@@ -1,0 +1,236 @@
+.propertyModalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9998;
+  font-family: "Lato", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2vw;
+}
+
+.propertyModalSection {
+  background: #fff;
+  padding: 2rem;
+  width: 95vw;
+  max-width: 60rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 1.2rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.propertyModalHeader {
+
+  background: #fff;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 0.1rem solid #e5e7eb;
+}
+
+.propertyModalHeader h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.closeButton {
+  background: #f3f4f6;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.6rem;
+  border-radius: 50%;
+  color: #6b7280;
+  transition: background 0.2s ease;
+  width: 3.2rem;
+  height: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.propertyModalContent {
+  flex: 1;
+}
+
+.propertyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  font-size: 1.4rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1.2rem 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.inputGroup input,
+.inputGroup select {
+  font-size: 0.7rem;
+  padding:1rem;
+  border-radius: 0.6rem;
+  border: 0.1rem solid #d1d5db;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputGroup input:focus,
+.inputGroup select:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 0.3rem rgba(124, 58, 237, 0.1);
+}
+
+.inputGroup input::placeholder {
+  color: #9ca3af;
+  font-size: 1rem;
+ color : "#6b7280";
+}
+
+.radioGroup {
+  display: flex;
+  gap:0.5rem;
+  flex-wrap: wrap;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.5rem;
+  color: #4b5563;
+  cursor: pointer;
+  border-radius: 0.6rem;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+
+.radioLabel input[type="radio"] {
+  margin: 0;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.radioLabel:has(input:checked) {
+  border-color: #7c3aed;
+  color: #4c1d95;
+  font-weight: 600;
+}
+
+.addressTextarea{
+    width: 100%;
+    height: 6rem;
+    padding: 1rem;
+    border-radius: 0.6rem;
+    border: 0.1rem solid #d1d5db;
+    background: #fff;
+    font-size: 1.2rem;
+    color: #374151;
+    resize: none;
+    font-family: "Lato", sans-serif;
+}
+
+.propertyModalFooter {
+  background: #fff;
+  z-index: 2;
+  display: flex;
+  font-family: "Lato", sans-serif;
+  justify-content: flex-end;
+  gap: 1.2rem;
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+  border-top: 0.1rem solid #e5e7eb;
+}
+
+.imagePreviewBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  margin-top: 1em;
+}
+
+.previewImage {
+  width: 12rem;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+}
+
+.inputGroupFileUpload{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.imageUploadInput {
+  display: none;
+}
+
+.customUploadArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: 2px dashed #8f2ef6;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 2rem;
+  text-align: center;
+}
+
+.customUploadArea:hover {
+  background-color: #e0e0e0;
+  border-color: #8018ef;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.uploadIcon {
+  font-size: 2rem;
+  color: #8f2ef6;
+}
+
+.uploadText {
+  font-size: 0.9rem;
+  color: #8f2ef6;
+}
+
+

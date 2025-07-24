@@ -1,0 +1,33 @@
+.adminTableHeaderSection {
+    padding: 1rem 2rem;
+  }
+  
+  .adminTableHeaderContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .adminTableTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    font-family: "Lato", sans-serif;
+  }
+  
+  .adminTableBtn {
+    background-color: #881f9b;
+    color: #fff;
+    padding: 0.5rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .adminTableBtn:hover {
+    background-color: #4338ca;
+  }
+  

@@ -1,0 +1,298 @@
+.adminNavbarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2vw;
+  z-index: 9999;
+  background-color: #ffffff;
+  border-bottom: 0.0625rem solid #e5e7eb;
+  height: 4rem;
+}
+
+.adminNavbarHeaderLogo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.adminNavbarHeaderLogoButton {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.adminNavbarHeaderLogoButton:hover {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.adminNavbarHeaderHeading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.adminNavbarHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* .adminNavbarHeaderSearchContainer {
+  display: flex;
+  align-items: center;
+  background-color: #f3f4f6;
+  border: 0.0625rem solid #e5e7eb;
+  border-radius: 0.375rem;
+  padding: 0.4em 1em;
+  width: 18vw;
+  max-width: 20rem;
+  min-width: 12rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+} */
+
+/* .adminNavbarHeaderSearchInput {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.5rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  width: 100%;
+  outline: none;
+} */
+
+.adminNavbarHeaderSearchInput::placeholder {
+  color: #9ca3af;
+}
+
+/* .adminNavbarHeaderSearchButton {
+  background: none;
+  border: none;
+  right: 0;
+  cursor: pointer;
+  color: #881f9b !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  padding-left: 0.5em;
+} */
+
+/* .adminNavbarHeaderSearchButton:hover {
+  color: #881f9b !important;
+} */
+
+.adminNavbarHeaderActionButton {
+  background-color: #e1c3fd8f;
+  border: none;
+  color: #c400cb;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.adminNavbarHeaderActionButton:hover {
+  background-color: #ddb9ff8f;
+  color: #c400cb;
+}
+
+.adminNavbarHeaderUserProfileSections {
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+}
+
+.adminNavbarUserProfileContainer {
+  display: flex;
+  align-items: center;
+  background-color: #f9fafb;
+  border: 0.0625rem solid #e5e7eb;
+  border-radius: 2rem;
+  padding: 0.4em 1em;
+  gap: 0.8em;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.adminNavbarUserProfileContainer:hover {
+  background-color: #f3f4f6;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+}
+
+.adminNavbarUserProfileImage {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adminNavbarUserProfileImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.adminNavbarUserProfileDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.adminNavbarUserProfileName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.adminNavbarUserProfileRole {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.adminNavbarUserProfileDropdownButton {
+  background: none;
+  border: none;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.adminNavbarUserProfileDropdownButton:hover {
+  color: #374151;
+}
+
+@media (max-width: 64rem) {
+  /* .adminNavbarHeaderSearchContainer {
+    display: none;
+  } */
+
+  .adminNavbarHeaderActions {
+    gap: 1rem;
+  }
+
+  .adminNavbarUserProfileContainer {
+    padding: 0.3em 0.8em;
+  }
+}
+
+@media (max-width: 48em) {
+  .adminNavbarHeader {
+    align-items: flex-start;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .adminNavbarHeaderLogo {
+    width: 100%;
+  }
+
+  .adminNavbarHeaderActions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .adminNavbarUserProfileSections {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .adminNavbarUserProfileContainer {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 36em) {
+  .adminNavbarUserProfileDetails {
+    display: none;
+  }
+  .adminNavbarHeader {
+    padding: 1rem 1vw;
+  }
+
+  .adminNavbarHeaderHeading {
+    font-size: 1.125rem;
+  }
+
+  .adminNavbarUserProfileName {
+    font-size: 0.875rem;
+  }
+
+  .adminNavbarUserProfileRole {
+    font-size: 0.6875rem;
+  }
+
+  .adminNavbarHeaderLogoButton {
+    font-size: 0.875rem;
+  }
+
+  .adminNavbarHeaderActionButton {
+    padding: 0.4rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 20rem) {
+  .adminNavbarUserProfileContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .adminNavbarUserProfileDetails {
+    align-items: flex-start;
+  }
+}
+
+.adminNavbarHeaderActionButton::after {
+  content: "";
+  position: absolute;
+  top: 0.375rem;
+  right: 0.375rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  background-color: #ef4444;
+  border-radius: 50%;
+  border: 0.125rem solid #ffffff;
+  display: none;
+}
+
+.adminNavbarHeaderActionButton.hasNotification::after {
+  display: block;
+}

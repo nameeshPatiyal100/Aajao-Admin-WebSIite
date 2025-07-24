@@ -1,0 +1,138 @@
+.adminSidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 15rem;
+  border-right: 0.0625rem solid #e5e7eb;
+  display: flex;
+  background-color: white;
+  justify-content: space-between;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.adminSidebar.collapsed {
+  width: 4rem;
+}
+
+.sidebarLogo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border-bottom: 0.0625rem solid #e5e7eb;
+  color: #7115bd;
+}
+
+.sidebarLogoText {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #27548a;
+  transition: color 0.2s;
+}
+
+.sidebarNav {
+  flex-grow: 1;
+  padding: 1rem 0.5rem;
+  overflow-y: auto;
+}
+
+.sidebarNavList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: #27548a;
+}
+
+.sidebarNavItem {
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.sidebarLinkWrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.sidebarLink,
+.sidebarSubLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+  width: 100%;
+}
+
+
+.sidebarLink:hover,
+.sidebarSubLink:hover {
+  color: #8e07d6; 
+}
+
+.sidebarActive {
+  color: #8e07d6;
+}
+
+.sidebarIcon.sidebarActive {
+  color: #8e07d6;
+}
+
+.sidebarIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+
+.sidebarText {
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+
+.sidebarDropdownToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #27548a;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebarDropdownToggle:hover {
+  color: #6b21a8;
+}
+
+.sidebarSubList {
+  padding-left: 2.5rem;
+  margin-top: 0.25rem;
+  list-style-type: none;
+}
+
+.sidebarSubItem {
+  margin-top: 0.25rem;
+}
+
+.sidebarSubLink {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
