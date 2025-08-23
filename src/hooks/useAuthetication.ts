@@ -4,10 +4,10 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../app/store';
 
 // Dummy function to simulate fetching user data from localStorage or an API
-const fetchUserFromStorage = () => {
-  const userData = localStorage.getItem('user');
-  return userData ? JSON.parse(userData) : null;
-};
+// const fetchUserFromStorage = () => {
+//   const userData = localStorage.getItem('user');
+//   return userData ? JSON.parse(userData) : null;
+// };
 
 const useAuthentication = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

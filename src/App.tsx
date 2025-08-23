@@ -1,10 +1,10 @@
-import React, { Suspense, lazy } from "react";
+// import React, { Suspense, lazy } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
-  Outlet,
+  // Outlet,
 } from "react-router-dom";
 
 import {

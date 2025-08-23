@@ -28,7 +28,7 @@ import { faker } from "@faker-js/faker";
 
 import PropertyModal from "../../../components/admin/modals/properyModal/PropertyModal";
 import { ConfirmDeleteModal, Pagination } from "../../../components";
-import { FileX, Search } from "lucide-react";
+import { FileX, } from "lucide-react";
 
 interface Attendant {
   id: string;
@@ -49,7 +49,7 @@ const AdminProperties = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-
+console.log(setRowsPerPage)
   useEffect(() => {
     const generateData = () => {
       const fakeData: Attendant[] = Array.from({ length: 50 }).map(() => ({
@@ -90,18 +90,18 @@ const AdminProperties = () => {
     setData(updatedData);
   };
 
-  const getStatusStyle = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "active":
-        return { backgroundColor: "#e6f7e6", color: "#2e7d32" };
-      case "inactive":
-        return { backgroundColor: "#ffebee", color: "#c62828" };
-      case "pending":
-        return { backgroundColor: "#fff8e1", color: "#ef6c00" };
-      default:
-        return { backgroundColor: "#f5f5f5", color: "#616161" };
-    }
-  };
+  // const getStatusStyle = (status: string) => {
+  //   switch (status.toLowerCase()) {
+  //     case "active":
+  //       return { backgroundColor: "#e6f7e6", color: "#2e7d32" };
+  //     case "inactive":
+  //       return { backgroundColor: "#ffebee", color: "#c62828" };
+  //     case "pending":
+  //       return { backgroundColor: "#fff8e1", color: "#ef6c00" };
+  //     default:
+  //       return { backgroundColor: "#f5f5f5", color: "#616161" };
+  //   }
+  // };
 
   const filteredRows = data.filter(
     (user) =>

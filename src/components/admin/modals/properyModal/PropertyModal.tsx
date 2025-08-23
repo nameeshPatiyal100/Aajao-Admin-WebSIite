@@ -19,9 +19,13 @@ const PropertyModal = ({ open, onClose }: PropertyModalProps) => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setSelectedImages(files);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      console.log(files)
+      console.log(setSelectedImages)
+      // setSelectedImages(files);
+    }
   };
 
   return (

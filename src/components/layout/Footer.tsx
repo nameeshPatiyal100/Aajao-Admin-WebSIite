@@ -7,13 +7,13 @@ import {
   Typography,
   Link,
   IconButton,
-  Button,
+  // Button,
   Divider,
 } from "@mui/material";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 
-const MotionButton = motion(Button);
+// const MotionButton = motion(Button);
 
 const Footer: React.FC = () => {
   return (
