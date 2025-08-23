@@ -17,7 +17,7 @@ const largeValues = [60, 65, 66, 68, 87, 82, 83, 89, 92, 75, 76, 77, 91];
 export default function CustomYAxis() {
   const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
   const [selectedChart, setSelectedChart] = React.useState<'small' | 'large' | null>(null);
-  const handleHighlightChange = (index: number | null, chartType: 'small' | 'large') => {
+  const handleHighlightChange = (index: any, chartType: 'small' | 'large') => {
     setSelectedIndex(index);
     setSelectedChart(chartType);
   };
@@ -58,7 +58,7 @@ export default function CustomYAxis() {
             data={largeValues}
             color="#1e88e5"
             {...settings}
-            onHighlightChange={(index) => handleHighlightChange(index, 'large')}
+            // onHighlightChange={(index) => handleHighlightChange(index, 'large')}
           />
           {selectedChart === 'large' && selectedIndex !== null && (
             <Typography
@@ -81,7 +81,7 @@ export default function CustomYAxis() {
             yAxis={{ min: 0, max: 100 }}
             color="#e53935"
             {...settings}
-            onHighlightChange={(index) => handleHighlightChange(index, 'small')}
+            // onHighlightChange={(index) => handleHighlightChange(index, 'small')}
           />
           {selectedChart === 'small' && selectedIndex !== null && (
             <Typography
@@ -98,7 +98,7 @@ export default function CustomYAxis() {
             yAxis={{ min: 0, max: 100 }}
             color="#1e88e5"
             {...settings}
-            onHighlightChange={(index) => handleHighlightChange(index, 'large')}
+            // onHighlightChange={(index) => handleHighlightChange(index, 'large')}
           />
           {selectedChart === 'large' && selectedIndex !== null && (
             <Typography
