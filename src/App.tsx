@@ -1,21 +1,27 @@
-// import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
-  // Outlet,
+  Outlet,
 } from "react-router-dom";
 
-import {
-  AdminLayout,
-} from "./components";
+import { AdminLayout } from "./components";
 
 import { SidebarProvider } from "./context/AdminContext";
 
 import AdminBooking from "./pages/admin/adminBooking/AdminBooking";
 import { Toaster } from "react-hot-toast";
-import { AdminLogin, AdminProperties, Dashboard, StatusPage, Transactions, UserPage } from "./pages";
+import {
+  AdminCategory,
+  AdminLogin,
+  AdminProperties,
+  Dashboard,
+  StatusPage,
+  Transactions,
+  UserPage,
+} from "./pages";
 import { UserDashboard } from "./pages/user/dashboard";
 import { HostDashboard } from "./pages/host/dashboard";
 import CommonLayout from "./components/layout/CommonLayout";
@@ -27,17 +33,14 @@ import { VerifyOtp } from "./auth/VerifyOtp";
 import { ResetPassword } from "./auth/ResetPassword";
 import ProtectedRoute from "./components/protectedRoute";
 
-
 function App() {
   return (
     <Router>
       <Toaster position="top-center" />
       <Routes>
-
         <Route path="/" element={<CommonLayout />}>
           <Route index element={<Home />} />
         </Route>
-
 
         {/* Auth Routes */}
         <Route path="/auth" element={<GuestRoute />}>
@@ -47,8 +50,6 @@ function App() {
           <Route path="reset-password" element={<ResetPassword />} />
         </Route>
 
-
-
         <Route path="/host/*" element={<ProtectedRoute />}>
           <Route path="dashboard" element={<HostDashboard />} />
           {/* other host routes */}
@@ -57,7 +58,6 @@ function App() {
         <Route path="/user/*" element={<ProtectedRoute />}>
           <Route path="dashboard" element={<UserDashboard />} />
         </Route>
-
 
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
@@ -71,7 +71,10 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<UserPage />} />
           <Route path="transactions" element={<Transactions />} />
-          <Route path="properties" element={<AdminProperties />} />
+          <Route path="properties" element={<AdminProperties />}>
+            <Route path=":propertyId" element={<div>Property Details</div>} />
+          </Route>
+          <Route path="categories" element={<AdminCategory />} />
           <Route path="bookings" element={<AdminBooking />} />
           <Route path="status" element={<StatusPage />} />
           <Route path="settings" element={<h1>Settings</h1>} />

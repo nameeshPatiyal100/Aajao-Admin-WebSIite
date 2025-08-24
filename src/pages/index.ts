@@ -5,4 +5,4 @@ export { default as AdminLogin } from "./admin/adminLogin/AdminLogin";
 export { default as Dashboard } from "./admin/admindashboard/Dashboard";
 export { default as Transactions } from "./admin/transactions/Transactions";
 export {default as AdminBookings} from "./admin/adminBooking/AdminBooking";
-
+export {default as AdminCategory} from "./admin/adminProperty/AdminCategory";

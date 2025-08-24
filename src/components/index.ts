@@ -31,3 +31,12 @@ export { default as AdminSidebar} from "./admin/adminsidebar/AdminSidebar"
 export { default as AdminBarChart} from "./admin/charts/AdminBarChart"
 export { default as AdminLineChart} from "./admin/charts/AdminLineChart"
 export { default as AdminTable} from "./admin/adminTable/AdminTable"
+
+
+// ------------------ADMIN COMMON COMPONENT---------------------->
+export { default as DataTable } from "./admin/common/DataTable";
+export { default as SearchBar } from "./admin/AdminSearch/AdminSearchBar";
+export { default as StatCard } from "./admin/adminState/AdminStateCard";
+export { default as ConfirmDialog } from "./admin/AdminConfig/AdminConfig"; 
+export {default as PropertyListItem} from "./admin/AdminProperty/AdminPropertyListItem";
+export { default as CommonModal } from "./admin/AdminCommonModal/CommonModal";

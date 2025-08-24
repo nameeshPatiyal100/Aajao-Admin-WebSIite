@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-// import { pink } from "@mui/material/colors";
+import { pink } from "@mui/material/colors";
 import {
   Modal,
   Box,
@@ -23,7 +23,7 @@ import * as Yup from "yup";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface AddUserModalProps {
   open: boolean;

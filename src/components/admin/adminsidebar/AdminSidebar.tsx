@@ -72,19 +72,10 @@ const SUB_ITEMS: Record<string, NavItem[]> = {
     },
     {
       text: "Property Categories",
-      path: "/admin/analytics/conversions",
+      path: "/admin/Categories",
       icon: ThermometerSnowflakeIcon,
     },
-    {
-      text: "Luxury Properties",
-      path: "/admin/analytics/conversions",
-      icon: ThermometerSnowflakeIcon,
-    },
-    {
-      text: "Property Tags",
-      path: "/admin/analytics/conversions",
-      icon: ThermometerSnowflakeIcon,
-    },
+    
   ],
   Settings: [
     { text: "Status", path: "/admin/status", icon: TrafficCone },

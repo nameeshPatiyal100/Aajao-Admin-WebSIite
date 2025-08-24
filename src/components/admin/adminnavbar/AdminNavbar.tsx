@@ -1,4 +1,4 @@
-import { Bell, ChevronDown, MenuSquareIcon } from "lucide-react";
+import { Bell, ChevronDown, MenuSquareIcon, Search } from "lucide-react";
 import { useSidebar } from "../../../context/AdminContext";
 import "./adminNavbar.css";
 import userImg from "../../../assets/user.jpg";
