@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -14,25 +14,22 @@ import {
   TableRow,
   Typography,
   TextField,
-  InputAdornment,
   IconButton,
   Tooltip,
-  useTheme,
-  useMediaQuery,
+
 } from "@mui/material";
 import {
   FilterList as FilterListIcon,
-  MoreVert as MoreVertIcon,
+
   Visibility as VisibilityIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Search as SearchIcon,
-  Padding,
+
+
 } from "@mui/icons-material";
 import { faker } from "@faker-js/faker";
 import {
   Pagination,
-  BackButton,
   AddUserModal,
   ConfirmDeleteModal,
 } from "../../../components";
@@ -57,8 +54,8 @@ interface Attendant {
 }
 
 export default function Transactions() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // State Management
   const [data, setData] = useState<Attendant[]>([]);
@@ -70,11 +67,11 @@ export default function Transactions() {
   );
 
   // Modal and Menu States
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Attendant | null>(null);
-  const [menuRowIndex, setMenuRowIndex] = useState<number | null>(null);
+  // const [menuRowIndex, setMenuRowIndex] = useState<number | null>(null);
   const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(
     null
   );
@@ -142,18 +139,18 @@ export default function Transactions() {
     }
   };
 
-  const handleMenuOpen = (
-    event: React.MouseEvent<HTMLElement>,
-    user: Attendant
-  ) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedUser(user);
-  };
+  // const handleMenuOpen = (
+  //   event: React.MouseEvent<HTMLElement>,
+  //   user: Attendant
+  // ) => {
+  //   setAnchorEl(event.currentTarget);
+  //   setSelectedUser(user);
+  // };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedUser(null);
-  };
+  // const handleMenuClose = () => {
+  //   setAnchorEl(null);
+  //   setSelectedUser(null);
+  // };
 
   const renderUserActions = (user: Attendant) => (
     <>

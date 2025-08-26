@@ -49,7 +49,7 @@ const tags = ["Beachfront", "Mountain View", "City Center", "Luxury", "Modern", 
 const amenities = ["WiFi", "Parking", "Pool", "Gym", "Spa", "Concierge", "Pet Care", "Garden"];
 
 
-const FormSection = styled(Paper)(({ theme }) => ({
+const FormSection = styled(Paper)(() => ({
   padding: '24px',
   marginBottom: '20px',
   borderRadius: '16px',
@@ -69,7 +69,7 @@ const FormSection = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const SectionTitle = styled(Typography)(({ theme }) => ({
+const SectionTitle = styled(Typography)(() => ({
   fontWeight: 700,
   fontSize: '1.25rem',
   color: '#1f2937',
@@ -83,7 +83,7 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   backgroundClip: 'text',
 }));
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
+const StyledTextField = styled(TextField)(() => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: '12px',
     backgroundColor: 'rgba(139, 69, 193, 0.02)',
@@ -116,7 +116,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+const StyledFormControlLabel = styled(FormControlLabel)(() => ({
   margin: '8px 16px 8px 0',
   padding: '8px 16px',
   borderRadius: '12px',
@@ -139,7 +139,7 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   },
 }));
 
-const ImageUploadBox = styled(Box)(({ theme }) => ({
+const ImageUploadBox = styled(Box)(() => ({
   border: '2px dashed rgba(139, 69, 193, 0.3)',
   borderRadius: '16px',
   padding: '32px 24px',
@@ -159,7 +159,7 @@ const ImageUploadBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+const StyledDialog = styled(Dialog)(() => ({
   '& .MuiDialog-paper': {
     borderRadius: '20px',
     maxWidth: '1200px',
@@ -168,7 +168,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+const StyledDialogTitle = styled(DialogTitle)(() => ({
   background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
   color: 'white',
   fontWeight: 700,

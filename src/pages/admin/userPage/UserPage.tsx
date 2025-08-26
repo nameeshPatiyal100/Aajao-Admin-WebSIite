@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -16,8 +16,6 @@ import {
 
   IconButton,
   Tooltip,
-  useTheme,
-  useMediaQuery,
 } from "@mui/material";
 import {
   FilterList as FilterListIcon,
@@ -70,7 +68,7 @@ export default function UserManagementPage() {
   );
 
   // Modal and Menu States
-  const [ setAnchorEl] = useState<null | HTMLElement>(null);
+  // const [ setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Attendant | null>(null);
@@ -136,18 +134,18 @@ export default function UserManagementPage() {
     }
   };
 
-  const handleMenuOpen = (
-    event: React.MouseEvent<HTMLElement>,
-    user: Attendant
-  ) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedUser(user);
-  };
+  // const handleMenuOpen = (
+  //   event: React.MouseEvent<HTMLElement>,
+  //   user: Attendant
+  // ) => {
+  //   setAnchorEl(event.currentTarget);
+  //   setSelectedUser(user);
+  // };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedUser(null);
-  };
+  // const handleMenuClose = () => {
+  //   setAnchorEl(null);
+  //   setSelectedUser(null);
+  // };
 
   const renderUserActions = (user: Attendant) => (
     <>
