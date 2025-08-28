@@ -12,7 +12,6 @@ import {
   Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-import { PropertyRow } from "../types";
 import { PenIcon } from "lucide-react";
 
 interface PropertyListItemProps {
@@ -44,7 +43,7 @@ export default function PropertyListItem({
         transition: "background-color 0.2s ease",
       }}
     >
-      {/* Avatar */}
+
       <Avatar
         sx={{
           background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
@@ -55,7 +54,7 @@ export default function PropertyListItem({
         {row.id.slice(-2)}
       </Avatar>
 
-      {/* Info */}
+
       <Box sx={{ minWidth: 0, flex: 1 }}>
         <Typography
           variant="h6"
@@ -85,7 +84,7 @@ export default function PropertyListItem({
         </Box>
       </Box>
 
-      {/* Value + Date */}
+
       <Box sx={{ textAlign: "right", minWidth: 120 }}>
         <Typography
           variant="h6"
@@ -98,7 +97,7 @@ export default function PropertyListItem({
         </Typography>
       </Box>
 
-      {/* Status Toggle */}
+
       <Box sx={{ display: "flex", alignItems: "center", minWidth: 120 }}>
         <Switch
           checked={row.active}
@@ -124,7 +123,7 @@ export default function PropertyListItem({
         </Typography>
       </Box>
 
-      {/* Actions */}
+
 
       <Box sx={{ display: "flex", gap: 0.5 }}>
         <Tooltip title="Edit Property" arrow>

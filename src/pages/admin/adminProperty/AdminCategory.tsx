@@ -1,9 +1,9 @@
-import { Typography, Box, Button, Grid } from "@mui/material";
+import { Typography, Box, Button } from "@mui/material";
 import { PropertyListItem, SearchBar } from "../../../components";
 import { useState } from "react";
-
 import { Add as AddIcon } from "@mui/icons-material";
 import { FilterIcon } from "lucide-react";
+
 const purpleTheme = {
   primary: {
     main: "#7C3AED",
@@ -73,34 +73,42 @@ export default function AdminCategory() {
             textTransform: "none",
           }}
         >
-          Add Property category
+          Add Property Category
         </Button>
       </Box>
-      <Box sx={{ mt: 4, mb: 2 }}>
-      <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} md={8}>
-                <SearchBar
-                  placeholder="Search properties by name, location, or type..."
-                  color={purpleTheme.primary.main}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Button
-                  startIcon={<FilterIcon />}
-                  variant="outlined"
-                  fullWidth
-                  sx={{
-                    borderRadius: 3,
-                    py: 1.5,
-                    fontWeight: 500,
-                    textTransform: "none",
-                  }}
-                >
-                  Advanced Filter
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
+
+
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2,
+          mt: 4,
+          mb: 2,
+        }}
+      >
+        <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 66%" } }}>
+          <SearchBar
+            placeholder="Search properties by name, location, or type..."
+            color={purpleTheme.primary.main}
+          />
+        </Box>
+        <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 32%" } }}>
+          <Button
+            startIcon={<FilterIcon />}
+            variant="outlined"
+            fullWidth
+            sx={{
+              borderRadius: 3,
+              py: 1.5,
+              fontWeight: 500,
+              textTransform: "none",
+            }}
+          >
+            Advanced Filter
+          </Button>
+        </Box>
+      </Box>
 
 
       <PropertyListItem
@@ -109,7 +117,7 @@ export default function AdminCategory() {
         onView={(id) => console.log("View:", id)}
         onDelete={(row) => console.log("Delete:", row)}
         formatDate={formatDate}
-        editable={true}  
+        editable={true}
       />
     </>
   );
