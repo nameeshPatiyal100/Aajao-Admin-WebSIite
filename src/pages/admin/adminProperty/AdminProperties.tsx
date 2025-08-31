@@ -17,7 +17,7 @@ import {
   FilterList as FilterIcon,
 } from "@mui/icons-material";
 import { PropertyRow } from "../components/types";
-import CommonModal from "./PropertyModal"; 
+import CommonModal from "./PropertyModal";
 import {
   SearchBar,
   StatCard,
@@ -87,7 +87,9 @@ export default function AdminProperties() {
     },
   ]);
 
-  const [selectedProperty, setSelectedProperty] = useState<PropertyRow | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<PropertyRow | null>(
+    null
+  );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // ✅ added modal state
   const [searchTerm, setSearchTerm] = useState("");
@@ -164,9 +166,14 @@ export default function AdminProperties() {
   ];
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: purpleTheme.background.default, pb: 4 }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: purpleTheme.background.default,
+        pb: 4,
+      }}
+    >
       <Container maxWidth="xl" sx={{ pt: 3 }}>
-
         <Box
           sx={{
             display: "flex",
@@ -195,7 +202,7 @@ export default function AdminProperties() {
               Manage and monitor all properties in your portfolio
             </Typography>
           </Box>
-         <Button
+          <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => setIsModalOpen(true)} // ✅ opens modal
@@ -207,7 +214,7 @@ export default function AdminProperties() {
               fontWeight: 600,
               textTransform: "none",
             }}
-          > 
+          >
             Add Property
           </Button>
         </Box>
@@ -221,7 +228,6 @@ export default function AdminProperties() {
           ))}
         </Grid>
 
-
         <Paper
           elevation={0}
           sx={{
@@ -232,7 +238,9 @@ export default function AdminProperties() {
             overflow: "hidden",
           }}
         >
-          <Box sx={{ p: 3, borderBottom: "1px solid", borderColor: "grey.100" }}>
+          <Box
+            sx={{ p: 3, borderBottom: "1px solid", borderColor: "grey.100" }}
+          >
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={12} md={8}>
                 <SearchBar
@@ -270,13 +278,14 @@ export default function AdminProperties() {
                   onDelete={handleDelete}
                   theme={purpleTheme}
                   formatDate={formatDate}
+                  variant="property"
+                  editable={true}
                 />
                 {i < filteredRows.length - 1 && <Divider sx={{ mx: 3 }} />}
               </Box>
             ))}
           </Box>
         </Paper>
-
 
         <CommonModal
           open={isModalOpen}
@@ -286,9 +295,7 @@ export default function AdminProperties() {
             console.log("Form submitted!");
             setIsModalOpen(false);
           }}
-        >
-        </CommonModal>
-
+        ></CommonModal>
 
         <ConfirmDialog
           open={isDeleteModalOpen}

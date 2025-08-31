@@ -1,6 +1,5 @@
-import { Box, Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material";
 import { PropertyListItem } from "../../../components";
-
 
 const purpleTheme = {
   primary: {
@@ -21,26 +20,25 @@ const purpleTheme = {
 };
 
 const AdminPropertyTags = () => {
-    
-      const mockRow = {
-        id: "1234",
-        name: "Green Villa",
-        email: "owner@example.com",
-        type: "Residential",
-        location: "California, USA",
-        value: "$450,000",
-        date: "2025-08-20",
-        active: true,
-      };
+  const mockRow = {
+    id: "1234",
+    name: "Green Villa",
+    email: "owner@example.com",
+    type: "Residential",
+    location: "California, USA",
+    value: "$450,000",
+    date: "2025-08-20",
+    active: true,
+  };
 
-      const formatDate = (date: string) => {
+  const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString();
   };
-    
+
   return (
-  <>
-  <Box>
-    <Typography
+    <>
+      <Box>
+        <Typography
           variant="h4"
           sx={{
             fontWeight: 700,
@@ -54,23 +52,20 @@ const AdminPropertyTags = () => {
           Property Tags
         </Typography>
         <Typography variant="body1" color="text.secondary">
-            Manage and categorize your property tags effectively.
+          Manage and categorize your property tags effectively.
         </Typography>
 
-
         <PropertyListItem
-                row={mockRow}
-                onToggle={(id) => console.log("Toggle:", id)}
-                onView={(id) => console.log("View:", id)}
-                onDelete={(row) => console.log("Delete:", row)}
-                formatDate={formatDate}
-                editable={true}
-              />
+          row={{ ...mockRow, canEdit: true }}
+          onToggle={(id) => console.log("Toggle:", id)}
+          onView={(id) => console.log("View:", id)}
+          onDelete={(row) => console.log("Delete:", row)}
+          formatDate={formatDate}
+          editable={true}
+        />
+      </Box>
+    </>
+  );
+};
 
-
-  </Box>
-  </>
-  )
-}
-
-export default AdminPropertyTags
+export default AdminPropertyTags;

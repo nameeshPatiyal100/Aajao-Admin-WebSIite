@@ -40,3 +40,4 @@ export { default as StatCard } from "./admin/adminState/AdminStateCard";
 export { default as ConfirmDialog } from "./admin/AdminConfig/AdminConfig"; 
 export {default as PropertyListItem} from "./admin/AdminProperty/AdminPropertyListItem";
 export { default as CommonModal } from "./admin/AdminCommonModal/CommonModal";
+export { default as CategoryListItem } from "./admin/modals/propertyModal/CategoryListItem";

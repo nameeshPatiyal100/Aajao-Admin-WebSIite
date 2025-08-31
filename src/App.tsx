@@ -17,6 +17,7 @@ import {
   AdminLogin,
   AdminProperties,
   AdminPropertyTags,
+  AdminPropertyVerification,
   Dashboard,
   StatusPage,
   Transactions,
@@ -75,6 +76,7 @@ function App() {
           <Route path="tags" element={<AdminPropertyTags />} />
           <Route path="categories" element={<AdminCategory />} />
           <Route path="ammenities" element={<AdminAmmenities/>} />
+          <Route path="property-verification" element={<AdminPropertyVerification/>} />
           <Route path="bookings" element={<AdminBooking />} />
           <Route path="status" element={<StatusPage />} />
           <Route path="settings" element={<h1>Settings</h1>} />

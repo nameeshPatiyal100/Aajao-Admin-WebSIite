@@ -82,6 +82,12 @@ const SUB_ITEMS: Record<string, NavItem[]> = {
       path : "/admin/ammenities",
       icon : ThermometerSnowflakeIcon
     }
+    ,
+    {
+      text : "Property Verification",
+      path : "/admin/property-verification",
+      icon : ThermometerSnowflakeIcon
+    }
     
   ],
   Settings: [
