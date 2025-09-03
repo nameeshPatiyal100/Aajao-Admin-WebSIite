@@ -1,6 +1,6 @@
 import Axios, { InternalAxiosRequestConfig } from "axios";
 import storage from "../utils/storage";
-import { API_BASE_URL } from "../configs/apis";
+// import { API_BASE_URL } from "../configs/apis";
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const token = storage.getToken();
@@ -31,11 +31,12 @@ axios.interceptors.response.use(
     }
 
     const message = error.response?.data?.message || error.message;
-    useNotificationStore.getState().addNotification({
-      type: "error",
-      title: "Failure",
-      message,
-    });
+    console.error("API Error:", message);
+    // useNotificationStore.getState().addNotification({
+    //   type: "error",
+    //   title: "Failure",
+    //   message,
+    // });
 
     return Promise.reject(error);
   }

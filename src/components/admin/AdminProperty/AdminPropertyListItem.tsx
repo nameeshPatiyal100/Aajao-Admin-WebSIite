@@ -48,7 +48,7 @@ interface PropertyListItemProps {
   row: GenericRow;
   onToggle: (id: string) => void;
   onView: (id: string) => void;
-  onDelete: (row: GenericRow | PropertyRow | string) => void; 
+  onDelete: (row: GenericRow | PropertyRow ) => void; 
   formatDate?: (date: string) => string;
   editable?: boolean;
   variant?: 'property' | 'category';

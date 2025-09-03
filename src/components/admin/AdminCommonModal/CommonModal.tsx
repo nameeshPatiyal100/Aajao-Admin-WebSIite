@@ -26,7 +26,7 @@ interface CommonModalProps {
 }
 
 // Styled components for enhanced visual appeal
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+const StyledDialog = styled(Dialog)(() => ({
   '& .MuiDialog-paper': {
     borderRadius: '24px',
     background: 'linear-gradient(145deg, #ffffff 0%, #fafafa 100%)',
@@ -48,7 +48,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+const StyledDialogTitle = styled(DialogTitle)(() => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -66,7 +66,7 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
   },
 }));
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
+const StyledIconButton = styled(IconButton)(() => ({
   backgroundColor: 'rgba(139, 69, 193, 0.08)',
   color: '#7c3aed',
   width: '40px',
@@ -84,7 +84,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
+const StyledDialogContent = styled(DialogContent)(() => ({
   padding: '0 32px 24px 32px',
   position: 'relative',
   '&::-webkit-scrollbar': {
@@ -99,7 +99,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   },
 }));
 
-const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
+const StyledDialogActions = styled(DialogActions)(() => ({
   padding: '24px 32px 32px 32px',
   background: 'rgba(249, 250, 251, 0.8)',
   borderTop: '1px solid rgba(139, 69, 193, 0.08)',
@@ -108,7 +108,7 @@ const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
   borderRadius: '0 0 24px 24px',
 }));
 
-const CancelButton = styled(Button)(({ theme }) => ({
+const CancelButton = styled(Button)(() => ({
   borderRadius: '16px',
   padding: '12px 24px',
   fontWeight: 600,
@@ -126,7 +126,7 @@ const CancelButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const SubmitButton = styled(Button)(({ theme }) => ({
+const SubmitButton = styled(Button)(() => ({
   borderRadius: '16px',
   padding: '12px 32px',
   fontWeight: 600,

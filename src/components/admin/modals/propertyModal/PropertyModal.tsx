@@ -9,7 +9,7 @@ type PropertyModalProps = {
 };
 
 const PropertyModal = ({ open, onClose }: PropertyModalProps) => {
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
 
   if (!open) return null;
 
@@ -19,8 +19,8 @@ const PropertyModal = ({ open, onClose }: PropertyModalProps) => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files ? Array.from(e.target.files) : [];
     setSelectedImages(files);
   };
 

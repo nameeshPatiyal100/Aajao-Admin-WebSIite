@@ -27,6 +27,17 @@ import { ConfirmDeleteModal, Pagination } from "../../../components";
 import { useEffect, useState } from "react";
 import { FileX } from "lucide-react";
 import { faker } from "@faker-js/faker";
+// Define the Attendant interface
+interface Attendant {
+  id: string;
+  name: string;
+  age: number;
+  email: string;
+  date: string;
+  status: string;
+  active: boolean;
+}
+
 const AdminBooking = () => {
   const [data, setData] = useState<Attendant[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -36,6 +47,8 @@ const AdminBooking = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  console.log(setRowsPerPage);
+  console.log(isModalOpen);
 
   useEffect(() => {
     const generateData = () => {
@@ -77,18 +90,18 @@ const AdminBooking = () => {
     setData(updatedData);
   };
 
-  const getStatusStyle = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "active":
-        return { backgroundColor: "#e6f7e6", color: "#2e7d32" };
-      case "inactive":
-        return { backgroundColor: "#ffebee", color: "#c62828" };
-      case "pending":
-        return { backgroundColor: "#fff8e1", color: "#ef6c00" };
-      default:
-        return { backgroundColor: "#f5f5f5", color: "#616161" };
-    }
-  };
+  // const getStatusStyle = (status: string) => {
+  //   switch (status.toLowerCase()) {
+  //     case "active":
+  //       return { backgroundColor: "#e6f7e6", color: "#2e7d32" };
+  //     case "inactive":
+  //       return { backgroundColor: "#ffebee", color: "#c62828" };
+  //     case "pending":
+  //       return { backgroundColor: "#fff8e1", color: "#ef6c00" };
+  //     default:
+  //       return { backgroundColor: "#f5f5f5", color: "#616161" };
+  //   }
+  // };
 
   const filteredRows = data.filter(
     (user) =>

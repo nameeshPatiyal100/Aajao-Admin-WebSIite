@@ -218,8 +218,10 @@ export default function AdminCategory() {
         <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 66%" } }}>
           <SearchBar
             placeholder="Search categories by title or slug..."
+            value={searchQuery}
             color={purpleTheme.primary.main}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            // onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={setSearchQuery}
           />
         </Box>
         <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 32%" } }}>
@@ -266,7 +268,7 @@ export default function AdminCategory() {
                 row={category}
                 onToggle={handleToggleActive}
                 onView={handleEditClick}
-                onDelete={handleDeleteClick}
+                onDelete={(row) => handleDeleteClick(row.id)}
                 formatDate={formatDate}
                 variant="category"
                 editable={true}
