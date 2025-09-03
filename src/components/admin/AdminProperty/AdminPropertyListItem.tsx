@@ -15,6 +15,7 @@ import {
   Edit as EditIcon,
 } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
+import { PropertyRow } from "../../types";
 
 // Generic interface that works for both properties and categories
 interface GenericRow {
@@ -27,21 +28,33 @@ interface GenericRow {
   type?: string;        // For properties
   value?: string;       // For properties
   active: boolean;
-  date?: string;        // For properties
+  date?: string;        // For propertiesnpm
   createdAt?: string;   // For categories
   canEdit?: boolean;
 }
 
+// interface PropertyListItemProps {
+//   row: GenericRow;
+//   onToggle: (id: string) => void;
+//   onView: (id: string) => void;
+//   onDelete: (row: GenericRow) => void; // Can accept full row or just ID
+//   // onDelete: (row: GenericRow | PropertyRow) => void;
+//   formatDate?: (date: string) => string;
+//   editable?: boolean;
+//   variant?: 'property' | 'category'; // Specify which variant to render
+//   theme?: any; // Allow custom theme
+// }
 interface PropertyListItemProps {
   row: GenericRow;
   onToggle: (id: string) => void;
   onView: (id: string) => void;
-  onDelete: (row: GenericRow) => void; // Can accept full row or just ID
+  onDelete: (row: GenericRow | PropertyRow | string) => void; 
   formatDate?: (date: string) => string;
   editable?: boolean;
-  variant?: 'property' | 'category'; // Specify which variant to render
-  theme?: any; // Allow custom theme
+  variant?: 'property' | 'category';
+  theme?: any;
 }
+
 
 export default function PropertyListItem({
   row,
@@ -79,16 +92,11 @@ export default function PropertyListItem({
 
   // Handle delete - support both function signatures
   const handleDelete = () => {
-    if (typeof onDelete === 'function') {
-      // Try to call with row first (new signature), fallback to ID (old signature)
-      try {
-        onDelete(row);
-      } catch (error) {
-        // If that fails, try with just ID
-        (onDelete as any)(row.id);
-      }
+    if (typeof onDelete === "function") {
+      onDelete(row);     // you can still pass the full row
     }
   };
+  
 
   if (variant === 'category') {
     return (

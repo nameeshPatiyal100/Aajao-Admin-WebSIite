@@ -4,8 +4,6 @@ import {
   Typography,
   Button,
   Paper,
-  Grid,
-  Divider,
   Container,
 } from "@mui/material";
 import {
@@ -16,14 +14,15 @@ import {
   Assessment,
   FilterList as FilterIcon,
 } from "@mui/icons-material";
-import { PropertyRow } from "../components/types";
-import CommonModal from "./PropertyModal";
+import { PropertyRow, GenericRow } from "../../../components/types";
 import {
   SearchBar,
   StatCard,
   ConfirmDialog,
   PropertyListItem,
 } from "../../../components";
+import "./AdminProperties.css"; // ✅ custom CSS
+import PropertyModal from "./PropertyModal";
 
 const purpleTheme = {
   primary: {
@@ -91,10 +90,9 @@ export default function AdminProperties() {
     null
   );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // ✅ added modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 🔹 Handlers
   const handleToggle = (id: string) => {
     setRows((prev) =>
       prev.map((row) => (row.id === id ? { ...row, active: !row.active } : row))
@@ -105,8 +103,12 @@ export default function AdminProperties() {
     alert("Viewing details for property " + id);
   };
 
-  const handleDelete = (property: PropertyRow) => {
-    setSelectedProperty(property);
+  const handleDelete = (row: GenericRow | PropertyRow | string) => {
+    if (typeof row === "string") {
+      setSelectedProperty(rows.find((r) => r.id === row) || null);
+    } else {
+      setSelectedProperty(row as PropertyRow);
+    }
     setIsDeleteModalOpen(true);
   };
 
@@ -125,7 +127,6 @@ export default function AdminProperties() {
       day: "numeric",
     });
 
-  // 🔹 Filtering
   const filteredRows = rows.filter(
     (row) =>
       row.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -133,7 +134,6 @@ export default function AdminProperties() {
       row.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // 🔹 Stats
   const stats = [
     {
       label: "Total Properties",
@@ -174,17 +174,9 @@ export default function AdminProperties() {
       }}
     >
       <Container maxWidth="xl" sx={{ pt: 3 }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            justifyContent: "space-between",
-            alignItems: { xs: "flex-start", sm: "center" },
-            gap: 3,
-            mb: 4,
-          }}
-        >
-          <Box>
+        {/* Header */}
+        <div className="admin-header">
+          <div>
             <Typography
               variant="h4"
               sx={{
@@ -201,11 +193,11 @@ export default function AdminProperties() {
             <Typography variant="body1" color="text.secondary">
               Manage and monitor all properties in your portfolio
             </Typography>
-          </Box>
+          </div>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => setIsModalOpen(true)} // ✅ opens modal
+            onClick={() => setIsModalOpen(true)}
             sx={{
               background: `linear-gradient(135deg, ${purpleTheme.primary.main}, ${purpleTheme.primary.light})`,
               borderRadius: 3,
@@ -217,17 +209,16 @@ export default function AdminProperties() {
           >
             Add Property
           </Button>
-        </Box>
-
-        {/* Stats */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        </div>
+  
+        {/* Stats Section */}
+        <div className="stats-grid">
           {stats.map((stat, i) => (
-            <Grid item xs={12} sm={6} lg={3} key={i}>
-              <StatCard {...stat} />
-            </Grid>
+            <StatCard {...stat} key={i} />
           ))}
-        </Grid>
-
+        </div>
+  
+        {/* Search + Filter */}
         <Paper
           elevation={0}
           sx={{
@@ -238,39 +229,36 @@ export default function AdminProperties() {
             overflow: "hidden",
           }}
         >
-          <Box
-            sx={{ p: 3, borderBottom: "1px solid", borderColor: "grey.100" }}
-          >
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} md={8}>
-                <SearchBar
-                  placeholder="Search properties by name, location, or type..."
-                  value={searchTerm}
-                  onChange={setSearchTerm}
-                  color={purpleTheme.primary.main}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Button
-                  startIcon={<FilterIcon />}
-                  variant="outlined"
-                  fullWidth
-                  sx={{
-                    borderRadius: 3,
-                    py: 1.5,
-                    fontWeight: 500,
-                    textTransform: "none",
-                  }}
-                >
-                  Advanced Filter
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-
-          <Box sx={{ overflow: "auto" }}>
-            {filteredRows.map((row, i) => (
-              <Box key={row.id}>
+          <div className="search-filter">
+            <div className="search-box">
+              <SearchBar
+                placeholder="Search properties by name, location, or type..."
+                value={searchTerm}
+                onChange={setSearchTerm}
+                color={purpleTheme.primary.main}
+              />
+            </div>
+            <div className="filter-btn">
+              <Button
+                startIcon={<FilterIcon />}
+                variant="outlined"
+                fullWidth
+                sx={{
+                  borderRadius: 3,
+                  py: 1.5,
+                  fontWeight: 500,
+                  textTransform: "none",
+                }}
+              >
+                Advanced Filter
+              </Button>
+            </div>
+          </div>
+  
+          {/* ✅ Property List */}
+          <div className="property-list">
+            {filteredRows.map((row) => (
+              <div className="property-item" key={row.id}>
                 <PropertyListItem
                   row={row}
                   onToggle={handleToggle}
@@ -281,22 +269,12 @@ export default function AdminProperties() {
                   variant="property"
                   editable={true}
                 />
-                {i < filteredRows.length - 1 && <Divider sx={{ mx: 3 }} />}
-              </Box>
+              </div>
             ))}
-          </Box>
+          </div>
         </Paper>
-
-        <CommonModal
-          open={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          title="Add New Property"
-          onSubmit={() => {
-            console.log("Form submitted!");
-            setIsModalOpen(false);
-          }}
-        ></CommonModal>
-
+  
+        {/* Confirm Delete Modal */}
         <ConfirmDialog
           open={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
@@ -308,7 +286,18 @@ export default function AdminProperties() {
           confirmText="Delete Property"
           cancelText="Cancel"
         />
+  
+        {/* ✅ Property Add/Edit Modal */}
+        <PropertyModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={(newProperty) => {
+            // setRows((prev) => [...prev, newProperty]);
+            setIsModalOpen(false);
+          }}
+        />
       </Container>
     </Box>
   );
+  
 }
