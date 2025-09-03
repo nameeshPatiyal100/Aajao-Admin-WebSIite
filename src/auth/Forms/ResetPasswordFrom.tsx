@@ -43,6 +43,7 @@ export const ResetPasswordForm = () => {
                 newPassword: values.password,
                 confirmPassword:values.confirmPassword
             });
+            console.log(response)
 
             addNotification({
                 type: "success",

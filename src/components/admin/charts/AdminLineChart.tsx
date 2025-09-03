@@ -59,28 +59,22 @@ const AdminLineChart = () => {
             valueFormatter: (value) =>
               value == null ? "NaN" : value.toString(),
             color: "#AA60C8",
-            showMarkers: false,
-            smooth: true,
+            showMark: false,
+            // smooth: true,
           },
           {
             data: [24, 53, 56, 64, 73, 52, 23, 62, 92, 87, 77, 60],
             color: "#A294F9",
-            showMarkers: false,
-            smooth: true,
+            showMark: false,
+            // smooth: true,
           },
         ]}
         height={300}
         width={600}
-        theme={{
-          backgroundColor: "transparent",
-          gridStyle: {
-            stroke: "#e0e0e0",
-            strokeWidth: 0.5,
-          },
-        }}
-        lineOptions={{
-          strokeWidth: 2,
-        }}
+        theme="light"
+        // lineOptions={{
+        //   strokeWidth: 2,
+        // }}
       />
     </Box>
   );

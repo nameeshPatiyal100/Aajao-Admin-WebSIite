@@ -1,9 +1,10 @@
 import { Typography, Box, Button, Grid } from "@mui/material";
-import { PropertyListItem, SearchBar } from "../../../components";
+import { PropertyListItem, } from "../../../components";
+// import { SearchBar } from "../../../components";
 import { useState } from "react";
 
 import { Add as AddIcon } from "@mui/icons-material";
-import { FilterIcon } from "lucide-react";
+// import { FilterIcon } from "lucide-react";
 const purpleTheme = {
   primary: {
     main: "#7C3AED",
@@ -24,12 +25,13 @@ const purpleTheme = {
 
 export default function AdminCategory() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(isModalOpen)
 
   const mockRow = {
     id: "1234",
     name: "Green Villa",
     email: "owner@example.com",
-    type: "Residential",
+    type: "Residential" as "Residential" | "Commercial",
     location: "California, USA",
     value: "$450,000",
     date: "2025-08-20",
@@ -77,31 +79,30 @@ export default function AdminCategory() {
         </Button>
       </Box>
       <Box sx={{ mt: 4, mb: 2 }}>
-      <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} md={8}>
-                <SearchBar
-                  placeholder="Search properties by name, location, or type..."
-                  color={purpleTheme.primary.main}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Button
-                  startIcon={<FilterIcon />}
-                  variant="outlined"
-                  fullWidth
-                  sx={{
-                    borderRadius: 3,
-                    py: 1.5,
-                    fontWeight: 500,
-                    textTransform: "none",
-                  }}
-                >
-                  Advanced Filter
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-
+        <Grid container spacing={2} alignItems="center">
+          {/* <Grid item={true} xs={12} md={8}>
+            <SearchBar
+              placeholder="Search properties by name, location, or type..."
+              color={purpleTheme.primary.main}
+            />
+          </Grid> */}
+          {/* <Grid item xs={12} md={4}>
+            <Button
+              startIcon={<FilterIcon />}
+              variant="outlined"
+              fullWidth
+              sx={{
+                borderRadius: 3,
+                py: 1.5,
+                fontWeight: 500,
+                textTransform: "none",
+              }}
+            >
+              Advanced Filter
+            </Button>
+          </Grid> */}
+        </Grid>
+      </Box>
 
       <PropertyListItem
         row={mockRow}
@@ -109,7 +110,7 @@ export default function AdminCategory() {
         onView={(id) => console.log("View:", id)}
         onDelete={(row) => console.log("Delete:", row)}
         formatDate={formatDate}
-        editable={true}  
+        editable={true}
       />
     </>
   );

@@ -14,6 +14,7 @@ import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const MotionButton = motion(Button);
+console.log(MotionButton);
 
 const Footer: React.FC = () => {
   return (

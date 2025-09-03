@@ -10,21 +10,31 @@ import {
 } from "@mui/material";
 import {
   Add as AddIcon,
-  TrendingUp,
-  Business,
-  People,
-  Assessment,
-  FilterList as FilterIcon,
+  // TrendingUp,
+  // Business,
+  // People,
+  // Assessment,
+  // FilterList as FilterIcon,
 } from "@mui/icons-material";
-import { PropertyRow } from "../components/types";
-import CommonModal from "./PropertyModal"; 
+// import { PropertyRowInline } from "../components/types";
+import CommonModal from "./PropertyModal";
 import {
-  SearchBar,
-  StatCard,
+  // SearchBar,
+  // StatCard,
   ConfirmDialog,
   PropertyListItem,
 } from "../../../components";
 
+type PropertyRowInline = {
+  id: string;
+  name: string;
+  email: string;
+  type: "Residential" | "Commercial";
+  location: string;
+  value: number | string;
+  date: string;
+  active: boolean;
+};
 const purpleTheme = {
   primary: {
     main: "#7C3AED",
@@ -44,7 +54,7 @@ const purpleTheme = {
 };
 
 export default function AdminProperties() {
-  const [rows, setRows] = useState<PropertyRow[]>([
+  const [rows, setRows] = useState<PropertyRowInline[]>([
     {
       id: "P001",
       name: "Sunset Villa",
@@ -87,10 +97,13 @@ export default function AdminProperties() {
     },
   ]);
 
-  const [selectedProperty, setSelectedProperty] = useState<PropertyRow | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<PropertyRowInline | null>(
+    null
+  );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // ✅ added modal state
   const [searchTerm, setSearchTerm] = useState("");
+  console.log(setSearchTerm)
 
   // 🔹 Handlers
   const handleToggle = (id: string) => {
@@ -103,7 +116,7 @@ export default function AdminProperties() {
     alert("Viewing details for property " + id);
   };
 
-  const handleDelete = (property: PropertyRow) => {
+  const handleDelete = (property: PropertyRowInline) => {
     setSelectedProperty(property);
     setIsDeleteModalOpen(true);
   };
@@ -132,41 +145,46 @@ export default function AdminProperties() {
   );
 
   // 🔹 Stats
-  const stats = [
-    {
-      label: "Total Properties",
-      value: rows.length.toString(),
-      icon: Business,
-      color: purpleTheme.primary.main,
-      bgColor: `${purpleTheme.primary.main}15`,
-    },
-    {
-      label: "Active Properties",
-      value: rows.filter((r) => r.active).length.toString(),
-      icon: Assessment,
-      color: "#10B981",
-      bgColor: "#10B98115",
-    },
-    {
-      label: "Total Value",
-      value: "$5.28M",
-      icon: TrendingUp,
-      color: "#3B82F6",
-      bgColor: "#3B82F615",
-    },
-    {
-      label: "Property Owners",
-      value: rows.length.toString(),
-      icon: People,
-      color: "#F59E0B",
-      bgColor: "#F59E0B15",
-    },
-  ];
+  // const stats = [
+  //   {
+  //     label: "Total Properties",
+  //     value: rows.length.toString(),
+  //     icon: Business,
+  //     color: purpleTheme.primary.main,
+  //     bgColor: `${purpleTheme.primary.main}15`,
+  //   },
+  //   {
+  //     label: "Active Properties",
+  //     value: rows.filter((r) => r.active).length.toString(),
+  //     icon: Assessment,
+  //     color: "#10B981",
+  //     bgColor: "#10B98115",
+  //   },
+  //   {
+  //     label: "Total Value",
+  //     value: "$5.28M",
+  //     icon: TrendingUp,
+  //     color: "#3B82F6",
+  //     bgColor: "#3B82F615",
+  //   },
+  //   {
+  //     label: "Property Owners",
+  //     value: rows.length.toString(),
+  //     icon: People,
+  //     color: "#F59E0B",
+  //     bgColor: "#F59E0B15",
+  //   },
+  // ];
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: purpleTheme.background.default, pb: 4 }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: purpleTheme.background.default,
+        pb: 4,
+      }}
+    >
       <Container maxWidth="xl" sx={{ pt: 3 }}>
-
         <Box
           sx={{
             display: "flex",
@@ -195,7 +213,7 @@ export default function AdminProperties() {
               Manage and monitor all properties in your portfolio
             </Typography>
           </Box>
-         <Button
+          <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => setIsModalOpen(true)} // ✅ opens modal
@@ -207,20 +225,19 @@ export default function AdminProperties() {
               fontWeight: 600,
               textTransform: "none",
             }}
-          > 
+          >
             Add Property
           </Button>
         </Box>
 
         {/* Stats */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* <Grid container spacing={3} sx={{ mb: 4 }}>
           {stats.map((stat, i) => (
-            <Grid item xs={12} sm={6} lg={3} key={i}>
+            <Grid item ={true} sm={6} lg={3} key={i}>
               <StatCard {...stat} />
             </Grid>
           ))}
-        </Grid>
-
+        </Grid> */}
 
         <Paper
           elevation={0}
@@ -232,17 +249,19 @@ export default function AdminProperties() {
             overflow: "hidden",
           }}
         >
-          <Box sx={{ p: 3, borderBottom: "1px solid", borderColor: "grey.100" }}>
+          <Box
+            sx={{ p: 3, borderBottom: "1px solid", borderColor: "grey.100" }}
+          >
             <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} md={8}>
+              {/* <Grid item xs={12} md={8}>
                 <SearchBar
                   placeholder="Search properties by name, location, or type..."
                   value={searchTerm}
                   onChange={setSearchTerm}
                   color={purpleTheme.primary.main}
                 />
-              </Grid>
-              <Grid item xs={12} md={4}>
+              </Grid> */}
+              {/* <Grid item xs={12} md={4}>
                 <Button
                   startIcon={<FilterIcon />}
                   variant="outlined"
@@ -256,7 +275,7 @@ export default function AdminProperties() {
                 >
                   Advanced Filter
                 </Button>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
 
@@ -268,7 +287,7 @@ export default function AdminProperties() {
                   onToggle={handleToggle}
                   onView={handleView}
                   onDelete={handleDelete}
-                  theme={purpleTheme}
+                  // theme={purpleTheme}
                   formatDate={formatDate}
                 />
                 {i < filteredRows.length - 1 && <Divider sx={{ mx: 3 }} />}
@@ -277,18 +296,15 @@ export default function AdminProperties() {
           </Box>
         </Paper>
 
-
         <CommonModal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          title="Add New Property"
+          // title="Add New Property"
           onSubmit={() => {
             console.log("Form submitted!");
             setIsModalOpen(false);
           }}
-        >
-        </CommonModal>
-
+        ></CommonModal>
 
         <ConfirmDialog
           open={isDeleteModalOpen}

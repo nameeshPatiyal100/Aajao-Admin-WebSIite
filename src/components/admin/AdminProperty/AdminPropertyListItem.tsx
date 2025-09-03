@@ -12,16 +12,29 @@ import {
   Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-import { PropertyRow } from "../types";
+// import { PropertyRow } from "../types";
 import { PenIcon } from "lucide-react";
 
+type PropertyRowInline = {
+  id: string;
+  name: string;
+  email: string;
+  type: "Residential" | "Commercial";
+  location: string;
+  value: number | string;
+  date: string;
+  active: boolean;
+};
+
 interface PropertyListItemProps {
-  row: PropertyRow;
+  row: PropertyRowInline;
   onToggle: (id: string) => void;
   onView: (id: string) => void;
-  onDelete: (row: PropertyRow) => void;
+  onDelete: (row: PropertyRowInline) => void;
   formatDate: (date: string) => string;
+  editable?: boolean;
 }
+
 
 export default function PropertyListItem({
   row,

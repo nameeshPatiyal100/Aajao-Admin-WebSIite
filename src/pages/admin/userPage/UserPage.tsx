@@ -4,8 +4,8 @@ import {
   Button,
   Stack,
   Chip,
-  Menu,
-  MenuItem,
+  // Menu,
+  // MenuItem,
   Paper,
   Table,
   TableBody,
@@ -15,25 +15,25 @@ import {
   TableRow,
   Typography,
   TextField,
-  InputAdornment,
+  // InputAdornment,
   IconButton,
   Tooltip,
-  useTheme,
-  useMediaQuery,
+  // useTheme,
+  // useMediaQuery,
 } from "@mui/material";
 import {
   FilterList as FilterListIcon,
-  MoreVert as MoreVertIcon,
+  // MoreVert as MoreVertIcon,
   Visibility as VisibilityIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Search as SearchIcon,
-  Padding,
+  // Search as SearchIcon,
+  // Padding,
 } from "@mui/icons-material";
 import { faker } from "@faker-js/faker";
 import {
   Pagination,
-  BackButton,
+  // BackButton,
   AddUserModal,
   ConfirmDeleteModal,
 } from "../../../components";
@@ -58,8 +58,8 @@ interface Attendant {
 }
 
 export default function UserManagementPage() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // State Management
   const [data, setData] = useState<Attendant[]>([]);
@@ -79,11 +79,13 @@ export default function UserManagementPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Attendant | null>(null);
-  const [menuRowIndex, setMenuRowIndex] = useState<number | null>(null);
-  const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(
-    null
-  );
-
+  // const [menuRowIndex, setMenuRowIndex] = useState<number | null>(null);
+  // const [filterAnchorEl, setFilterAnchorEl] = useState<null | HTMLElement>(
+  //   null
+  // );
+  
+  console.log(setStatusFilter)
+  console.log(anchorEl)
   const rowsPerPage = 10;
 
   useEffect(() => {
@@ -152,11 +154,13 @@ export default function UserManagementPage() {
     setAnchorEl(event.currentTarget);
     setSelectedUser(user);
   };
+  console.log(handleMenuOpen)
 
   const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedUser(null);
   };
+  console.log(handleMenuClose)
 
   const renderUserActions = (user: Attendant) => (
     <>

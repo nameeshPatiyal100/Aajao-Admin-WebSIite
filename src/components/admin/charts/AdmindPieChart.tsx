@@ -55,14 +55,15 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
     const clickedId = item.dataIndex;
     setSelectedSlice(selectedSlice === clickedId ? null : clickedId);
   };
+  console.log(setHoveredSlice);
 
-  const handleSliceHover = (_: any, item: any) => {
-    if (item) setHoveredSlice(item.dataIndex);
-  };
+  // const handleSliceHover = (_: any, item: any) => {
+  //   if (item) setHoveredSlice(item.dataIndex);
+  // };
 
-  const handleSliceLeave = () => {
-    setHoveredSlice(null);
-  };
+  // const handleSliceLeave = () => {
+  //   setHoveredSlice(null);
+  // };
 
   return (
     <Box sx={{ textAlign: "center", mt: "2rem" }}>
@@ -87,8 +88,8 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
                 hoveredSlice === index
                   ? `${item.color}ee`
                   : selectedSlice === index
-                  ? `${item.color}cc`
-                  : item.color,
+                    ? `${item.color}cc`
+                    : item.color,
             })),
             innerRadius: 60,
             outerRadius: hoveredSlice !== null ? 125 : 120,
@@ -98,7 +99,7 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
             endAngle: 270,
             cx: width / 2,
             cy: height / 2,
-            highlightScope: { faded: "global", highlighted: "item" },
+            highlightScope: { fade: "global", highlight: "item" },
             faded: {
               innerRadius: 40,
               additionalRadius: -5,
@@ -109,8 +110,8 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
         width={width}
         height={height}
         onItemClick={handleSliceClick}
-        onItemEnter={handleSliceHover}
-        onItemLeave={handleSliceLeave}
+        // onItemEnter={handleSliceHover}
+        // onItemLeave={handleSliceLeave}
       />
 
       <Box
@@ -122,7 +123,7 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
           gap: "0.6rem",
         }}
       >
-        {chartData.map((item, index) => (
+        {chartData.map((item) => (
           <Chip
             key={item.id}
             label={item.label}
@@ -173,10 +174,8 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
               }}
             >
               Represents{" "}
-              {Math.round(
-                (chartData[selectedSlice]?.value / total) * 100
-              )}
-              % of total users
+              {Math.round((chartData[selectedSlice]?.value / total) * 100)}% of
+              total users
             </Typography>
           </Box>
         </Fade>
