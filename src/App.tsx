@@ -27,7 +27,7 @@ import {
 import { UserDashboard } from "./pages/user/dashboard";
 import { HostDashboard } from "./pages/host/dashboard";
 import CommonLayout from "./components/layout/CommonLayout";
-import Home from "./pages/home";
+import { Home } from "./pages";
 import GuestRoute from "./components/authGaurd";
 import { LoginForm } from "./auth/Forms/LoginForm";
 import { ForgotPassword } from "./auth/ForgotPassword";
@@ -73,11 +73,14 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<UserPage />} />
           <Route path="transactions" element={<Transactions />} />
-          <Route path="properties" element={<AdminProperties />}/>
+          <Route path="properties" element={<AdminProperties />} />
           <Route path="tags" element={<AdminPropertyTags />} />
           <Route path="categories" element={<AdminCategory />} />
-          <Route path="ammenities" element={<AdminAmmenities/>} />
-          <Route path="property-verification" element={<AdminPropertyVerification/>} />
+          <Route path="ammenities" element={<AdminAmmenities />} />
+          <Route
+            path="property-verification"
+            element={<AdminPropertyVerification />}
+          />
           <Route path="bookings" element={<AdminBooking />} />
           <Route path="status" element={<StatusPage />} />
           <Route path="settings" element={<h1>Settings</h1>} />

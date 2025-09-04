@@ -9,3 +9,5 @@ export {default as AdminCategory} from "./admin/adminProperty/AdminCategory";
 export {default as AdminPropertyTags} from "./admin/adminProperty/AdminPropertyTags";
 export {default as AdminAmmenities} from "./admin/adminProperty/AdminAmmenities";
 export {default as AdminPropertyVerification} from "./admin/adminProperty/AdminPropertyVerification";
+export {default as Home} from "./user/home";
+

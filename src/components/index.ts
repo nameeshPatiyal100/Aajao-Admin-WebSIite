@@ -20,6 +20,10 @@ export { default as AdminLatestTransactions } from "./admin/adminTable/AdminLate
 
 
 // ------------------FRONTEND-COMPONENT---------------------->
+
+export { default as WhyChooseUs } from "./frontend/WhyChooseUs";
+export { default as MapandFilter } from "./frontend/MapandFilter";
+export { default as CTAoneHome } from "./frontend/CTAoneHome";
 // ------------------HOST-COMPONENT---------------------->
 
 

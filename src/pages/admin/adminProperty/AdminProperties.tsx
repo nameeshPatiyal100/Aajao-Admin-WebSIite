@@ -8,32 +8,22 @@ import {
 } from "@mui/material";
 import {
   Add as AddIcon,
-  // TrendingUp,
-  // Business,
-  // People,
-  // Assessment,
-  // FilterList as FilterIcon,
+  TrendingUp,
+  Business,
+  People,
+  Assessment,
+  FilterList as FilterIcon,
 } from "@mui/icons-material";
 import { PropertyRow, GenericRow } from "../../../components/types";
 import {
-  // SearchBar,
-  // StatCard,
+  SearchBar,
+  StatCard,
   ConfirmDialog,
   PropertyListItem,
 } from "../../../components";
 import "./AdminProperties.css"; // ✅ custom CSS
 import PropertyModal from "./PropertyModal";
 
-type PropertyRowInline = {
-  id: string;
-  name: string;
-  email: string;
-  type: "Residential" | "Commercial";
-  location: string;
-  value: number | string;
-  date: string;
-  active: boolean;
-};
 const purpleTheme = {
   primary: {
     main: "#7C3AED",
@@ -53,7 +43,7 @@ const purpleTheme = {
 };
 
 export default function AdminProperties() {
-  const [rows, setRows] = useState<PropertyRowInline[]>([
+  const [rows, setRows] = useState<PropertyRow[]>([
     {
       id: "P001",
       name: "Sunset Villa",
@@ -102,7 +92,6 @@ export default function AdminProperties() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  console.log(setSearchTerm)
 
   const handleToggle = (id: string) => {
     setRows((prev) =>
@@ -215,7 +204,7 @@ export default function AdminProperties() {
               px: 4,
               py: 1.5,
               fontWeight: 600,
-              textTransform: "none",StatCard
+              textTransform: "none",
             }}
           >
             Add Property
@@ -225,7 +214,7 @@ export default function AdminProperties() {
         {/* Stats Section */}
         <div className="stats-grid">
           {stats.map((stat, i) => (
-            < {...stat} key={i} />
+            <StatCard {...stat} key={i} />
           ))}
         </div>
   
@@ -275,7 +264,7 @@ export default function AdminProperties() {
                   onToggle={handleToggle}
                   onView={handleView}
                   onDelete={handleDelete}
-                  // theme={purpleTheme}
+                  theme={purpleTheme}
                   formatDate={formatDate}
                   variant="property"
                   editable={true}

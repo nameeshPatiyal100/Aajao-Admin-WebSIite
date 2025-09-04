@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
 import { store } from "./app/store.ts";
+import "leaflet/dist/leaflet.css";
 import App from "./App.tsx";
 //import { AuthProvider } from "./context/AuthContext.tsx";
 // import AppWrapper from "./appWrapper.tsx";
