@@ -24,6 +24,16 @@ import {
 import "./AdminProperties.css"; // ✅ custom CSS
 import PropertyModal from "./PropertyModal";
 
+type PropertyRowInline = {
+  id: string;
+  name: string;
+  email: string;
+  type: "Residential" | "Commercial";
+  location: string;
+  value: number | string;
+  date: string;
+  active: boolean;
+};
 const purpleTheme = {
   primary: {
     main: "#7C3AED",
@@ -205,7 +215,7 @@ export default function AdminProperties() {
               px: 4,
               py: 1.5,
               fontWeight: 600,
-              textTransform: "none",
+              textTransform: "none",StatCard
             }}
           >
             Add Property
@@ -215,7 +225,7 @@ export default function AdminProperties() {
         {/* Stats Section */}
         <div className="stats-grid">
           {stats.map((stat, i) => (
-            <StatCard {...stat} key={i} />
+            < {...stat} key={i} />
           ))}
         </div>
   
