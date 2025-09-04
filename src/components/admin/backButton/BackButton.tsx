@@ -4,7 +4,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const MotionButton = motion(Button);
+const MotionButton = motion.create(Button);
 
 export default function BackButton() {
   const navigate = useNavigate();
@@ -30,4 +30,4 @@ export default function BackButton() {
       </MotionButton>
     </Tooltip>
   );
-};
+}
