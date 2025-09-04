@@ -291,7 +291,7 @@ export default function AdminProperties() {
         <PropertyModal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSubmit={(newProperty) => {
+          onSubmit={() => {
             // setRows((prev) => [...prev, newProperty]);
             setIsModalOpen(false);
           }}

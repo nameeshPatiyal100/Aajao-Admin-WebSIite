@@ -53,7 +53,7 @@ interface PropertyListItemProps {
   editable?: boolean;
   variant?: 'property' | 'category';
   theme?: any;
-}
+};
 
 
 export default function PropertyListItem({
