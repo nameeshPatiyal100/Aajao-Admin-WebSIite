@@ -55,15 +55,16 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
     const clickedId = item.dataIndex;
     setSelectedSlice(selectedSlice === clickedId ? null : clickedId);
   };
-  console.log(setHoveredSlice);
 
-  // const handleSliceHover = (_: any, item: any) => {
-  //   if (item) setHoveredSlice(item.dataIndex);
-  // };
-
-  // const handleSliceLeave = () => {
-  //   setHoveredSlice(null);
-  // };
+  const handleSliceHover = (_: any, item: any) => {
+    if (item) setHoveredSlice(item.dataIndex);
+  };
+  console.log(handleSliceHover);
+  
+  const handleSliceLeave = () => {
+    setHoveredSlice(null);
+  };
+  console.log(handleSliceLeave);
 
   return (
     <Box sx={{ textAlign: "center", mt: "2rem" }}>
@@ -124,6 +125,7 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
         }}
       >
         {chartData.map((item) => (
+          // console.log(index)
           <Chip
             key={item.id}
             label={item.label}

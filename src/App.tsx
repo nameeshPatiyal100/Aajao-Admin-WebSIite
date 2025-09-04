@@ -13,9 +13,12 @@ import { SidebarProvider } from "./context/AdminContext";
 import AdminBooking from "./pages/admin/adminBooking/AdminBooking";
 import { Toaster } from "react-hot-toast";
 import {
+  AdminAmmenities,
   AdminCategory,
   AdminLogin,
   AdminProperties,
+  AdminPropertyTags,
+  AdminPropertyVerification,
   Dashboard,
   StatusPage,
   Transactions,
@@ -70,10 +73,11 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<UserPage />} />
           <Route path="transactions" element={<Transactions />} />
-          <Route path="properties" element={<AdminProperties />}>
-            <Route path=":propertyId" element={<div>Property Details</div>} />
-          </Route>
+          <Route path="properties" element={<AdminProperties />}/>
+          <Route path="tags" element={<AdminPropertyTags />} />
           <Route path="categories" element={<AdminCategory />} />
+          <Route path="ammenities" element={<AdminAmmenities/>} />
+          <Route path="property-verification" element={<AdminPropertyVerification/>} />
           <Route path="bookings" element={<AdminBooking />} />
           <Route path="status" element={<StatusPage />} />
           <Route path="settings" element={<h1>Settings</h1>} />

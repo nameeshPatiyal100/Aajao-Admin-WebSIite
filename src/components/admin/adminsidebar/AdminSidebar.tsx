@@ -63,18 +63,31 @@ const SUB_ITEMS: Record<string, NavItem[]> = {
       path: "/admin/reports/annual",
       icon: AlignVerticalJustifyCenterIcon,
     },
+    
   ],
   Properties: [
-    {
-      text: "Confirmation Pending",
-      path: "/admin/analytics/traffic",
-      icon: TrafficCone,
-    },
+   
     {
       text: "Property Categories",
       path: "/admin/Categories",
       icon: ThermometerSnowflakeIcon,
     },
+    {
+      text : "Property Tags",
+      path : "/admin/tags",
+      icon : ThermometerSnowflakeIcon
+    },
+    {
+      text : "Ammenities",
+      path : "/admin/ammenities",
+      icon : ThermometerSnowflakeIcon
+    }
+    ,
+    {
+      text : "Property Verification",
+      path : "/admin/property-verification",
+      icon : ThermometerSnowflakeIcon
+    }
     
   ],
   Settings: [

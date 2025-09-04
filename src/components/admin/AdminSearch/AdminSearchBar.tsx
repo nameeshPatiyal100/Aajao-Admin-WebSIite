@@ -14,6 +14,7 @@ export default function SearchBar({ placeholder, value, onChange, color = "#7C3A
       fullWidth
       placeholder={placeholder}
       value={value}
+      // onChange={(e) => onChange(e.target.value)}
       onChange={(e) => onChange(e.target.value)}
       InputProps={{
         startAdornment: (

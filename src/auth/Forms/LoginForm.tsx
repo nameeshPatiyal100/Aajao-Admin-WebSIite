@@ -1,32 +1,28 @@
 import {
-  ToggleButton,
-  ToggleButtonGroup,
-  Checkbox,
-  FormControlLabel,
-} from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import * as z from "zod";
-import { useState, useEffect } from "react";
-import { Form } from "../../components/Form/form";
-import { useNotificationStore } from "../../components/toast";
-import { InputField } from "../../components/Form/inputField";
-import { Button } from "../../components/Element/button";
-import { AnimatePresence, motion } from "framer-motion";
-import useAnimateFn from "../../hooks/useAnimate";
-import { animations } from "../../components/layout/loginLayout";
-import { useDispatch } from "react-redux";
-import { login } from "../../redux/authSllice";
-import { AppDispatch } from "../../app/store";
-import storage from "../../utils/storage";
+    ToggleButton,
+    ToggleButtonGroup,
+    Checkbox,
+    FormControlLabel
+} from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
+// import * as z from 'zod';
+import { useState, useEffect } from 'react';
+import { Form } from '../../components/Form/form';
+import { useNotificationStore } from '../../components/toast';
+import { InputField } from '../../components/Form/inputField';
+import { Button } from '../../components/Element/button';
+import { AnimatePresence, motion } from 'framer-motion';
+import useAnimateFn from '../../hooks/useAnimate';
+import { animations } from '../../components/layout/loginLayout';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/authSllice';
+import { AppDispatch } from '../../app/store';
+import storage from '../../utils/storage';
 
-const schema = z.object({
-  email: z
-    .string()
-    .min(1, "Please enter email address")
-    .email("Enter a valid email address"),
-  password: z.string().min(1, "Please enter password"),
-});
-console.log(schema, "schema");
+// const schema = z.object({
+//     email: z.string().min(1, 'Please enter email address').email('Enter a valid email address'),
+//     password: z.string().min(1, 'Please enter password'),
+// });
 
 type FormData = {
   email: string;

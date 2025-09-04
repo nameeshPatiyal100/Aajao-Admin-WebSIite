@@ -43,7 +43,7 @@ export const loginAdmin = createAsyncThunk(
         severity: response.data.success ? "success" : ("error" as AlertColor),
       };
       //   return response?.data?.data;
-    } catch (error: any) {
+    } catch (error:any ) {
       console.log(error, "errorerrorerrorerror");
       return thunkAPI.rejectWithValue({
         message: error.response?.data?.message || "Login failed",

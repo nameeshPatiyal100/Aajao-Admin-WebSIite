@@ -3,18 +3,8 @@ import { LineChart } from "@mui/x-charts/LineChart";
 
 const AdminLineChart = () => {
   const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
   ];
 
   return (
@@ -31,8 +21,9 @@ const AdminLineChart = () => {
       <LineChart
         xAxis={[
           {
-            data: months,
-            scaleType: "band",
+            data: months, // ✅ use strings directly
+            // scaleType: "band",
+            scaleType: "point",
             disableLine: true,
             disableTicks: true,
             tickLabelStyle: {
@@ -56,25 +47,20 @@ const AdminLineChart = () => {
         series={[
           {
             data: [25, 35, 64, 35, 64, 75, 94, 18, 23, 53, 64, 75],
-            valueFormatter: (value) =>
-              value == null ? "NaN" : value.toString(),
             color: "#AA60C8",
             showMark: false,
-            // smooth: true,
+            curve: "monotoneX",
           },
           {
             data: [24, 53, 56, 64, 73, 52, 23, 62, 92, 87, 77, 60],
             color: "#A294F9",
             showMark: false,
-            // smooth: true,
+            curve: "monotoneX",
           },
         ]}
         height={300}
         width={600}
-        theme="light"
-        // lineOptions={{
-        //   strokeWidth: 2,
-        // }}
+        grid={{ vertical: true, horizontal: true }}
       />
     </Box>
   );

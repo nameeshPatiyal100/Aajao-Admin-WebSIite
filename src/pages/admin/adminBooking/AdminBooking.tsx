@@ -27,7 +27,8 @@ import { ConfirmDeleteModal, Pagination } from "../../../components";
 import { useEffect, useState } from "react";
 import { FileX } from "lucide-react";
 import { faker } from "@faker-js/faker";
-type Attendant = {
+// Define the Attendant interface
+interface Attendant {
   id: string;
   name: string;
   age: number;
@@ -35,7 +36,7 @@ type Attendant = {
   date: string;
   status: string;
   active: boolean;
-};
+}
 
 const AdminBooking = () => {
   const [data, setData] = useState<Attendant[]>([]);
@@ -46,8 +47,8 @@ const AdminBooking = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  console.log(setRowsPerPage)
-  console.log(isModalOpen)
+  console.log(setRowsPerPage);
+  console.log(isModalOpen);
 
   useEffect(() => {
     const generateData = () => {

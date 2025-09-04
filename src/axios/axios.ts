@@ -30,7 +30,8 @@ axios.interceptors.response.use(
       window.location.assign(window.location.origin as unknown as string);
     }
 
-    // const message = error.response?.data?.message || error.message;
+    const message = error.response?.data?.message || error.message;
+    console.error("API Error:", message);
     // useNotificationStore.getState().addNotification({
     //   type: "error",
     //   title: "Failure",

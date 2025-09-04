@@ -6,3 +6,6 @@ export { default as Dashboard } from "./admin/admindashboard/Dashboard";
 export { default as Transactions } from "./admin/transactions/Transactions";
 export {default as AdminBookings} from "./admin/adminBooking/AdminBooking";
 export {default as AdminCategory} from "./admin/adminProperty/AdminCategory";
+export {default as AdminPropertyTags} from "./admin/adminProperty/AdminPropertyTags";
+export {default as AdminAmmenities} from "./admin/adminProperty/AdminAmmenities";
+export {default as AdminPropertyVerification} from "./admin/adminProperty/AdminPropertyVerification";

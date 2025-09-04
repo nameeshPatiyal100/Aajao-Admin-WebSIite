@@ -20,11 +20,9 @@ const PropertyModal = ({ open, onClose }: PropertyModalProps) => {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // const files = Array.from(e.target.files);
     const files = e.target.files ? Array.from(e.target.files) : [];
     setSelectedImages(files);
   };
-  console.log(setSelectedImages)
 
   return (
     <div className="propertyModalBackdrop" onClick={handleBackdropClick}>
