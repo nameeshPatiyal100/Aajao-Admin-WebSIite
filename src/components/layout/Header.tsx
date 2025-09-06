@@ -27,8 +27,10 @@ const Header: React.FC = () => {
     };
 
     const menuItems = [
+        { label: 'Home', to: '/' },
+        { label: 'About Us', to: '/about' },
+        { label: 'Blogs', to: '/' },
         { label: 'Rooms', to: '/' },
-        { label: 'About', to: '/about' },
         { label: 'Contact', to: '/contact' },
     ];
 

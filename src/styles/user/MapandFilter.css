@@ -4,7 +4,7 @@
   height: 80vh;
   padding: 1rem;
   flex-wrap: wrap; /* allow wrapping on small screens */
-  /* margin-bottom: 500px; */
+  margin-bottom: 100px;
 }
 
 .filterSection {

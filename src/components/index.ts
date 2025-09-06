@@ -24,6 +24,9 @@ export { default as AdminLatestTransactions } from "./admin/adminTable/AdminLate
 export { default as WhyChooseUs } from "./frontend/WhyChooseUs";
 export { default as MapandFilter } from "./frontend/MapandFilter";
 export { default as CTAoneHome } from "./frontend/CTAoneHome";
+export { default as HomeCategorySection } from "./frontend/HomeCategorySection";
+export { default as HomeCustomGrid } from "./frontend/HomeCustomGrid";
+export { default as HomePropCard } from "./frontend/HomePropCard";
 // ------------------HOST-COMPONENT---------------------->
 
 
