@@ -1,10 +1,22 @@
 import { Box, Typography, Button } from "@mui/material";
 
-const CTAoneHome = () => {
+interface CTAoneHomeProps {
+  backgroundImage: string;   // Background image URL
+  title: string;             // Title text
+  buttonText?: string;       // Button text (optional, default "View Rooms")
+  onButtonClick: () => void; // Function (API call or any handler)
+}
+
+const CTAoneHome: React.FC<CTAoneHomeProps> = ({
+  backgroundImage,
+  title,
+  buttonText = "View Rooms",
+  onButtonClick,
+}) => {
   return (
     <Box
       sx={{
-        backgroundImage: "url('/room5.webp')", // ✅ replace with your image path
+        backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -14,7 +26,7 @@ const CTAoneHome = () => {
         position: "relative",
       }}
     >
-      {/* Overlay for better readability */}
+      {/* Overlay */}
       <Box
         sx={{
           position: "absolute",
@@ -30,16 +42,17 @@ const CTAoneHome = () => {
           fontWeight="bold"
           mb={2}
           sx={{
-            fontFamily: "'Playfair Display', serif", // elegant font
+            fontFamily: "'Playfair Display', serif",
             fontSize: { xs: "1.8rem", md: "2.5rem" },
             letterSpacing: 1,
           }}
         >
-          Looking for a relaxing vacation?
+          {title}
         </Typography>
 
         <Button
           variant="contained"
+          onClick={onButtonClick} // ✅ dynamic function
           sx={{
             bgcolor: "#fff",
             color: "#C14365",
@@ -54,7 +67,7 @@ const CTAoneHome = () => {
             },
           }}
         >
-          View Rooms
+          {buttonText}
         </Button>
       </Box>
     </Box>

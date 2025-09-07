@@ -1,5 +1,6 @@
 import React from "react";
 import "../../styles/user/HomeCustomGrid.css";
+import { Typography, Container } from "@mui/material";
 
 interface GridItem {
   id: number;
@@ -22,22 +23,29 @@ const HomeCustomGrid: React.FC = () => {
   };
 
   return (
-    <div className="gridWrapper">
-      <div className="parent">
-        {gridItems.map((item) => (
-          <div
-            key={item.id}
-            className={`div${item.id} gridBox`}
-            onClick={() => handleClick(item)}
-          >
-            <img src={item.image} alt={item.title} className="gridImage" />
-            <div className="overlay">
-              <h3 className="title">{item.title}</h3>
+    <>
+      <Container sx={{ py: 2 }}>
+        <Typography variant="h4" fontWeight="bold" color="#C14365" gutterBottom>
+          For You
+        </Typography>
+      </Container>
+      <div className="gridWrapper">
+        <div className="parent">
+          {gridItems.map((item) => (
+            <div
+              key={item.id}
+              className={`div${item.id} gridBox`}
+              onClick={() => handleClick(item)}
+            >
+              <img src={item.image} alt={item.title} className="gridImage" />
+              <div className="overlay">
+                <h3 className="title">{item.title}</h3>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

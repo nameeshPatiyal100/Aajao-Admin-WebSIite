@@ -1,5 +1,5 @@
 import Slider from "react-slick";
-import { Box, Typography, Button, Grid } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import {
   MapandFilter,
   WhyChooseUs,
@@ -7,8 +7,11 @@ import {
   HomeCategorySection,
   HomeCustomGrid,
   HomePropCard,
+  FAQSection,
+  FeatureSection,
+  ReviewSlider,
 } from "../../components";
-// import Grid from "@mui/material/Unstable_Grid2";
+import "../../styles/user/Home.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -23,6 +26,16 @@ const Home = () => {
     slidesToScroll: 1,
     autoplay: true,
     arrows: false,
+  };
+
+  const handleApiCall = async () => {
+    try {
+      const response = await fetch("/api/rooms");
+      const data = await response.json();
+      console.log("Fetched Rooms:", data);
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
+    }
   };
 
   // 🔹 Hotels Array
@@ -83,7 +96,44 @@ const Home = () => {
       description: "Experience the charm of desert landscapes and comfort.",
       location: "Rajasthan, India",
       price: "₹3,800 / night",
-    }
+    },
+  ];
+  const faqs = [
+    {
+      question: "What is the cancellation policy?",
+      answer:
+        "You can cancel your booking up to 24 hours before check-in for a full refund.",
+    },
+    {
+      question: "Do you offer free Wi-Fi?",
+      answer:
+        "Yes, all our properties provide complimentary high-speed Wi-Fi for guests.",
+    },
+    {
+      question: "Is breakfast included?",
+      answer:
+        "Most of our hotels include breakfast. Please check the booking details for confirmation.",
+    },
+    {
+      question: "Are pets allowed?",
+      answer:
+        "Some of our properties are pet-friendly. Please check the listing before booking.",
+    },
+    {
+      question: "How do I modify my booking?",
+      answer:
+        "You can modify your booking by logging into your account or contacting customer support.",
+    },
+    {
+      question: "Are pets allowed?",
+      answer:
+        "Some of our properties are pet-friendly. Please check the listing before booking.",
+    },
+    {
+      question: "How do I modify my booking?",
+      answer:
+        "You can modify your booking by logging into your account or contacting customer support.",
+    },
   ];
 
   return (
@@ -147,28 +197,43 @@ const Home = () => {
           </Button>
         </Box>
       </Box>
-
       <MapandFilter />
       <HomeCategorySection />
       <HomeCustomGrid />
-
+      <FeatureSection />
+      {/* <div> */}
       {/* 🔹 Hotel Cards Section */}
-      <Box sx={{ px: 4, py: 5 }}>
-        <Typography variant="h4" fontWeight="bold" mb={3} color="#c14365">
-          Featured Properties
-        </Typography>
-
-        <Grid container spacing={3}>
+      <section className="featured-properties">
+        <h2>Featured Properties</h2>
+        <div className="properties-grid">
           {hotels.map((hotel, idx) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={idx}>
-              <HomePropCard {...hotel} />
-            </Grid>
+            <HomePropCard key={idx} {...hotel} />
           ))}
-        </Grid>
-      </Box>
-      <CTAoneHome />
+        </div>
+      </section>
+      {/* </div> */}
+      {/* <CTAoneHome /> */}
+      <CTAoneHome
+        backgroundImage="/room5.webp"
+        title="Looking for a relaxing vacation?"
+        buttonText="Explore Now"
+        onButtonClick={handleApiCall}
+      />
       <WhyChooseUs />
-      <CTAoneHome />
+      {/* <FAQSection image="/faq_vector.jpg" faqs={faqs} />; */}
+      <FAQSection
+        image="/faq_vector.jpg"
+        faqs={faqs}
+        description="Got questions? We’ve got answers for you!"
+      />
+      ;
+      <CTAoneHome
+        backgroundImage="/room3.jpg"
+        title="Looking for a relaxing vacation?"
+        buttonText="Book now"
+        onButtonClick={handleApiCall}
+      />
+      <ReviewSlider/>
     </Box>
   );
 };

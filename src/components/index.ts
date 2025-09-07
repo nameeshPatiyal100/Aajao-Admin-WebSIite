@@ -27,6 +27,9 @@ export { default as CTAoneHome } from "./frontend/CTAoneHome";
 export { default as HomeCategorySection } from "./frontend/HomeCategorySection";
 export { default as HomeCustomGrid } from "./frontend/HomeCustomGrid";
 export { default as HomePropCard } from "./frontend/HomePropCard";
+export { default as FAQSection } from "./frontend/FAQSection";
+export { default as FeatureSection } from "./frontend/FeatureSection";
+export { default as ReviewSlider } from "./frontend/ReviewSlider";
 // ------------------HOST-COMPONENT---------------------->
 
 

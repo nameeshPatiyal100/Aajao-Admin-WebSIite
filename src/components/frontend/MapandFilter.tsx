@@ -82,8 +82,17 @@ const MapandFilter = () => {
           fullWidth
           sx={{
             mb: 2,
+            "& .MuiInputLabel-root": {
+              color: "#c14365", // label default color
+              fontWeight: "bold",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#c14365", // label on focus
+            },
             "& .MuiOutlinedInput-root": {
               "& fieldset": { borderColor: "#c14365" },
+              "&:hover fieldset": { borderColor: "#c14365" },
+              "&.Mui-focused fieldset": { borderColor: "#c14365" },
             },
           }}
         />

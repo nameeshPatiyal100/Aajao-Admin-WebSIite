@@ -1,0 +1,58 @@
+/* Section Wrapper */
+.featured-properties {
+    padding: 40px 20px;
+    background-color: #fafafa;
+  
+    /* 👇 Reduce width */
+    max-width: 1200px;
+    margin: 0 auto; /* center it */
+    border-radius: 12px; /* optional for nice look */
+  }
+  
+  /* Section Title */
+  .featured-properties h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #c14365;
+    text-align: center;
+  }
+  
+  /* Grid Layout */
+  .properties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  
+  /* Responsive tweaks */
+  @media (max-width: 1024px) {
+    .featured-properties {
+      max-width: 950px;
+    }
+    .featured-properties h2 {
+      font-size: 1.75rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .featured-properties {
+      max-width: 700px;
+      padding: 30px 15px;
+    }
+    .featured-properties h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .featured-properties {
+      max-width: 100%; /* mobile full width */
+      padding: 20px 10px;
+    }
+    .featured-properties h2 {
+      font-size: 1.25rem;
+    }
+  }
+  
