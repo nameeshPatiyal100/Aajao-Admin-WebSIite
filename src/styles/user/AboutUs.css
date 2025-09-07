@@ -1,0 +1,575 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+
+/* Contact Section */
+.contactSection {
+    width: 100%;
+    height: 200px;
+    background-color: #c14365; /* Theme color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .contactContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .contactTitle {
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  
+  .contactButton {
+    background-color: #fff !important;
+    color: #c14365 !important;
+    font-weight: 600 !important;
+    padding: 8px 24px !important;
+    border-radius: 30px !important;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .contactButton:hover {
+    background-color: #f8e4ec !important;
+  }
+  
+  /* Responsive */
+  @media (max-width: 600px) {
+    .contactTitle {
+      font-size: 1.5rem;
+    }
+  
+    .contactButton {
+      padding: 6px 18px !important;
+      font-size: 0.9rem !important;
+    }
+  }
+  
+
+
+/* Hero Section */
+.aboutUsHero {
+  position: relative;
+  height: 70vh;
+  background: url("/room4.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aboutUsOverlay {
+  background: rgba(0, 0, 0, 0.55);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aboutUsContent {
+  text-align: center;
+  color: #fff;
+  max-width: 800px;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.aboutUsTitle {
+  font-size: 3rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.aboutUsDescription {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* Text + Image Section */
+.aboutustextsection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 10%;
+  gap: 40px;
+  background-color: #c14365;
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
+
+.textSectionImg {
+  /* flex: 1; */
+  display: flex;
+
+  justify-content: center;
+}
+
+.textSectionImg img {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.textSectiontext {
+  flex: 2;
+}
+
+.textSectiontext h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.textSectiontext p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Gallery Section */
+.imageGallery {
+  padding: 60px 10%;
+  font-family: "Poppins", sans-serif;
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 200px);
+  gap: 12px;
+}
+
+.gridBox {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.gridImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.gridBox:hover .gridImage {
+  transform: scale(1.1);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* About Sections (Alternating) */
+.aboutSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 10%;
+  gap: 40px;
+  font-family: "Poppins", sans-serif;
+}
+
+.textContainer {
+  flex: 1;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.sectionDescription {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+.imageContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.sectionImage {
+  width: 100%;
+  max-width: 550px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.sectionImage:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .aboutUsTitle {
+    font-size: 2.3rem;
+  }
+
+  .aboutUsDescription {
+    font-size: 1rem;
+  }
+
+  .aboutustextsection {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .textSectionImg img {
+    width: 220px;
+    height: 220px;
+    margin-bottom: 20px;
+  }
+
+  .parent {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .aboutSection {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .sectionImage {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .aboutUsTitle {
+    font-size: 1.8rem;
+  }
+
+  .aboutUsDescription {
+    font-size: 0.95rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.4rem;
+  }
+
+  .sectionDescription {
+    font-size: 0.95rem;
+  }
+
+  .textSectiontext h2 {
+    font-size: 1.4rem;
+  }
+
+  .textSectiontext p {
+    font-size: 0.95rem;
+  }
+}
+
+
+
+
+
+
+.imageGallery {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 20px;
+}
+
+.parent {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 10px;
+  height: 80vh;
+}
+
+/* Grid boxes */
+.gridBox {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.gridBox:hover {
+  transform: scale(1.04);
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* Images */
+.gridImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.gridBox:hover .gridImage {
+  transform: scale(1.1);
+}
+
+/* Overlay */
+.overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  color: #fff;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Grid positions */
+.div1 {
+  grid-column: span 2;
+  grid-row: span 3;
+}
+
+.div2 {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.div3 {
+  grid-column: span 1;
+  grid-row: span 3;
+}
+
+.div4 {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.div5 {
+  grid-column: span 2;
+  grid-row: span 3;
+}
+
+/* 🔹 Responsive Design */
+@media (max-width: 1024px) {
+  .parent {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    height: auto;
+  }
+  .div1,
+  .div2,
+  .div3,
+  .div4,
+  .div5 {
+    grid-column: span 1 !important;
+    grid-row: auto !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .parent {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .parent {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Section wrapper */
+.aboutustextsection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  background-color: #c14365;
+  padding: 60px 20px;
+  flex-wrap: wrap;
+  margin-top: 100px;
+}
+
+/* Round Image */
+.textSectionImg img {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #fff;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Text */
+.textSectiontext {
+  flex: 1;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  max-width: 600px;
+}
+
+.textSectiontext h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.textSectiontext p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+/* 🔹 Responsive */
+@media (max-width: 1024px) {
+  .textSectionImg img {
+    width: 200px;
+    height: 200px;
+  }
+  .textSectiontext h2 {
+    font-size: 1.8rem;
+  }
+  .textSectiontext p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .aboutustextsection {
+    flex-direction: column;
+    text-align: center;
+    gap: 25px;
+  }
+  .textSectionImg img {
+    width: 180px;
+    height: 180px;
+  }
+  .textSectiontext h2 {
+    font-size: 1.6rem;
+  }
+  .textSectiontext p {
+    font-size: 0.95rem;
+  }
+}
+
+.aboutUsHero {
+  position: relative;
+  width: 100%;
+  height: 70vh; /* Adjust height */
+  background-image: url("/room5.webp"); /* ✅ Replace with your image */
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aboutUsOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55); /* darker overlay for readability */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.aboutUsContent {
+  text-align: center;
+  color: #fff;
+  max-width: 850px;
+  padding: 20px;
+}
+
+.aboutUsTitle {
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 3rem;
+  letter-spacing: 1px;
+}
+
+.aboutUsDescription {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #f2f2f2;
+  font-weight: 400;
+}
+
+/* 🔹 Responsive Design */
+@media (max-width: 1024px) {
+  .aboutUsHero {
+    height: 60vh;
+  }
+  .aboutUsTitle {
+    font-size: 2.4rem;
+  }
+  .aboutUsDescription {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .aboutUsHero {
+    height: 50vh;
+  }
+  .aboutUsTitle {
+    font-size: 2rem;
+  }
+  .aboutUsDescription {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .aboutUsHero {
+    height: 45vh;
+    padding: 10px;
+  }
+  .aboutUsTitle {
+    font-size: 1.6rem;
+  }
+  .aboutUsDescription {
+    font-size: 0.85rem;
+  }
+}

@@ -23,7 +23,13 @@ import {
   StatusPage,
   Transactions,
   UserPage,
+  AboutUs,
 } from "./pages";
+
+
+
+
+// NEED TO SET ORDER
 import { UserDashboard } from "./pages/user/dashboard";
 import { HostDashboard } from "./pages/host/dashboard";
 import CommonLayout from "./components/layout/CommonLayout";
@@ -42,6 +48,8 @@ function App() {
       <Routes>
         <Route path="/" element={<CommonLayout />}>
           <Route index element={<Home />} />
+          <Route path="about" element={<AboutUs />} />
+          {/* <Route path="contact" element={<Contact />} /> */}
         </Route>
 
         {/* Auth Routes */}
