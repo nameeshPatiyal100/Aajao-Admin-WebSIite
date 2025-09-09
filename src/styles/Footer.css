@@ -1,0 +1,103 @@
+.footer {
+    background-color: #fafafa;
+    padding: 40px 0;
+  }
+  
+  .footerBrand {
+    font-size: 2rem;
+    text-align: left;
+    color: #c14365;
+    font-family: "Playfair Display", serif;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    margin-left: 20px;
+  }
+  
+  .footerContent {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 30px;
+  }
+  
+  .footerCol {
+    flex: 1 1 250px;
+    min-width: 220px;
+  }
+  
+  .footerHeading {
+    color: #c14365;
+    margin-bottom: 12px;
+    font-weight: bold;
+  }
+  
+  .footerLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .footerLinks a {
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footerLinks a:hover {
+    color: #c14365;
+  }
+  
+  .subscribeBox {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .subscribeInput {
+    flex: 1;
+  }
+  
+  .subscribeButton {
+    background-color: #c14365 !important;
+    color: #fff !important;
+    font-weight: bold;
+  }
+  
+  .socialIcons {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .footerBottom {
+    text-align: center;
+    color: #888;
+    margin-top: 20px;
+  }
+  
+  .divider {
+    margin: 30px 0;
+  }
+  
+  /* 📱 Responsive Design */
+  @media (max-width: 768px) {
+    .footerContent {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .footerCol {
+      min-width: 100%;
+    }
+  
+    .subscribeBox {
+      flex-direction: column;
+      width: 100%;
+    }
+  
+    .subscribeButton {
+      width: 100%;
+    }
+  }
+  

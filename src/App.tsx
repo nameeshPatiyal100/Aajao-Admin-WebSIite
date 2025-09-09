@@ -24,6 +24,7 @@ import {
   Transactions,
   UserPage,
   AboutUs,
+  ContactUs,
 } from "./pages";
 
 
@@ -49,7 +50,7 @@ function App() {
         <Route path="/" element={<CommonLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<AboutUs />} />
-          {/* <Route path="contact" element={<Contact />} /> */}
+          <Route path="contact" element={<ContactUs />} />
         </Route>
 
         {/* Auth Routes */}

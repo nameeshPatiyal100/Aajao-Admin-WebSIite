@@ -3,138 +3,87 @@ import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Container,
-  Grid,
   Typography,
   Link,
   IconButton,
-  // Button,
   Divider,
+  TextField,
+  Button,
 } from "@mui/material";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
-// import { motion } from "framer-motion";
-
-// const MotionButton = motion(Button);
+import "../../styles/Footer.css";
 
 const Footer: React.FC = () => {
   return (
-    <Box component="footer" sx={{ bgcolor: "background.paper", py: 6 }}>
-      <Typography
-        variant="body2"
-        sx={{
-          fontSize: "2rem", // increase size
-          textAlign: "left", // fix to left
-          color: "#c14365", // change color
-          fontFamily: "'Playfair Display', serif", // apply custom font
-          // fontFamily: "Georgia', serif", // apply custom font
-          fontWeight: "bold",
-          letterSpacing: "0.5px",
-          marginLeft:20
-        }}
-      >
-        AAJOO Homes.
-      </Typography>
-      <Divider sx={{ mt: 6, mb: 3 }} />
+    <Box component="footer" className="footer">
+      {/* Brand */}
+      <Typography className="footerBrand">AAJOO Homes.</Typography>
+      <Divider className="divider" />
 
       <Container maxWidth="lg">
-        <Grid container spacing={4} justifyContent="space-between" mb={3}>
-          {/* Company Links */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Typography variant="h6" color="primary" gutterBottom>
-              Company
+        <Box className="footerContent">
+          {/* Section 1: Pages */}
+          <Box className="footerCol">
+            <Typography variant="h6" className="footerHeading">
+              Pages
             </Typography>
-            <Box display="flex" flexDirection="column" gap={1}>
-              <Link
-                component={RouterLink}
-                to="/About"
-                color="text.secondary"
-                underline="hover"
-              >
-                About Us
-              </Link>
-              <Link
-                component={RouterLink}
-                to="/Blogs"
-                color="text.secondary"
-                underline="hover"
-              >
-                Blogs
-              </Link>
-              <Link
-                component={RouterLink}
-                to="/Cancel"
-                color="text.secondary"
-                underline="hover"
-              >
-                Cancellation Policy
-              </Link>
-              <Link
-                component={RouterLink}
-                to="/Host&Agreements"
-                color="text.secondary"
-                underline="hover"
-              >
-                Host Agreement
-              </Link>
-              <Link
-                component={RouterLink}
-                to="/privacy"
-                color="text.secondary"
-                underline="hover"
-              >
-                Privacy
-              </Link>
-              <Link
-                component={RouterLink}
-                to="/T&C"
-                color="text.secondary"
-                underline="hover"
-              >
-                Terms & Conditions
-              </Link>
+            <Box className="footerLinks">
+              <Link component={RouterLink} to="/About">About Us</Link>
+              <Link component={RouterLink} to="/Blogs">Blogs</Link>
+              <Link component={RouterLink} to="/Cancel">Cancellation Policy</Link>
+              <Link component={RouterLink} to="/Host&Agreements">Host Agreement</Link>
+              <Link component={RouterLink} to="/privacy">Privacy</Link>
+              <Link component={RouterLink} to="/T&C">Terms & Conditions</Link>
             </Box>
-          </Grid>
+          </Box>
 
-          {/* About + Social Icons */}
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Typography variant="h6" color="primary" gutterBottom>
-              aajao
+          {/* Section 2: Host */}
+          <Box className="footerCol">
+            <Typography variant="h6" className="footerHeading">
+              Host
             </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              Find your perfect stay with aajao, the world's leading
-              accommodation booking platform.
+            <Box className="footerLinks">
+              <Link component={RouterLink} to="/About">About Us</Link>
+              <Link component={RouterLink} to="/Blogs">Blogs</Link>
+              <Link component={RouterLink} to="/Cancel">Cancellation Policy</Link>
+              <Link component={RouterLink} to="/Host&Agreements">Host Agreement</Link>
+              <Link component={RouterLink} to="/privacy">Privacy</Link>
+              <Link component={RouterLink} to="/T&C">Terms & Conditions</Link>
+            </Box>
+          </Box>
+
+          {/* Section 3: Subscribe + Social */}
+          <Box className="footerCol">
+            <Typography variant="h6" className="footerHeading">
+              Subscribe
             </Typography>
-            <Box display="flex" gap={2}>
-              <IconButton
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                color="primary"
-              >
+            <Box className="subscribeBox">
+              <TextField
+                placeholder="Enter your email"
+                variant="outlined"
+                size="small"
+                className="subscribeInput"
+              />
+              <Button variant="contained" className="subscribeButton">
+                Subscribe
+              </Button>
+            </Box>
+            <Box className="socialIcons">
+              <IconButton href="https://facebook.com" target="_blank">
                 <FaFacebook />
               </IconButton>
-              <IconButton
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ color: "#E1306C" }}
-              >
+              <IconButton href="https://instagram.com" target="_blank" sx={{ color: "#E1306C" }}>
                 <FaInstagram />
               </IconButton>
-              <IconButton
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ color: "#1DA1F2" }}
-              >
+              <IconButton href="https://twitter.com" target="_blank" sx={{ color: "#1DA1F2" }}>
                 <FaTwitter />
               </IconButton>
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
-        <Divider sx={{ mt: 6, mb: 3 }} />
-
-        <Typography variant="body2" color="text.secondary" align="center">
+        <Divider className="divider" />
+        <Typography variant="body2" className="footerBottom">
           © 2025 aajao. All rights reserved.
         </Typography>
       </Container>

@@ -13,3 +13,4 @@ export { default as AdminPropertyVerification } from "./admin/adminProperty/Admi
 //USER SECTION EXPORTS
 export { default as Home } from "./user/home";
 export { default as AboutUs } from "./user/AboutUs";
+export { default as ContactUs } from "./user/ContactUs";

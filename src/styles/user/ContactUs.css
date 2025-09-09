@@ -1,0 +1,206 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
+.contactPage {
+  font-family: "Poppins", sans-serif;
+  background: #fafafa;
+  color: #222;
+  text-align: center;
+}
+
+/* ---------- HERO SECTION ---------- */
+.contactHero {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.heroTitle {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 12px;
+}
+
+.heroDescription {
+  font-size: 1rem;
+  max-width: 700px;
+}
+
+/* ---------- CONTACT MAIN SECTION ---------- */
+.contactMain {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  justify-content: center;
+  margin: 40px auto;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.contactCol {
+  flex: 1 1 400px;
+  max-width: 600px;
+}
+
+.formTitle {
+  color: #c14365;
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-size: 2rem;
+}
+
+/* ---------- FORM ---------- */
+.contactForm {
+  background: #fff;
+  padding: 22px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Custom TextField Styles */
+.customTextField .MuiOutlinedInput-root {
+  border-radius: 8px;
+}
+
+/* .customTextField .MuiOutlinedInput-notchedOutline {
+  border-color: #c14365 !important;
+}
+
+.customTextField:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #c14365 !important;
+}
+
+.customTextField.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #c14365 !important;
+} */
+
+.submitButton {
+  background-color: #c14365 !important;
+  color: #fff !important;
+  margin-top: 15px !important;
+  padding: 10px 22px !important;
+  border-radius: 26px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  width: 100%;
+  max-width: 220px;
+}
+
+.submitButton:hover {
+  background-color: #ab3864 !important;
+}
+
+/* ---------- IMAGE SECTION ---------- */
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contactImage {
+  width: 100%;
+  max-width: 550px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* ---------- INFO CARDS ---------- */
+.contactInfoSection {
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.infoRow {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.infoCard {
+  flex: 1 1 260px;
+  max-width: 340px;
+  border-radius: 12px !important;
+  padding: 10px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: #fff;
+}
+
+.infoCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+.infoTitle {
+  color: #c14365;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.infoText {
+  color: #444;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  .contactMain {
+    flex-direction: column;
+  }
+
+  .contactCol {
+    max-width: 100%;
+  }
+
+  .contactImage {
+    max-width: 100%;
+  }
+
+  .heroTitle {
+    font-size: 2rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 1.6rem !important;
+  }
+
+  .heroDescription {
+    font-size: 0.9rem;
+  }
+
+  .formTitle {
+    font-size: 1.5rem;
+  }
+
+  .submitButton {
+    width: 100% !important;
+  }
+}
