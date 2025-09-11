@@ -197,6 +197,37 @@ const Home = () => {
           </Button>
         </Box>
       </Box>
+      <Box
+        sx={{
+          backgroundColor: "#fff",
+          borderRadius: "12px",
+          boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
+          padding: "1.5rem",
+          marginTop: "2rem",
+          marginBottom: "2rem",
+          textAlign: "center", // center everything inside
+        }}
+      >
+        <Typography
+          variant="h4" // a bit bigger than h5
+          sx={{
+            color: "#c14365",
+            fontWeight: "bold",
+            marginTop: "1rem",
+            marginBottom: "1rem",
+          }}
+        >
+          Properties near you
+        </Typography>
+
+        <Typography
+          variant="body1"
+          sx={{ color: "#555", maxWidth: "700px", mx: "auto" }}
+        >
+          Explore the best properties located close to your current location.
+          Use filters to refine your search and find your perfect place.
+        </Typography>
+      </Box>
       <MapandFilter />
       <HomeCategorySection />
       <HomeCustomGrid />
@@ -233,7 +264,7 @@ const Home = () => {
         buttonText="Book now"
         onButtonClick={handleApiCall}
       />
-      <ReviewSlider/>
+      <ReviewSlider />
     </Box>
   );
 };
