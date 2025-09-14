@@ -1,0 +1,204 @@
+/* ===== Global Container ===== */
+.mainUpperContainer {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1600px;
+    font-family: "Roboto", sans-serif;
+  }
+  
+  .breadcrumbContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .backButton {
+    color: #c14365;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* ===== Main Section ===== */
+  .mainSection {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  /* ===== Left Section (Images) ===== */
+  .leftSection {
+    flex: 0 0 68%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .coverImage {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+  
+  .propertyImages {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .smallImage {
+    flex: 1;
+    min-width: 22%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .smallImage:hover {
+    transform: scale(1.05);
+  }
+  
+  /* ===== Right Section (Owner + Map) ===== */
+  .rightSection {
+    flex: 0 0 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* Owner Box */
+  .ownerBox {
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ownerTitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .ownerName {
+    font-size: 16px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+  }
+  
+  .ownerDesc {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+  
+  .contactAgent {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 2px solid #c14365;
+    border-radius: 8px;
+    color: #c14365;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .contactAgent:hover {
+    background-color: #c14365;
+    color: #fff;
+  }
+  
+  .phoneIcon {
+    font-size: 18px;
+  }
+  
+  /* Map Box */
+  .mapBox {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    height: 300px;
+  }
+  
+  .propertyMap {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  /* Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* ===== Responsive Adjustments ===== */
+  @media (max-width: 1200px) {
+    .leftSection {
+      flex: 0 0 65%;
+    }
+  
+    .rightSection {
+      flex: 0 0 33%;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .mainSection {
+      flex-direction: column;
+    }
+  
+    .leftSection,
+    .rightSection {
+      flex: 1 1 100%;
+    }
+  
+    .coverImage {
+      height: 300px;
+    }
+  
+    .smallImage {
+      height: 100px;
+    }
+  
+    .mapBox {
+      height: 250px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .coverImage {
+      height: 220px;
+    }
+  
+    .smallImage {
+      height: 80px;
+    }
+  
+    .mapBox {
+      height: 200px;
+    }
+  }
+  

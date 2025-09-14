@@ -25,6 +25,7 @@ import {
   UserPage,
   AboutUs,
   ContactUs,
+  PropertyDetail,
 } from "./pages";
 
 
@@ -51,6 +52,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="contact" element={<ContactUs />} />
+          <Route path="property/detail" element={<PropertyDetail />} />
         </Route>
 
         {/* Auth Routes */}
