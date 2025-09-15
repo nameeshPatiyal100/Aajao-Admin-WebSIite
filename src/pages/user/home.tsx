@@ -1,32 +1,32 @@
-import Slider from "react-slick";
-import { Box, Typography, Button } from "@mui/material";
+// import Slider from "react-slick";
+import { Box,} from "@mui/material";
 import {
   MapandFilter,
   WhyChooseUs,
   CTAoneHome,
-  HomeCategorySection,
-  HomeCustomGrid,
+  // HomeCategorySection,
+  // HomeCustomGrid,
   HomePropCard,
   FAQSection,
-  FeatureSection,
+  // FeatureSection,
   ReviewSlider,
 } from "../../components";
 import "../../styles/user/Home.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const roomImages = ["/room1.jpg", "/room2.jpg", "/room3.jpg", "/room4.jpg"];
+// const roomImages = ["/room1.jpg", "/room2.jpg", "/room3.jpg", "/room4.jpg"];
 
 const Home = () => {
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 800,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    arrows: false,
-  };
+  // const sliderSettings = {
+  //   dots: true,
+  //   infinite: true,
+  //   speed: 800,
+  //   slidesToShow: 1,
+  //   slidesToScroll: 1,
+  //   autoplay: true,
+  //   arrows: false,
+  // };
 
   const handleApiCall = async () => {
     try {
@@ -139,7 +139,7 @@ const Home = () => {
   return (
     <Box>
       {/* Hero Slider */}
-      <Box sx={{ position: "relative" }}>
+      {/* <Box sx={{ position: "relative" }}>
         <Slider {...sliderSettings}>
           {roomImages.map((src, idx) => (
             <Box key={idx}>
@@ -227,11 +227,11 @@ const Home = () => {
           Explore the best properties located close to your current location.
           Use filters to refine your search and find your perfect place.
         </Typography>
-      </Box>
+      </Box> */}
       <MapandFilter />
-      <HomeCategorySection />
-      <HomeCustomGrid />
-      <FeatureSection />
+      {/* <HomeCategorySection /> */}
+      {/* <HomeCustomGrid /> */}
+      {/* <FeatureSection /> */}
       {/* <div> */}
       {/* 🔹 Hotel Cards Section */}
       <section className="featured-properties">
