@@ -1,8 +1,25 @@
 import "../../styles/user/MapandFilter.css";
 import React, { useEffect, useState } from "react";
 
+// Category icons
+import single from "../../assets/UI/single.png";
+import couple3 from "../../assets/UI/couple3.png";
+import family from "../../assets/UI/family.png";
+import sharing from "../../assets/UI/sharing.png";
+import prebooking from "../../assets/UI/prebooking.png";
+import crown1 from "../../assets/UI/crown1.png";
+
+const categories = [
+  { img: single, label: "Single" },
+  { img: couple3, label: "Couple" },
+  { img: family, label: "Family" },
+  { img: sharing, label: "Sharing" },
+];
+
 const MapandFilter: React.FC = () => {
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
@@ -25,6 +42,7 @@ const MapandFilter: React.FC = () => {
 
   return (
     <div className="MapParentSection">
+      {/* Left Map Section */}
       <div className="leftSection">
         {location ? (
           <iframe
@@ -37,15 +55,34 @@ const MapandFilter: React.FC = () => {
             src={`https://www.google.com/maps?q=${location.lat},${location.lng}&hl=es;z=14&output=embed`}
           ></iframe>
         ) : (
-          <div className="fallbackText">{error || "Fetching your location..."}</div>
+          <div className="fallbackText">
+            {error || "Fetching your location..."}
+          </div>
         )}
       </div>
 
+      {/* Right Filter Section */}
       <div className="rightSection">
-        <div className="upperSection"></div>
+        {/* Categories */}
+        <div className="upperSection">
+          {categories.map((item, index) => (
+            <div key={index} className="categorySection">
+              <img src={item.img} alt={item.label} className="categoryImg" />
+              <span className="categoryName">{item.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Lower Options */}
         <div className="bottomSection">
-          <div className="preBookingSection"></div>
-          <div className="luxurySection"></div>
+          <div className="preBookingSection">
+            <img src={crown1} alt="Luxury" className="lowerSectionImg" />
+            <span className="lowerSectionText">Luxury</span>
+          </div>
+          <div className="luxurySection">
+            <img src={prebooking} alt="Pre-Booking" className="lowerSectionImg" />
+            <span className="lowerSectionText">Pre-Booking</span>
+          </div>
         </div>
       </div>
     </div>

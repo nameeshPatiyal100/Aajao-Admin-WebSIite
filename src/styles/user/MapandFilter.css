@@ -17,7 +17,7 @@
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
-  min-height: 400px; /* makes map visible even on large screens */
+  min-height: 400px; /* visible on large screens */
 }
 
 .fallbackText {
@@ -27,7 +27,7 @@
   height: 100%;
   font-size: 1.2rem;
   font-weight: 500;
-  color: #555;
+  color: #c14365;
   text-align: center;
 }
 
@@ -48,6 +48,29 @@
   background-color: white;
   border-radius: 12px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; /* allows wrapping on small devices */
+  padding: 10px;
+  gap: 10px;
+}
+
+.categoryName {
+  color: #c14365;
+  font-size: large;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.lowerSectionImg {
+  width: 80px;
+  height: 80px;
+}
+
+.lowerSectionText {
+  color: white;
+  font-size: xx-large;
+  font-weight: 900;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .bottomSection {
@@ -62,26 +85,59 @@
   flex: 1;
   min-width: 140px;
   border-radius: 20px;
-  background: #facfcf;
+  background: #c14365;
   height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .luxurySection {
   border: 1px solid green;
 }
 
+.categoryImg {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 8px;
+}
+
+.categorySection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+}
+
 /* ========================= */
 /* 📱 Responsive Design */
 /* ========================= */
 
-/* Tablets & smaller laptops */
+/* Large desktops (≤1400px) */
+@media (max-width: 1400px) {
+  .MapParentSection {
+    grid-template-columns: 58% 42%;
+  }
+  .leftSection {
+    min-height: 350px;
+  }
+}
+
+/* Tablets & smaller laptops (≤1200px) */
 @media (max-width: 1200px) {
   .MapParentSection {
     grid-template-columns: 55% 45%;
   }
+  .leftSection {
+    min-height: 320px;
+  }
 }
 
-/* Tablets (portrait) */
+/* Tablets (portrait ≤900px) */
 @media (max-width: 900px) {
   .MapParentSection {
     grid-template-columns: 1fr; /* stack */
@@ -95,6 +151,10 @@
     margin-top: 15px;
   }
 
+  .upperSection {
+    justify-content: center;
+  }
+
   .bottomSection {
     flex-direction: column;
   }
@@ -106,7 +166,7 @@
   }
 }
 
-/* Mobile devices */
+/* Mobile devices (≤600px) */
 @media (max-width: 600px) {
   .MapParentSection {
     padding: 10px;
@@ -114,7 +174,7 @@
   }
 
   .leftSection {
-    min-height: 220px;
+    min-height: 240px;
     padding: 10px;
   }
 
@@ -122,8 +182,22 @@
     padding: 10px;
   }
 
-  .bottomSection {
-    gap: 12px;
+  .categoryImg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .categoryName {
+    font-size: medium;
+  }
+
+  .lowerSectionImg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .lowerSectionText {
+    font-size: large;
   }
 
   .preBookingSection,
@@ -135,15 +209,57 @@
 /* Very small devices (≤400px) */
 @media (max-width: 400px) {
   .leftSection {
-    min-height: 180px;
+    min-height: 200px;
+  }
+
+  .categoryImg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .lowerSectionImg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .fallbackText {
+    font-size: 0.9rem;
   }
 
   .preBookingSection,
   .luxurySection {
     height: 80px;
+    padding: 12px;
   }
 
-  .fallbackText {
-    font-size: 1rem;
+  .lowerSectionText {
+    font-size: medium;
+  }
+}
+
+/* Ultra small devices (≤320px) */
+@media (max-width: 320px) {
+  .MapParentSection {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .leftSection {
+    min-height: 160px;
+  }
+
+  .categoryImg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .categoryName {
+    font-size: 0.8rem;
+  }
+
+  .preBookingSection,
+  .luxurySection {
+    height: 70px;
+    font-size: 0.8rem;
   }
 }
