@@ -5,7 +5,7 @@ import {
   Navigate,
   // Outlet,
 } from "react-router-dom";
-
+import notFound from "./assets/UI/404.jpg";
 import { AdminLayout } from "./components";
 
 import { SidebarProvider } from "./context/AdminContext";
@@ -26,10 +26,8 @@ import {
   AboutUs,
   ContactUs,
   PropertyDetail,
+  NotFound,
 } from "./pages";
-
-
-
 
 // NEED TO SET ORDER
 import { UserDashboard } from "./pages/user/dashboard";
@@ -53,6 +51,7 @@ function App() {
           <Route path="about" element={<AboutUs />} />
           <Route path="contact" element={<ContactUs />} />
           <Route path="property/detail" element={<PropertyDetail />} />
+          <Route path="*" element={<NotFound image={notFound} />} />
         </Route>
 
         {/* Auth Routes */}
