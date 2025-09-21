@@ -82,10 +82,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
             }}
           >
             <HelpOutlineIcon sx={{ color: "#c14365", fontSize: 30 }} />
-            <Typography
-              variant="h6"
-              sx={{ color: "#c14365", fontWeight: 600 }}
-            >
+            <Typography variant="h6" sx={{ color: "#c14365", fontWeight: 600 }}>
               {description}
             </Typography>
           </Box>
@@ -102,10 +99,13 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                 borderRadius: 2,
                 boxShadow: "none",
                 "&:before": { display: "none" },
+                padding: "5px",
               }}
             >
               <AccordionSummary
-                expandIcon={<ExpandMoreIcon sx={{ color: "#c14365", fontSize: 30 }} />}
+                expandIcon={
+                  <ExpandMoreIcon sx={{ color: "#c14365", fontSize: 30 }} />
+                }
                 sx={{
                   bgcolor: expanded === idx ? "#c14365" : "#fff",
                   color: expanded === idx ? "#fff" : "#c14365",
@@ -119,7 +119,12 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                 {faq.question}
               </AccordionSummary>
               <AccordionDetails
-                sx={{ color: "#333", bgcolor: "#fff", fontSize: "1rem", lineHeight: 1.6 }}
+                sx={{
+                  color: "#333",
+                  bgcolor: "#fff",
+                  fontSize: "1rem",
+                  lineHeight: 1.6,
+                }}
               >
                 <Typography>{faq.answer}</Typography>
               </AccordionDetails>

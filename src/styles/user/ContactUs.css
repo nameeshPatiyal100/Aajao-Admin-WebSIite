@@ -5,13 +5,14 @@
   background: #fafafa;
   color: #222;
   text-align: center;
+  line-height: 1.6;
 }
 
 /* ---------- HERO SECTION ---------- */
 .contactHero {
   position: relative;
   width: 100%;
-  height: 300px;
+  height: 280px;
   overflow: hidden;
 }
 
@@ -27,77 +28,67 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.55);
   color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 16px;
+  text-align: center;
 }
 
 .heroTitle {
-  font-size: 2.5rem !important;
-  font-weight: 700 !important;
-  margin-bottom: 12px;
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 1.2;
 }
 
 .heroDescription {
   font-size: 1rem;
-  max-width: 700px;
+  max-width: 680px;
 }
 
 /* ---------- CONTACT MAIN SECTION ---------- */
 .contactMain {
   display: flex;
-  gap: 32px;
+  flex-wrap: wrap;
+  gap: 28px;
   align-items: center;
   justify-content: center;
   margin: 40px auto;
-  flex-wrap: wrap;
   max-width: 1200px;
-  padding: 0 20px;
+  padding: 0 16px;
 }
 
 .contactCol {
-  flex: 1 1 400px;
+  flex: 1 1 360px;
   max-width: 600px;
 }
 
+/* ---------- FORM ---------- */
 .formTitle {
   color: #c14365;
   font-weight: 700;
   margin-bottom: 16px;
-  font-size: 2rem;
+  font-size: 1.9rem;
 }
 
-/* ---------- FORM ---------- */
 .contactForm {
   background: #fff;
-  padding: 22px;
+  padding: 20px;
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
-/* Custom TextField Styles */
 .customTextField .MuiOutlinedInput-root {
   border-radius: 8px;
 }
-
-/* .customTextField .MuiOutlinedInput-notchedOutline {
-  border-color: #c14365 !important;
-}
-
-.customTextField:hover .MuiOutlinedInput-notchedOutline {
-  border-color: #c14365 !important;
-}
-
-.customTextField.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: #c14365 !important;
-} */
 
 .submitButton {
   background-color: #c14365 !important;
@@ -117,22 +108,24 @@
 
 /* ---------- IMAGE SECTION ---------- */
 .imageContainer {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .contactImage {
   width: 100%;
-  max-width: 550px;
+  height: auto;
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  object-fit: cover;
 }
 
 /* ---------- INFO CARDS ---------- */
 .contactInfoSection {
   margin: 30px auto;
-  padding: 0 20px;
+  padding: 0 16px;
 }
 
 .infoRow {
@@ -144,63 +137,84 @@
 }
 
 .infoCard {
-  flex: 1 1 260px;
+  flex: 1 1 240px;
   max-width: 340px;
-  border-radius: 12px !important;
-  padding: 10px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   background: #fff;
+  text-align: left;
 }
 
 .infoCard:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
 .infoTitle {
   color: #c14365;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  font-size: 1.1rem;
 }
 
 .infoText {
   color: #444;
+  font-size: 0.95rem;
 }
 
 /* ---------- RESPONSIVE ---------- */
-@media (max-width: 900px) {
-  .contactMain {
-    flex-direction: column;
+@media (max-width: 1024px) {
+  .heroTitle {
+    font-size: 2rem;
   }
+}
 
-  .contactCol {
-    max-width: 100%;
-  }
-
-  .contactImage {
-    max-width: 100%;
+@media (max-width: 768px) {
+  .contactHero {
+    height: 220px;
   }
 
   .heroTitle {
-    font-size: 2rem !important;
+    font-size: 1.8rem;
+  }
+
+  .heroDescription {
+    font-size: 0.95rem;
+  }
+
+  .formTitle {
+    font-size: 1.6rem;
+  }
+
+  .infoCard {
+    max-width: 100%;
   }
 }
 
 @media (max-width: 480px) {
+  .contactHero {
+    height: 180px;
+  }
+
   .heroTitle {
-    font-size: 1.6rem !important;
+    font-size: 1.4rem;
   }
 
   .heroDescription {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   .formTitle {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
 
   .submitButton {
-    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .infoCard {
+    padding: 12px;
   }
 }

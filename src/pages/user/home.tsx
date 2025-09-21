@@ -2,7 +2,7 @@
 import { Box,} from "@mui/material";
 import {
   MapandFilter,
-  WhyChooseUs,
+  // WhyChooseUs,
   CTAoneHome,
   // HomeCategorySection,
   // HomeCustomGrid,
@@ -250,7 +250,7 @@ const Home = () => {
         buttonText="Explore Now"
         onButtonClick={handleApiCall}
       />
-      <WhyChooseUs />
+      {/* <WhyChooseUs /> */}
       {/* <FAQSection image="/faq_vector.jpg" faqs={faqs} />; */}
       <FAQSection
         image="/faq_vector.jpg"

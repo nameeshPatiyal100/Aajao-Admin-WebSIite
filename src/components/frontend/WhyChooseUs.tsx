@@ -9,30 +9,33 @@ import {
 const features = [
   {
     icon: <Security sx={{ fontSize: 40, color: "#C14365" }} />,
-    title: "Secure Bookings",
-    description:
-      "Your transactions are encrypted and protected with top-level security.",
+    title: "Easy & Quick Bookings",
+    description: "Search, book, and confirm stays in just a few clicks.",
     link: "#",
   },
   {
     icon: <EventAvailable sx={{ fontSize: 40, color: "#C14365" }} />,
-    title: "Flexible Cancellations",
-    description:
-      "Change of plans? Enjoy easy cancellations and modifications anytime.",
+    title: "Local & Unique Stays",
+    description: "Live with families, experience culture, not just hotels.",
     link: "#",
   },
   {
     icon: <LocalOffer sx={{ fontSize: 40, color: "#C14365" }} />,
-    title: "Best Price Guarantee",
-    description:
-      "We ensure you always get the best deals with exclusive discounts.",
+    title: "Safe & Verified",
+    description: "Every property and host is checked with government rules.",
     link: "#",
   },
+  // {
+  //   icon: <SupportAgent sx={{ fontSize: 40, color: "#C14365" }} />,
+  //   title: "Affordable Prices",
+  //   description:
+  //     "Transparent, budget-friendly stays with no hidden charges.",
+  //   link: "#",
+  // },
   {
     icon: <SupportAgent sx={{ fontSize: 40, color: "#C14365" }} />,
-    title: "24/7 Support",
-    description:
-      "Our team is always available to help you with bookings and queries.",
+    title: "24x7 Support",
+    description: "Instant help via WhatsApp, app, or call anytime.",
     link: "#",
   },
 ];
@@ -51,14 +54,26 @@ const WhyChooseUs = () => {
         Why Choose Us?
       </Typography>
       <Typography
-        variant="body1"
+        variant="h6" // bigger than body1 (use h6 for slightly larger)
         mb={6}
-        sx={{ maxWidth: "700px", mx: "auto", textAlign: "center" }}
+        sx={{
+          maxWidth: "800px",
+          mx: "auto",
+          textAlign: "center",
+          fontSize: { xs: "1rem", sm: "1.2rem", md: "1.4rem" }, // responsive sizing
+          fontFamily: "'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+          fontWeight: 400,
+          lineHeight: 1.6,
+          color: "#444", // softer text color
+        }}
       >
-        At <strong>AAJAO</strong>, we make your hotel booking experience
-        seamless, secure, and stress-free. From reliable reservations to
-        unbeatable prices and dedicated support, we’ve got everything you need
-        for the perfect stay.
+        At{" "}
+        <Box component="span" sx={{ color: "#C14365", fontWeight: "bold" }}>
+          AAJAO
+        </Box>
+        , we bring together travelers and local hosts on one trusted Indian
+        homestay platform. Whether you’re booking a stay or listing your
+        property, here’s why you’ll love us
       </Typography>
 
       {/* Features */}

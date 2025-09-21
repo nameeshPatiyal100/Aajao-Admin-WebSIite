@@ -1,43 +1,25 @@
-import { Box, Typography,Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
+import { WhyChooseUs } from "../../components";
 import "../../styles/user/AboutUs.css";
 
 const AboutUs = () => {
   return (
     <>
-      {/* Hero Section */}
-      <Box className="aboutUsHero">
-        <Box className="aboutUsOverlay">
-          <Box className="aboutUsContent">
-            <Typography variant="h3" className="aboutUsTitle">
-              About AAJOO Homes
-            </Typography>
-            <Typography variant="body1" className="aboutUsDescription">
-              At AAJOO Homes, we believe in creating memorable stays with
-              comfort, luxury, and warmth. Whether you're looking for a weekend
-              getaway or a long vacation, our properties offer the perfect blend
-              of modern amenities and homely vibes.
-            </Typography>
-          </Box>
-        </Box>
+      {/* ---------- Top Intro Section ---------- */}
+      <Box className="aboutHero">
+        <Typography variant="h2" className="aboutHeroTitle">
+          About Us
+        </Typography>
+        <Typography variant="body1" className="aboutHeroDescription">
+          We are dedicated to offering you the best luxury experiences with
+          modern amenities, elegant interiors, and breathtaking locations.
+          Our goal is to make every stay unforgettable.
+        </Typography>
       </Box>
 
-      {/* Text + Image Section */}
-      <div className="aboutustextsection">
-        <div className="textSectionImg">
-          <img src="/room4.jpg" alt="About Us" />
-        </div>
-        <div className="textSectiontext">
-          <h2>Why Choose AAJOO Homes?</h2>
-          <p>
-            We go beyond just providing stays – we provide experiences. With
-            beautiful locations, modern amenities, and unmatched hospitality,
-            AAJOO Homes is your perfect partner in creating unforgettable
-            memories.
-          </p>
-        </div>
-      </div>
+      <WhyChooseUs />
 
-      {/* Gallery Section */}
+      {/* ---------- Gallery Section ---------- */}
       <div className="imageGallery">
         <div className="parent">
           <div className="gridBox div1">
@@ -67,18 +49,10 @@ const AboutUs = () => {
               <p className="title">Cozy Ambience</p>
             </div>
           </div>
-
-          {/* <div className="gridBox div5">
-            <img src="/room5.jpg" alt="Gallery 5" className="gridImage" />
-            <div className="overlay">
-              <p className="title">Comfort Stay</p>
-            </div>
-          </div> */}
-
-          {/* Section 3 */}
         </div>
       </div>
 
+      {/* ---------- About Sections ---------- */}
       <div className="aboutSection">
         <div className="textContainer">
           <h2 className="sectionTitle">Beautiful Locations</h2>
@@ -88,47 +62,38 @@ const AboutUs = () => {
           </p>
         </div>
         <div className="imageContainer">
-          <img
-            src="/room3.jpg"
-            alt="Beautiful Views"
-            className="sectionImage"
-          />
-        </div>
-      </div>
-      <div className="aboutSection">
-        <div className="imageContainer">
-          <img
-            src="/room3.jpg"
-            alt="Beautiful Views"
-            className="sectionImage"
-          />
-        </div>
-
-        <div className="textContainer">
-          <h2 className="sectionTitle">Beautiful Locations</h2>
-          <p className="sectionDescription">
-            Wake up to stunning views and serene surroundings. Every property is
-            located at prime spots to enhance your stay experience.
-          </p>
-        </div>
-      </div>
-      <div className="aboutSection">
-        <div className="textContainer">
-          <h2 className="sectionTitle">Beautiful Locations</h2>
-          <p className="sectionDescription">
-            Wake up to stunning views and serene surroundings. Every property is
-            located at prime spots to enhance your stay experience.
-          </p>
-        </div>
-        <div className="imageContainer">
-          <img
-            src="/room3.jpg"
-            alt="Beautiful Views"
-            className="sectionImage"
-          />
+          <img src="/room3.jpg" alt="Beautiful Views" className="sectionImage" />
         </div>
       </div>
 
+      <div className="aboutSection">
+        <div className="imageContainer">
+          <img src="/room3.jpg" alt="Beautiful Views" className="sectionImage" />
+        </div>
+
+        <div className="textContainer">
+          <h2 className="sectionTitle">Luxury Comfort</h2>
+          <p className="sectionDescription">
+            Designed with elegance and comfort in mind, our rooms offer the
+            perfect balance of relaxation and luxury.
+          </p>
+        </div>
+      </div>
+
+      <div className="aboutSection">
+        <div className="textContainer">
+          <h2 className="sectionTitle">Exceptional Experience</h2>
+          <p className="sectionDescription">
+            From the moment you arrive, we focus on delivering world-class
+            hospitality that goes beyond expectations.
+          </p>
+        </div>
+        <div className="imageContainer">
+          <img src="/room3.jpg" alt="Beautiful Views" className="sectionImage" />
+        </div>
+      </div>
+
+      {/* ---------- Contact Section ---------- */}
       <Box className="contactSection">
         <Box className="contactContent">
           <Typography variant="h4" className="contactTitle">

@@ -13,7 +13,7 @@ import {
     useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/UI/logo.svg';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
@@ -27,7 +27,7 @@ const Header: React.FC = () => {
     };
 
     const menuItems = [
-        { label: 'Home', to: '/' },
+        { label: 'Find Your Stay ', to: '/' },
         { label: 'About Us', to: '/about' },
         { label: 'Blogs', to: '/' },
         { label: 'Rooms', to: '/' },

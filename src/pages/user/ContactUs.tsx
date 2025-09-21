@@ -7,6 +7,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import contactUs from "../../assets/UI/contactUs.jpg"
 import "../../styles/user/ContactUs.css";
 
 const ContactUs: React.FC = () => {
@@ -137,7 +138,7 @@ const ContactUs: React.FC = () => {
         {/* Right Side - Image */}
         <div className="contactCol contactRight">
           <div className="imageContainer">
-            <img src="/room1.jpg" alt="Location" className="contactImage" />
+            <img src={contactUs} alt="Location" className="contactImage" />
           </div>
         </div>
       </div>
