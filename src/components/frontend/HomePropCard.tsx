@@ -1,5 +1,13 @@
-import { Card, CardContent, CardMedia, Typography, Box, Button } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Box,
+  Button,
+} from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useNavigate } from "react-router-dom";
 import "../../styles/user/HomePropCard.css";
 
 interface HomePropCard {
@@ -10,7 +18,14 @@ interface HomePropCard {
   price: string;
 }
 
-const HomePropCard: React.FC<HomePropCard> = ({ image, name, description, location, price }) => {
+const HomePropCard: React.FC<HomePropCard> = ({
+  image,
+  name,
+  description,
+  location,
+  price,
+}) => {
+  const navigate = useNavigate();
   return (
     <Card className="hotelCard">
       {/* Hotel Image */}
@@ -21,7 +36,11 @@ const HomePropCard: React.FC<HomePropCard> = ({ image, name, description, locati
         <Typography variant="h6" className="hotelTitle">
           {name}
         </Typography>
-        <Typography variant="body2" color="text.secondary" className="hotelDescription">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          className="hotelDescription"
+        >
           {description}
         </Typography>
 
@@ -44,6 +63,7 @@ const HomePropCard: React.FC<HomePropCard> = ({ image, name, description, locati
               borderRadius: 2,
               "&:hover": { bgcolor: "#ab3864" },
             }}
+            onClick={() => navigate("/property/detail")}
           >
             Book Now
           </Button>

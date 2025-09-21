@@ -1,204 +1,510 @@
 /* ===== Global Container ===== */
 .mainUpperContainer {
-    padding: 20px;
-    margin: 0 auto;
-    max-width: 1600px;
-    font-family: "Roboto", sans-serif;
-  }
-  
-  .breadcrumbContainer {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .backButton {
-    color: #c14365;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  /* ===== Main Section ===== */
-  .mainSection {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  
-  /* ===== Left Section (Images) ===== */
-  .leftSection {
-    flex: 0 0 68%;
-    display: flex;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1600px;
+  font-family: "Roboto", sans-serif;
+}
+
+.breadcrumbContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  color: #c14365;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* ===== Main Section ===== */
+.mainSection {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* ===== Left Section (Images) ===== */
+.leftSection {
+  flex: 0 0 68%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.coverImage {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.propertyImages {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.smallImage {
+  flex: 1;
+  min-width: 22%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.smallImage:hover {
+  transform: scale(1.05);
+}
+
+/* ===== Title Section ===== */
+.titleSection {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  gap: 20px;
+  flex-wrap: wrap; /* responsive wrapping */
+}
+
+.leftTitleSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Price */
+.price {
+  font-size: 28px;
+  font-weight: bold;
+  color: #c14365; /* theme color */
+  font-family: "Roboto", sans-serif;
+}
+
+/* Location */
+.location {
+  font-size: 18px;
+  font-weight: 500;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Roboto", sans-serif;
+}
+
+.locationIcon {
+  color: #c14365;
+  font-size: 20px;
+}
+
+/* Categories & Tags */
+.categoryTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.category,
+.tag {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #f9f9f9;
+  color: #555;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+.category:hover,
+.tag:hover {
+  background: #c14365;
+  color: #fff;
+  border-color: #c14365;
+}
+
+/* Amenities */
+.amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.amenity {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.amenityIcon {
+  font-size: 18px;
+  color: #c14365;
+}
+
+/* Ratings */
+.ratings {
+  margin-top: 12px;
+}
+
+.starIcon {
+  font-size: 28px;
+  color: #ffd700; /* Gold Yellow */
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+/* ===== Right Section (Owner + Map) ===== */
+.propeDetailRightSection {
+  flex: 0 0 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 60%;
+}
+
+/* Owner Box */
+.ownerBox {
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ownerTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.ownerName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.ownerDesc {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.contactAgent {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 2px solid #c14365;
+  border-radius: 8px;
+  color: #c14365;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.contactAgent:hover {
+  background-color: #c14365;
+  color: #fff;
+}
+
+.phoneIcon {
+  font-size: 18px;
+}
+
+/* Map Box */
+.mapBox {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  height: 300px;
+}
+
+.propertyMap {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* ===== Booking Box (Calendar + Button) ===== */
+.rightTitleSection {
+  flex: 0 0 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 260px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+}
+
+.bookingBox {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.bookingTitle {
+  font-size: 22px;
+  font-weight: bold;
+  color: #c14365;
+  margin-bottom: 10px;
+}
+
+/* Date Inputs */
+.dateGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.dateLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+.datePicker {
+  padding: 10px 12px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  width: 100%;
+  background: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.datePicker:focus {
+  border-color: #c14365;
+  box-shadow: 0 0 6px rgba(193, 67, 101, 0.3);
+  background: #fff;
+}
+
+/* Book Now Button */
+.bookButton {
+  background-color: #c14365;
+  color: #fff;
+  padding: 12px 18px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bookButton:hover {
+  background-color: #a83252;
+}
+
+/* ===== Description Section ===== */
+.descriptionSection {
+  max-width: 1600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.descriptionTitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #c14365;
+  font-family: "Poppins", sans-serif;
+}
+
+.descriptionText {
+  font-size: 19px;
+  line-height: 1.6;
+  color: #555;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Pet & Smoking Info */
+.propertyInfo {
+  display: flex;
+  gap: 30px;
+  margin-top: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.infoItem {
+  display: flex;
+  gap: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.infoTitle {
+  font-weight: 600;
+}
+
+.infoValue {
+  font-weight: 400;
+  color: #555;
+}
+
+/* House Rules */
+.houseRules {
+  margin-top: 25px;
+  font-family: "Roboto", sans-serif;
+}
+
+.houseRulesTitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #c14365;
+}
+
+.rulesList {
+  list-style: disc;
+  margin-left: 20px;
+  color: #555;
+  font-size: 19px;
+  line-height: 1.6;
+}
+
+.rulesList li {
+  margin-bottom: 6px;
+}
+
+/* ===== Similar Properties Section ===== */
+.similarPropertiesSection {
+  margin: 50px 10%;
+  font-family: "Poppins", sans-serif;
+}
+
+.similarPropertiesTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+/* Customize slick slider arrows */
+.similarPropertiesSlider .slick-prev,
+.similarPropertiesSlider .slick-next {
+  z-index: 2;
+  width: 35px;
+  height: 35px;
+  background: #c14365;
+  border-radius: 50%;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.similarPropertiesSlider .slick-prev:hover,
+.similarPropertiesSlider .slick-next:hover {
+  background: #ab3864;
+}
+
+.similarPropertiesSlider .slick-prev:before,
+.similarPropertiesSlider .slick-next:before {
+  content: "";
+}
+
+.similarPropertiesSlider .slick-slide {
+  padding: 0 10px;
+}
+
+.similarPropertiesSlider .slick-prev:before,
+.similarPropertiesSlider .slick-next:before {
+  color: white;
+  font-size: 20px;
+  opacity: 1;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 992px) {
+  .titleSection {
     flex-direction: column;
-    gap: 20px;
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    align-items: flex-start;
   }
-  
-  .coverImage {
+}
+
+@media (max-width: 768px) {
+  .rightTitleSection {
     width: 100%;
-    height: 400px;
-    object-fit: cover;
-    border-radius: 12px;
-  }
-  
-  .propertyImages {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  
-  .smallImage {
-    flex: 1;
-    min-width: 22%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .smallImage:hover {
-    transform: scale(1.05);
-  }
-  
-  /* ===== Right Section (Owner + Map) ===== */
-  .rightSection {
-    flex: 0 0 30%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  /* Owner Box */
-  .ownerBox {
+    min-height: auto;
     padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   }
-  
-  .ownerTitle {
+
+  .bookingBox {
+    gap: 15px;
+  }
+
+  .bookingTitle {
     font-size: 20px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
   }
-  
-  .ownerName {
+
+  .datePicker {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .bookButton {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .price {
+    font-size: 24px;
+  }
+  .location {
     font-size: 16px;
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 8px;
   }
-  
-  .ownerDesc {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 15px;
-    line-height: 1.5;
+  .category,
+  .tag {
+    font-size: 12px;
+    padding: 4px 8px;
   }
-  
-  .contactAgent {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border: 2px solid #c14365;
-    border-radius: 8px;
-    color: #c14365;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  .amenity {
+    font-size: 12px;
   }
-  
-  .contactAgent:hover {
-    background-color: #c14365;
-    color: #fff;
+
+  .coverImage {
+    height: 220px;
   }
-  
-  .phoneIcon {
-    font-size: 18px;
+
+  .smallImage {
+    height: 80px;
   }
-  
-  /* Map Box */
+
   .mapBox {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    height: 300px;
+    height: 200px;
   }
-  
-  .propertyMap {
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-    animation: fadeIn 1s ease-in-out;
-  }
-  
-  /* Animation */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.98);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  /* ===== Responsive Adjustments ===== */
-  @media (max-width: 1200px) {
-    .leftSection {
-      flex: 0 0 65%;
-    }
-  
-    .rightSection {
-      flex: 0 0 33%;
-    }
-  }
-  
-  @media (max-width: 992px) {
-    .mainSection {
-      flex-direction: column;
-    }
-  
-    .leftSection,
-    .rightSection {
-      flex: 1 1 100%;
-    }
-  
-    .coverImage {
-      height: 300px;
-    }
-  
-    .smallImage {
-      height: 100px;
-    }
-  
-    .mapBox {
-      height: 250px;
-    }
-  }
-  
-  @media (max-width: 600px) {
-    .coverImage {
-      height: 220px;
-    }
-  
-    .smallImage {
-      height: 80px;
-    }
-  
-    .mapBox {
-      height: 200px;
-    }
-  }
-  
+}

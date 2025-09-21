@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
   return (
     <Box component="footer" className="footer">
       {/* Brand */}
-      <Typography className="footerBrand">AAJOO Homes.</Typography>
+      {/* <Typography className="footerBrand">AAJOO Homes.</Typography> */}
       <Divider className="divider" />
 
       <Container maxWidth="lg">
