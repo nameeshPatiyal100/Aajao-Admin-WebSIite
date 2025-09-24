@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import loginPage from "../../assets/UI/loginpagesvg.svg";
 import "../../styles/LoginForm.css";
 
 export const LoginForm = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [userType, setUserType] = useState<"renter" | "host">("renter");
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -41,6 +41,7 @@ export const LoginForm = () => {
               display: "flex",
               justifyContent: "center",
               mb: 3,
+              height: "38px",
               borderRadius: "30px",
               overflow: "hidden",
               "& .MuiToggleButton-root": {
@@ -61,8 +62,8 @@ export const LoginForm = () => {
                   borderBottomRightRadius: "30px",
                 },
                 "&.Mui-selected": {
-                  backgroundColor: "#ffe4ec",
-                  color: "#C14365",
+                  backgroundColor: "#c14365",
+                  color: "white",
                   borderColor: "#C14365",
                 },
                 "&:hover": {
@@ -165,23 +166,11 @@ export const LoginForm = () => {
           >
             Login with Google
           </Button>
-          <Button
-            variant="contained"
-            fullWidth
-            sx={{
-              mt: 2,
-              mb: 2,
-              backgroundColor: "#C14365",
-              color: "#fff",
-              borderRadius: "8px",
-              padding: "12px",
-              fontWeight: 600,
-              "&:hover": { backgroundColor: "#a93250" },
-            }}
-            onClick={() => navigate('/')}
-          >
-            Return to Home
-          </Button>
+          <div className="singuponLogin">
+            <Link to="/auth/forget" className="forgot-password">
+              Don't Have Account? Sign-up
+            </Link>
+          </div>
         </div>
       </div>
 
