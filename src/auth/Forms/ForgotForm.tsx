@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import "../../styles/ForgetPasswordForm.css";
-import { useNavigate } from 'react-router-dom';
-import bgImage from "../../assets/UI/forgotpasswordback.jpg"; // <-- add your background image here
+import { useNavigate } from "react-router-dom";
+import bgImage from "../../assets/UI/forgetpass1.svg";
+import logo from "../../assets/UI/logo.svg";
 
 export const ForgetPasswordForm = () => {
   const [step, setStep] = useState<"email" | "otp">("email");
@@ -11,9 +12,7 @@ export const ForgetPasswordForm = () => {
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(30);
 
-
   const navigate = useNavigate();
-
 
   // Timer effect
   useEffect(() => {
@@ -29,9 +28,10 @@ export const ForgetPasswordForm = () => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
+
   const returnToLogin = () => {
     navigate("/auth/login");
-  }
+  };
 
   const handleSubmit = () => {
     if (step === "email") {
@@ -51,17 +51,26 @@ export const ForgetPasswordForm = () => {
         setError("OTP is required");
         return;
       }
+      if (otp.length !== 4) {
+        setError("OTP must be 4 digits");
+        return;
+      }
       setError("");
       alert(`OTP Submitted: ${otp}`); // replace with your API call
     }
   };
 
+  const handleResendOtp = () => {
+    setOtp("");
+    setTimer(30);
+    alert("OTP resent to your email"); // replace with API call
+  };
+
   return (
-    <Box
-      className="forget-container"
-      sx={{ backgroundImage: `url(${bgImage})` }}
-    >
+    <Box className="forget-container">
+      {/* Left: Form */}
       <Box className="forget-box">
+        <img src={logo} alt="" className="topLogofrgtpas"/>
         <Typography variant="h4" fontWeight={700} mb={1} color="#C14365">
           Forgot Password
         </Typography>
@@ -98,9 +107,10 @@ export const ForgetPasswordForm = () => {
             fullWidth
             margin="normal"
             value={otp}
-            onChange={(e) => setOtp(e.target.value)}
+            onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))} // only digits
             error={!!error && step === "otp"}
             helperText={step === "otp" ? error : ""}
+            inputProps={{ maxLength: 4 }}
             sx={{
               "& .MuiOutlinedInput-root.Mui-focused fieldset": {
                 borderColor: "#C14365",
@@ -112,11 +122,20 @@ export const ForgetPasswordForm = () => {
           />
         )}
 
-        {/* Timer */}
+        {/* Timer / Resend OTP */}
         {step === "otp" && (
           <Typography variant="body2" color="text.secondary" mb={2}>
-            Resend OTP in {timer}s
+            {timer > 0 ? `Resend OTP in ${timer}s` : ""}
           </Typography>
+        )}
+        {step === "otp" && timer === 0 && (
+          <Button
+            variant="text"
+            onClick={handleResendOtp}
+            sx={{ color: "#C14365", fontWeight: 600 }}
+          >
+            Resend OTP
+          </Button>
         )}
 
         {/* Button */}
@@ -133,9 +152,11 @@ export const ForgetPasswordForm = () => {
             "&:hover": { backgroundColor: "#a93250" },
           }}
           onClick={handleSubmit}
+          disabled={step === "otp" && otp.length !== 4} // ✅ disabled until 4-digit OTP
         >
           {step === "email" ? "Submit" : "Submit OTP"}
         </Button>
+
         <Button
           fullWidth
           variant="contained"
@@ -150,8 +171,13 @@ export const ForgetPasswordForm = () => {
           }}
           onClick={returnToLogin}
         >
-          Retrun to Login
+          Return to Login
         </Button>
+      </Box>
+
+      {/* Right: Image */}
+      <Box className="rightImgFrgtPass">
+        <img src={bgImage} alt="Forgot password" />
       </Box>
     </Box>
   );

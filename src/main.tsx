@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import App from "./App.tsx";
-//import { AuthProvider } from "./context/AuthContext.tsx";
+// import { AuthProvider } from "./context/AuthContext.tsx";
 // import AppWrapper from "./appWrapper.tsx";
 
 createRoot(document.getElementById("root")!).render(

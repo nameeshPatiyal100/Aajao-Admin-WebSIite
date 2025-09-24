@@ -30,8 +30,8 @@ import {
 } from "./pages";
 
 // NEED TO SET ORDER
-import { UserDashboard } from "./pages/user/dashboard";
-import { HostDashboard } from "./pages/host/dashboard";
+// import { UserDashboard } from "./pages/user/dashboard";
+// import { HostDashboard } from "./pages/host/dashboard";
 import CommonLayout from "./components/layout/CommonLayout";
 import { Home } from "./pages";
 import GuestRoute from "./components/authGaurd";
@@ -39,7 +39,7 @@ import { LoginForm } from "./auth/Forms/LoginForm";
 import { ForgotPassword } from "./auth/ForgotPassword";
 import { VerifyOtp } from "./auth/VerifyOtp";
 import { ResetPassword } from "./auth/ResetPassword";
-import ProtectedRoute from "./components/protectedRoute";
+// import ProtectedRoute from "./components/protectedRoute";
 
 function App() {
   return (
@@ -56,20 +56,22 @@ function App() {
 
         {/* Auth Routes */}
         <Route path="/auth" element={<GuestRoute />}>
-          <Route path="login" element={<LoginForm />} />
-          <Route path="forget" element={<ForgotPassword />} />
-          <Route path="verifyOtp" element={<VerifyOtp />} />
-          <Route path="reset-password" element={<ResetPassword />} />
+          <Route element={<CommonLayout />}>
+            <Route path="login" element={<LoginForm />} />
+            <Route path="forget" element={<ForgotPassword />} />
+            <Route path="verifyOtp" element={<VerifyOtp />} />
+            <Route path="reset-password" element={<ResetPassword />} />
+          </Route>
         </Route>
 
-        <Route path="/host/*" element={<ProtectedRoute />}>
+        {/* <Route path="/host/*" element={<ProtectedRoute />}>
           <Route path="dashboard" element={<HostDashboard />} />
-          {/* other host routes */}
-        </Route>
 
-        <Route path="/user/*" element={<ProtectedRoute />}>
+        </Route> */}
+
+        {/* <Route path="/user/*" element={<ProtectedRoute />}>
           <Route path="dashboard" element={<UserDashboard />} />
-        </Route>
+        </Route> */}
 
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route

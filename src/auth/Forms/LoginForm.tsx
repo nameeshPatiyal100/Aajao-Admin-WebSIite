@@ -10,7 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useNavigate } from "react-router-dom";
-import loginPage from "../../assets/UI/loginpage.jpg";
+import loginPage from "../../assets/UI/loginpagesvg.svg";
 import "../../styles/LoginForm.css";
 
 export const LoginForm = () => {
