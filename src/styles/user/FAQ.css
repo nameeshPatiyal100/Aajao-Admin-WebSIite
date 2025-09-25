@@ -1,0 +1,144 @@
+.getintouchFaq {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  background: #f8f8f8; /* light background to separate section */
+}
+
+.getintouchFaqChild {
+  max-width: 800px;
+  text-align: center;
+  padding: 40px 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.getintouchFaqTitle {
+  font-family: "Poppins", sans-serif !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: #c14365;
+  margin-bottom: 16px !important;
+}
+
+.getintouchFaqText {
+  font-family: "Roboto", sans-serif !important;
+  font-size: 1.1rem !important;
+  color: #555;
+  margin-bottom: 24px !important;
+  line-height: 1.6;
+}
+
+.getintouchFaqButton {
+  display: inline-block;
+  padding: 12px 28px;
+  background-color: #c14365;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 10px rgba(193, 67, 101, 0.3);
+}
+
+.getintouchFaqButton:hover {
+  background-color: #a93250;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .getintouchFaqChild {
+    padding: 30px 20px;
+  }
+
+  .getintouchFaqTitle {
+    font-size: 1.6rem !important;
+  }
+
+  .getintouchFaqText {
+    font-size: 1rem !important;
+  }
+}
+
+.TopContainerFaq {
+  padding: 40px 20px;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.TopContainerFaq h1 {
+  color: #c14365;
+  font-family: "Poppins", sans-serif;
+  font-size: 2.2rem;
+  font-weight: bold;
+}
+
+.TopContainerFaq p {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.1rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+/* FAQ Container -> flexbox with wrapping */
+.FaqContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* Each FAQ Item -> takes 50% width */
+.FaqItem {
+  flex: 1 1 calc(50% - 20px); /* two per row with gap */
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 280px;
+}
+
+/* FAQ Title */
+.FaqTitle {
+  display: flex;
+  align-items: center;
+  font-family: "Poppins", sans-serif !important;
+  font-size: 1.2rem !important;
+  font-weight: 600 !important;
+  color: #c14365;
+  margin-bottom: 10px !important;
+}
+
+/* FAQ Icon */
+.FaqIcon {
+  color: #c14365;
+  margin-right: 8px;
+}
+
+/* FAQ Answer */
+.FaqAnswer {
+  font-family: "Roboto", sans-serif !important;
+  font-size: 1rem !important;
+  color: #444;
+  line-height: 1.5;
+}
+
+/* Responsive: stack into single column */
+@media (max-width: 768px) {
+  .FaqItem {
+    flex: 1 1 100%;
+  }
+}
