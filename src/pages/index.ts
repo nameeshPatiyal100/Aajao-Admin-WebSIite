@@ -17,3 +17,4 @@ export { default as ContactUs } from "./user/ContactUs";
 export { default as NotFound } from "./user/NotFound";
 export { default as FAQ } from "./user/FAQ";
 export { PropertyDetail } from "./user/PropertyDetail";
+export { default as DashboardLayout } from "./user/DashboardLayout";
