@@ -27,6 +27,7 @@ import {
   ContactUs,
   PropertyDetail,
   NotFound,
+  FAQ,
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -36,6 +37,8 @@ import CommonLayout from "./components/layout/CommonLayout";
 import { Home } from "./pages";
 import GuestRoute from "./components/authGaurd";
 import { LoginForm } from "./auth/Forms/LoginForm";
+import UserSignup from "./auth/UserSignup";
+import SignupOtpVerification from "./auth/SignupOtpVerification";
 import { ForgotPassword } from "./auth/ForgotPassword";
 import { VerifyOtp } from "./auth/VerifyOtp";
 import { ResetPassword } from "./auth/ResetPassword";
@@ -51,6 +54,7 @@ function App() {
           <Route path="about" element={<AboutUs />} />
           <Route path="contact" element={<ContactUs />} />
           <Route path="property/detail" element={<PropertyDetail />} />
+          <Route path="faqs" element={<FAQ />} />
           <Route path="*" element={<NotFound image={notFound} />} />
         </Route>
 
@@ -59,7 +63,9 @@ function App() {
           <Route element={<CommonLayout />}>
             <Route path="login" element={<LoginForm />} />
             <Route path="forget" element={<ForgotPassword />} />
+            <Route path="signup" element={<UserSignup />} />
             <Route path="verifyOtp" element={<VerifyOtp />} />
+            <Route path="signup-verication" element={<SignupOtpVerification />} />
             <Route path="reset-password" element={<ResetPassword />} />
           </Route>
         </Route>

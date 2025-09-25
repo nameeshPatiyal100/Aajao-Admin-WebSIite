@@ -15,4 +15,5 @@ export { default as Home } from "./user/home";
 export { default as AboutUs } from "./user/AboutUs";
 export { default as ContactUs } from "./user/ContactUs";
 export { default as NotFound } from "./user/NotFound";
+export { default as FAQ } from "./user/FAQ";
 export { PropertyDetail } from "./user/PropertyDetail";
