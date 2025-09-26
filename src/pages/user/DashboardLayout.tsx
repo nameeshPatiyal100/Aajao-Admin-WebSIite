@@ -12,9 +12,9 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CloseIcon from "@mui/icons-material/Close";
 
 // Import your other components here
-import UserProfile from "./UserProfile";
-import Bookings from "./UserBookings";
-import Transactions from "./UserTransactions";
+import UserProfile from "./UserProfile.tsx";
+import Bookings from "./UserBookings.tsx";
+import Transactions from "./UserTransactions.tsx";
 
 const DashboardLayout: React.FC = () => {
   const [activeSection, setActiveSection] = useState("profile");
