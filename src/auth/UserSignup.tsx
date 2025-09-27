@@ -9,6 +9,8 @@ import {
   InputLabel,
   FormControl,
   IconButton,
+  FormControlLabel,
+  Checkbox
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -41,8 +43,6 @@ const validationSchema = Yup.object({
 
 const UserSignup: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
-  //   const [dob, setDob] = useState<Date | null>(null);
-
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -60,6 +60,8 @@ const UserSignup: React.FC = () => {
       docType: "",
       docNumber: "",
       file: null,
+      isUser: false,
+      isHost: false,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -374,6 +376,47 @@ const UserSignup: React.FC = () => {
                 <MenuItem value="city2">City 2</MenuItem>
               </TextField>
               {/* <TextField fullWidth label="City" /> */}
+            </Box>
+          </Box>
+
+          <Box className="inputsUserinfoProfile">
+            <Box className="inputboxChilduserProfile">
+              <Typography className="userProfileFormLabel">
+                Select Who You Are ?
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formik.values.isUser}
+                    onChange={formik.handleChange}
+                    name="isUser"
+                    sx={{
+                      color: "#c14365",
+                      "&.Mui-checked": { color: "#c14365" },
+                    }}
+                  />
+                }
+                label="As User"
+              />
+               <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formik.values.isHost}
+                    onChange={formik.handleChange}
+                    name="isHost"
+                    sx={{
+                      color: "#c14365",
+                      "&.Mui-checked": { color: "#c14365" },
+                    }}
+                  />
+                }
+                label="As Host"
+              />
+              {formik.errors && typeof formik.errors === "string" && (
+                <Typography variant="body2" color="error">
+                  {formik.errors}
+                </Typography>
+              )}
             </Box>
           </Box>
 
