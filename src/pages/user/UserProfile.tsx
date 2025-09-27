@@ -10,7 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
+// import DeleteIcon from "@mui/icons-material/Delete";
 import userImg from "../../assets/UI/userDemo.jpg";
 import "../../styles/user/UserProfile.css";
 
@@ -75,29 +75,16 @@ const UserProfile: React.FC = () => {
             onChange={handleFileChange}
             style={{ display: "none" }}
           />
-          <Box className="profileChangeButton">
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#c14365",
-                "&:hover": { backgroundColor: "#a83252" },
-              }}
-              onClick={handleUploadClick}
-            >
-              Change Photo
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#c14365",
-                "&:hover": { backgroundColor: "#a83252" },
-              }}
-              onClick={handleUploadClick}
-            >
-              <DeleteIcon />
-              Remove
-            </Button>
-          </Box>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#c14365",
+              "&:hover": { backgroundColor: "#a83252" },
+            }}
+            onClick={handleUploadClick}
+          >
+            Change Photo
+          </Button>
         </Box>
 
         {/* Change Password Section */}
@@ -265,23 +252,10 @@ const UserProfile: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                label="County"
+                label="State"
               >
                 <MenuItem value="state1">State 1</MenuItem>
                 <MenuItem value="state2">State 2</MenuItem>
-              </TextField>
-            </Box>
-            <Box className="inputboxChilduserProfile">
-              <Typography className="userProfileFormLabel">City</Typography>
-              <TextField
-                select
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                label="City"
-              >
-                <MenuItem value="city1">City 1</MenuItem>
-                <MenuItem value="city2">City 2</MenuItem>
               </TextField>
             </Box>
           </Box>
