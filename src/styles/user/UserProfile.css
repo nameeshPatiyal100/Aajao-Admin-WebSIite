@@ -1,89 +1,188 @@
+.profileChangeButton{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userInforight {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #c14365;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif !important;
+}
+
+.userInfoFormProfile {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputsUserinfoProfile {
+  width: 95%;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.userProfileFormLabel {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif !important;
+  font-weight: bold;
+  color: #c14365;
+}
+
+.inputboxChilduserProfile {
+  width: 45%;
+}
+
+.uploadBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chooseFileBtn {
+  background-color: #c14365 !important;
+  color: white !important;
+  font-weight: bold;
+  text-transform: none;
+}
+
+.imagePreview {
+  position: relative;
+  display: inline-block;
+}
+
+.previewImg {
+  width: 200px;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.removeImgBtn {
+  position: absolute !important;
+  top: -8px;
+  right: -8px;
+  background: #fff !important;
+  border: 1px solid #ccc;
+}
+
+.submitBtn {
+  background-color: #c14365 !important;
+  padding: 0.7rem 2rem !important;
+  font-weight: bold !important;
+  text-transform: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .inputboxChilduserProfile {
+    width: 100%;
+  }
+
+  .inputsUserinfoProfile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .uploadBox {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+
+/* ////////////////////////////// */
+
 .mainContaineruserProfile {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  /* Left section */
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Left section */
+.leftContaineruserProfile {
+  border: 1px solid #ddd;
+  width: 25%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  gap: 5rem;
+}
+
+.imageContainerUserProfile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.userDemoImg {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #c14365;
+}
+
+/* Change password section */
+.changePasswordContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.changePasswordTitle {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #c14365;
+}
+
+/* Right section */
+.rightContaineruserProfile {
+  flex: 1;
+  border: 1px solid #ddd;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
   .leftContaineruserProfile {
-    border: 1px solid #ddd;
-    width: 25%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-    gap: 5rem;
+    width: 35%;
   }
-  
-  .imageContainerUserProfile {
-    display: flex;
+}
+
+@media (max-width: 768px) {
+  .mainContaineruserProfile {
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
+  }
+
+  .leftContaineruserProfile {
     width: 100%;
+    min-height: auto;
   }
-  
-  .userDemoImg {
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #c14365;
-  }
-  
-  /* Change password section */
-  .changePasswordContainer {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .changePasswordTitle {
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #c14365;
-  }
-  
-  /* Right section */
+
   .rightContaineruserProfile {
-    flex: 1;
-    border: 1px solid #ddd;
-    min-height: 100vh;
-    padding: 1rem;
+    width: 100%;
+    min-height: auto;
   }
-  
-  /* Responsive */
-  @media (max-width: 1024px) {
-    .leftContaineruserProfile {
-      width: 35%;
-    }
+
+  .userDemoImg {
+    width: 100px;
+    height: 100px;
   }
-  
-  @media (max-width: 768px) {
-    .mainContaineruserProfile {
-      flex-direction: column;
-    }
-  
-    .leftContaineruserProfile {
-      width: 100%;
-      min-height: auto;
-    }
-  
-    .rightContaineruserProfile {
-      width: 100%;
-      min-height: auto;
-    }
-  
-    .userDemoImg {
-      width: 100px;
-      height: 100px;
-    }
+}
+
+@media (max-width: 480px) {
+  .userDemoImg {
+    width: 80px;
+    height: 80px;
   }
-  
-  @media (max-width: 480px) {
-    .userDemoImg {
-      width: 80px;
-      height: 80px;
-    }
-  }
-  
+}
