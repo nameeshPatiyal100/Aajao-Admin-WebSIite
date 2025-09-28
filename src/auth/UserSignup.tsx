@@ -337,7 +337,6 @@ const UserSignup: React.FC = () => {
                   {formik.errors.docType}
                 </Typography>
               )}
-              {/* <TextField fullWidth label="City" /> */}
             </Box>
           </Box>
           <Box className="inputsUserinfoProfile">
