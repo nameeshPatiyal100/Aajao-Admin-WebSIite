@@ -13,7 +13,7 @@ import {
   useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 import logo from "../../assets/UI/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -29,9 +29,9 @@ const Header: React.FC = () => {
 
   const menuItems = [
     { label: "Find Your Stay ", to: "/" },
+    { label: "Homes", to: "/" },
     { label: "About Us", to: "/about" },
-    { label: "Blogs", to: "/" },
-    { label: "Rooms", to: "/" },
+    // { label: "Rooms", to: "/" },
     { label: "Contact", to: "/contact" },
   ];
 
@@ -109,18 +109,13 @@ const Header: React.FC = () => {
                 </Button>
                 <Button
                   onClick={() => navigate("/auth/login")}
-                //   variant="outlined"
+                  //   variant="outlined"
                   sx={{
                     textTransform: "none",
                     color: "#C14365",
-                    // borderColor: "#6B240C",
-                    // "&:hover": {
-                    //   bgcolor: "#F2D0C4",
-                    //   borderColor: "#6B240C",
-                    // },
                   }}
                 >
-                  <PersonIcon/>
+                  <PersonIcon />
                 </Button>
               </Box>
             </>
