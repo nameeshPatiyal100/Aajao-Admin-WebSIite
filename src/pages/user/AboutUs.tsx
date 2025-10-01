@@ -41,9 +41,7 @@ const AboutUs = () => {
                 alt=""
                 className="titleWithiconAboutusIcon"
               />
-              <h2 className="titleWithiconAboutusText">
-                Dream Properties
-              </h2>
+              <h2 className="titleWithiconAboutusText">Dream Properties</h2>
             </Box>
             <Box className="titleWithiconAboutus">
               <img

@@ -1,88 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
-.AboutusWhychooseSec {
-  /* border: 1px solid black; */
-  height: 650px;
-  display: flex;
-  justify-content: space-around;
-}
-.AboutusWhychooseSecleft {
-  /* border: 1px solid red; */
-  width: 45%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.AboutusWhychooseSectitle {
-  /* border: 1px solid blue; */
-  /* font-size: 3rem; */
-  font-weight: 600 !important;
-  margin-bottom: 20px;
-  color: #c14365;
-}
-.AboutusWhychooseSecdesc {
-  /* border: 1px solid green; */
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #444;
-}
-.ThreeIconsAboutUs {
-  /* border: 1px solid black; */
-  margin-top: 20px;
-  width: 80%;
-  height: 350px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-direction: column;
-}
-.titleWithiconAboutus {
-  border: 1px solid red;
-  width: 80%;
-  background-color: #c14365;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
-}
-.titleWithiconAboutusIcon {
-  width: 80px;
-  border-radius: 10px;
-}
-.titleWithiconAboutusText {
-  font-size: 2rem;
-  font-weight: 500;
-
-  color: white;
-}
-.AboutusWhychooseSecRight {
-  /* border: 1px solid red; */
-  width: 45%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  border-radius: 20px;
-  align-items: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-.aboutus2Img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-/* ///////////////////////////////// */
-
 /* General Reset */
 * {
   margin: 0;
@@ -97,26 +14,22 @@ body {
 }
 
 /* ---------- Hero Section ---------- */
-/* ---------- About Us Hero Section ---------- */
 .aboutHero {
-  /* border: 1px solid red; */
   padding: 60px 20px 40px;
   text-align: center;
-  background: #fafafa;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .aboutHeroTitle {
-  color: #c14365; /* theme color */
+  color: #c14365;
   font-weight: 700 !important;
   font-size: 3rem !important;
   margin-bottom: 16px;
 }
 
 .aboutHeroDescription {
-  /* border: 1px solid black; */
   max-width: 1200px;
   margin: 0 auto;
   font-size: 1.2rem !important;
@@ -124,104 +37,120 @@ body {
   line-height: 1.6;
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 768px) {
-  .aboutHeroTitle {
-    font-size: 2.2rem !important;
-  }
-  .aboutHeroDescription {
-    font-size: 1rem;
-    padding: 0 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .aboutHeroTitle {
-    font-size: 1.8rem !important;
-  }
-  .aboutHeroDescription {
-    font-size: 0.95rem;
-  }
-}
-
-.aboutUsHero {
-  position: relative;
-  width: 100%;
-  height: 70vh;
-  background-image: url("/room5.webp"); /* ✅ Replace with your image */
-  background-size: cover;
-  background-position: center;
+/* ---------- Why Choose Section ---------- */
+.AboutusWhychooseSec {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-}
-
-.aboutUsOverlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.aboutUsContent {
-  text-align: center;
-  color: #fff;
-  max-width: 850px;
-  padding: 20px;
-}
-
-.aboutUsTitle {
-  font-size: 3rem;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-.aboutUsDescription {
-  font-size: 1.2rem;
-  line-height: 1.8;
-  color: #f2f2f2;
-}
-
-/* ---------- Text + Image Section ---------- */
-.aboutustextsection {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   gap: 40px;
-  background-color: #c14365;
-  padding: 60px 20px;
+  padding: 40px 20px;
   flex-wrap: wrap;
-  margin-top: 80px;
-  color: #fff;
 }
 
-.textSectionImg img {
-  width: 250px;
-  height: 250px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 6px solid #fff;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
-}
-
-.textSectiontext {
+.AboutusWhychooseSecleft,
+.AboutusWhychooseSecRight {
   flex: 1;
-  max-width: 600px;
+  min-width: 320px;
 }
 
-.textSectiontext h2 {
+.AboutusWhychooseSectitle {
+  font-weight: 600 !important;
+  margin-bottom: 20px;
+  color: #c14365;
+}
+
+.AboutusWhychooseSecdesc {
+  font-family: "Inter", "Roboto", "Helvetica", Arial, sans-serif;  /* clean modern font */
+  font-size: 1.1rem !important;            /* readable body size */
+  line-height: 1.7;           /* balanced spacing */
+  color: #444;                /* softer than black */
+  max-width: 700px;           /* prevents very long lines */
+  margin: 0 auto;             /* center align inside section */
+  text-align: center;         /* aligns with section’s title */
+  font-weight: 400;           /* normal weight for body */
+  letter-spacing: 0.2px;      /* subtle spacing for readability */
+}
+
+
+.ThreeIconsAboutUs {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.titleWithiconAboutus {
+  background-color: #c14365;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 16px;
+}
+
+.titleWithiconAboutusIcon {
+  width: 60px;
+  border-radius: 10px;
+}
+
+.titleWithiconAboutusText {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: white;
+}
+
+.aboutus2Img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* ---------- Alternating About Sections ---------- */
+.aboutSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 10%;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.textContainer {
+  flex: 1;
+  min-width: 280px;
+}
+
+.sectionTitle {
   font-size: 2rem;
-  margin-bottom: 15px;
   font-weight: 600;
+  margin-bottom: 15px;
+  color: #222;
 }
 
-.textSectiontext p {
+.sectionDescription {
   font-size: 1.1rem;
-  line-height: 1.8;
+  line-height: 1.6;
+  color: #555;
+}
+
+.imageContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.sectionImage {
+  width: 100%;
+  max-width: 550px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.sectionImage:hover {
+  transform: scale(1.05);
 }
 
 /* ---------- Gallery Section ---------- */
@@ -233,10 +162,8 @@ body {
 
 .parent {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
-  height: 80vh;
 }
 
 .gridBox {
@@ -244,9 +171,7 @@ body {
   overflow: hidden;
   border-radius: 14px;
   cursor: pointer;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .gridBox:hover {
@@ -281,77 +206,10 @@ body {
   font-weight: 600;
 }
 
-/* Grid positions */
-.div1 {
-  grid-column: span 2;
-  grid-row: span 3;
-}
-.div2 {
-  grid-column: span 1;
-  grid-row: span 2;
-}
-.div3 {
-  grid-column: span 1;
-  grid-row: span 3;
-}
-.div4 {
-  grid-column: span 1;
-  grid-row: span 2;
-}
-.div5 {
-  grid-column: span 2;
-  grid-row: span 3;
-}
-
-/* ---------- Alternating About Sections ---------- */
-.aboutSection {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 60px 10%;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-
-.textContainer {
-  flex: 1;
-}
-
-.sectionTitle {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: #222;
-}
-
-.sectionDescription {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #555;
-}
-
-.imageContainer {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.sectionImage {
-  width: 100%;
-  max-width: 550px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease;
-}
-
-.sectionImage:hover {
-  transform: scale(1.05);
-}
-
 /* ---------- Contact Section ---------- */
 .contactSection {
   width: 100%;
-  height: 200px;
+  padding: 40px 20px;
   background-color: #c14365;
   display: flex;
   align-items: center;
@@ -385,103 +243,55 @@ body {
   background-color: #f8e4ec !important;
 }
 
-/* ---------- Responsive Design ---------- */
+/* ---------- Responsive Adjustments ---------- */
 @media (max-width: 1024px) {
-  .aboutUsHero {
-    height: 60vh;
+  .aboutHeroTitle {
+    font-size: 2.2rem !important;
   }
-  .aboutUsTitle {
-    font-size: 2.4rem;
+  .aboutHeroDescription {
+    font-size: 1rem;
+    padding: 0 10px;
   }
-  .aboutUsDescription {
-    font-size: 1.05rem;
-  }
-
-  .parent {
-    grid-template-columns: repeat(3, 1fr);
-    height: auto;
-  }
-  .div1,
-  .div2,
-  .div3,
-  .div4,
-  .div5 {
-    grid-column: span 1 !important;
-    grid-row: auto !important;
-  }
-
   .aboutSection {
     flex-direction: column;
     text-align: center;
-  }
-  .sectionImage {
-    max-width: 100%;
-    margin-top: 20px;
+    padding: 40px 20px;
   }
 }
 
 @media (max-width: 768px) {
-  .aboutUsHero {
-    height: 50vh;
-  }
-  .aboutUsTitle {
-    font-size: 2rem;
-  }
-  .aboutUsDescription {
-    font-size: 0.95rem;
-  }
-
-  .aboutustextsection {
+  .AboutusWhychooseSec {
     flex-direction: column;
     text-align: center;
-    gap: 25px;
   }
-  .textSectionImg img {
-    width: 180px;
-    height: 180px;
+  .titleWithiconAboutus {
+    justify-content: center;
   }
-
-  .parent {
-    grid-template-columns: repeat(2, 1fr);
+  .aboutHeroTitle {
+    font-size: 1.8rem !important;
   }
-}
-
-@media (max-width: 600px) {
-  .contactTitle {
+  .aboutHeroDescription {
+    font-size: 0.95rem;
+  }
+  .sectionTitle {
     font-size: 1.5rem;
   }
-  .contactButton {
-    padding: 6px 18px !important;
-    font-size: 0.9rem !important;
-  }
-
-  .sectionTitle {
-    font-size: 1.4rem;
-  }
   .sectionDescription {
-    font-size: 0.95rem;
-  }
-  .textSectiontext h2 {
-    font-size: 1.4rem;
-  }
-  .textSectiontext p {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .aboutUsHero {
-    height: 45vh;
-    padding: 10px;
+  .aboutHeroTitle {
+    font-size: 1.6rem !important;
   }
-  .aboutUsTitle {
-    font-size: 1.6rem;
+  .aboutHeroDescription {
+    font-size: 0.9rem;
   }
-  .aboutUsDescription {
-    font-size: 0.85rem;
+  .titleWithiconAboutusIcon {
+    width: 50px;
   }
-
-  .parent {
-    grid-template-columns: 1fr;
+  .titleWithiconAboutusText {
+    font-size: 1rem;
   }
 }
