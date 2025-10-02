@@ -1,5 +1,5 @@
 // import Slider from "react-slick";
-import { Box,} from "@mui/material";
+import { Box } from "@mui/material";
 import {
   MapandFilter,
   // WhyChooseUs,
@@ -138,101 +138,8 @@ const Home = () => {
 
   return (
     <Box>
-      {/* Hero Slider */}
-      {/* <Box sx={{ position: "relative" }}>
-        <Slider {...sliderSettings}>
-          {roomImages.map((src, idx) => (
-            <Box key={idx}>
-              <Box
-                component="img"
-                src={src}
-                alt={`room-${idx}`}
-                sx={{
-                  width: "100%",
-                  height: { xs: "50vh", md: "80vh" },
-                  objectFit: "cover",
-                  filter: "brightness(0.7)",
-                }}
-              />
-            </Box>
-          ))}
-        </Slider>
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#fff",
-            textAlign: "center",
-            px: 2,
-          }}
-        >
-          <Typography variant="h3" fontWeight="bold">
-            Welcome to AAJAO
-          </Typography>
-          <Typography variant="h6" mt={2}>
-            Your comfort is our priority. Experience luxury like never before.
-          </Typography>
-          <Button
-            variant="contained"
-            sx={{
-              mt: 3,
-              bgcolor: "#fff",
-              color: "#C14365",
-              px: 4,
-              py: 1.5,
-              fontWeight: 600,
-              "&:hover": {
-                bgcolor: "#fce4ec",
-              },
-            }}
-          >
-            Book Now
-          </Button>
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          backgroundColor: "#fff",
-          borderRadius: "12px",
-          boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
-          padding: "1.5rem",
-          marginTop: "2rem",
-          marginBottom: "2rem",
-          textAlign: "center", // center everything inside
-        }}
-      >
-        <Typography
-          variant="h4" // a bit bigger than h5
-          sx={{
-            color: "#c14365",
-            fontWeight: "bold",
-            marginTop: "1rem",
-            marginBottom: "1rem",
-          }}
-        >
-          Properties near you
-        </Typography>
-
-        <Typography
-          variant="body1"
-          sx={{ color: "#555", maxWidth: "700px", mx: "auto" }}
-        >
-          Explore the best properties located close to your current location.
-          Use filters to refine your search and find your perfect place.
-        </Typography>
-      </Box> */}
       <MapandFilter />
-      {/* <HomeCategorySection /> */}
-      {/* <HomeCustomGrid /> */}
-      {/* <FeatureSection /> */}
-      {/* <div> */}
+
       {/* 🔹 Hotel Cards Section */}
       <section className="featured-properties">
         <h2>Featured Properties</h2>
@@ -242,7 +149,7 @@ const Home = () => {
           ))}
         </div>
       </section>
-      {/* </div> */}
+
       {/* <CTAoneHome /> */}
       <CTAoneHome
         backgroundImage="/room5.webp"
@@ -250,14 +157,12 @@ const Home = () => {
         buttonText="Explore Now"
         onButtonClick={handleApiCall}
       />
-      {/* <WhyChooseUs /> */}
-      {/* <FAQSection image="/faq_vector.jpg" faqs={faqs} />; */}
+
       <FAQSection
         image="/faq_vector.jpg"
         faqs={faqs}
         description="Got questions? We’ve got answers for you!"
       />
-      ;
       <CTAoneHome
         backgroundImage="/room3.jpg"
         title="Looking for a relaxing vacation?"

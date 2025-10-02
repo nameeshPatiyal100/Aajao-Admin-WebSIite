@@ -77,7 +77,7 @@ const MapandFilter: React.FC = () => {
         <div className="bottomSection">
           <div className="preBookingSection">
             <img src={crown1} alt="Luxury" className="lowerSectionImg" />
-            <span className="lowerSectionText">Luxury</span>
+            <span className="lowerSectionText">Luxury Room</span>
           </div>
           <div className="luxurySection">
             <img src={prebooking} alt="Pre-Booking" className="lowerSectionImg" />

@@ -39,17 +39,19 @@
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   gap: 20px;
   height: 400px !important;
 }
 
 /* Filter cards */
 .upperSection {
-  min-height: 120px;
+  min-height: 200px;
   background-color: white;
   border-radius: 12px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   display: flex;
+  align-items: center;
   justify-content: space-around;
   flex-wrap: wrap; /* allows wrapping on small devices */
   padding: 10px;
@@ -58,13 +60,14 @@
 
 .categoryName {
   color: #c14365;
-  font-size: large;
+  font-size: 1.5rem;
+  font-weight: 600;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .lowerSectionImg {
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
 }
 
 .lowerSectionText {
@@ -87,7 +90,7 @@
   min-width: 140px;
   border-radius: 20px;
   background: #c14365;
-  height: 100px;
+  height: 70px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -102,8 +105,8 @@
 }
 
 .categoryImg {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   margin-bottom: 8px;
 }
 
@@ -163,7 +166,7 @@
   .preBookingSection,
   .luxurySection {
     width: 100%;
-    height: 100px;
+    /* height: 100px; */
   }
 }
 

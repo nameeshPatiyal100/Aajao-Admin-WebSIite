@@ -1,0 +1,70 @@
+.plFilter {
+    margin-top: 20px;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap; /* enables wrapping */
+  }
+  
+  .plFilterSecOne {
+    border: 1px solid #e0e0e0;
+    flex: 1 1 55%;
+    min-width: 280px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row; /* side by side */
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .plFilterSectwo {
+    flex: 1 1 40%;
+    min-width: 250px;
+    height: 80px;
+  }
+
+
+
+  .plFilterSectwo {
+    border: 1px solid #e0e0e0;
+    flex: 1 1 40%;
+    min-width: 250px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .plFilterSectwo {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+  
+  
+  /* 🔹 Responsive tweaks */
+  @media (max-width: 1024px) {
+    .plFilter {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .plFilterSecOne,
+    .plFilterSectwo {
+      width: 100%;
+      min-width: unset;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .plFilterSecOne {
+      flex-direction: column; /* stack search + filter */
+      gap: 10px;
+    }
+  }
+  

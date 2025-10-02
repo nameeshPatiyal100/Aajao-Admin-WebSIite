@@ -28,7 +28,8 @@ import {
   PropertyDetail,
   NotFound,
   FAQ,
-  DashboardLayout
+  DashboardLayout,
+  PropertyListing
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -55,6 +56,7 @@ function App() {
           <Route path="about" element={<AboutUs />} />
           <Route path="contact" element={<ContactUs />} />
           <Route path="property/detail" element={<PropertyDetail />} />
+          <Route path="property/list" element={<PropertyListing />} />
           <Route path="faqs" element={<FAQ />} />
           <Route path="/user-dashboard" element={<DashboardLayout />} />
           <Route path="*" element={<NotFound image={notFound} />} />
