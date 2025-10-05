@@ -18,15 +18,6 @@ import "slick-carousel/slick/slick-theme.css";
 // const roomImages = ["/room1.jpg", "/room2.jpg", "/room3.jpg", "/room4.jpg"];
 
 const Home = () => {
-  // const sliderSettings = {
-  //   dots: true,
-  //   infinite: true,
-  //   speed: 800,
-  //   slidesToShow: 1,
-  //   slidesToScroll: 1,
-  //   autoplay: true,
-  //   arrows: false,
-  // };
 
   const handleApiCall = async () => {
     try {
