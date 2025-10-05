@@ -11,7 +11,7 @@ export { default as AdminAmmenities } from "./admin/adminProperty/AdminAmmenitie
 export { default as AdminPropertyVerification } from "./admin/adminProperty/AdminPropertyVerification";
 
 //USER SECTION EXPORTS
-export { default as Home } from "./user/Home";
+export { default as Home } from "./user/home"
 export { default as AboutUs } from "./user/AboutUs";
 export { default as ContactUs } from "./user/ContactUs";
 export { default as NotFound } from "./user/NotFound";
