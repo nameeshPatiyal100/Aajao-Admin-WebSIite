@@ -1,70 +1,74 @@
-.plFilter {
-    margin-top: 20px;
-    width: 100%;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap; /* enables wrapping */
+.propertyPageContainer {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Sidebar */
+.sidebarSection {
+  width: 280px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+}
+
+.sidebarContent {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Property Grid */
+.propertyListingContainer {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+/* Hamburger Icon - Desktop Hidden */
+.sidebarToggle {
+  display: none; /* hide by default */
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .propertyListingContainer {
+    grid-template-columns: repeat(3, 1fr);
   }
-  
-  .plFilterSecOne {
-    border: 1px solid #e0e0e0;
-    flex: 1 1 55%;
-    min-width: 280px;
-    padding: 10px;
-    display: flex;
-    flex-direction: row; /* side by side */
-    align-items: center;
-    gap: 15px;
+}
+
+@media (max-width: 900px) {
+  .propertyListingContainer {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .plFilterSectwo {
-    flex: 1 1 40%;
-    min-width: 250px;
-    height: 80px;
+}
+
+@media (max-width: 768px) {
+  .propertyPageContainer {
+    flex-direction: column;
   }
 
+  /* Hide sidebar on mobile */
+  .sidebarSection {
+    display: none;
+  }
 
+  /* Show hamburger above the property grid */
+  .sidebarToggle {
+    display: inline-flex !important; /* force show only on mobile */
+    background-color: #c14365;
+    color: #fff;
+    margin-bottom: 15px;
+    padding: 8px;
+    border-radius: 8px;
+  }
 
-  .plFilterSectwo {
-    border: 1px solid #e0e0e0;
-    flex: 1 1 40%;
-    min-width: 250px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 20px;
+  .propertyListingContainer {
+    grid-template-columns: 1fr;
   }
-  
-  /* Responsive */
-  @media (max-width: 1024px) {
-    .plFilterSectwo {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  }
-  
-  
-  /* 🔹 Responsive tweaks */
-  @media (max-width: 1024px) {
-    .plFilter {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  
-    .plFilterSecOne,
-    .plFilterSectwo {
-      width: 100%;
-      min-width: unset;
-    }
-  }
-  
-  @media (max-width: 600px) {
-    .plFilterSecOne {
-      flex-direction: column; /* stack search + filter */
-      gap: 10px;
-    }
-  }
-  
+}
