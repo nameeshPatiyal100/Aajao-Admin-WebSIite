@@ -43,7 +43,8 @@ const MapandFilter: React.FC = () => {
   return (
     <div className="MapParentSection">
       {/* Left Map Section */}
-      <div className="leftSection">
+      <div className="">
+      {/* leftSection */}
         {location ? (
           <iframe
             title="user-location-map"
@@ -55,7 +56,8 @@ const MapandFilter: React.FC = () => {
             src={`https://www.google.com/maps?q=${location.lat},${location.lng}&hl=es;z=14&output=embed`}
           ></iframe>
         ) : (
-          <div className="fallbackText">
+          <div className="">
+            {/* fallbackText */}
             {error || "Fetching your location..."}
           </div>
         )}
