@@ -5,52 +5,44 @@ import { CTAoneHome } from "../../components";
 
 const faqs = [
   {
-    title: "What is your return policy?",
-    description: `You can return items within 30 days of purchase for a full refund.
-    You can return items within 30 days of purchase for a full refund.You 
-    can return items within 30 days of purchase for a full refund.You can return items within
-     30 days of purchase for a full refund.You can return items within 30 days of purchase for a full refund.`,
+    title: "How do I find a room near me on AAJOO?",
+    description: `You just open the app, enable location, and you’ll see available rooms within walking distance from your current location.`,
   },
   {
-    title: "Do you offer international shipping?",
-    description: "Yes, we ship worldwide with applicable charges.",
+    title: "Can I negotiate the price before booking?",
+    description: "Yes! AAJOO allows real-time price negotiation with the host. You can propose a price and the host may accept, decline, or counter it.",
   },
   {
-    title: "How can I track my order?",
+    title: "Can I book for one night, a week, or a month?",
     description:
-      "After placing an order, you will receive a tracking ID via email.",
+      "Absolutely. You can choose a daily, weekly, or monthly stay as per your requirement. Use filters while searching.",
   },
   {
-    title: "What payment methods are accepted?",
+    title: "Is my booking and payment secure?",
     description:
-      "We accept credit cards, debit cards, UPI, PayPal, and net banking.",
+      "Yes. We use secure payment gateways and you receive confirmation via app and email after booking.",
   },
   {
-    title: "Can I cancel my order?",
-    description: "Yes, orders can be cancelled before they are shipped.",
+    title: "Do I have to pay a security deposit?",
+    description: "For monthly stays, a minimal security deposit may apply. For daily or short stays, no deposit is required.",
   },
   {
-    title: "How do I contact customer support?",
-    description: "You can reach us via email or our 24/7 live chat support.",
+    title: "Is KYC mandatory to book?",
+    description: "Yes, to ensure safety for both user and host, basic KYC (ID verification with photo) is required before final booking.",
   },
   {
-    title: "Are my payment details secure?",
+    title: "What if I have an issue during the stay?",
     description:
-      "Yes, all payments are processed through secure encrypted gateways.",
+      "You can contact AAJOO support via in-app chat, email, or WhatsApp support for any help during your stay.",
   },
   {
-    title: "Do you offer discounts?",
-    description: "Yes, we offer seasonal discounts and promo codes.",
+    title: "What is the cancellation policy?",
+    description: "You can cancel your booking according to the cancellation terms.",
   },
   {
-    title: "Is account registration required?",
+    title: "Can I talk to the host before booking?",
     description:
-      "No, you can checkout as a guest, but registration gives more benefits.",
-  },
-  {
-    title: "How long does delivery take?",
-    description:
-      "Delivery usually takes 3-7 business days depending on location.",
+      "Yes, once negotiation or request is accepted, you may get access to communicate with the host through the app.",
   },
 ];
 

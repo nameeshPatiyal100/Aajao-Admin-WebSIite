@@ -1,9 +1,13 @@
 // import Slider from "react-slick";
+import "../../styles/user/Home.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { Box } from "@mui/material";
+import { Link } from "react-router-dom";
 import {
   MapandFilter,
   // WhyChooseUs,
-  CTAoneHome,
+  // CTAoneHome,
   // HomeCategorySection,
   // HomeCustomGrid,
   HomePropCard,
@@ -11,23 +15,20 @@ import {
   // FeatureSection,
   ReviewSlider,
 } from "../../components";
-import "../../styles/user/Home.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import JoinusNow from "../../assets/UI/joinusNow.jpg";
 
 // const roomImages = ["/room1.jpg", "/room2.jpg", "/room3.jpg", "/room4.jpg"];
 
 const Home = () => {
-
-  const handleApiCall = async () => {
-    try {
-      const response = await fetch("/api/rooms");
-      const data = await response.json();
-      console.log("Fetched Rooms:", data);
-    } catch (error) {
-      console.error("Error fetching rooms:", error);
-    }
-  };
+  // const handleApiCall = async () => {
+  //   try {
+  //     const response = await fetch("/api/rooms");
+  //     const data = await response.json();
+  //     console.log("Fetched Rooms:", data);
+  //   } catch (error) {
+  //     console.error("Error fetching rooms:", error);
+  //   }
+  // };
 
   // 🔹 Hotels Array
   const hotels = [
@@ -136,30 +137,65 @@ const Home = () => {
         <h2>Featured Properties</h2>
         <div className="properties-grid">
           {hotels.map((hotel, idx) => (
-            <HomePropCard key={idx} {...hotel} />
+            <Link
+              to={`/property/detail/`}
+              key={idx}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <HomePropCard {...hotel} />
+            </Link>
           ))}
         </div>
       </section>
+      {/* <section className="featured-properties">
+        <h2>Featured Properties</h2>
+        <div className="properties-grid">
+          {hotels.map((hotel, idx) => (
+            <HomePropCard key={idx} {...hotel} />
+          ))}
+        </div>
+      </section> */}
 
       {/* <CTAoneHome /> */}
-      <CTAoneHome
+      {/* <CTAoneHome
         backgroundImage="/room5.webp"
         title="Looking for a relaxing vacation?"
         buttonText="Explore Now"
         onButtonClick={handleApiCall}
-      />
+      /> */}
+      <div className="addHostSection">
+        <div className="addHostSectionLeft">
+          <img src={JoinusNow} alt="Become a Host" />
+        </div>
+
+        <div className="addHostSectionRight">
+          <h2>Become a Host</h2>
+          <p className="addHostDesc">
+            Turn your extra space into an opportunity. Whether you have a cozy
+            apartment, a charming villa, or a vacation home, Aajoo Homes makes
+            it simple and secure to list your property. Connect with verified
+            guests, earn extra income, and share your hospitality with travelers
+            from around the world — all while maintaining complete control over
+            your property.
+          </p>
+          <Link to="/become-a-host" className="addHostButton">
+            Get Started
+          </Link>
+        </div>
+      </div>
 
       <FAQSection
         image="/faq_vector.jpg"
         faqs={faqs}
         description="Got questions? We’ve got answers for you!"
       />
-      <CTAoneHome
+
+      {/* <CTAoneHome
         backgroundImage="/room3.jpg"
         title="Looking for a relaxing vacation?"
         buttonText="Book now"
         onButtonClick={handleApiCall}
-      />
+      /> */}
       <ReviewSlider />
     </Box>
   );

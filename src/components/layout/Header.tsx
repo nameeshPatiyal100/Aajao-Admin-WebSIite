@@ -11,8 +11,10 @@ import {
   Box,
   useMediaQuery,
   useTheme,
+  Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import PersonIcon from "@mui/icons-material/Person";
 import logo from "../../assets/UI/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,11 +30,16 @@ const Header: React.FC = () => {
   };
 
   const menuItems = [
-    { label: "Find Your Stay ", to: "/" },
-    { label: "Homes", to: "/" },
+    { label: "Find Your Stay", to: "/" },
+    { label: "Homes", to: "/property/list" },
     { label: "About Us", to: "/about" },
-    // { label: "Rooms", to: "/" },
     { label: "Contact", to: "/contact" },
+    { label: "Help Center", to: "/" },
+    { label: "FAQ", to: "/faqs" },
+    { label: "Privacy Policy", to: "/" },
+    { label: "Terms & Condition", to: "/" },
+    { label: "Why Host List With Aajoo", to: "/" },
+    { label: "State Regulation", to: "/" },
   ];
 
   return (
@@ -57,68 +64,48 @@ const Header: React.FC = () => {
 
           <Box flexGrow={1} />
 
-          {/* Desktop View */}
+          {/* Desktop Right Section */}
           {!isMobile && (
-            <>
-              <Box sx={{ display: "flex", gap: 3 }}>
-                {menuItems.map((item) => (
-                  <Button
-                    key={item.to}
-                    component={Link}
-                    to={item.to}
-                    sx={{
-                      textTransform: "none",
-                      color: "#C14365",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {item.label}
-                  </Button>
-                ))}
-              </Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Button
+                onClick={() => navigate("/auth/signup")}
+                variant="contained"
+                sx={{
+                  textTransform: "none",
+                  bgcolor: "#c14365",
+                  color: "#fff",
+                  "&:hover": {
+                    bgcolor: "#ab3864",
+                  },
+                }}
+              >
+                Register
+              </Button>
 
-              <Box sx={{ display: "flex", gap: 2, marginLeft: 4 }}>
-                <Button
-                  onClick={() => navigate("/auth/signup")}
-                  variant="contained"
-                  sx={{
-                    textTransform: "none",
-                    bgcolor: "#c14365",
-                    color: "#fff",
-                    "&:hover": {
-                      bgcolor: "#94605A",
-                    },
-                  }}
-                >
-                  Register
-                </Button>
-                <Button
-                  onClick={() => navigate("/auth/login")}
-                  variant="outlined"
-                  sx={{
-                    textTransform: "none",
-                    color: "#C14365",
-                    borderColor: "#6B240C",
-                    "&:hover": {
-                      bgcolor: "#F2D0C4",
-                      borderColor: "#6B240C",
-                    },
-                  }}
-                >
-                  Login
-                </Button>
-                <Button
-                  onClick={() => navigate("/auth/login")}
-                  //   variant="outlined"
-                  sx={{
-                    textTransform: "none",
-                    color: "#C14365",
-                  }}
-                >
-                  <PersonIcon />
-                </Button>
-              </Box>
-            </>
+              <Button
+                onClick={() => navigate("/auth/login")}
+                variant="outlined"
+                sx={{
+                  textTransform: "none",
+                  color: "#c14365",
+                  borderColor: "#c14365",
+                  "&:hover": {
+                    bgcolor: "#fce4ec",
+                    borderColor: "#c14365",
+                  },
+                }}
+              >
+                Login
+              </Button>
+
+              <IconButton onClick={() => navigate("/auth/login")}>
+                <PersonIcon sx={{ color: "#c14365" }} />
+              </IconButton>
+
+              <IconButton onClick={toggleDrawer(true)}>
+                <MenuIcon sx={{ color: "#c14365" }} />
+              </IconButton>
+            </Box>
           )}
 
           {/* Mobile View Menu Button */}
@@ -130,63 +117,112 @@ const Header: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer for Mobile View */}
-      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
-        <Box sx={{ width: 250, p: 2, bgcolor: "#FFF", height: "100%" }}>
+      {/* Drawer (Now Opens from LEFT SIDE) */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={toggleDrawer(false)}
+      >
+        <Box
+          sx={{
+            width: 250,
+            p: 2,
+            bgcolor: "#fff",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            // justifyContent: "space-between",
+          }}
+        >
+          {/* Header inside sidebar */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 2,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                color: "#c14365",
+                fontWeight: 600,
+              }}
+            >
+              Menu
+            </Typography>
+
+            {/* Close Icon */}
+            <IconButton onClick={toggleDrawer(false)}>
+              <CloseIcon sx={{ color: "#c14365" }} />
+            </IconButton>
+          </Box>
+
+          {/* Menu Items */}
           <List>
             {menuItems.map((item) => (
               <ListItem
-                // button
                 key={item.to}
                 component={Link}
                 to={item.to}
                 onClick={toggleDrawer(false)}
-              >
-                <ListItemText primary={item.label} sx={{ color: "#6B240C" }} />
-              </ListItem>
-            ))}
-
-            <ListItem>
-              <Button
-                fullWidth
-                onClick={() => {
-                  navigate("/auth/login");
-                  setDrawerOpen(false);
-                }}
-                variant="outlined"
                 sx={{
-                  color: "#6B240C",
-                  borderColor: "#6B240C",
-                  textTransform: "none",
-                  mt: 2,
-                  "&:hover": { bgcolor: "#F2D0C4" },
-                }}
-              >
-                Login
-              </Button>
-            </ListItem>
-
-            <ListItem>
-              <Button
-                fullWidth
-                onClick={() => {
-                  navigate("/auth/signup");
-                  setDrawerOpen(false);
-                }}
-                variant="contained"
-                sx={{
-                  textTransform: "none",
-                  bgcolor: "#A9746E",
-                  color: "#fff",
                   "&:hover": {
-                    bgcolor: "#94605A",
+                    bgcolor: "#fce4ec",
                   },
                 }}
               >
-                Register
-              </Button>
-            </ListItem>
+                <ListItemText
+                  primary={item.label}
+                  sx={{
+                    color: "#c14365",
+                    fontWeight: 500,
+                  }}
+                />
+              </ListItem>
+            ))}
           </List>
+
+          {/* Auth Buttons inside drawer */}
+          <Box sx={{ mt: 2 }}>
+            <Button
+              fullWidth
+              onClick={() => {
+                navigate("/auth/login");
+                setDrawerOpen(false);
+              }}
+              variant="outlined"
+              sx={{
+                color: "#c14365",
+                borderColor: "#c14365",
+                textTransform: "none",
+                mb: 1.5,
+                "&:hover": { bgcolor: "#fce4ec" },
+              }}
+            >
+              Login
+            </Button>
+
+            <Button
+              fullWidth
+              onClick={() => {
+                navigate("/auth/signup");
+                setDrawerOpen(false);
+              }}
+              variant="contained"
+              sx={{
+                textTransform: "none",
+                bgcolor: "#c14365",
+                color: "#fff",
+                "&:hover": {
+                  bgcolor: "#ab3864",
+                },
+              }}
+            >
+              Register
+            </Button>
+          </Box>
         </Box>
       </Drawer>
     </>

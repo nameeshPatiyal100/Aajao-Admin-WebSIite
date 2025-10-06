@@ -1,6 +1,7 @@
 import "../../styles/user/MapandFilter.css";
 import React, { useEffect, useState } from "react";
 
+
 // Category icons
 import single from "../../assets/UI/single.png";
 import couple3 from "../../assets/UI/couple3.png";
@@ -77,13 +78,14 @@ const MapandFilter: React.FC = () => {
 
         {/* Lower Options */}
         <div className="bottomSection">
-          <div className="preBookingSection">
-            <img src={crown1} alt="Luxury" className="lowerSectionImg" />
-            <span className="lowerSectionText">Luxury Room</span>
-          </div>
+         
           <div className="luxurySection">
             <img src={prebooking} alt="Pre-Booking" className="lowerSectionImg" />
             <span className="lowerSectionText">Pre-Booking</span>
+          </div>
+          <div className="preBookingSection">
+            <img src={crown1} alt="Luxury" className="lowerSectionImg" />
+            <span className="lowerSectionText">Luxury Room</span>
           </div>
         </div>
       </div>

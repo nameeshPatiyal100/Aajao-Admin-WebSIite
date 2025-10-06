@@ -81,13 +81,15 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  padding: 20px;
   flex-wrap: wrap;
 }
 
 .preBookingSection,
 .luxurySection {
   flex: 1;
-  min-width: 140px;
+  min-width: 100px;
+  /* max-width: 200px; */
   border-radius: 20px;
   background: #c14365;
   height: 70px;
