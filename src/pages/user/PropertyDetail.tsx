@@ -13,7 +13,11 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
-import { HomePropCard, PropertyBookingBox } from "../../components";
+import {
+  HomePropCard,
+  PropertyBookingBox,
+  ReviewSliderAdvanced,
+} from "../../components";
 
 export const PropertyDetail: React.FC = () => {
   // const theme = useTheme();
@@ -148,7 +152,6 @@ export const PropertyDetail: React.FC = () => {
           <Typography color="text.primary">Property Detail</Typography>
         </Breadcrumbs>
       </Box>
-
       {/* Main Section */}
       <Box
         sx={{
@@ -289,7 +292,6 @@ export const PropertyDetail: React.FC = () => {
           </Box>
         </Box>
       </Box>
-
       {/* Description */}
       <Box
         sx={{
@@ -314,7 +316,8 @@ export const PropertyDetail: React.FC = () => {
           convenience.
         </Typography>
       </Box>
-
+      // Inside return JSX, before Similar Properties section
+      <ReviewSliderAdvanced propertyId="property-123" />
       {/* Similar Properties */}
       <Box sx={{ mt: 6 }}>
         <Typography sx={{ fontSize: 22, fontWeight: 600, mb: 3 }}>
