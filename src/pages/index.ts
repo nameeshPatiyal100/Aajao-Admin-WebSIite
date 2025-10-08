@@ -19,3 +19,4 @@ export { default as FAQ } from "./user/FAQ";
 export { PropertyDetail } from "./user/PropertyDetail";
 export { default as DashboardLayout } from "./user/DashboardLayout";
 export { default as PropertyListing } from "./user/PropertyListing";
+export { default as FinalBookingPage } from "./user/FinalBookingPage";

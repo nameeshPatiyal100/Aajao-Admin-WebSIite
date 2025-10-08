@@ -30,6 +30,7 @@ export { default as HomePropCard } from "./frontend/HomePropCard";
 export { default as FAQSection } from "./frontend/FAQSection";
 export { default as FeatureSection } from "./frontend/FeatureSection";
 export { default as ReviewSlider } from "./frontend/ReviewSlider";
+export { default as PropertyBookingBox } from "./frontend/PropertyBookingBox";
 // ------------------HOST-COMPONENT---------------------->
 
 

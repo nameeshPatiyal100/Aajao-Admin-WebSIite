@@ -15,7 +15,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-
+import { Link } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 // import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -85,7 +85,7 @@ const PropertyListing = () => {
   const filterContent = (
     <Box className="sidebarContent">
       {/* Search Field */}
-      <Typography sx={{ color: "#c14365", fontWeight: 600, mb: 1 , }}>
+      <Typography sx={{ color: "#c14365", fontWeight: 600, mb: 1 }}>
         Search
       </Typography>
       <TextField
@@ -261,7 +261,14 @@ const PropertyListing = () => {
         {/* Property Grid */}
         <Box className="propertyListingContainer">
           {properties.map((prop, idx) => (
-            <HomePropCard key={idx} {...prop} />
+            // <HomePropCard key={idx} {...prop} />
+            <Link
+              to={`/property/detail/`}
+              key={idx}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <HomePropCard {...prop} />
+            </Link>
           ))}
         </Box>
       </Box>

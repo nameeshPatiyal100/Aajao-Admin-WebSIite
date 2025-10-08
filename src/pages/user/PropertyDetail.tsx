@@ -1,73 +1,24 @@
-import "../../styles/user/PropertyDetail.css";
-import { Box, Typography, IconButton, Breadcrumbs, Link } from "@mui/material";
+import React from "react";
+import Slider from "react-slick";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Breadcrumbs,
+  Link,
+  // useTheme,
+  // useMediaQuery,
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { HomePropCard } from "../../components";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import {
-  LocationOn,
-  Pool,
-  LocalParking,
-  Wifi,
-  Star,
-} from "@mui/icons-material";
 import L from "leaflet";
+import { HomePropCard, PropertyBookingBox } from "../../components";
 
-export const PropertyDetail = () => {
-  const NextArrow = (props: any) => {
-    const { onClick } = props;
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#c14365",
-          borderRadius: "50%",
-          width: 35,
-          height: 35,
-          position: "absolute",
-          right: -15,
-          top: "40%",
-          zIndex: 2,
-          cursor: "pointer",
-          color: "#fff",
-        }}
-        onClick={onClick}
-      >
-        &gt;
-      </div>
-    );
-  };
+export const PropertyDetail: React.FC = () => {
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const PrevArrow = (props: any) => {
-    const { onClick } = props;
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#c14365",
-          borderRadius: "50%",
-          width: 35,
-          height: 35,
-          position: "absolute",
-          left: -15,
-          top: "40%",
-          zIndex: 2,
-          cursor: "pointer",
-          color: "#fff",
-        }}
-        onClick={onClick}
-      >
-        &lt;
-      </div>
-    );
-  };
   const similarProperties = [
     {
       image: "/room2.jpg",
@@ -99,11 +50,65 @@ export const PropertyDetail = () => {
     },
   ];
 
+  const NextArrow = (props: any) => {
+    const { onClick } = props;
+    return (
+      <Box
+        onClick={onClick}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#c14365",
+          borderRadius: "50%",
+          width: 35,
+          height: 35,
+          position: "absolute",
+          right: -15,
+          top: "40%",
+          zIndex: 10,
+          cursor: "pointer",
+          color: "#fff",
+          "&:hover": { backgroundColor: "#ab3864" },
+        }}
+      >
+        &gt;
+      </Box>
+    );
+  };
+
+  const PrevArrow = (props: any) => {
+    const { onClick } = props;
+    return (
+      <Box
+        onClick={onClick}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#c14365",
+          borderRadius: "50%",
+          width: 35,
+          height: 35,
+          position: "absolute",
+          left: -15,
+          top: "40%",
+          zIndex: 10,
+          cursor: "pointer",
+          color: "#fff",
+          "&:hover": { backgroundColor: "#ab3864" },
+        }}
+      >
+        &lt;
+      </Box>
+    );
+  };
+
   const sliderSettings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: 4,
     slidesToScroll: 1,
     arrows: true,
     nextArrow: <NextArrow />,
@@ -113,19 +118,27 @@ export const PropertyDetail = () => {
       { breakpoint: 768, settings: { slidesToShow: 1 } },
     ],
   };
+
   const chandigarhCoords: [number, number] = [30.7333, 76.7794];
 
-  // Custom Marker Icon
   const markerIcon = new L.Icon({
     iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
   });
+
   return (
-    <div className="mainUpperContainer">
-      {/* Breadcrumb Section */}
-      <Box className="breadcrumbContainer">
-        <IconButton className="backButton">
+    <Box
+      sx={{
+        padding: 3,
+        maxWidth: 1600,
+        margin: "0 auto",
+        fontFamily: "Roboto, sans-serif",
+      }}
+    >
+      {/* Breadcrumb */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+        <IconButton sx={{ color: "#c14365" }}>
           <ArrowBackIcon />
         </IconButton>
         <Breadcrumbs aria-label="breadcrumb">
@@ -136,95 +149,134 @@ export const PropertyDetail = () => {
         </Breadcrumbs>
       </Box>
 
-      {/* Main Content */}
-      <div className="mainSection">
-        {/* Left Side - Images */}
-        <div className="leftSection">
-          <img src="/room1.jpg" alt="cover" className="coverImage" />
-          <div className="propertyImages">
-            <img src="/room2.jpg" alt="room2" className="smallImage" />
-            <img src="/room3.jpg" alt="room3" className="smallImage" />
-            <img src="/room4.jpg" alt="room4" className="smallImage" />
-            <img src="/room1.jpg" alt="room5" className="smallImage" />
-          </div>
-          <div className="titleSection">
-            <div className="leftTitleSection">
-              <span className="price">₹1500</span>
-              <span className="location">
-                <LocationOn className="locationIcon" /> 123 ani street chennai,
-                India
-              </span>
+      {/* Main Section */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          gap: 3,
+        }}
+      >
+        {/* Left Side */}
+        <Box
+          sx={{
+            flex: { xs: "1 1 100%", md: "0 0 68%" },
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            backgroundColor: "#f9f9f9",
+            p: 2,
+            borderRadius: 2,
+            boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
+          }}
+        >
+          <Box
+            component="img"
+            src="/room1.jpg"
+            alt="cover"
+            sx={{
+              width: "100%",
+              height: { xs: 220, sm: 300, md: 400 },
+              objectFit: "cover",
+              borderRadius: 2,
+            }}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
+            {["/room2.jpg", "/room3.jpg", "/room4.jpg", "/room1.jpg"].map(
+              (img, i) => (
+                <Box
+                  component="img"
+                  key={i}
+                  src={img}
+                  alt={`room${i}`}
+                  sx={{
+                    flex: "1 0 22%",
+                    minWidth: 80,
+                    height: { xs: 80, sm: 100, md: 120 },
+                    objectFit: "cover",
+                    borderRadius: 1,
+                    cursor: "pointer",
+                    transition: "transform 0.3s",
+                    "&:hover": { transform: "scale(1.05)" },
+                  }}
+                />
+              )
+            )}
+          </Box>
 
-              <div className="categoryTags">
-                <span className="category">Apartment</span>
-                <span className="tag">Luxury</span>
-                <span className="tag">Family</span>
-              </div>
+          {/* Booking Box */}
+          <PropertyBookingBox />
+        </Box>
 
-              <div className="amenities">
-                <span className="amenity">
-                  <Pool className="amenityIcon" /> Pool
-                </span>
-                <span className="amenity">
-                  <LocalParking className="amenityIcon" /> Parking
-                </span>
-                <span className="amenity">
-                  <Wifi className="amenityIcon" /> WiFi
-                </span>
-              </div>
-
-              {/* ⭐ Rating Section */}
-              <div className="ratings">
-                <Star className="starIcon" />
-                <Star className="starIcon" />
-                <Star className="starIcon" />
-                <Star className="starIcon" />
-                <Star className="starIcon" />
-              </div>
-            </div>
-
-            <div className="rightTitleSection">
-              <div className="bookingBox">
-                <h3 className="bookingTitle">Book Your Stay</h3>
-
-                <div className="dateGroup">
-                  <label className="dateLabel">Check-in</label>
-                  <input type="date" className="datePicker" />
-                </div>
-
-                <div className="dateGroup">
-                  <label className="dateLabel">Check-out</label>
-                  <input type="date" className="datePicker" />
-                </div>
-
-                <button className="bookButton">Book Now</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side - Details */}
-        <div className="propeDetailRightSection">
-          <div className="rightBox ownerBox">
-            <h3 className="ownerTitle">Owner's Details</h3>
-            <h6 className="ownerName">Mr Joe Doe</h6>
-            <p className="ownerDesc">
+        {/* Right Side */}
+        <Box
+          sx={{
+            flex: { xs: "1 1 100%", md: "0 0 30%" },
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            height: "100%",
+          }}
+        >
+          {/* Owner Box */}
+          <Box
+            sx={{
+              p: 2,
+              backgroundColor: "#fff",
+              borderRadius: 2,
+              boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
+            }}
+          >
+            <Typography sx={{ fontWeight: "bold", fontSize: 20, mb: 1 }}>
+              Owner's Details
+            </Typography>
+            <Typography sx={{ fontWeight: 600, fontSize: 16, mb: 1 }}>
+              Mr Joe Doe
+            </Typography>
+            <Typography sx={{ fontSize: 14, color: "#666", mb: 1 }}>
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
               Architecto alias, sap
-            </p>
-            <span className="contactAgent">
-              {/* <i className="fas fa-phone"></i> Contact agent */}
-              <PhoneIcon className="phoneIcon" /> Contact agent
-            </span>
-          </div>
+            </Typography>
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 1,
+                px: 2,
+                py: 1,
+                border: "2px solid #c14365",
+                borderRadius: 1,
+                color: "#c14365",
+                fontWeight: 600,
+                cursor: "pointer",
+                "&:hover": { backgroundColor: "#c14365", color: "#fff" },
+              }}
+            >
+              <PhoneIcon />
+              Contact agent
+            </Box>
+          </Box>
 
-          {/* <div className="rightBox"></div> */}
-          <div className="rightMapBox mapBox">
+          {/* Map Box */}
+          <Box
+            sx={{
+              height: { xs: 200, sm: 250, md: 300 },
+              borderRadius: 2,
+              overflow: "hidden",
+              boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
+            }}
+          >
             <MapContainer
               center={chandigarhCoords}
               zoom={13}
               scrollWheelZoom={false}
-              className="propertyMap"
+              style={{ width: "100%", height: "100%" }}
             >
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -234,57 +286,48 @@ export const PropertyDetail = () => {
                 <Popup>Property located in Chandigarh</Popup>
               </Marker>
             </MapContainer>
-          </div>
-        </div>
-      </div>
-      <div className="descriptionSection">
-        <h3 className="descriptionTitle">Property Description</h3>
-        <p className="descriptionText">
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Description */}
+      <Box
+        sx={{
+          mt: 4,
+          p: 3,
+          backgroundColor: "#fff",
+          borderRadius: 2,
+          boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
+        }}
+      >
+        <Typography
+          sx={{ fontSize: 22, fontWeight: 600, color: "#c14365", mb: 2 }}
+        >
+          Property Description
+        </Typography>
+        <Typography sx={{ fontSize: 16, lineHeight: 1.6, color: "#555" }}>
           This luxury apartment offers a perfect blend of comfort and elegance.
           Located in the heart of Chennai, the property features spacious rooms,
           modern interiors, and access to premium amenities like a swimming
           pool, parking facilities, and high-speed WiFi. Ideal for families and
           business travelers alike, this homestay ensures both relaxation and
           convenience.
-        </p>
-        <div className="propertyInfo">
-          <div className="infoItem">
-            <span className="infoTitle">Pets Allowed:</span>
-            <span className="infoValue">Yes</span>
-          </div>
-          <div className="infoItem">
-            <span className="infoTitle">Smoking:</span>
-            <span className="infoValue">No</span>
-          </div>
-        </div>
+        </Typography>
+      </Box>
 
-        {/* House Rules Section */}
-        <div className="houseRules">
-          <h4 className="houseRulesTitle">House Rules</h4>
-          <ul className="rulesList">
-            <li>Check-in after 2:00 PM</li>
-            <li>Check-out before 11:00 AM</li>
-            <li>No loud music after 10:00 PM</li>
-          </ul>
-        </div>
-      </div>
-      <div className="similarPropertiesSection">
-        <h3 className="similarPropertiesTitle">
+      {/* Similar Properties */}
+      <Box sx={{ mt: 6 }}>
+        <Typography sx={{ fontSize: 22, fontWeight: 600, mb: 3 }}>
           Similar Properties You May Like
-        </h3>
-        <Slider {...sliderSettings} className="similarPropertiesSlider">
-          {similarProperties.map((prop, index) => (
-            <HomePropCard
-              key={index}
-              image={prop.image}
-              name={prop.name}
-              description={prop.description}
-              location={prop.location}
-              price={prop.price}
-            />
-          ))}
-        </Slider>
-      </div>
-    </div>
+        </Typography>
+        <Box sx={{ position: "relative" }}>
+          <Slider {...sliderSettings}>
+            {similarProperties.map((prop, index) => (
+              <HomePropCard key={index} {...prop} />
+            ))}
+          </Slider>
+        </Box>
+      </Box>
+    </Box>
   );
 };

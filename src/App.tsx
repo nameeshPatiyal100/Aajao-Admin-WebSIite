@@ -29,7 +29,8 @@ import {
   NotFound,
   FAQ,
   DashboardLayout,
-  PropertyListing
+  PropertyListing,
+  FinalBookingPage
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -59,6 +60,7 @@ function App() {
           <Route path="property/list" element={<PropertyListing />} />
           <Route path="faqs" element={<FAQ />} />
           <Route path="/user-dashboard" element={<DashboardLayout />} />
+          <Route path="/property-booking/final" element={<FinalBookingPage />} />
           <Route path="*" element={<NotFound image={notFound} />} />
         </Route>
 
