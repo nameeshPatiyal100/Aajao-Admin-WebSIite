@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -32,6 +32,8 @@ const themeColor = "#c14365";
 
 const PropertyBookingBox: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isOnFinalBookingPage = location.pathname === "/property-booking/final";
 
   const [stayType, setStayType] = useState<StayType>("Daily");
   const [checkIn, setCheckIn] = useState(dayjs().format("YYYY-MM-DD"));
@@ -287,37 +289,39 @@ const PropertyBookingBox: React.FC = () => {
         </Box>
 
         {/* Book Now Button */}
-        <Button
-          variant="contained"
-          sx={{
-            bgcolor: themeColor,
-            color: "#fff",
-            px: isMobile ? 4 : 6,
-            py: 1.5,
-            borderRadius: "10px",
-            fontWeight: 600,
-            textTransform: "none",
-            width: isMobile ? "100%" : "auto",
-            "&:hover": { bgcolor: "#a83454" },
-          }}
-          onClick={() =>
-            navigate("/final-booking", {
-              state: {
-                stayType,
-                checkIn,
-                checkOut,
-                guests,
-                price,
-                property: {
-                  name: "Luxury Apartment in Chennai",
-                  address: "123 Ani Street, Chennai, India",
+        {!isOnFinalBookingPage && (
+          <Button
+            variant="contained"
+            sx={{
+              bgcolor: themeColor,
+              color: "#fff",
+              px: isMobile ? 4 : 6,
+              py: 1.5,
+              borderRadius: "10px",
+              fontWeight: 600,
+              textTransform: "none",
+              width: isMobile ? "100%" : "auto",
+              "&:hover": { bgcolor: "#a83454" },
+            }}
+            onClick={() =>
+              navigate("/property-booking/final", {
+                state: {
+                  stayType,
+                  checkIn,
+                  checkOut,
+                  guests,
+                  price,
+                  property: {
+                    name: "Luxury Apartment in Chennai",
+                    address: "123 Ani Street, Chennai, India",
+                  },
                 },
-              },
-            })
-          }
-        >
-          Book Now
-        </Button>
+              })
+            }
+          >
+            Book Now
+          </Button>
+        )}
       </Box>
     </Box>
   );

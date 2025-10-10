@@ -32,6 +32,7 @@ export { default as FeatureSection } from "./frontend/FeatureSection";
 export { default as ReviewSlider } from "./frontend/ReviewSlider";
 export { default as PropertyBookingBox } from "./frontend/PropertyBookingBox";
 export { default as ReviewSliderAdvanced } from "./frontend/ReviewSliderAdvanced";
+export { default as RazorpayPayment } from "./frontend/RazorpayPayment";
 // ------------------HOST-COMPONENT---------------------->
 
 
