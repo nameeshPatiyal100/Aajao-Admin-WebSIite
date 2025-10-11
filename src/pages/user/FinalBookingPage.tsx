@@ -187,7 +187,8 @@ const FinalBookingPage: React.FC = () => {
                 py: 1.5,
                 fontWeight: 600,
               }}
-              onClick={() => alert("Proceeding to Pay Now")}
+              // onClick={() => alert("Proceeding to Pay Now")}
+              onClick={handlePayLater}
             >
               Pay Now
             </Button>
@@ -202,7 +203,7 @@ const FinalBookingPage: React.FC = () => {
                 py: 1.5,
                 fontWeight: 600,
               }}
-              onClick={handlePayLater}
+              // onClick={handlePayLater}
             >
               Pay Later
             </Button>
