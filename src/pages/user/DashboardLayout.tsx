@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 // Import your other components here
 import UserProfile from "./UserProfile.tsx";
 import Bookings from "./UserBookings.tsx";
-import Transactions from "./UserTransactions.tsx";
+// import Transactions from "./UserTransactions.tsx";
 
 const DashboardLayout: React.FC = () => {
   const [activeSection, setActiveSection] = useState("profile");
@@ -30,8 +30,8 @@ const DashboardLayout: React.FC = () => {
         return <UserProfile />;
       case "bookings":
         return <Bookings />;
-      case "transactions":
-        return <Transactions />;
+      // case "transactions":
+      //   return <Transactions />;
       default:
         return <Typography>Select a section</Typography>;
     }
@@ -101,7 +101,7 @@ const DashboardLayout: React.FC = () => {
         Bookings
       </Button>
 
-      <Button
+      {/* <Button
         fullWidth
         variant={activeSection === "transactions" ? "contained" : "outlined"}
         sx={{
@@ -119,7 +119,7 @@ const DashboardLayout: React.FC = () => {
         }}
       >
         Transactions
-      </Button>
+      </Button> */}
     </Box>
   );
 

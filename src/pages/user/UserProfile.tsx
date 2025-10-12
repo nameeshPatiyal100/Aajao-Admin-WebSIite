@@ -8,8 +8,10 @@ import {
   Typography,
   MenuItem,
   IconButton,
+  InputAdornment,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 // import DeleteIcon from "@mui/icons-material/Delete";
 import userImg from "../../assets/UI/userDemo.jpg";
 import "../../styles/user/UserProfile.css";
@@ -19,6 +21,12 @@ const UserProfile: React.FC = () => {
   const [preview, setPreview] = useState(userImg);
   console.log(setPreview);
   const [image, setImage] = useState<string | null>(null);
+
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+
+  const handleToggleOldPassword = () => setShowOldPassword((prev) => !prev);
+  const handleToggleNewPassword = () => setShowNewPassword((prev) => !prev);
 
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   console.log("Uploaded File URL:", uploadedFile);
@@ -88,24 +96,55 @@ const UserProfile: React.FC = () => {
         </Box>
 
         {/* Change Password Section */}
-        <Box className="changePasswordContainer">
-          <Typography variant="h6" className="changePasswordTitle">
+        <Box
+          className="changePasswordContainer"
+          sx={{ maxWidth: 400, mx: "auto", mt: 4 }}
+        >
+          <Typography
+            variant="h6"
+            className="changePasswordTitle"
+            sx={{ fontWeight: 700, mb: 2, fontFamily: "'Poppins', sans-serif" }}
+          >
             Change Password
           </Typography>
+
+          {/* Old Password */}
           <TextField
             label="Old Password"
-            type="password"
+            type={showOldPassword ? "text" : "password"}
             variant="outlined"
             fullWidth
             margin="normal"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleToggleOldPassword} edge="end">
+                    {showOldPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
+
+          {/* New Password */}
           <TextField
             label="New Password"
-            type="password"
+            type={showNewPassword ? "text" : "password"}
             variant="outlined"
             fullWidth
             margin="normal"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleToggleNewPassword} edge="end">
+                    {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
+
+          {/* Buttons */}
           <Button
             variant="contained"
             fullWidth
@@ -117,6 +156,7 @@ const UserProfile: React.FC = () => {
           >
             Change Password
           </Button>
+
           <Button
             variant="contained"
             fullWidth
@@ -128,6 +168,7 @@ const UserProfile: React.FC = () => {
           >
             Delete Account
           </Button>
+
           <Button
             variant="contained"
             fullWidth
