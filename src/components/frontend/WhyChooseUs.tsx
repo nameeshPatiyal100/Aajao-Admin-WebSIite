@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, Container, Button } from "@mui/material";
+import { Box, Typography, Grid, Container } from "@mui/material";
 import {
   Security,
   EventAvailable,
@@ -116,7 +116,7 @@ const WhyChooseUs = () => {
               </Typography>
 
               {/* Link Button */}
-              <Button
+              {/* <Button
                 href={feature.link}
                 sx={{
                   color: "#C14365",
@@ -126,7 +126,7 @@ const WhyChooseUs = () => {
                 }}
               >
                 Read More →
-              </Button>
+              </Button> */}
             </Box>
           </Grid>
         ))}

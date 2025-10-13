@@ -40,6 +40,7 @@ const Header: React.FC = () => {
     { label: "Terms & Condition", to: "/" },
     { label: "Why Host List With Aajoo", to: "/" },
     { label: "State Regulation", to: "/" },
+    { label: "Become A Host", to: "/auth/signup" },
   ];
 
   return (

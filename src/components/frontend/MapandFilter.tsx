@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import "../../styles/user/MapandFilter.css";
 import { Box, Typography, Card, Button } from "@mui/material";
 
 import prebooking from "../../assets/UI/prebooking.png";
@@ -14,12 +13,11 @@ const categories = [
   { img: couple3, label: "Couple" },
   { img: family, label: "Family" },
   { img: sharing, label: "Sharing" },
+  { img: sharing, label: "Party" },
 ];
 
 const MapandFilter: React.FC = () => {
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
-    null
-  );
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
@@ -31,9 +29,7 @@ const MapandFilter: React.FC = () => {
             lng: position.coords.longitude,
           });
         },
-        () => {
-          setError("Location access denied. Showing fallback location.");
-        }
+        () => setError("Location access denied. Showing fallback location.")
       );
     } else {
       setError("Geolocation not supported by your browser.");
@@ -42,28 +38,33 @@ const MapandFilter: React.FC = () => {
 
   return (
     <>
+      {/* ✅ Responsive Top Section */}
       <Box
         sx={{
           display: "flex",
+
           flexDirection: "column",
           width: "100%",
-          height: "300px",
-          // marginTop: 2,
+          minHeight: { xs: "auto", sm: 280, md: 300 },
           alignItems: "center",
-          justifyContent: "space-between",
-          p: 2,
-          borderRadius: "12px", // optional, for smoother edges
-          boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)", // 👈 shadow added
-          backgroundColor: "#fff", // helps shadow show better
+          justifyContent: "space-evenly",
+          p: { xs: 1.5, sm: 2 },
+          borderRadius: "12px",
+          boxShadow: "0 4px 15px rgba(0, 0, 0, 0.15)",
+          backgroundColor: "#fff",
+          mb: { xs: 2, sm: 3 },
         }}
       >
+        {/* ✅ Category Section */}
         <Box
           sx={{
-            width: "50%",
-            height: "100px",
+            width: "100%",
             display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
             alignItems: "center",
-            justifyContent: "space-evenly",
+            gap: { xs: 2, sm: 3, md: 4 },
+            mb: { xs: 2, sm: 0 },
           }}
         >
           {categories.map((cat, index) => (
@@ -74,6 +75,7 @@ const MapandFilter: React.FC = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 cursor: "pointer",
+                width: { xs: "40%", sm: "auto" }, // ✅ 2 items per row on mobile
               }}
             >
               <Box
@@ -81,8 +83,8 @@ const MapandFilter: React.FC = () => {
                 src={cat.img}
                 alt={cat.label}
                 sx={{
-                  width: 80,
-                  height: 80,
+                  width: { xs: 60, sm: 70, md: 80 },
+                  height: { xs: 60, sm: 70, md: 80 },
                   objectFit: "contain",
                   mb: 0.5,
                 }}
@@ -90,10 +92,11 @@ const MapandFilter: React.FC = () => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: "#c14365", // theme color
-                  fontSize: "1rem",
+                  color: "#c14365",
+                  fontSize: { xs: "0.9rem", sm: "1rem" },
                   fontFamily: "Poppins, sans-serif",
                   fontWeight: 600,
+                  textAlign: "center",
                 }}
               >
                 {cat.label}
@@ -101,13 +104,17 @@ const MapandFilter: React.FC = () => {
             </Box>
           ))}
         </Box>
+
+        {/* ✅ Buttons Section */}
         <Box
           sx={{
-            width: "25%",
-            height: "150px",
+            width: { xs: "100%", sm: "70%", md: "25%" },
             display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
             alignItems: "center",
             justifyContent: "space-between",
+            gap: { xs: 2, sm: 3 },
+            mt: { xs: 2, sm: 0 },
           }}
         >
           <Button
@@ -117,14 +124,14 @@ const MapandFilter: React.FC = () => {
                 component="img"
                 src={prebooking}
                 alt="Prebooking"
-                sx={{ width: 50, height: 50 }}
+                sx={{ width: { xs: 35, sm: 50 }, height: { xs: 35, sm: 50 } }}
               />
             }
             sx={{
               backgroundColor: "#c14365",
               textTransform: "none",
-              width: 200,
-              fontSize: "1rem",
+              width: { xs: "100%", sm: 200 },
+              fontSize: { xs: "0.9rem", sm: "1rem" },
               fontFamily: "Poppins, sans-serif",
               fontWeight: 600,
               "&:hover": { backgroundColor: "#a83756" },
@@ -140,16 +147,17 @@ const MapandFilter: React.FC = () => {
                 component="img"
                 src={crown1}
                 alt="Luxury"
-                sx={{ width: 50, height: 50 }}
+                sx={{ width: { xs: 35, sm: 50 }, height: { xs: 35, sm: 50 } }}
               />
             }
             sx={{
               borderColor: "#c14365",
               color: "#c14365",
               textTransform: "none",
-              fontSize: "1rem",
+              fontSize: { xs: "0.9rem", sm: "1rem" },
               fontFamily: "Poppins, sans-serif",
               fontWeight: 600,
+              width: { xs: "100%", sm: "auto" },
               "&:hover": {
                 backgroundColor: "#c1436510",
                 borderColor: "#c14365",
@@ -161,13 +169,8 @@ const MapandFilter: React.FC = () => {
         </Box>
       </Box>
 
-      <Box
-        sx={{
-          width: "100%",
-          // mt: 4,
-          p: { xs: 1, sm: 2 },
-        }}
-      >
+      {/* ✅ Map Section */}
+      <Box sx={{ width: "100%", p: { xs: 1, sm: 2 } }}>
         <Card
           sx={{
             width: "100%",
@@ -197,6 +200,8 @@ const MapandFilter: React.FC = () => {
                 flexDirection: "column",
                 color: "#c14365",
                 backgroundColor: "#f9f9f9",
+                textAlign: "center",
+                p: 2,
               }}
             >
               <Typography variant="h6" sx={{ mb: 1 }}>
