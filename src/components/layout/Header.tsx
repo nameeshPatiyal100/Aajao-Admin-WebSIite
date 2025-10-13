@@ -46,7 +46,7 @@ const Header: React.FC = () => {
     <>
       <AppBar
         position="sticky"
-        elevation={1}
+        elevation={2}
         sx={{ bgcolor: "#FFFFFF", color: "#6B240C" }}
       >
         <Toolbar>
@@ -60,6 +60,7 @@ const Header: React.FC = () => {
             }}
           >
             <img src={logo} alt="Logo" style={{ height: 40, marginRight: 8 }} />
+            aajoo
           </Link>
 
           <Box flexGrow={1} />
@@ -118,11 +119,7 @@ const Header: React.FC = () => {
       </AppBar>
 
       {/* Drawer (Now Opens from LEFT SIDE) */}
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={toggleDrawer(false)}
-      >
+      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box
           sx={{
             width: 250,

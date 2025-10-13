@@ -1,4 +1,3 @@
-// import Slider from "react-slick";
 import "../../styles/user/Home.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -6,30 +5,13 @@ import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import {
   MapandFilter,
-  // WhyChooseUs,
-  // CTAoneHome,
-  // HomeCategorySection,
-  // HomeCustomGrid,
   HomePropCard,
   FAQSection,
-  // FeatureSection,
   ReviewSlider,
 } from "../../components";
 import JoinusNow from "../../assets/UI/joinusNow.jpg";
 
-// const roomImages = ["/room1.jpg", "/room2.jpg", "/room3.jpg", "/room4.jpg"];
-
 const Home = () => {
-  // const handleApiCall = async () => {
-  //   try {
-  //     const response = await fetch("/api/rooms");
-  //     const data = await response.json();
-  //     console.log("Fetched Rooms:", data);
-  //   } catch (error) {
-  //     console.error("Error fetching rooms:", error);
-  //   }
-  // };
-
   // 🔹 Hotels Array
   const hotels = [
     {
@@ -92,39 +74,39 @@ const Home = () => {
   ];
   const faqs = [
     {
-      question: "What is the cancellation policy?",
+      question: "How do I find a room near me on AAJOO?",
       answer:
-        "You can cancel your booking up to 24 hours before check-in for a full refund.",
+        "You just open the app, enable location, and you’ll see available rooms within walking distance from your current location.",
     },
     {
-      question: "Do you offer free Wi-Fi?",
+      question: "Can I negotiate the price before booking?",
       answer:
-        "Yes, all our properties provide complimentary high-speed Wi-Fi for guests.",
+        "Yes! AAJOO allows real-time price negotiation with the host. You can propose a price and the host may accept, decline, or counter it.",
     },
     {
-      question: "Is breakfast included?",
+      question: "Can I book for one night, a week, or a month?",
       answer:
-        "Most of our hotels include breakfast. Please check the booking details for confirmation.",
+        "Absolutely. You can choose a daily, weekly, or monthly stay as per your requirement. Use filters while searching.",
     },
     {
-      question: "Are pets allowed?",
+      question: "Is my booking and payment secure?",
       answer:
-        "Some of our properties are pet-friendly. Please check the listing before booking.",
+        "Yes. We use secure payment gateways and you receive confirmation via app and email after booking.",
     },
     {
-      question: "How do I modify my booking?",
+      question: "Do I have to pay a security deposit?",
       answer:
-        "You can modify your booking by logging into your account or contacting customer support.",
+        "For monthly stays, a minimal security deposit may apply. For daily or short stays, no deposit is required.",
     },
     {
-      question: "Are pets allowed?",
+      question: "Is KYC mandatory to book?",
       answer:
-        "Some of our properties are pet-friendly. Please check the listing before booking.",
+        "Yes, to ensure safety for both user and host, basic KYC (ID verification with photo) is required before final booking.",
     },
     {
-      question: "How do I modify my booking?",
+      question: "What if I have an issue during the stay?",
       answer:
-        "You can modify your booking by logging into your account or contacting customer support.",
+        "You can contact AAJOO support via in-app chat, email, or WhatsApp support for any help during your stay.",
     },
   ];
 
@@ -134,7 +116,7 @@ const Home = () => {
 
       {/* 🔹 Hotel Cards Section */}
       <section className="featured-properties">
-        <h2>Featured Properties</h2>
+        {/* <h2>Featured Properties</h2> */}
         <div className="properties-grid">
           {hotels.map((hotel, idx) => (
             <Link
@@ -147,27 +129,10 @@ const Home = () => {
           ))}
         </div>
       </section>
-      {/* <section className="featured-properties">
-        <h2>Featured Properties</h2>
-        <div className="properties-grid">
-          {hotels.map((hotel, idx) => (
-            <HomePropCard key={idx} {...hotel} />
-          ))}
-        </div>
-      </section> */}
-
-      {/* <CTAoneHome /> */}
-      {/* <CTAoneHome
-        backgroundImage="/room5.webp"
-        title="Looking for a relaxing vacation?"
-        buttonText="Explore Now"
-        onButtonClick={handleApiCall}
-      /> */}
       <div className="addHostSection">
         <div className="addHostSectionLeft">
           <img src={JoinusNow} alt="Become a Host" />
         </div>
-
         <div className="addHostSectionRight">
           <h2>Become a Host</h2>
           <p className="addHostDesc">
@@ -183,19 +148,11 @@ const Home = () => {
           </Link>
         </div>
       </div>
-
       <FAQSection
         image="/faq_vector.jpg"
         faqs={faqs}
         description="Got questions? We’ve got answers for you!"
       />
-
-      {/* <CTAoneHome
-        backgroundImage="/room3.jpg"
-        title="Looking for a relaxing vacation?"
-        buttonText="Book now"
-        onButtonClick={handleApiCall}
-      /> */}
       <ReviewSlider />
     </Box>
   );
