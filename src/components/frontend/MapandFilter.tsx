@@ -42,7 +42,6 @@ const MapandFilter: React.FC = () => {
       <Box
         sx={{
           display: "flex",
-
           flexDirection: "column",
           width: "100%",
           minHeight: { xs: "auto", sm: 280, md: 300 },
@@ -58,10 +57,11 @@ const MapandFilter: React.FC = () => {
         {/* ✅ Category Section */}
         <Box
           sx={{
-            width: "100%",
+            width: "35%",
+            // border:"1px solid black",
             display: "flex",
             flexWrap: "wrap",
-            justifyContent: "center",
+            justifyContent: "space-between",
             alignItems: "center",
             gap: { xs: 2, sm: 3, md: 4 },
             mb: { xs: 2, sm: 0 },

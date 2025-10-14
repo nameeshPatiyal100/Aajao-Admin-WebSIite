@@ -1,129 +1,28 @@
-import React from "react";
-import Slider from "react-slick";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
   IconButton,
   Breadcrumbs,
   Link,
-  // useTheme,
-  // useMediaQuery,
+  Button,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PhoneIcon from "@mui/icons-material/Phone";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
-import {
-  HomePropCard,
-  PropertyBookingBox,
-  ReviewSliderAdvanced,
-} from "../../components";
+import { PropertyBookingBox, ReviewSliderAdvanced,CancellationPolicyModal } from "../../components";
+// import {  } from "../../components";
 
 export const PropertyDetail: React.FC = () => {
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const similarProperties = [
-    {
-      image: "/room2.jpg",
-      name: "Luxury Apartment",
-      description: "Modern interiors with a beautiful view.",
-      location: "Chennai, India",
-      price: "₹2000/night",
-    },
-    {
-      image: "/room3.jpg",
-      name: "Cozy Studio",
-      description: "Perfect for solo travelers.",
-      location: "Chennai, India",
-      price: "₹1200/night",
-    },
-    {
-      image: "/room4.jpg",
-      name: "Family Apartment",
-      description: "Spacious apartment for family stay.",
-      location: "Chennai, India",
-      price: "₹2500/night",
-    },
-    {
-      image: "/room1.jpg",
-      name: "Modern Flat",
-      description: "Elegant interiors with premium amenities.",
-      location: "Chennai, India",
-      price: "₹1800/night",
-    },
-  ];
-
-  const NextArrow = (props: any) => {
-    const { onClick } = props;
-    return (
-      <Box
-        onClick={onClick}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#c14365",
-          borderRadius: "50%",
-          width: 35,
-          height: 35,
-          position: "absolute",
-          right: -15,
-          top: "40%",
-          zIndex: 10,
-          cursor: "pointer",
-          color: "#fff",
-          "&:hover": { backgroundColor: "#ab3864" },
-        }}
-      >
-        &gt;
-      </Box>
-    );
-  };
-
-  const PrevArrow = (props: any) => {
-    const { onClick } = props;
-    return (
-      <Box
-        onClick={onClick}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#c14365",
-          borderRadius: "50%",
-          width: 35,
-          height: 35,
-          position: "absolute",
-          left: -15,
-          top: "40%",
-          zIndex: 10,
-          cursor: "pointer",
-          color: "#fff",
-          "&:hover": { backgroundColor: "#ab3864" },
-        }}
-      >
-        &lt;
-      </Box>
-    );
-  };
-
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    arrows: true,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 2 } },
-      { breakpoint: 768, settings: { slidesToShow: 1 } },
-    ],
-  };
-
   const chandigarhCoords: [number, number] = [30.7333, 76.7794];
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rules, _setRules] = useState<string[]>([
+    "No smoking inside the property.",
+    "Pets are not allowed.",
+    "Please respect quiet hours after 10 PM.",
+  ]);
 
   const markerIcon = new L.Icon({
     iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
@@ -152,6 +51,7 @@ export const PropertyDetail: React.FC = () => {
           <Typography color="text.primary">Property Detail</Typography>
         </Breadcrumbs>
       </Box>
+
       {/* Main Section */}
       <Box
         sx={{
@@ -160,7 +60,7 @@ export const PropertyDetail: React.FC = () => {
           gap: 3,
         }}
       >
-        {/* Left Side */}
+        {/* Left Section */}
         <Box
           sx={{
             flex: { xs: "1 1 100%", md: "0 0 68%" },
@@ -184,6 +84,7 @@ export const PropertyDetail: React.FC = () => {
               borderRadius: 2,
             }}
           />
+
           <Box
             sx={{
               display: "flex",
@@ -217,7 +118,7 @@ export const PropertyDetail: React.FC = () => {
           <PropertyBookingBox />
         </Box>
 
-        {/* Right Side */}
+        {/* Right Section */}
         <Box
           sx={{
             flex: { xs: "1 1 100%", md: "0 0 30%" },
@@ -292,7 +193,8 @@ export const PropertyDetail: React.FC = () => {
           </Box>
         </Box>
       </Box>
-      {/* Description */}
+
+      {/* Property Description */}
       <Box
         sx={{
           mt: 4,
@@ -300,37 +202,104 @@ export const PropertyDetail: React.FC = () => {
           backgroundColor: "#fff",
           borderRadius: 2,
           boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
+          fontFamily: "Roboto, sans-serif",
         }}
       >
         <Typography
-          sx={{ fontSize: 22, fontWeight: 600, color: "#c14365", mb: 2 }}
+          sx={{
+            fontSize: { xs: 20, sm: 22 },
+            fontWeight: 700,
+            color: "#c14365",
+            mb: 2,
+          }}
         >
           Property Description
         </Typography>
-        <Typography sx={{ fontSize: 16, lineHeight: 1.6, color: "#555" }}>
+        <Typography
+          sx={{
+            fontSize: { xs: 14, sm: 16 },
+            lineHeight: 1.8,
+            color: "#555",
+            mb: 3,
+          }}
+        >
           This luxury apartment offers a perfect blend of comfort and elegance.
-          Located in the heart of Chennai, the property features spacious rooms,
-          modern interiors, and access to premium amenities like a swimming
-          pool, parking facilities, and high-speed WiFi. Ideal for families and
-          business travelers alike, this homestay ensures both relaxation and
-          convenience.
+          Located in the heart of Chennai, it features spacious rooms, modern
+          interiors, and access to premium amenities such as a swimming pool,
+          parking facilities, and high-speed WiFi.
         </Typography>
+
+        {/* Cancellation Policy Button */}
+        <Button
+          variant="outlined"
+          sx={{
+            borderColor: "#c14365",
+            color: "#c14365",
+            borderRadius: "8px",
+            px: 3,
+            py: 1,
+            fontWeight: 600,
+            textTransform: "none",
+            "&:hover": { bgcolor: "#c14365", color: "#fff" },
+          }}
+          onClick={() => setIsModalOpen(true)}
+        >
+          Cancellation Policy
+        </Button>
       </Box>
-      // Inside return JSX, before Similar Properties section
-      <ReviewSliderAdvanced propertyId="property-123" />
-      {/* Similar Properties */}
-      <Box sx={{ mt: 6 }}>
-        <Typography sx={{ fontSize: 22, fontWeight: 600, mb: 3 }}>
-          Similar Properties You May Like
+
+      {/* 🏠 Property Rules */}
+      <Box
+        sx={{
+          mt: 3,
+          p: 3,
+          backgroundColor: "#fff",
+          borderRadius: 2,
+          boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: { xs: 20, sm: 22 },
+            fontWeight: 700,
+            color: "#c14365",
+            mb: 2,
+          }}
+        >
+          Property Rules
         </Typography>
-        <Box sx={{ position: "relative" }}>
-          <Slider {...sliderSettings}>
-            {similarProperties.map((prop, index) => (
-              <HomePropCard key={index} {...prop} />
+
+        {rules.length > 0 ? (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            {rules.map((rule, index) => (
+              <Typography
+                key={index}
+                sx={{ fontSize: { xs: 14, sm: 16 }, color: "#555" }}
+              >
+                • {rule}
+              </Typography>
             ))}
-          </Slider>
-        </Box>
+          </Box>
+        ) : (
+          <Typography
+            sx={{
+              fontSize: { xs: 14, sm: 16 },
+              color: "#777",
+              fontStyle: "italic",
+            }}
+          >
+            No rules
+          </Typography>
+        )}
       </Box>
+
+      <ReviewSliderAdvanced propertyId="property-123" />
+
+      {/* Modal */}
+      <CancellationPolicyModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Box>
   );
 };

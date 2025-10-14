@@ -20,7 +20,7 @@ import {
   Wifi,
   Star,
   LocationOn,
-  AttachMoney as AttachMoneyIcon,
+  // AttachMoney as AttachMoneyIcon,
   Add,
   Remove,
 } from "@mui/icons-material";
@@ -40,15 +40,18 @@ const PropertyBookingBox: React.FC = () => {
   const [checkOut, setCheckOut] = useState(
     dayjs().add(1, "day").format("YYYY-MM-DD")
   );
+  const [checkInTime, setCheckInTime] = useState("12:00");
+  const [checkOutTime, setCheckOutTime] = useState("11:00");
   const [price, setPrice] = useState<number>(1500);
-  const [guests, setGuests] = useState<number>(1);
+  const [adults, setAdults] = useState<number>(1);
+  const [children, setChildren] = useState<number>(0);
   const [manualCheckout, setManualCheckout] = useState<boolean>(false);
 
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // Update checkout date & price based on stay type only if checkout not manually changed
+  // Update checkout date & price based on stay type
   useEffect(() => {
     let newCheckOut = dayjs(checkIn);
     let newPrice = 1500;
@@ -56,15 +59,15 @@ const PropertyBookingBox: React.FC = () => {
     switch (stayType) {
       case "Daily":
         newCheckOut = dayjs(checkIn).add(1, "day");
-        newPrice = 1500 * guests;
+        newPrice = 1500 * (adults + children * 0.5); // children count for 50%
         break;
       case "Weekly":
         newCheckOut = dayjs(checkIn).add(7, "day");
-        newPrice = 1500 * 7 * guests;
+        newPrice = 1500 * 7 * (adults + children * 0.5);
         break;
       case "Monthly":
         newCheckOut = dayjs(checkIn).add(30, "day");
-        newPrice = 1500 * 30 * guests;
+        newPrice = 1500 * 30 * (adults + children * 0.5);
         break;
     }
 
@@ -73,10 +76,14 @@ const PropertyBookingBox: React.FC = () => {
     }
 
     setPrice(newPrice);
-  }, [stayType, checkIn, guests, manualCheckout]);
+  }, [stayType, checkIn, adults, children, manualCheckout]);
 
-  const handleGuestsChange = (delta: number) => {
-    setGuests((prev) => Math.max(1, prev + delta));
+  const handleAdultsChange = (delta: number) => {
+    setAdults((prev) => Math.max(1, prev + delta));
+  };
+
+  const handleChildrenChange = (delta: number) => {
+    setChildren((prev) => Math.max(0, prev + delta));
   };
 
   return (
@@ -95,6 +102,20 @@ const PropertyBookingBox: React.FC = () => {
     >
       {/* 🏠 Property Info Section */}
       <Box sx={{ width: "100%", borderBottom: "1px solid #eee", pb: 2 }}>
+        {/* 🏡 Property Title */}
+        <Typography
+          variant="h5"
+          sx={{
+            color: "#222",
+            fontWeight: 700,
+            fontSize: isMobile ? "1.3rem" : "1.6rem",
+            mb: 1.5, // gap between title and price
+          }}
+        >
+          Luxury Stay at Aajoo Villa
+        </Typography>
+
+        {/* 💰 Price */}
         <Typography
           variant="h4"
           sx={{
@@ -104,12 +125,13 @@ const PropertyBookingBox: React.FC = () => {
             display: "flex",
             alignItems: "center",
             gap: 0.5,
+            mb: 1, // small gap below price
           }}
         >
-          <AttachMoneyIcon sx={{ fontSize: isMobile ? 24 : 28 }} />
-          {price.toLocaleString()}
+          ₹{price.toLocaleString()}
         </Typography>
 
+        {/* 📍 Location */}
         <Typography
           sx={{
             display: "flex",
@@ -124,6 +146,7 @@ const PropertyBookingBox: React.FC = () => {
           Street, Chennai, India
         </Typography>
 
+        {/* 🏷️ Chips */}
         <Box
           sx={{
             mt: 2,
@@ -145,6 +168,7 @@ const PropertyBookingBox: React.FC = () => {
           ))}
         </Box>
 
+        {/* 🌟 Amenities */}
         <Box
           sx={{
             mt: 2,
@@ -171,6 +195,7 @@ const PropertyBookingBox: React.FC = () => {
           </Box>
         </Box>
 
+        {/* ⭐ Ratings */}
         <Box sx={{ mt: 1, display: "flex", gap: 0.3 }}>
           {[...Array(5)].map((_, i) => (
             <Star
@@ -186,109 +211,180 @@ const PropertyBookingBox: React.FC = () => {
         sx={{
           width: "100%",
           display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          flexWrap: isTablet ? "wrap" : "nowrap",
-          alignItems: "center",
-          justifyContent: "space-between",
+          flexDirection: "column",
           gap: "1.5rem",
         }}
       >
-        <FormControl fullWidth sx={{ flex: 1 }}>
-          <InputLabel>Stay Type</InputLabel>
-          <Select
-            value={stayType}
-            label="Stay Type"
-            onChange={(e) => setStayType(e.target.value as StayType)}
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": { borderColor: themeColor },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: themeColor,
-              },
-            }}
-          >
-            <MenuItem value="Daily">Daily</MenuItem>
-            <MenuItem value="Weekly">Weekly</MenuItem>
-            <MenuItem value="Monthly">Monthly</MenuItem>
-          </Select>
-        </FormControl>
-
-        <TextField
-          type="date"
-          label="Check-in"
-          value={checkIn}
-          onChange={(e) => setCheckIn(e.target.value)}
-          InputLabelProps={{ shrink: true }}
-          fullWidth
-          sx={{ flex: 1 }}
-        />
-
-        <TextField
-          type="date"
-          label="Check-out"
-          value={checkOut}
-          onChange={(e) => {
-            setCheckOut(e.target.value);
-            setManualCheckout(true); // user edited manually
-          }}
-          InputLabelProps={{ shrink: true }}
-          fullWidth
-          sx={{ flex: 1 }}
-        />
-      </Box>
-
-      {/* Guests + Book Now Section */}
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          justifyContent: isMobile ? "center" : "space-between",
-          alignItems: "center",
-          gap: "1.5rem",
-          mt: 2,
-        }}
-      >
-        {/* Guests */}
+        {/* Stay Type + Dates */}
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
-            border: `1px solid ${themeColor}`,
-            borderRadius: "10px",
-            px: 2,
-            py: 0.5,
-            gap: 1.5,
+            flexDirection: isMobile ? "column" : "row",
+            flexWrap: "wrap",
+            gap: "1.5rem",
           }}
         >
-          <Typography sx={{ fontWeight: 600 }}>Guests:</Typography>
-          <IconButton
-            size="small"
-            onClick={() => handleGuestsChange(-1)}
-            sx={{
-              bgcolor: themeColor,
-              color: "#fff",
-              "&:hover": { bgcolor: "#a83454" },
+          <FormControl fullWidth sx={{ flex: 1 }}>
+            <InputLabel>Stay Type</InputLabel>
+            <Select
+              value={stayType}
+              label="Stay Type"
+              onChange={(e) => setStayType(e.target.value as StayType)}
+              sx={{
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: themeColor,
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: themeColor,
+                },
+              }}
+            >
+              <MenuItem value="Daily">Daily</MenuItem>
+              <MenuItem value="Weekly">Weekly</MenuItem>
+              <MenuItem value="Monthly">Monthly</MenuItem>
+            </Select>
+          </FormControl>
+
+          <TextField
+            type="date"
+            label="Check-in"
+            value={checkIn}
+            onChange={(e) => setCheckIn(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+          />
+
+          <TextField
+            type="date"
+            label="Check-out"
+            value={checkOut}
+            onChange={(e) => {
+              setCheckOut(e.target.value);
+              setManualCheckout(true);
             }}
-          >
-            <Remove fontSize="small" />
-          </IconButton>
-          <Typography sx={{ minWidth: 24, textAlign: "center" }}>
-            {guests}
-          </Typography>
-          <IconButton
-            size="small"
-            onClick={() => handleGuestsChange(1)}
-            sx={{
-              bgcolor: themeColor,
-              color: "#fff",
-              "&:hover": { bgcolor: "#a83454" },
-            }}
-          >
-            <Add fontSize="small" />
-          </IconButton>
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+          />
         </Box>
 
-        {/* Book Now Button */}
+        {/* Check-in/out Time */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            gap: "1.5rem",
+          }}
+        >
+          <TextField
+            type="time"
+            label="Check-in Time"
+            value={checkInTime}
+            onChange={(e) => setCheckInTime(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+          />
+          <TextField
+            type="time"
+            label="Check-out Time"
+            value={checkOutTime}
+            onChange={(e) => setCheckOutTime(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+          />
+        </Box>
+
+        {/* Guests Selection */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            // justifyContent: "space-between",
+            alignItems: "center",
+            gap: "1.5rem",
+          }}
+        >
+          {/* Adults */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              border: `1px solid ${themeColor}`,
+              borderRadius: "10px",
+              px: 2,
+              py: 0.5,
+              gap: 1.5,
+            }}
+          >
+            <Typography sx={{ fontWeight: 600 }}>Adults:</Typography>
+            <IconButton
+              size="small"
+              onClick={() => handleAdultsChange(-1)}
+              sx={{
+                bgcolor: themeColor,
+                color: "#fff",
+                "&:hover": { bgcolor: "#a83454" },
+              }}
+            >
+              <Remove fontSize="small" />
+            </IconButton>
+            <Typography sx={{ minWidth: 24, textAlign: "center" }}>
+              {adults}
+            </Typography>
+            <IconButton
+              size="small"
+              onClick={() => handleAdultsChange(1)}
+              sx={{
+                bgcolor: themeColor,
+                color: "#fff",
+                "&:hover": { bgcolor: "#a83454" },
+              }}
+            >
+              <Add fontSize="small" />
+            </IconButton>
+          </Box>
+
+          {/* Children */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              border: `1px solid ${themeColor}`,
+              borderRadius: "10px",
+              px: 2,
+              py: 0.5,
+              gap: 1.5,
+            }}
+          >
+            <Typography sx={{ fontWeight: 600 }}>Children:</Typography>
+            <IconButton
+              size="small"
+              onClick={() => handleChildrenChange(-1)}
+              sx={{
+                bgcolor: themeColor,
+                color: "#fff",
+                "&:hover": { bgcolor: "#a83454" },
+              }}
+            >
+              <Remove fontSize="small" />
+            </IconButton>
+            <Typography sx={{ minWidth: 24, textAlign: "center" }}>
+              {children}
+            </Typography>
+            <IconButton
+              size="small"
+              onClick={() => handleChildrenChange(1)}
+              sx={{
+                bgcolor: themeColor,
+                color: "#fff",
+                "&:hover": { bgcolor: "#a83454" },
+              }}
+            >
+              <Add fontSize="small" />
+            </IconButton>
+          </Box>
+        </Box>
+
+        {/* 🧾 Book Now Button */}
         {!isOnFinalBookingPage && (
           <Button
             variant="contained"
@@ -302,6 +398,7 @@ const PropertyBookingBox: React.FC = () => {
               textTransform: "none",
               width: isMobile ? "100%" : "auto",
               "&:hover": { bgcolor: "#a83454" },
+              mt: 2,
             }}
             onClick={() =>
               navigate("/property-booking/final", {
@@ -309,12 +406,11 @@ const PropertyBookingBox: React.FC = () => {
                   stayType,
                   checkIn,
                   checkOut,
-                  guests,
+                  checkInTime,
+                  checkOutTime,
+                  adults,
+                  children,
                   price,
-                  property: {
-                    name: "Luxury Apartment in Chennai",
-                    address: "123 Ani Street, Chennai, India",
-                  },
                 },
               })
             }
