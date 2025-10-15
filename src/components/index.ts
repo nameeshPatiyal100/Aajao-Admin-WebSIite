@@ -36,6 +36,7 @@ export { default as RazorpayPayment } from "./frontend/RazorpayPayment";
 export { default as BookingDetailsModal } from "./frontend/BookingDetailsModal";
 //MODALS
 export { default as CancellationPolicyModal } from "./frontend/modals/CancellationPolicyModal";
+export { default as OngoingBookingModal } from "./frontend/modals/OngoingBookingModal";
 // ------------------HOST-COMPONENT---------------------->
 
 

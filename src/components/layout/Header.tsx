@@ -100,7 +100,7 @@ const Header: React.FC = () => {
                 Login
               </Button>
 
-              <IconButton onClick={() => navigate("/auth/login")}>
+              <IconButton onClick={() => navigate("/user-dashboard")}>
                 <PersonIcon sx={{ color: "#c14365" }} />
               </IconButton>
 

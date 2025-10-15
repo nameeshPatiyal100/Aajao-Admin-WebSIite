@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { PropertyBookingBox } from "../../components";
 import {
-  AttachMoney as AttachMoneyIcon,
+  // AttachMoney as AttachMoneyIcon,
   LocationOn,
 } from "@mui/icons-material";
 import securePay from "../../assets/UI/securePay.jpg";
@@ -54,32 +54,32 @@ const FinalBookingPage: React.FC = () => {
     setPrice(total);
   }, [stayType, guests]);
   const applyGST = async () => {
-    try {
-      // Example API call, replace with your backend endpoint
-      const response = await fetch("/api/calculate-bill", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          price,
-          gstNumber,
-          stayType,
-          guests,
-        }),
-      });
+    // try {
+    //   // Example API call, replace with your backend endpoint
+    //   const response = await fetch("/api/calculate-bill", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       price,
+    //       gstNumber,
+    //       stayType,
+    //       guests,
+    //     }),
+    //   });
 
-      const data = await response.json();
-      if (data.success) {
-        setPrice(data.newPrice);
-        // gstAmount and totalBill will automatically recalc in useEffect or you can update here:
-        // setGstAmount(data.newGST);
-        // setTotalBill(data.newTotal);
-      } else {
-        alert("Failed to apply GST. Please try again.");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Error applying GST.");
-    }
+    //   const data = await response.json();
+    //   if (data.success) {
+    //     setPrice(data.newPrice);
+    //     // gstAmount and totalBill will automatically recalc in useEffect or you can update here:
+    //     // setGstAmount(data.newGST);
+    //     // setTotalBill(data.newTotal);
+    //   } else {
+    //     alert("Failed to apply GST. Please try again.");
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   alert("Error applying GST.");
+    // }
   };
 
   const GST_PERCENT = 18;

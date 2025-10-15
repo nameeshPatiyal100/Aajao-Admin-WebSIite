@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 // Import your other components here
 import UserProfile from "./UserProfile.tsx";
 import Bookings from "./UserBookings.tsx";
-// import Transactions from "./UserTransactions.tsx";
+import UserOngoingBooking from "./userOngoingBooking.tsx";
 
 const DashboardLayout: React.FC = () => {
   const [activeSection, setActiveSection] = useState("profile");
@@ -30,8 +30,8 @@ const DashboardLayout: React.FC = () => {
         return <UserProfile />;
       case "bookings":
         return <Bookings />;
-      // case "transactions":
-      //   return <Transactions />;
+      case "ongoing":
+        return <UserOngoingBooking />;
       default:
         return <Typography>Select a section</Typography>;
     }
@@ -68,9 +68,11 @@ const DashboardLayout: React.FC = () => {
           mb: 1,
           borderColor: "#c14365",
           color: activeSection === "profile" ? "#fff" : "#c14365",
-          backgroundColor: activeSection === "profile" ? "#c14365" : "transparent",
+          backgroundColor:
+            activeSection === "profile" ? "#c14365" : "transparent",
           "&:hover": {
-            backgroundColor: activeSection === "profile" ? "#a0324f" : "#fbe6ec",
+            backgroundColor:
+              activeSection === "profile" ? "#a0324f" : "#fbe6ec",
           },
         }}
         onClick={() => {
@@ -88,9 +90,11 @@ const DashboardLayout: React.FC = () => {
           mb: 1,
           borderColor: "#c14365",
           color: activeSection === "bookings" ? "#fff" : "#c14365",
-          backgroundColor: activeSection === "bookings" ? "#c14365" : "transparent",
+          backgroundColor:
+            activeSection === "bookings" ? "#c14365" : "transparent",
           "&:hover": {
-            backgroundColor: activeSection === "bookings" ? "#a0324f" : "#fbe6ec",
+            backgroundColor:
+              activeSection === "bookings" ? "#a0324f" : "#fbe6ec",
           },
         }}
         onClick={() => {
@@ -101,30 +105,34 @@ const DashboardLayout: React.FC = () => {
         Bookings
       </Button>
 
-      {/* <Button
+      <Button
         fullWidth
-        variant={activeSection === "transactions" ? "contained" : "outlined"}
+        variant={activeSection === "ongoing" ? "contained" : "outlined"}
         sx={{
           mb: 1,
           borderColor: "#c14365",
-          color: activeSection === "transactions" ? "#fff" : "#c14365",
-          backgroundColor: activeSection === "transactions" ? "#c14365" : "transparent",
+          color: activeSection === "ongoing" ? "#fff" : "#c14365",
+          backgroundColor:
+            activeSection === "ongoing" ? "#c14365" : "transparent",
           "&:hover": {
-            backgroundColor: activeSection === "transactions" ? "#a0324f" : "#fbe6ec",
+            backgroundColor:
+              activeSection === "ongoing" ? "#a0324f" : "#fbe6ec",
           },
         }}
         onClick={() => {
-          setActiveSection("transactions");
+          setActiveSection("ongoing");
           setMobileOpen(false);
         }}
       >
-        Transactions
-      </Button> */}
+        ongoing
+      </Button>
     </Box>
   );
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#f9f9f9" }}>
+    <Box
+      sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#f9f9f9" }}
+    >
       {/* Sidebar for desktop */}
       <Box
         sx={{
