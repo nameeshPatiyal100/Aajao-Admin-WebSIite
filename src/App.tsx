@@ -31,7 +31,9 @@ import {
   DashboardLayout,
   PropertyListing,
   FinalBookingPage,
-  BookingConfirmed
+  BookingConfirmed,
+  CancelBookResult,
+  UserCheckoutPage
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -63,6 +65,8 @@ function App() {
           <Route path="/user-dashboard" element={<DashboardLayout />} />
           <Route path="/property-booking/final" element={<FinalBookingPage />} />
           <Route path="/booking/confirmation" element={<BookingConfirmed />} />
+          <Route path="/booking/cancel-result/:bookingId" element={<CancelBookResult />} />
+          <Route path="/user/checkout/:id" element={<UserCheckoutPage />} />
           <Route path="*" element={<NotFound image={notFound} />} />
         </Route>
 

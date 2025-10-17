@@ -33,16 +33,18 @@ const OngoingBookingModal: React.FC<OngoingBookingModalProps> = ({
   if (!booking) return null;
 
   const handleCheckout = () => {
-    navigate(`/checkout/${booking.id}`, { state: { booking } });
+    navigate(`/user/checkout/${booking.id}`, { state: { booking } });
   };
-
+  
   const handleCancelBooking = () => {
     setConfirmOpen(true); // open confirmation dialog
+    // navigate(`/booking/cancel-result/${booking.id}`, { state: { booking } });
   };
 
   const confirmCancel = () => {
     setConfirmOpen(false);
-    navigate(`/cancel-booking/${booking.id}`, { state: { booking } });
+    navigate(`/booking/cancel-result/${booking.id}`, { state: { booking } });
+    // navigate(`/cancel-booking/${booking.id}`, { state: { booking } });
   };
 
   return (

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -14,9 +16,10 @@ import CloseIcon from "@mui/icons-material/Close";
 // Import your other components here
 import UserProfile from "./UserProfile.tsx";
 import Bookings from "./UserBookings.tsx";
-import UserOngoingBooking from "./userOngoingBooking.tsx";
+import UserOngoingBooking from "./UserOngoingBooking.tsx";
 
 const DashboardLayout: React.FC = () => {
+  const location = useLocation();
   const [activeSection, setActiveSection] = useState("profile");
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -36,6 +39,11 @@ const DashboardLayout: React.FC = () => {
         return <Typography>Select a section</Typography>;
     }
   };
+  useEffect(() => {
+    if (location.state?.section) {
+      setActiveSection(location.state.section);
+    }
+  }, [location.state]);
 
   const sidebarContent = (
     <Box
