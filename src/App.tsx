@@ -33,7 +33,8 @@ import {
   FinalBookingPage,
   BookingConfirmed,
   CancelBookResult,
-  UserCheckoutPage
+  UserCheckoutPage,
+  StateRegulation
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -67,6 +68,7 @@ function App() {
           <Route path="/booking/confirmation" element={<BookingConfirmed />} />
           <Route path="/booking/cancel-result/:bookingId" element={<CancelBookResult />} />
           <Route path="/user/checkout/:id" element={<UserCheckoutPage />} />
+          <Route path="/state-regulation" element={<StateRegulation />} />
           <Route path="*" element={<NotFound image={notFound} />} />
         </Route>
 

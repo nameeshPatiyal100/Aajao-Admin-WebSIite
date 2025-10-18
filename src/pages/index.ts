@@ -24,3 +24,4 @@ export { default as BookingConfirmed } from "./user/BookingConfirmed";
 export { default as CancelBookResult } from "./user/CancelBookResult";
 export { default as UserOngoingBooking } from "./user/UserOngoingBooking";
 export { default as UserCheckoutPage } from "./user/UserCheckoutPage";
+export { default as StateRegulation } from "./user/StateRegulation";

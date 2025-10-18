@@ -18,7 +18,7 @@ interface OngoingBookingModalProps {
   open: boolean;
   onClose: () => void;
   booking: any;
-}
+};
 
 const OngoingBookingModal: React.FC<OngoingBookingModalProps> = ({
   open,
@@ -37,19 +37,16 @@ const OngoingBookingModal: React.FC<OngoingBookingModalProps> = ({
   };
   
   const handleCancelBooking = () => {
-    setConfirmOpen(true); // open confirmation dialog
-    // navigate(`/booking/cancel-result/${booking.id}`, { state: { booking } });
+    setConfirmOpen(true); 
   };
 
   const confirmCancel = () => {
     setConfirmOpen(false);
     navigate(`/booking/cancel-result/${booking.id}`, { state: { booking } });
-    // navigate(`/cancel-booking/${booking.id}`, { state: { booking } });
   };
 
   return (
     <>
-      {/* Main Booking Details Modal */}
       <Modal
         open={open}
         onClose={onClose}
@@ -119,8 +116,6 @@ const OngoingBookingModal: React.FC<OngoingBookingModalProps> = ({
           </Box>
 
           <Divider sx={{ my: 3 }} />
-
-          {/* Action Buttons */}
           <Box
             sx={{
               display: "flex",
@@ -182,8 +177,6 @@ const OngoingBookingModal: React.FC<OngoingBookingModalProps> = ({
           </Box>
         </Box>
       </Modal>
-
-      {/* Confirmation Dialog */}
       <Dialog
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}

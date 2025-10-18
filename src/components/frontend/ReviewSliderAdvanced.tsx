@@ -103,6 +103,7 @@ const Arrow = ({
 );
 
 const ReviewSliderAdvanced: React.FC<ReviewSliderProps> = ({ propertyId }) => {
+  console.log(propertyId)
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
