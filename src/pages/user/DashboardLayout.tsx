@@ -16,7 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 // Import your other components here
 import UserProfile from "./UserProfile.tsx";
 import Bookings from "./UserBookings.tsx";
-import UserOngoingBooking from "./UserOngoingBooking.tsx";
+import UserOngoingBooking from "./userOngoingBooking.tsx";
 
 const DashboardLayout: React.FC = () => {
   const location = useLocation();
