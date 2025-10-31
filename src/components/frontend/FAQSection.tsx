@@ -34,25 +34,35 @@ const FAQSection: React.FC<FAQSectionProps> = ({
   };
 
   return (
-    <Box sx={{ py: 8, px: { xs: 2, md: 6 }, bgcolor: "#fdfdfd" }}>
+    <Box
+      sx={{
+        py: { xs: 6, md: 8 },
+        px: { xs: 2, sm: 3, md: 6 },
+        bgcolor: "#fdfdfd",
+      }}
+    >
       {/* Section Title */}
       <Typography
         variant="h4"
         textAlign="center"
         fontWeight="bold"
-        mb={5}
-        sx={{ color: "#c14365" }}
+        mb={{ xs: 4, md: 5 }}
+        sx={{
+          color: "#c14365",
+          fontSize: { xs: "1.8rem", sm: "2rem", md: "2.4rem" },
+        }}
       >
         {title}
       </Typography>
 
-      {/* Content Grid */}
+      {/* Content Wrapper */}
       <Box
         sx={{
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
-          gap: 4,
-          alignItems: "stretch",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: { xs: 4, sm: 5, md: 6 },
         }}
       >
         {/* Left: Image */}
@@ -61,17 +71,25 @@ const FAQSection: React.FC<FAQSectionProps> = ({
           src={image}
           alt="FAQ"
           sx={{
-            flex: 1,
-            maxWidth: "40%",
-            borderRadius: 2,
-            boxShadow: 3,
+            width: { xs: "100%", sm: "90%", md: "45%" },
+            height: { xs: "auto", sm: 280, md: "100%" },
+            maxHeight: { md: 420 },
             objectFit: "cover",
-            height: { xs: 250, md: "100%" },
+            borderRadius: 3,
+            boxShadow: 3,
+            mx: "auto",
           }}
         />
 
         {/* Right: FAQs */}
-        <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           {/* Description with Icon */}
           <Box
             sx={{
@@ -79,10 +97,22 @@ const FAQSection: React.FC<FAQSectionProps> = ({
               alignItems: "center",
               gap: 1.5,
               mb: 3,
+              flexWrap: "wrap",
+              justifyContent: { xs: "center", md: "flex-start" },
+              textAlign: { xs: "center", md: "left" },
             }}
           >
-            <HelpOutlineIcon sx={{ color: "#c14365", fontSize: 30 }} />
-            <Typography variant="h6" sx={{ color: "#c14365", fontWeight: 600 }}>
+            <HelpOutlineIcon
+              sx={{ color: "#c14365", fontSize: { xs: 26, sm: 30 } }}
+            />
+            <Typography
+              variant="h6"
+              sx={{
+                color: "#c14365",
+                fontWeight: 600,
+                fontSize: { xs: "1rem", sm: "1.1rem", md: "1.2rem" },
+              }}
+            >
               {description}
             </Typography>
           </Box>
@@ -99,18 +129,22 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                 borderRadius: 2,
                 boxShadow: "none",
                 "&:before": { display: "none" },
-                padding: "5px",
+                overflow: "hidden",
+                width: "100%",
               }}
             >
               <AccordionSummary
                 expandIcon={
-                  <ExpandMoreIcon sx={{ color: "#c14365", fontSize: 30 }} />
+                  <ExpandMoreIcon
+                    sx={{ color: expanded === idx ? "#fff" : "#c14365", fontSize: 28 }}
+                  />
                 }
                 sx={{
                   bgcolor: expanded === idx ? "#c14365" : "#fff",
                   color: expanded === idx ? "#fff" : "#c14365",
                   fontWeight: 700,
-                  fontSize: "1.1rem",
+                  fontSize: { xs: "1rem", sm: "1.1rem" },
+                  transition: "0.3s",
                   "&:hover": {
                     bgcolor: expanded === idx ? "#ab3864" : "#fce4ec",
                   },
@@ -122,8 +156,10 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                 sx={{
                   color: "#333",
                   bgcolor: "#fff",
-                  fontSize: "1rem",
+                  fontSize: { xs: "0.95rem", sm: "1rem" },
                   lineHeight: 1.6,
+                  px: { xs: 2, sm: 3 },
+                  py: { xs: 1, sm: 1.5 },
                 }}
               >
                 <Typography>{faq.answer}</Typography>

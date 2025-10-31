@@ -8,27 +8,23 @@ import {
   Button,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import "leaflet/dist/leaflet.css";
 import PhoneIcon from "@mui/icons-material/Phone";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
-import { PropertyBookingBox, ReviewSliderAdvanced,CancellationPolicyModal } from "../../components";
-// import {  } from "../../components";
+import {
+  PropertyBookingBox,
+  PropDetailMap,
+  ReviewSliderAdvanced,
+  CancellationPolicyModal,
+  BookingSection,
+} from "../../components";
 
 export const PropertyDetail: React.FC = () => {
-  const chandigarhCoords: [number, number] = [30.7333, 76.7794];
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rules, _setRules] = useState<string[]>([
+  const [rules] = useState<string[]>([
     "No smoking inside the property.",
     "Pets are not allowed.",
     "Please respect quiet hours after 10 PM.",
   ]);
-
-  const markerIcon = new L.Icon({
-    iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-  });
 
   return (
     <Box
@@ -52,27 +48,28 @@ export const PropertyDetail: React.FC = () => {
         </Breadcrumbs>
       </Box>
 
-      {/* Main Section */}
+      {/* MAIN LAYOUT */}
       <Box
         sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          gap: 3,
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "65% 32%" },
+          gap: { xs: 3, md: 4 },
+          alignItems: "flex-start",
         }}
       >
-        {/* Left Section */}
+        {/* LEFT SECTION */}
         <Box
           sx={{
-            flex: { xs: "1 1 100%", md: "0 0 68%" },
             display: "flex",
             flexDirection: "column",
-            gap: 2,
+            gap: 3,
             backgroundColor: "#f9f9f9",
             p: 2,
             borderRadius: 2,
             boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
           }}
         >
+          {/* Cover Image */}
           <Box
             component="img"
             src="/room1.jpg"
@@ -85,13 +82,8 @@ export const PropertyDetail: React.FC = () => {
             }}
           />
 
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 1,
-            }}
-          >
+          {/* Gallery */}
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
             {["/room2.jpg", "/room3.jpg", "/room4.jpg", "/room1.jpg"].map(
               (img, i) => (
                 <Box
@@ -114,18 +106,17 @@ export const PropertyDetail: React.FC = () => {
             )}
           </Box>
 
-          {/* Booking Box */}
+          {/* Property Booking Box */}
           <PropertyBookingBox />
         </Box>
 
-        {/* Right Section */}
+        {/* RIGHT SECTION */}
         <Box
           sx={{
-            flex: { xs: "1 1 100%", md: "0 0 30%" },
+            position: "relative",
             display: "flex",
             flexDirection: "column",
-            gap: 2,
-            height: "100%",
+            gap: 3,
           }}
         >
           {/* Owner Box */}
@@ -145,7 +136,7 @@ export const PropertyDetail: React.FC = () => {
             </Typography>
             <Typography sx={{ fontSize: 14, color: "#666", mb: 1 }}>
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Architecto alias, sap
+              Architecto alias, sap.
             </Typography>
             <Box
               sx={{
@@ -168,41 +159,37 @@ export const PropertyDetail: React.FC = () => {
           </Box>
 
           {/* Map Box */}
+          <PropDetailMap
+            coordinates={[30.7333, 76.7794]}
+            popupText="Property located in Chandigarh"
+          />
+
+          {/* Sticky Booking Section */}
           <Box
             sx={{
-              height: { xs: 200, sm: 250, md: 300 },
+              position: "sticky",
+              top: 100,
+              zIndex: 10,
+              backgroundColor: "#fff",
               borderRadius: 2,
-              overflow: "hidden",
-              boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
+              p: 2,
+              // boxShadow: "0px 4px 15px rgba(0,0,0,0.1)",
             }}
           >
-            <MapContainer
-              center={chandigarhCoords}
-              zoom={13}
-              scrollWheelZoom={false}
-              style={{ width: "100%", height: "100%" }}
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
-              />
-              <Marker position={chandigarhCoords} icon={markerIcon}>
-                <Popup>Property located in Chandigarh</Popup>
-              </Marker>
-            </MapContainer>
+            <BookingSection />
           </Box>
         </Box>
       </Box>
 
-      {/* Property Description */}
+      {/* DESCRIPTION SECTION */}
       <Box
         sx={{
-          mt: 4,
+          mt: 5,
           p: 3,
           backgroundColor: "#fff",
           borderRadius: 2,
           boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
-          fontFamily: "Roboto, sans-serif",
+          maxWidth: { md: "65%" }, // keeps content left-aligned
         }}
       >
         <Typography
@@ -229,7 +216,6 @@ export const PropertyDetail: React.FC = () => {
           parking facilities, and high-speed WiFi.
         </Typography>
 
-        {/* Cancellation Policy Button */}
         <Button
           variant="outlined"
           sx={{
@@ -248,7 +234,7 @@ export const PropertyDetail: React.FC = () => {
         </Button>
       </Box>
 
-      {/* 🏠 Property Rules */}
+      {/* RULES */}
       <Box
         sx={{
           mt: 3,
@@ -256,6 +242,7 @@ export const PropertyDetail: React.FC = () => {
           backgroundColor: "#fff",
           borderRadius: 2,
           boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
+          maxWidth: { md: "65%" },
         }}
       >
         <Typography
@@ -293,6 +280,7 @@ export const PropertyDetail: React.FC = () => {
         )}
       </Box>
 
+      {/* Reviews */}
       <ReviewSliderAdvanced propertyId="property-123" />
 
       {/* Modal */}
