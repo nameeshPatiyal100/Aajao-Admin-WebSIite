@@ -16,7 +16,26 @@
     top: auto !important;
     bottom: 50px; /* stays just above the footer */
   }
+
   
+  /* Fix Slick overflow on mobile */
+.slick-slider,
+.slick-list,
+.slick-track {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.slick-slide {
+  margin: 0 2px;
+}
+
+@media (max-width: 600px) {
+  .slick-slide {
+    margin: 0 1px !important;
+  }
+}
+
   /* Responsive behavior - normal flow on small screens */
   @media (max-width: 900px) {
     .sticky-booking-box {

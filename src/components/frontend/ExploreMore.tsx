@@ -1,8 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 const ExploreMore: React.FC = () => {
   const properties = [
@@ -16,15 +14,16 @@ const ExploreMore: React.FC = () => {
     dots: true,
     infinite: true,
     autoplay: true,
+    autoplaySpeed: 2500,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: false,
-    responsive: [
-      { breakpoint: 1200, settings: { slidesToShow: 2.5 } },
-      { breakpoint: 900, settings: { slidesToShow: 2 } },
-      { breakpoint: 600, settings: { slidesToShow: 1.2 } },
-    ],
+    // responsive: [
+    //   { breakpoint: 1200, settings: { slidesToShow: 2.5 } },
+    //   { breakpoint: 900, settings: { slidesToShow: 2 } },
+    //   { breakpoint: 600, settings: { slidesToShow: 1.2 } },
+    // ],
   };
 
   return (
@@ -33,10 +32,12 @@ const ExploreMore: React.FC = () => {
         mt: 5,
         p: { xs: 2, sm: 3 },
         backgroundColor: "#fff",
+        ml: { xs: 0, md: 0 },
         borderRadius: 2,
         boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
         maxWidth: { md: "65%" },
-        ml: 0, // 👈 fully left aligned
+        mx: "auto",
+        overflow: "hidden",
       }}
     >
       <Typography
@@ -45,15 +46,32 @@ const ExploreMore: React.FC = () => {
           fontWeight: 700,
           color: "#c14365",
           mb: 3,
+          textAlign: "left",
         }}
       >
-        Explore Near By Places
+        Explore Nearby Places
       </Typography>
 
       <Box
         sx={{
-          ".slick-slide": { px: 1 },
-          ".slick-track": { display: "flex", alignItems: "center" },
+          overflow: "hidden",
+          width: "100%",
+          ".slick-slider": { width: "100%" },
+          ".slick-slide": {
+            px: { xs: 0.5, sm: 1 },
+            boxSizing: "border-box",
+          },
+          ".slick-track": {
+            display: "flex",
+            alignItems: "center",
+          },
+          ".slick-dots li button:before": {
+            color: "#c14365",
+            fontSize: "10px",
+          },
+          ".slick-dots li.slick-active button:before": {
+            color: "#c14365",
+          },
         }}
       >
         <Slider {...sliderSettings}>
@@ -65,6 +83,7 @@ const ExploreMore: React.FC = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                textAlign: "center",
               }}
             >
               <Box
@@ -73,17 +92,18 @@ const ExploreMore: React.FC = () => {
                 alt={item.title}
                 sx={{
                   width: "100%",
-                  height: { xs: 140, sm: 180 },
+                  height: { xs: 160, sm: 200, md: 220 },
                   objectFit: "cover",
                   borderRadius: 2,
                   mb: 1.5,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                 }}
               />
               <Typography
                 sx={{
                   fontWeight: 600,
-                  textAlign: "center",
                   color: "#333",
+                  fontSize: { xs: 14, sm: 16 },
                 }}
               >
                 {item.title}

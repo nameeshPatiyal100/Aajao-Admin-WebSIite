@@ -47,35 +47,9 @@ const PropertyBookingBox: React.FC = () => {
     // let newCheckOut = dayjs(checkIn);
     let newPrice = 1500;
 
-    // switch (stayType) {
-    //   case "Daily":
-    //     newCheckOut = dayjs(checkIn).add(1, "day");
-    //     newPrice = 1500 * (adults + children * 0.5); // children count for 50%
-    //     break;
-    //   case "Weekly":
-    //     newCheckOut = dayjs(checkIn).add(7, "day");
-    //     newPrice = 1500 * 7 * (adults + children * 0.5);
-    //     break;
-    //   case "Monthly":
-    //     newCheckOut = dayjs(checkIn).add(30, "day");
-    //     newPrice = 1500 * 30 * (adults + children * 0.5);
-    //     break;
-    // }
-
-    // if (!manualCheckout) {
-    //   setCheckOut(newCheckOut.format("YYYY-MM-DD"));
-    // }
 
     setPrice(newPrice);
   }, []);
-
-  // const handleAdultsChange = (delta: number) => {
-  //   setAdults((prev) => Math.max(1, prev + delta));
-  // };
-
-  // const handleChildrenChange = (delta: number) => {
-  //   setChildren((prev) => Math.max(0, prev + delta));
-  // };
 
   return (
     <Box

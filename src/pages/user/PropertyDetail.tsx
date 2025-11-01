@@ -175,6 +175,7 @@ export const PropertyDetail: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             gap: { xs: 2, sm: 3 },
+            overflowX: "hidden",
             backgroundColor: "#f9f9f9",
             p: { xs: 1.5, sm: 2 },
             borderRadius: 2,
@@ -196,13 +197,14 @@ export const PropertyDetail: React.FC = () => {
           />
 
           {/* Slick Slider */}
+          {/* Slick Slider */}
           <Box
             sx={{
-              ".slick-slide": { px: 1 },
-              ".slick-track": {
-                display: "flex",
-                alignItems: "center",
-              },
+              width: "100%",
+              overflow: "hidden", // prevent horizontal scroll
+              ".slick-slider": { width: "100%" },
+              ".slick-slide": { px: 0.5 },
+              ".slick-track": { display: "flex", alignItems: "center" },
               mb: 1,
             }}
           >
@@ -215,7 +217,7 @@ export const PropertyDetail: React.FC = () => {
                   alt={`room${i}`}
                   sx={{
                     width: "100%",
-                    height: { xs: 80, sm: 100, md: 120 },
+                    height: { xs: 100, sm: 120, md: 140 },
                     objectFit: "cover",
                     borderRadius: 2,
                     cursor: "pointer",
