@@ -36,6 +36,8 @@ export { default as RazorpayPayment } from "./frontend/RazorpayPayment";
 export { default as BookingDetailsModal } from "./frontend/BookingDetailsModal";
 export { default as PropDetailMap } from "./frontend/PropDetailMap";
 export { default as BookingSection } from "./frontend/BookingSection";
+export { default as ExploreMore } from "./frontend/ExploreMore";
+export { default as PropertyGallery } from "./frontend/PropertyGallery";
 //--------------------------MODALS---------------------------------->
 export { default as CancellationPolicyModal } from "./frontend/modals/CancellationPolicyModal";
 export { default as OngoingBookingModal } from "./frontend/modals/OngoingBookingModal";

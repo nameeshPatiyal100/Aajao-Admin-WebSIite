@@ -1,0 +1,28 @@
+/* Sticky booking box */
+.sticky-booking-box {
+    position: fixed;
+    top: 150px;
+    right: 2vw;
+    width: 500px;
+    background-color: #fff;
+    border-radius: 12px;
+    z-index: 1000;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* When reaching footer area */
+  .sticky-booking-box.stop-sticky {
+    position: absolute !important;
+    top: auto !important;
+    bottom: 50px; /* stays just above the footer */
+  }
+  
+  /* Responsive behavior - normal flow on small screens */
+  @media (max-width: 900px) {
+    .sticky-booking-box {
+      position: static;
+      width: 100%;
+      margin-top: 24px;
+    }
+  }
+  
