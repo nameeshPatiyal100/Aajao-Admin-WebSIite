@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 import {
   Box,
   Typography,
@@ -23,6 +26,7 @@ import {
   ExploreMore,
   PropertyGallery,
 } from "../../components";
+
 
 export const PropertyDetail: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,14 +73,6 @@ export const PropertyDetail: React.FC = () => {
     ],
   };
 
-  const images = [
-    "/room2.jpg",
-    "/room3.jpg",
-    "/room4.jpg",
-    "/room1.jpg",
-    "/room2.jpg",
-  ];
-
   const bookingBoxRef = useRef<HTMLDivElement | null>(null);
   const INITIAL_TOP = 150;
   const GAP_FROM_FOOTER = 24;
@@ -108,7 +104,7 @@ export const PropertyDetail: React.FC = () => {
 
       if (initialBottom > footerTop - GAP_FROM_FOOTER) {
         const adjustedTop = Math.max(
-          8,
+          -100,
           footerTop - GAP_FROM_FOOTER - bookingHeight
         );
         box.style.top = `${adjustedTop}px`;
@@ -197,7 +193,6 @@ export const PropertyDetail: React.FC = () => {
           />
 
           {/* Slick Slider */}
-          {/* Slick Slider */}
           <Box
             sx={{
               width: "100%",
@@ -208,8 +203,9 @@ export const PropertyDetail: React.FC = () => {
               mb: 1,
             }}
           >
+            
             <Slider {...sliderSettings}>
-              {images.map((img, i) => (
+              {Roomimages.map((img, i) => (
                 <Box
                   key={i}
                   component="img"
@@ -393,8 +389,9 @@ export const PropertyDetail: React.FC = () => {
           }}
         >
           <PropDetailMap
-            coordinates={[30.7333, 76.7794]}
-            popupText="Property located in Chandigarh"
+            // coordinates={[30.7333, 76.7794]}
+            coordinates={[31.1048, 77.1734]}
+            // popupText="Property located in Chandigarh"
           />
         </Box>
       </Box>

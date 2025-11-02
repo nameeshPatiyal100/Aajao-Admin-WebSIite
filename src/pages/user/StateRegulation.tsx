@@ -8,7 +8,10 @@ import {
   Button,
 } from "@mui/material";
 import { RegulationModal } from "../../components";
-import Img1 from "../../assets/UI/chandigarh.jpeg";
+// import Img1 from "../../assets/UI/chandigarh.jpeg";
+import shimlahimachal from "../../assets/provided asset/shimlahimachal.jpg";
+import punjab from "../../assets/provided asset/punjab.jpg";
+import chandigarh from "../../assets/provided asset/chandigarh.jpg";
 
 const StateRegulation: React.FC = () => {
   const theme = useTheme();
@@ -334,7 +337,7 @@ Hosting in Chandigarh means more than income — it’s about sharing the city�
       <Section
         title="🏔️ Hosting with Aajoo in Himachal Pradesh"
         description="If you’re thinking about opening your home to travelers in Himachal Pradesh, you’re in the right place. At Aajoo, we help everyday homeowners, families, and locals turn extra rooms or unused spaces into meaningful income, while giving travelers an authentic Himachali experience."
-        image={Img1}
+        image={shimlahimachal}
         content={himachalContent}
       />
 
@@ -342,7 +345,7 @@ Hosting in Chandigarh means more than income — it’s about sharing the city�
       <Section
         title="🌾Hosting with Aajoo in Punjab"
         description="Punjab is famous for its warmth, culture, and hospitality — and now you can share that spirit with travelers by opening your home as a homestay or Bed & Breakfast (BnB). At Aajoo, we help you turn spare rooms into income while making sure you meet all state rules and tourism standards."
-        image={Img1}
+        image={punjab}
         reverse
         content={punjabContent}
       />
@@ -351,7 +354,7 @@ Hosting in Chandigarh means more than income — it’s about sharing the city�
       <Section
         title="🏡 Host with Aajoo in Chandigarh"
         description="Chandigarh isn’t just a city — it’s a planned masterpiece with a blend of modernity and culture. More travelers now want to stay with locals instead of hotels, which is why homestays and BnBs are growing here.With Aajoo, you can turn your extra space into income + cultural exchange, while we help you with registrations, guest bookings, and digital growth."
-        image={Img1}
+        image={chandigarh}
         content={chandigarhContent}
       />
 

@@ -1,29 +1,101 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, { useEffect } from "react";
+import { Box } from "@mui/material";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// ✅ Custom Map Marker
+// ✅ Custom red map marker
 const markerIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
   iconSize: [32, 48],
   iconAnchor: [16, 48],
-  popupAnchor: [0, -40],
 });
+
+// ✅ Pulse effect dynamically rendered at given lat/lng
+const MarkerPulse = ({ coordinates }: { coordinates: [number, number] }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) return;
+
+    // Create a custom div icon with two rings
+    const pulseIcon = L.divIcon({
+      className: "custom-pulse",
+      html: `
+        <div class="pulse-wrapper">
+          <div class="pulse-ring outer"></div>
+          <div class="pulse-ring inner"></div>
+        </div>
+      `,
+      iconSize: [30, 30],
+      iconAnchor: [15, 15],
+    });
+
+    // Add pulse marker to the map
+    const pulseMarker = L.marker(coordinates, { icon: pulseIcon }).addTo(map);
+
+    // Inject styles once
+    if (!document.getElementById("pulse-style")) {
+      const style = document.createElement("style");
+      style.id = "pulse-style";
+      style.innerHTML = `
+        .pulse-wrapper {
+          position: relative;
+          width: 30px;
+          height: 30px;
+        }
+
+        .pulse-ring {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(193, 67, 101, 0.6);
+          opacity: 0.6;
+        }
+
+        .pulse-ring.outer {
+          animation: pulseOuter 2s infinite;
+        }
+
+        .pulse-ring.inner {
+          animation: pulseInner 2s infinite 0.5s;
+          background: rgba(193, 67, 101, 0.8);
+        }
+
+        @keyframes pulseOuter {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+          70% { transform: translate(-50%, -50%) scale(2.5); opacity: 0.2; }
+          100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
+        }
+
+        @keyframes pulseInner {
+          0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+          70% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.2; }
+          100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    return () => {
+      pulseMarker.remove();
+    };
+  }, [map, coordinates]);
+
+  return null;
+};
 
 interface ResponsiveMapProps {
   coordinates: [number, number];
-  popupText?: string;
 }
 
-const PropDetailMap: React.FC<ResponsiveMapProps> = ({
-  coordinates,
-  popupText = "Property Location",
-}) => {
+const PropDetailMap: React.FC<ResponsiveMapProps> = ({ coordinates }) => {
   return (
     <Box
       sx={{
@@ -44,34 +116,25 @@ const PropDetailMap: React.FC<ResponsiveMapProps> = ({
         },
       }}
     >
-      {/* ✅ Map Container */}
       <MapContainer
         center={coordinates}
         zoom={13}
         scrollWheelZoom={false}
         style={{ width: "100%", height: "100%", zIndex: 1 }}
       >
-        {/* Modern & Clean Map Tiles */}
         <TileLayer
-        //   url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        //   url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-        //   url="https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png"
-        
           attribution='&copy; <a href="http://carto.com/attributions">CARTO</a>'
         />
 
-        {/* Marker */}
-        <Marker position={coordinates} icon={markerIcon}>
-          <Popup>
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>
-              {popupText}
-            </Typography>
-          </Popup>
-        </Marker>
+        {/* ✅ Red marker for property */}
+        <Marker position={coordinates} icon={markerIcon} />
+
+        {/* ✅ Animated pulse effect */}
+        <MarkerPulse coordinates={coordinates} />
       </MapContainer>
 
-      {/* ✅ Overlay Gradient for Professional Feel */}
+      {/* ✅ Overlay gradient */}
       <Box
         sx={{
           position: "absolute",
@@ -80,56 +143,6 @@ const PropDetailMap: React.FC<ResponsiveMapProps> = ({
             "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%)",
           pointerEvents: "none",
           zIndex: 2,
-        }}
-      />
-
-      {/* ✅ Optional Floating Label on Top */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: 10,
-          left: 15,
-          backgroundColor: "#c14365",
-          color: "#fff",
-          px: 2,
-          py: 0.5,
-          borderRadius: "20px",
-          fontSize: { xs: "0.75rem", sm: "0.85rem" },
-          fontWeight: 600,
-          zIndex: 3,
-          boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-        }}
-      >
-        Property Map
-      </Box>
-
-      {/* ✅ Marker Pulse Animation */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -100%)",
-          width: 20,
-          height: 24,
-          borderRadius: "50%",
-          backgroundColor: "rgba(193, 67, 101, 0.6)",
-          animation: "pulse 1.5s infinite",
-          zIndex: 1,
-          "@keyframes pulse": {
-            "0%": {
-              transform: "translate(-50%, -100%) scale(0.8)",
-              opacity: 0.7,
-            },
-            "50%": {
-              transform: "translate(-50%, -100%) scale(1.2)",
-              opacity: 0.3,
-            },
-            "100%": {
-              transform: "translate(-50%, -100%) scale(0.8)",
-              opacity: 0.7,
-            },
-          },
         }}
       />
     </Box>

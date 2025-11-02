@@ -20,8 +20,7 @@
   
   /* Fix Slick overflow on mobile */
 .slick-slider,
-.slick-list,
-.slick-track {
+.slick-list{
   max-width: 100% !important;
   overflow: hidden !important;
 }

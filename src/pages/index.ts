@@ -25,3 +25,7 @@ export { default as CancelBookResult } from "./user/CancelBookResult";
 export { default as UserOngoingBooking } from "./user/userOngoingBooking";
 export { default as UserCheckoutPage } from "./user/UserCheckoutPage";
 export { default as StateRegulation } from "./user/StateRegulation";
+export { default as HelpCenter } from "./user/HelpCenter";
+export { default as TermsAndConditions } from "./user/TermsAndConditions";
+export { default as WhyHostsListWithAajoo } from "./user/WhyHostsListWithAajoo";
+export { default as PrivacyPolicyPage } from "./user/PrivacyPolicyPage";

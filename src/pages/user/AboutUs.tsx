@@ -1,6 +1,9 @@
 // import React from "react";
 import { Box, Typography } from "@mui/material";
 import { WhyChooseUs } from "../../components";
+
+import mission from "../../assets/provided asset/mission.png";
+import vision from "../../assets/provided asset/vision.png";
 import aboutus2 from "../../assets/UI/aboutUs2.jpg";
 import bestus from "../../assets/UI/bestus.jpg";
 
@@ -161,11 +164,11 @@ const AboutUs = () => {
         >
           <Box
             component="img"
-            src="/room3.jpg"
+            src={mission}
             alt="Mission"
             sx={{
-              width: "100%",
-              maxWidth: 550,
+              width: "80%",
+              maxWidth: 400,
               borderRadius: "12px",
               boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
               transition: "transform 0.3s ease",
@@ -199,11 +202,11 @@ const AboutUs = () => {
         >
           <Box
             component="img"
-            src="/room3.jpg"
+            src={vision}
             alt="Vision"
             sx={{
-              width: "100%",
-              maxWidth: 550,
+              width: "80%",
+              maxWidth: 400,
               borderRadius: "12px",
               boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
               transition: "transform 0.3s ease",

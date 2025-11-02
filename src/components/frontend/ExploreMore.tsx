@@ -19,11 +19,11 @@ const ExploreMore: React.FC = () => {
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: false,
-    // responsive: [
-    //   { breakpoint: 1200, settings: { slidesToShow: 2.5 } },
-    //   { breakpoint: 900, settings: { slidesToShow: 2 } },
-    //   { breakpoint: 600, settings: { slidesToShow: 1.2 } },
-    // ],
+    responsive: [
+      { breakpoint: 1200, settings: { slidesToShow: 2.5 } },
+      { breakpoint: 900, settings: { slidesToShow: 2 } },
+      { breakpoint: 600, settings: { slidesToShow: 1.2 } },
+    ],
   };
 
   return (

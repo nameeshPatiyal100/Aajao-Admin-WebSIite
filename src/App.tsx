@@ -34,7 +34,11 @@ import {
   BookingConfirmed,
   CancelBookResult,
   UserCheckoutPage,
-  StateRegulation
+  StateRegulation,
+  HelpCenter,
+  TermsAndConditions,
+  WhyHostsListWithAajoo,
+  PrivacyPolicyPage
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -69,6 +73,11 @@ function App() {
           <Route path="/booking/cancel-result/:bookingId" element={<CancelBookResult />} />
           <Route path="/user/checkout/:id" element={<UserCheckoutPage />} />
           <Route path="/state-regulation" element={<StateRegulation />} />
+          {/* <Route path="/state-regulation" element={<StateRegulation />} /> */}
+          <Route path="/help-center" element={<HelpCenter />} />
+          <Route path="/terms-condition" element={<TermsAndConditions />} />
+          <Route path="/Why-Hosts-List-With-Aajoo" element={<WhyHostsListWithAajoo />} />
+          <Route path="/Privacy-Policy" element={<PrivacyPolicyPage />} />
           <Route path="*" element={<NotFound image={notFound} />} />
         </Route>
 

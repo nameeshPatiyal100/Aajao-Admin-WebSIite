@@ -36,11 +36,13 @@ const Header: React.FC = () => {
     { label: "Contact", to: "/contact" },
     { label: "Help Center", to: "/" },
     { label: "FAQ", to: "/faqs" },
-    { label: "Privacy Policy", to: "/" },
-    { label: "Terms & Condition", to: "/" },
-    { label: "Why Host List With Aajoo", to: "/" },
-    { label: "State Regulation", to: "/" },
+    { label: "Privacy Policy", to: "/Privacy-Policy" },
+    { label: "Terms & Condition", to: "/terms-condition" },
+    { label: "Why Host List With Aajoo", to: "/Why-Hosts-List-With-Aajoo" },
+    { label: "State Regulation", to: "/state-regulation" },
     { label: "Become A Host", to: "/auth/signup" },
+    { label: "Help Center", to: "/help-center" },
+    // { label: "T&C", to: "/terms-condition" },
   ];
 
   return (
