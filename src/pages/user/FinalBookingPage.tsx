@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RazorpayPayment } from "../../components";
+import { useNavigate } from "react-router-dom";
+
 import {
   Box,
   Typography,
@@ -31,6 +33,8 @@ const FinalBookingPage: React.FC = () => {
   const [stayType, _setStayType] = useState<"Daily" | "Weekly" | "Monthly">(
     "Daily"
   );
+  const navigate = useNavigate();
+
   const [guests, _setGuests] = useState(1);
   const [gstNumber, setGstNumber] = useState("");
   const [price, setPrice] = useState<number>(propertyData.basePrice);
@@ -66,7 +70,6 @@ const FinalBookingPage: React.FC = () => {
     //       guests,
     //     }),
     //   });
-
     //   const data = await response.json();
     //   if (data.success) {
     //     setPrice(data.newPrice);
@@ -152,144 +155,152 @@ const FinalBookingPage: React.FC = () => {
 
         {/* Right Side: Billing */}
         <Box
-  sx={{
-    flex: 1,
-    backgroundColor: "#fff",
-    borderRadius: 3,
-    boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-    p: { xs: 2, sm: 3 },
-    display: "flex",
-    flexDirection: "column",
-    gap: 3,
-    minWidth: isMobile ? "100%" : "360px",
-    fontFamily: "Roboto, sans-serif",
-  }}
->
-  {/* Header */}
-  <Typography
-    variant="h5"
-    sx={{
-      color: themeColor,
-      fontWeight: 700,
-      fontSize: { xs: 18, sm: 20 },
-      mb: 1,
-    }}
-  >
-    Billing Summary
-  </Typography>
+          sx={{
+            flex: 1,
+            backgroundColor: "#fff",
+            borderRadius: 3,
+            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            p: { xs: 2, sm: 3 },
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            minWidth: isMobile ? "100%" : "360px",
+            fontFamily: "Roboto, sans-serif",
+          }}
+        >
+          {/* Header */}
+          <Typography
+            variant="h5"
+            sx={{
+              color: themeColor,
+              fontWeight: 700,
+              fontSize: { xs: 18, sm: 20 },
+              mb: 1,
+            }}
+          >
+            Billing Summary
+          </Typography>
 
-  <Divider />
+          <Divider />
 
-  {/* Price Breakdown */}
-  <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-      <Typography sx={{ fontWeight: 500 }}>Price ({stayType})</Typography>
-      <Typography sx={{ fontWeight: 500 }}>₹ {price.toLocaleString()}</Typography>
-    </Box>
+          {/* Price Breakdown */}
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography sx={{ fontWeight: 500 }}>
+                Price ({stayType})
+              </Typography>
+              <Typography sx={{ fontWeight: 500 }}>
+                ₹ {price.toLocaleString()}
+              </Typography>
+            </Box>
 
-    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-      <Typography sx={{ fontWeight: 500 }}>GST ({GST_PERCENT}%)</Typography>
-      <Typography sx={{ fontWeight: 500 }}>₹ {gstAmount.toLocaleString()}</Typography>
-    </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography sx={{ fontWeight: 500 }}>
+                GST ({GST_PERCENT}%)
+              </Typography>
+              <Typography sx={{ fontWeight: 500 }}>
+                ₹ {gstAmount.toLocaleString()}
+              </Typography>
+            </Box>
 
-    {/* GST Input & Apply Button */}
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: { xs: "column", sm: "row" },
-        gap: 1,
-        alignItems: "center",
-        mt: 1,
-      }}
-    >
-      <TextField
-        label="GST Number (optional)"
-        variant="outlined"
-        size="small"
-        value={gstNumber}
-        onChange={(e) => setGstNumber(e.target.value)}
-        sx={{ flex: 1 }}
-      />
-      <Button
-        variant="contained"
-        sx={{
-          bgcolor: themeColor,
-          "&:hover": { bgcolor: "#a83454" },
-          borderRadius: 2,
-          py: 1,
-          fontWeight: 600,
-          width: { xs: "100%", sm: "auto" },
-        }}
-        onClick={applyGST}
-      >
-        Apply GST
-      </Button>
-    </Box>
-  </Box>
+            {/* GST Input & Apply Button */}
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                gap: 1,
+                alignItems: "center",
+                mt: 1,
+              }}
+            >
+              <TextField
+                label="GST Number (optional)"
+                variant="outlined"
+                size="small"
+                value={gstNumber}
+                onChange={(e) => setGstNumber(e.target.value)}
+                sx={{ flex: 1 }}
+              />
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: themeColor,
+                  "&:hover": { bgcolor: "#a83454" },
+                  borderRadius: 2,
+                  py: 1,
+                  fontWeight: 600,
+                  width: { xs: "100%", sm: "auto" },
+                }}
+                onClick={applyGST}
+              >
+                Apply GST
+              </Button>
+            </Box>
+          </Box>
 
-  <Divider sx={{ my: 2 }} />
+          <Divider sx={{ my: 2 }} />
 
-  {/* Total */}
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      fontWeight: 700,
-      fontSize: { xs: 18, sm: 20 },
-    }}
-  >
-    <Typography>Total</Typography>
-    <Typography>₹ {totalBill.toLocaleString()}</Typography>
-  </Box>
+          {/* Total */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontWeight: 700,
+              fontSize: { xs: 18, sm: 20 },
+            }}
+          >
+            <Typography>Total</Typography>
+            <Typography>₹ {totalBill.toLocaleString()}</Typography>
+          </Box>
 
-  {/* Payment Buttons */}
-  <Box
-    sx={{
-      display: "flex",
-      flexDirection: "column",
-      gap: 1.5,
-      mt: 2,
-    }}
-  >
-    <Button
-      variant="contained"
-      sx={{
-        bgcolor: themeColor,
-        "&:hover": { bgcolor: "#a83454" },
-        borderRadius: 2,
-        py: 1.5,
-        fontWeight: 600,
-        fontSize: { xs: 14, sm: 16 },
-      }}
-      onClick={handlePayLater}
-    >
-      Pay Now
-    </Button>
+          {/* Payment Buttons */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1.5,
+              mt: 2,
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: themeColor,
+                "&:hover": { bgcolor: "#a83454" },
+                borderRadius: 2,
+                py: 1.5,
+                fontWeight: 600,
+                fontSize: { xs: 14, sm: 16 },
+              }}
+              onClick={handlePayLater}
+            >
+              Pay Now
+            </Button>
 
-    <Button
-      variant="outlined"
-      sx={{
-        borderColor: themeColor,
-        color: themeColor,
-        "&:hover": { bgcolor: "#fce4ec" },
-        borderRadius: 2,
-        py: 1.5,
-        fontWeight: 600,
-        fontSize: { xs: 14, sm: 16 },
-      }}
-    >
-      Pay Later
-    </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                borderColor: themeColor,
+                color: themeColor,
+                "&:hover": { bgcolor: "#fce4ec" },
+                borderRadius: 2,
+                py: 1.5,
+                fontWeight: 600,
+                fontSize: { xs: 14, sm: 16 },
+              }}
+              onClick={() => navigate("/booking/confirmation")}
+            >
+              Pay Later
+            </Button>
 
-    <RazorpayPayment
-      amount={totalBill}
-      onSuccess={handlePaymentSuccess}
-      onFailure={handlePaymentFailure}
-    />
-  </Box>
-</Box>
-
+            <RazorpayPayment
+              amount={totalBill}
+              onSuccess={handlePaymentSuccess}
+              onFailure={handlePaymentFailure}
+            />
+          </Box>
+        </Box>
       </Box>
 
       {/* Secure Payment Section */}

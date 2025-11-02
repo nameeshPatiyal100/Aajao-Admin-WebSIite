@@ -13,12 +13,17 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+
 import dayjs from "dayjs";
 
 type StayType = "Daily" | "Weekly" | "Monthly";
 const themeColor = "#c14365";
 
 const BookingSection: React.FC = () => {
+  const navigate = useNavigate();
+
+
   const [stayType, setStayType] = useState<StayType>("Daily");
   const [checkIn, setCheckIn] = useState(dayjs().format("YYYY-MM-DD"));
   const [checkOut, setCheckOut] = useState(
@@ -247,6 +252,7 @@ const BookingSection: React.FC = () => {
           "&:hover": { bgcolor: "#a83454" },
           width: "100%",
         }}
+        onClick={() => navigate("/property-booking/final")}
       >
         Book Now
       </Button>
