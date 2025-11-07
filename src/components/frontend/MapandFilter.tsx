@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Card, Button, useMediaQuery } from "@mui/material";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+// import { motion } from "motion/react";
+
+import RecenterButton from "./RecenterButton";
+// import HotelTooltip from "./HotelTooltip";
+import MarkerPulse from "./MarkerPulse";
+import HotelMarkers from "./HotelMarkers";
+
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -21,157 +27,97 @@ const categories = [
   { img: party, label: "Party" },
 ];
 
-// ✅ Recenter map button component
-// const RecenterButton = ({ coordinates }: { coordinates: [number, number] }) => {
-//   const map = useMap();
-
-//   const handleRecenter = () => {
-//     map.flyTo(coordinates, 14, { animate: true, duration: 1 });
-//   };
-
-//   return (
-//     <Box
-//       sx={{
-//         position: "absolute",
-//         top: 10,
-//         right: 10,
-//         zIndex: 9999,
-//       }}
-//     >
-//       <Button
-//         variant="contained"
-//         onClick={handleRecenter}
-//         sx={{
-//           backgroundColor: "#c14365",
-//           textTransform: "none",
-//           fontSize: "0.8rem",
-//           fontWeight: 600,
-//           px: 2,
-//           py: 0.5,
-//           "&:hover": { backgroundColor: "#a83756" },
-//         }}
-//       >
-//         Recenter
-//       </Button>
-//     </Box>
-//   );
-// };
-const RecenterButton: React.FC<{ location: { lat: number; lng: number } }> = ({
-  location,
-}) => {
-  const map = useMap();
-  const handleRecenter = () => {
-    map.setView(location, 14, { animate: true });
-  };
-
-  return (
-    <Box
-      sx={{
-        position: "absolute",
-        bottom: 20,
-        right: 20,
-        zIndex: 1000,
-        width: 45,
-        height: 45,
-        borderRadius: "50%",
-        backgroundColor: "#ffffff",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        cursor: "pointer",
-        transition: "all 0.2s ease",
-        "&:hover": {
-          backgroundColor: "#c14365",
-          "& svg": { color: "#fff" },
-        },
-      }}
-      onClick={handleRecenter}
-    >
-      <MyLocationIcon sx={{ color: "#c14365", fontSize: 26 }} />
-    </Box>
-  );
-};
-
-// ✅ Dual pulse marker effect
-const MarkerPulse = ({ coordinates }: { coordinates: [number, number] }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!map) return;
-
-    const pulseIcon = L.divIcon({
-      className: "custom-pulse",
-      html: `
-    <div class="pulse-wrapper">
-      <div class="pulse-ring outer"></div>
-      <div class="pulse-ring inner"></div>
-    </div>
-  `,
-      iconSize: [30, 30],
-      iconAnchor: [15, 15],
-    });
-
-    const pulseMarker = L.marker(coordinates, { icon: pulseIcon }).addTo(map);
-
-    if (!document.getElementById("pulse-style")) {
-      const style = document.createElement("style");
-      style.id = "pulse-style";
-      style.innerHTML = `
-    .pulse-wrapper {
-      position: relative;
-      width: 30px;
-      height: 30px;
-    }
-    .pulse-ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(193, 67, 101, 0.6);
-      opacity: 0.6;
-    }
-    .pulse-ring.outer {
-      animation: pulseOuter 2s infinite;
-    }
-    .pulse-ring.inner {
-      animation: pulseInner 2s infinite 0.5s;
-      background: rgba(193, 67, 101, 0.8);
-    }
-    @keyframes pulseOuter {
-      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
-      70% { transform: translate(-50%, -50%) scale(2.5); opacity: 0.2; }
-      100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.8; }
-    }
-    @keyframes pulseInner {
-      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
-      70% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.2; }
-      100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
-    }
-  `;
-      document.head.appendChild(style);
-    }
-
-    return () => {
-      pulseMarker.remove();
-    };
-  }, [map, coordinates]);
-
-  return null;
-};
-
 const MapandFilter: React.FC = () => {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
   const [error, setError] = useState<string>("");
 
+  const [hotels, setHotels] = useState<
+    {
+      id: number;
+      name: string;
+      price: number;
+      lat: number;
+      lng: number;
+      image: string;
+    }[]
+  >([]);
+
+  // const markerColor = "#c14365";
+  const hotelIcon = new L.DivIcon({
+    className: "custom-hotel-marker",
+    html: `
+    <div style="
+      background-color: #c14365;
+      color: white;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid white;
+      box-shadow: 0 0 6px rgba(0,0,0,0.3);
+      font-size: 18px;
+      cursor: pointer;
+    ">
+      🏠
+    </div>
+  `,
+    // iconAnchor: [18, 36],
+    // popupAnchor: [0, -36],
+    iconSize: [38, 48],
+    iconAnchor: [19, 48],
+    popupAnchor: [0, -45],
+  });
+
+  useEffect(() => {
+    if (location) {
+      // ✅ Dummy nearby hotels data (same shape as future API)
+      const dummyHotels = [
+        {
+          id: 1,
+          name: "Himalayan View Resort",
+          price: 3200,
+          lat: location.lat + 0.01,
+          lng: location.lng + 0.01,
+          image: "https://images.unsplash.com/photo-1566073771259-6a8506099945",
+        },
+        {
+          id: 2,
+          name: "Mountain Breeze Inn",
+          price: 2800,
+          lat: location.lat - 0.008,
+          lng: location.lng + 0.009,
+          image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb",
+        },
+        {
+          id: 3,
+          name: "Snow Valley Retreat",
+          price: 4000,
+          lat: location.lat + 0.007,
+          lng: location.lng - 0.006,
+          image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+        },
+        {
+          id: 4,
+          name: "River Edge Lodge",
+          price: 2600,
+          lat: location.lat - 0.009,
+          lng: location.lng - 0.005,
+          image: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461",
+        },
+      ];
+
+      // ✅ Simulate API call delay
+      setTimeout(() => setHotels(dummyHotels), 1000);
+    }
+  }, [location]);
+
   const markerIcon = new L.Icon({
     iconUrl:
-    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
     shadowUrl:
       "[https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png](https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png)",
     iconSize: [32, 48],
@@ -271,6 +217,7 @@ const MapandFilter: React.FC = () => {
             </Box>
           ))}{" "}
         </Box>
+
         {/* ✅ Action Buttons */}
         <Box
           sx={{
@@ -363,12 +310,19 @@ const MapandFilter: React.FC = () => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
+
+              {/* ✅ User’s location */}
               <Marker position={location} icon={markerIcon}>
                 <Popup>Your Current Location</Popup>
               </Marker>
+
               <MarkerPulse coordinates={[location.lat, location.lng]} />
-              {/* <RecenterButton coordinates={[location.lat, location.lng]} /> */}
               <RecenterButton location={location} />
+
+              {/* ✅ Custom Hotel Markers */}
+              {/* <HotelMarkers hotels={hotels} hotelIcon={hotelIcon} /> */}
+              <HotelMarkers hotels={hotels} hotelIcon={hotelIcon} />
+
             </MapContainer>
           ) : (
             <Box

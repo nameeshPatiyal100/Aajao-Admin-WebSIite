@@ -5,6 +5,7 @@ import {
   Navigate,
   // Outlet,
 } from "react-router-dom";
+import "./App.css"
 import notFound from "./assets/UI/404.jpg";
 import { AdminLayout } from "./components";
 
@@ -64,7 +65,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="contact" element={<ContactUs />} />
-          <Route path="property/detail" element={<PropertyDetail />} />
+          <Route path="property/detail/:id" element={<PropertyDetail />} />
           <Route path="property/list" element={<PropertyListing />} />
           <Route path="faqs" element={<FAQ />} />
           <Route path="/user-dashboard" element={<DashboardLayout />} />

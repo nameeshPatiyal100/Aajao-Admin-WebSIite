@@ -1,0 +1,31 @@
+/* -----------------TOOLTIP_CSS_START-----------------> */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    border: none !important;
+  }
+  .leaflet-popup-tip {
+    background: #c14365 !important;
+  }
+  
+
+  /* hotel popup fade animation */
+  .leaflet-popup {
+    transform-origin: bottom center;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  
+  .leaflet-popup-content-wrapper {
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  .hotel-popup {
+    pointer-events: auto;
+  }
+  
+
+
+
+/* -----------------TOOLTIP_CSS_END-----------------> */
