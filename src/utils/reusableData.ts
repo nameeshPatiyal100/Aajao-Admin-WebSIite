@@ -43,3 +43,6 @@ export const Roomimages = [
       { breakpoint: 400, settings: { slidesToShow: 1.3 } },
     ],
   };
+
+
+  
