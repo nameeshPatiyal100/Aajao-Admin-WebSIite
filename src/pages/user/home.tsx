@@ -120,7 +120,7 @@ const Home = () => {
         <div className="properties-grid">
           {hotels.map((hotel, idx) => (
             <Link
-              to={`/property/detail/`}
+              to={`/property/detail/1`}
               key={idx}
               style={{ textDecoration: "none", color: "inherit" }}
             >

@@ -263,7 +263,7 @@ const PropertyListing = () => {
           {properties.map((prop, idx) => (
             // <HomePropCard key={idx} {...prop} />
             <Link
-              to={`/property/detail/`}
+              to={`/property/detail/1`}
               key={idx}
               style={{ textDecoration: "none", color: "inherit" }}
             >

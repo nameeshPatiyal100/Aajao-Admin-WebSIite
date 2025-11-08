@@ -63,7 +63,7 @@ const HomePropCard: React.FC<HomePropCard> = ({
               borderRadius: 2,
               "&:hover": { bgcolor: "#ab3864" },
             }}
-            onClick={() => navigate("/property/detail")}
+            onClick={() => navigate("/property/detail/1")}
           >
             Book Now
           </Button>
