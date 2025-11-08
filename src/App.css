@@ -24,6 +24,36 @@
   .hotel-popup {
     pointer-events: auto;
   }
+  /* Hide the default white background and shadow of Leaflet popups */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Remove white background behind tooltip (popup pane) */
+.leaflet-popup-pane {
+  background: transparent !important;
+}
+
+/* Adjust popup content to remove default margins/padding */
+.leaflet-popup-content {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* Optional: remove border line around tooltip */
+.leaflet-popup-content-wrapper {
+  border: none !important;
+}
+
+/* Prevent popup flickering due to layout shifts */
+.leaflet-container a.leaflet-popup-close-button {
+  display: none !important;
+}
+
   
 
 

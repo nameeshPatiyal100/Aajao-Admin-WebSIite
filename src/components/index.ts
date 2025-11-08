@@ -38,6 +38,7 @@ export { default as PropDetailMap } from "./frontend/PropDetailMap";
 export { default as BookingSection } from "./frontend/BookingSection";
 export { default as ExploreMore } from "./frontend/ExploreMore";
 export { default as PropertyGallery } from "./frontend/PropertyGallery";
+export { default as FeaturedProperties } from "./frontend/FeaturedProperties";
 //--------------------------MODALS---------------------------------->
 export { default as CancellationPolicyModal } from "./frontend/modals/CancellationPolicyModal";
 export { default as OngoingBookingModal } from "./frontend/modals/OngoingBookingModal";

@@ -5,9 +5,10 @@ import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import {
   MapandFilter,
-  HomePropCard,
+  // HomePropCard,
   FAQSection,
   ReviewSlider,
+  FeaturedProperties,
 } from "../../components";
 import JoinusNow from "../../assets/UI/joinusNow.jpg";
 
@@ -115,8 +116,7 @@ const Home = () => {
       <MapandFilter />
 
       {/* 🔹 Hotel Cards Section */}
-      <section className="featured-properties">
-        {/* <h2>Featured Properties</h2> */}
+      {/* <section className="featured-properties">
         <div className="properties-grid">
           {hotels.map((hotel, idx) => (
             <Link
@@ -128,7 +128,9 @@ const Home = () => {
             </Link>
           ))}
         </div>
-      </section>
+      </section> */}
+      <FeaturedProperties hotels={hotels} />
+
       <div className="addHostSection">
         <div className="addHostSectionLeft">
           <img src={JoinusNow} alt="Become a Host" />
@@ -148,11 +150,13 @@ const Home = () => {
           </Link>
         </div>
       </div>
+
       <FAQSection
         image="/faq_vector.jpg"
         faqs={faqs}
         description="Got questions? We’ve got answers for you!"
       />
+
       <ReviewSlider />
     </Box>
   );

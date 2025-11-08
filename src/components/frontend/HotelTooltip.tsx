@@ -23,7 +23,7 @@ const HotelTooltip: React.FC<HotelTooltipProps> = ({ id, name, price, image }) =
       sx={{
         width: 180,
         borderRadius: "12px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+        // boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
         overflow: "hidden",
         cursor: "pointer",
         transition: "transform 0.2s ease",

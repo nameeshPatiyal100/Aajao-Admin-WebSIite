@@ -26,7 +26,7 @@ const HotelMarkers: React.FC<HotelMarkersProps> = ({ hotels, hotelIcon }) => {
         let hoverTimeout: ReturnType<typeof setTimeout>;
 
         return (
-          <Marker
+          <Marker 
             key={hotel.id}
             position={[hotel.lat, hotel.lng]}
             icon={hotelIcon}
