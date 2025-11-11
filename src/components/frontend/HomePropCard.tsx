@@ -6,7 +6,7 @@ import {
   Typography,
   Box,
   Button,
-  useTheme,
+  // useTheme,
 } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +28,7 @@ const HomePropCard: React.FC<HomePropCardProps> = ({
   price,
 }) => {
   const navigate = useNavigate();
-  const theme = useTheme();
+  // const theme = useTheme();
 
   return (
     <motion.div
