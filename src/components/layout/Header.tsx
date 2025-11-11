@@ -34,7 +34,7 @@ const Header: React.FC = () => {
     { label: "Homes", to: "/property/list" },
     { label: "About Us", to: "/about" },
     { label: "Contact", to: "/contact" },
-    { label: "Help Center", to: "/" },
+    // { label: "Help Center", to: "/" },
     { label: "FAQ", to: "/faqs" },
     { label: "Privacy Policy", to: "/Privacy-Policy" },
     { label: "Terms & Condition", to: "/terms-condition" },

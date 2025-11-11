@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Box, Typography, Card, Button, useMediaQuery } from "@mui/material";
+import React, { useEffect, useState, useRef } from "react";
+import { Box, Typography, IconButton, Card, Button } from "@mui/material";
+// useMediaQuery
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-// import { motion } from "motion/react";
 
-import RecenterButton from "./RecenterButton";
-// import HotelTooltip from "./HotelTooltip";
+// import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import FilterListIcon from "@mui/icons-material/FilterList";
+// import L from "leaflet";
+// import MarkerPulse from "./MarkerPulse";
+// import HotelMarkers from "./HotelMarkers";
+import FilterDropdown from "./FilterDropdown";
+
+// import RecenterButton from "./RecenterButton";
 import MarkerPulse from "./MarkerPulse";
 import HotelMarkers from "./HotelMarkers";
 
@@ -31,6 +39,11 @@ const MapandFilter: React.FC = () => {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
+  const [address, setAddress] = useState<string>("");
+  console.log(address);
+  const [showFilter, setShowFilter] = useState(false);
+  const mapRef = useRef<any>(null);
+
   const [error, setError] = useState<string>("");
 
   const [hotels, setHotels] = useState<
@@ -114,6 +127,7 @@ const MapandFilter: React.FC = () => {
       setTimeout(() => setHotels(dummyHotels), 1000);
     }
   }, [location]);
+  // const [showFilters, setShowFilters] = useState(false);
 
   const markerIcon = new L.Icon({
     iconUrl:
@@ -124,7 +138,7 @@ const MapandFilter: React.FC = () => {
     iconAnchor: [16, 48],
   });
 
-  const isMobile = useMediaQuery("(max-width:600px)");
+  // const isMobile = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -141,6 +155,24 @@ const MapandFilter: React.FC = () => {
       setError("Geolocation not supported by your browser.");
     }
   }, []);
+  // ✅ Reverse geocode location to get readable address
+  useEffect(() => {
+    if (location) {
+      fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          const displayName =
+            data.address.city ||
+            data.address.town ||
+            data.address.village ||
+            data.display_name;
+          setAddress(displayName || "Your Location");
+        })
+        .catch(() => setAddress("Location not available"));
+    }
+  }, [location]);
 
   return (
     <>
@@ -164,19 +196,17 @@ const MapandFilter: React.FC = () => {
         {/* ✅ Category Section */}
         <Box
           sx={{
-            width: { xs: "100%", sm: "70%", md: "50%" },
+            width: "100%",
             display: "flex",
-            flexWrap: "wrap",
-            // border: "1px solid black",
-            justifyContent: {
-              xs: "center",
-              sm: "space-between",
-              md: "space-between",
-            },
-            // justifyContent: "space-between",
+            flexDirection: "row",
+            flexWrap: "nowrap", // ❌ disables wrapping — all items in one line
+            justifyContent: "center", // keeps items centered
             alignItems: "center",
-            gap: { xs: 2, sm: 3, md: 4 },
-            mb: { xs: 2, sm: 0 },
+            overflowX: "auto", // ✅ allows horizontal scroll on small screens
+            gap: { xs: 3, sm: 4, md: 5 },
+            py: 2,
+            scrollbarWidth: "none", // hides scrollbar (for Firefox)
+            "&::-webkit-scrollbar": { display: "none" }, // hides scrollbar (for Chrome)
           }}
         >
           {categories.map((cat, index) => (
@@ -184,12 +214,12 @@ const MapandFilter: React.FC = () => {
               key={index}
               sx={{
                 display: "flex",
-                flexDirection: isMobile ? "column" : "column",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
-                width: { xs: "30%", sm: "auto" }, // ✅ 3 items in one row, 2 below on mobile
-                gap: isMobile ? 1 : 0,
+                flex: "0 0 auto", // ✅ prevents shrinking
+                minWidth: 90, // keeps spacing consistent
               }}
             >
               <Box
@@ -197,8 +227,8 @@ const MapandFilter: React.FC = () => {
                 src={cat.img}
                 alt={cat.label}
                 sx={{
-                  width: { xs: 45, sm: 60 },
-                  height: { xs: 45, sm: 60 },
+                  width: 40,
+                  height: 40,
                   objectFit: "contain",
                 }}
               />
@@ -206,30 +236,34 @@ const MapandFilter: React.FC = () => {
                 variant="body2"
                 sx={{
                   color: "#c14365",
-                  fontSize: { xs: "0.8rem", sm: "1rem" },
+                  fontSize: { xs: "0.8rem", sm: "0.95rem" },
                   fontFamily: "Poppins, sans-serif",
                   fontWeight: 600,
                   textAlign: "center",
+                  mt: 1,
                 }}
               >
-                {cat.label}{" "}
-              </Typography>{" "}
+                {cat.label}
+              </Typography>
             </Box>
-          ))}{" "}
+          ))}
         </Box>
 
         {/* ✅ Action Buttons */}
         <Box
           sx={{
-            width: { xs: "100%", sm: "80%", md: "50%" },
+            width: "100%",
+            maxWidth: 700, // keeps the box from stretching too wide on large screens
+            mx: "auto", // centers the box horizontally
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            // border: "1px solid black",
             gap: { xs: 2, sm: 3 },
+            flexWrap: "wrap", // ensures responsiveness on smaller screens
           }}
         >
+          {/* 🔹 Prebooking Button */}
           <Button
             variant="contained"
             startIcon={
@@ -244,18 +278,23 @@ const MapandFilter: React.FC = () => {
               />
             }
             sx={{
+              flex: "1 1 45%", // ensures equal width buttons
+              minWidth: { xs: "48%", sm: 250, md: 280 },
+              maxWidth: 300,
+              height: { xs: 45, sm: 50, md: 55 },
               backgroundColor: "#c14365",
               textTransform: "none",
-              width: { xs: "48%", sm: "45%", md: 300 },
               fontSize: { xs: "0.85rem", sm: "0.95rem" },
               fontFamily: "Poppins, sans-serif",
               fontWeight: 600,
+              borderRadius: "12px",
               "&:hover": { backgroundColor: "#a83756" },
             }}
           >
             Prebooking
           </Button>
 
+          {/* 🔹 Luxury Homes Button */}
           <Button
             variant="outlined"
             startIcon={
@@ -270,13 +309,17 @@ const MapandFilter: React.FC = () => {
               />
             }
             sx={{
+              flex: "1 1 45%",
+              minWidth: { xs: "48%", sm: 250, md: 280 },
+              maxWidth: 300,
+              height: { xs: 45, sm: 50, md: 55 },
               borderColor: "#c14365",
               color: "#c14365",
               textTransform: "none",
               fontSize: { xs: "0.85rem", sm: "0.95rem" },
               fontFamily: "Poppins, sans-serif",
               fontWeight: 600,
-              width: { xs: "48%", sm: "45%", md: "45%" },
+              borderRadius: "12px",
               "&:hover": {
                 backgroundColor: "#c1436510",
                 borderColor: "#c14365",
@@ -297,33 +340,92 @@ const MapandFilter: React.FC = () => {
             borderRadius: "20px",
             overflow: "hidden",
             boxShadow: 4,
+            position: "relative",
           }}
         >
           {location ? (
-            <MapContainer
-              center={location}
-              zoom={14}
-              style={{ width: "100%", height: "100%" }}
-              scrollWheelZoom
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
+            <>
+              <MapContainer
+                center={location}
+                zoom={14}
+                style={{ width: "100%", height: "100%" }}
+                scrollWheelZoom
+                ref={mapRef}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
 
-              {/* ✅ User’s location */}
-              <Marker position={location} icon={markerIcon}>
-                <Popup>Your Current Location</Popup>
-              </Marker>
+                {/* ✅ User’s location marker */}
+                <Marker position={location} icon={markerIcon}>
+                  <Popup>Your Current Location</Popup>
+                </Marker>
 
-              <MarkerPulse coordinates={[location.lat, location.lng]} />
-              <RecenterButton location={location} />
+                <MarkerPulse coordinates={[location.lat, location.lng]} />
+                <HotelMarkers hotels={hotels} hotelIcon={hotelIcon} />
+              </MapContainer>
 
-              {/* ✅ Custom Hotel Markers */}
-              {/* <HotelMarkers hotels={hotels} hotelIcon={hotelIcon} /> */}
-              <HotelMarkers hotels={hotels} hotelIcon={hotelIcon} />
+              {/* ✅ Top-right icons container */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 10,
+                  right: 10,
+                  zIndex: 1000,
+                  display: "flex",
+                  gap: 1.2,
+                }}
+              >
+                {/* 🔹 Filter Icon */}
+                <Box sx={{ position: "relative" }}>
+                  <IconButton
+                    onClick={() => setShowFilter((prev) => !prev)}
+                    sx={{
+                      bgcolor: "#fff",
+                      boxShadow: 2,
+                      "&:hover": { bgcolor: "#f0f0f0" },
+                    }}
+                  >
+                    <FilterListIcon sx={{ color: "#c14365" }} />
+                  </IconButton>
 
-            </MapContainer>
+                  {/* 🔹 Dropdown Component (Appears below Filter icon) */}
+                  {showFilter && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: "110%",
+                        right: 0,
+                        zIndex: 1100,
+                        bgcolor: "#fff",
+                        borderRadius: "12px",
+                        boxShadow: 4,
+                        overflow: "hidden",
+                      }}
+                    >
+                      <FilterDropdown onApply={() => setShowFilter(false)} />
+                    </Box>
+                  )}
+                </Box>
+
+                {/* 🔹 Recenter Icon (unchanged) */}
+                <IconButton
+                  onClick={() => {
+                    if (mapRef.current) {
+                      mapRef.current.setView(location, 14);
+                    }
+                  }}
+                  sx={{
+                    bgcolor: "#fff",
+                    boxShadow: 2,
+                    "&:hover": { bgcolor: "#f0f0f0" },
+                  }}
+                >
+                  <MyLocationIcon sx={{ color: "#c14365" }} />
+                </IconButton>
+              </Box>
+            </>
           ) : (
             <Box
               sx={{
