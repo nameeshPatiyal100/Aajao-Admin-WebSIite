@@ -19,7 +19,7 @@ const cardVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" as const },
+    transition: { duration: 0.3, ease: "easeOut" as const },
   },
 };
 
@@ -31,7 +31,7 @@ export default function FeaturedProperties({ hotels }: { hotels: any[] }) {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: false, amount: 0.2 }} // 👈 triggers when 20% visible
+        viewport={{ once: false, amount: 0.01 }} // 👈 triggers when 20% visible
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",

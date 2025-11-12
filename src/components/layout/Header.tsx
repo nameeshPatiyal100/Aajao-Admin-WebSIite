@@ -13,6 +13,8 @@ import {
   useTheme,
   Typography,
 } from "@mui/material";
+
+import NotificationDropdown from "../frontend/NotificationDropdown";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonIcon from "@mui/icons-material/Person";
@@ -34,7 +36,6 @@ const Header: React.FC = () => {
     { label: "Homes", to: "/property/list" },
     { label: "About Us", to: "/about" },
     { label: "Contact", to: "/contact" },
-    // { label: "Help Center", to: "/" },
     { label: "FAQ", to: "/faqs" },
     { label: "Privacy Policy", to: "/Privacy-Policy" },
     { label: "Terms & Condition", to: "/terms-condition" },
@@ -42,7 +43,6 @@ const Header: React.FC = () => {
     { label: "State Regulation", to: "/state-regulation" },
     { label: "Become A Host", to: "/auth/signup" },
     { label: "Help Center", to: "/help-center" },
-    // { label: "T&C", to: "/terms-condition" },
   ];
 
   return (
@@ -68,7 +68,7 @@ const Header: React.FC = () => {
 
           <Box flexGrow={1} />
 
-          {/* Desktop Right Section */}
+          {/* Desktop View */}
           {!isMobile && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Button
@@ -102,26 +102,37 @@ const Header: React.FC = () => {
                 Login
               </Button>
 
+              {/* 🔔 Notification Dropdown */}
+              <NotificationDropdown />
+
+              {/* 👤 User Icon */}
               <IconButton onClick={() => navigate("/user-dashboard")}>
                 <PersonIcon sx={{ color: "#c14365" }} />
               </IconButton>
 
+              {/* ☰ Menu */}
               <IconButton onClick={toggleDrawer(true)}>
                 <MenuIcon sx={{ color: "#c14365" }} />
               </IconButton>
             </Box>
           )}
 
-          {/* Mobile View Menu Button */}
+          {/* Mobile View */}
           {isMobile && (
-            <IconButton edge="end" onClick={toggleDrawer(true)}>
-              <MenuIcon sx={{ color: "#6B240C" }} />
-            </IconButton>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {/* 🔔 Notification Icon (left of hamburger) */}
+              <NotificationDropdown />
+
+              {/* ☰ Hamburger Menu */}
+              <IconButton edge="end" onClick={toggleDrawer(true)}>
+                <MenuIcon sx={{ color: "#6B240C" }} />
+              </IconButton>
+            </Box>
           )}
         </Toolbar>
       </AppBar>
 
-      {/* Drawer (Now Opens from LEFT SIDE) */}
+      {/* Drawer */}
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
         <Box
           sx={{
@@ -131,10 +142,9 @@ const Header: React.FC = () => {
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            // justifyContent: "space-between",
           }}
         >
-          {/* Header inside sidebar */}
+          {/* Drawer Header */}
           <Box
             sx={{
               display: "flex",
@@ -153,7 +163,6 @@ const Header: React.FC = () => {
               Menu
             </Typography>
 
-            {/* Close Icon */}
             <IconButton onClick={toggleDrawer(false)}>
               <CloseIcon sx={{ color: "#c14365" }} />
             </IconButton>
@@ -184,7 +193,7 @@ const Header: React.FC = () => {
             ))}
           </List>
 
-          {/* Auth Buttons inside drawer */}
+          {/* Auth Buttons */}
           <Box sx={{ mt: 2 }}>
             <Button
               fullWidth

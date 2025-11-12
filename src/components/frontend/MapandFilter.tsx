@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Box, Typography, IconButton, Card, Button } from "@mui/material";
-// useMediaQuery
+import {
+  Box,
+  Typography,
+  IconButton,
+  Card,
+  Button,
+  InputBase,
+} from "@mui/material";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
-// import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import FilterListIcon from "@mui/icons-material/FilterList";
-// import L from "leaflet";
-// import MarkerPulse from "./MarkerPulse";
-// import HotelMarkers from "./HotelMarkers";
 import FilterDropdown from "./FilterDropdown";
-
-// import RecenterButton from "./RecenterButton";
 import MarkerPulse from "./MarkerPulse";
 import HotelMarkers from "./HotelMarkers";
 
@@ -36,16 +36,15 @@ const categories = [
 ];
 
 const MapandFilter: React.FC = () => {
+  const mapRef = useRef<any>(null);
+
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
   const [address, setAddress] = useState<string>("");
-  console.log(address);
   const [showFilter, setShowFilter] = useState(false);
-  const mapRef = useRef<any>(null);
-
   const [error, setError] = useState<string>("");
-
+  console.log(address);
   const [hotels, setHotels] = useState<
     {
       id: number;
@@ -155,24 +154,48 @@ const MapandFilter: React.FC = () => {
       setError("Geolocation not supported by your browser.");
     }
   }, []);
-  // ✅ Reverse geocode location to get readable address
-  useEffect(() => {
-    if (location) {
-      fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          const displayName =
-            data.address.city ||
-            data.address.town ||
-            data.address.village ||
-            data.display_name;
-          setAddress(displayName || "Your Location");
-        })
-        .catch(() => setAddress("Location not available"));
-    }
-  }, [location]);
+  // // ✅ Reverse geocode location to get readable address
+  // useEffect(() => {
+  //   if (location) {
+  //     fetch(
+  //       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`
+  //     )
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         const displayName =
+  //           data.address.city ||
+  //           data.address.town ||
+  //           data.address.village ||
+  //           data.display_name;
+  //         setAddress(displayName || "Your Location");
+  //       })
+  //       .catch(() => setAddress("Location not available"));
+  //   }
+  // }, [location]);
+   // ✅ Get user location
+   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const loc = { lat: latitude, lng: longitude };
+        setLocation(loc);
+
+        // ✅ Reverse Geocode to get address
+        fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            setAddress(data.display_name || "Current Location");
+          })
+          .catch(() => setAddress("Unable to fetch address"));
+      },
+      (err) => {
+        setError("Unable to access location");
+        console.error(err);
+      }
+    );
+  }, []);
 
   return (
     <>
@@ -375,8 +398,36 @@ const MapandFilter: React.FC = () => {
                   zIndex: 1000,
                   display: "flex",
                   gap: 1.2,
+                  alignItems: "center",
                 }}
               >
+                {/* 🔍 Fake Search Bar */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    bgcolor: "#fff",
+                    borderRadius: "30px",
+                    boxShadow: 2,
+                    px: 2,
+                    py: 0.5,
+                    minWidth: { xs: "140px", sm: "250px" },
+                    maxWidth: "300px",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  <InputBase
+                    value={address}
+                    disabled
+                    sx={{
+                      fontSize: { xs: "0.7rem", sm: "0.85rem" },
+                      color: "#555",
+                      width: "100%",
+                    }}
+                  />
+                </Box>
+
                 {/* 🔹 Filter Icon */}
                 <Box sx={{ position: "relative" }}>
                   <IconButton
@@ -390,7 +441,7 @@ const MapandFilter: React.FC = () => {
                     <FilterListIcon sx={{ color: "#c14365" }} />
                   </IconButton>
 
-                  {/* 🔹 Dropdown Component (Appears below Filter icon) */}
+                  {/* 🔹 Dropdown Component */}
                   {showFilter && (
                     <Box
                       sx={{
@@ -409,12 +460,10 @@ const MapandFilter: React.FC = () => {
                   )}
                 </Box>
 
-                {/* 🔹 Recenter Icon (unchanged) */}
+                {/* 🔹 Recenter Icon */}
                 <IconButton
                   onClick={() => {
-                    if (mapRef.current) {
-                      mapRef.current.setView(location, 14);
-                    }
+                    if (mapRef.current) mapRef.current.setView(location, 14);
                   }}
                   sx={{
                     bgcolor: "#fff",
