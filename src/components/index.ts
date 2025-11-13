@@ -40,10 +40,12 @@ export { default as ExploreMore } from "./frontend/ExploreMore";
 export { default as PropertyGallery } from "./frontend/PropertyGallery";
 export { default as FeaturedProperties } from "./frontend/FeaturedProperties";
 export { default as NotificationDropdown } from "./frontend/NotificationDropdown";
+export { default as OngoingFloat } from "./frontend/OngoingFloat";
 //--------------------------MODALS---------------------------------->
 export { default as CancellationPolicyModal } from "./frontend/modals/CancellationPolicyModal";
 export { default as OngoingBookingModal } from "./frontend/modals/OngoingBookingModal";
 export { default as RegulationModal } from "./frontend/modals/RegulationModal";
+export { default as HostDetailsModal } from "./frontend/modals/HostDetailsModal";
 // ------------------HOST-COMPONENT---------------------->
 
 

@@ -20,6 +20,7 @@ import UserOngoingBooking from "./userOngoingBooking.tsx";
 
 const DashboardLayout: React.FC = () => {
   const location = useLocation();
+  
   const [activeSection, setActiveSection] = useState("profile");
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -27,6 +28,12 @@ const DashboardLayout: React.FC = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  
+  useEffect(() => {
+    if (location.state?.section) {
+      setActiveSection(location.state.section);
+    }
+  }, [location.state]);
   const renderSection = () => {
     switch (activeSection) {
       case "profile":
@@ -39,11 +46,6 @@ const DashboardLayout: React.FC = () => {
         return <Typography>Select a section</Typography>;
     }
   };
-  useEffect(() => {
-    if (location.state?.section) {
-      setActiveSection(location.state.section);
-    }
-  }, [location.state]);
 
   const sidebarContent = (
     <Box
