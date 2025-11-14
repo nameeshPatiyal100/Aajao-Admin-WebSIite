@@ -57,14 +57,6 @@ const UserProfile: React.FC = () => {
     }
   };
 
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //     const file = e.target.files[0];
-  //     const imageUrl = URL.createObjectURL(file);
-  //     setPreview(imageUrl); // Show selected image as preview
-  //   }
-  // };
-
   return (
     <Box className="mainContaineruserProfile">
       {/* Left Side Profile Section */}
@@ -185,6 +177,40 @@ const UserProfile: React.FC = () => {
 
       {/* Right Side Section */}
       <Box className="rightContaineruserProfile">
+        {/* ⭐ Welcome Header with User Name */}
+        <Box
+          sx={{
+            mb: 3,
+            p: 2,
+            borderRadius: "12px",
+            background: "linear-gradient(135deg, #ffe6ee, #fff0f5)",
+            border: "1px solid #f8c9d6",
+            textAlign: "center",
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: "1.4rem",
+              fontWeight: 700,
+              fontFamily: "'Poppins', sans-serif",
+              color: "#c14365",
+              mb: 0.5,
+            }}
+          >
+            Welcome Back, <span style={{ color: "#a83252" }}>Jhon!</span>
+          </Typography>
+
+          <Typography
+            sx={{
+              fontSize: "0.95rem",
+              fontWeight: 500,
+              color: "#6b6b6b",
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            Manage your personal information and account settings
+          </Typography>
+        </Box>
         <Typography variant="h4" className="userInforight">
           User Information
         </Typography>
