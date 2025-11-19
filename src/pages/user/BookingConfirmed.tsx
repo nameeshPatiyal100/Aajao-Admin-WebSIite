@@ -55,15 +55,6 @@ const BookingConfirmed: React.FC = () => {
       >
         Go to Home
       </Button>
-
-      {/* Optional Illustration Image */}
-      {/* If you have an illustration asset */}
-      {/* <Box
-        component="img"
-        src="/assets/booking-confirmed.svg"
-        alt="Booking Confirmed"
-        sx={{ width: "250px", mt: 4 }}
-      /> */}
     </Box>
   );
 };

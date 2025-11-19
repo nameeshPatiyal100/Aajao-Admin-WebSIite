@@ -26,3 +26,26 @@ export type AuthContextType = {
   user: UserType | null;
   loading: boolean;
 };
+
+
+export interface SignupFormData {
+  fullName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  dob: string;
+  gender: string;
+  contact: string;
+  alternatePhone: string;
+
+  address: string;
+  city: string;
+  pincode: string;
+
+  aadhaar: string;
+  pan: string;
+
+  isUser: boolean;
+  isHost: boolean;
+}
+
