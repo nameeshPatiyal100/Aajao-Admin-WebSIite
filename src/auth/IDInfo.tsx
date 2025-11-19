@@ -1,4 +1,4 @@
-// import React from "react";
+import React from "react";
 import {
   Box,
   TextField,
@@ -26,71 +26,67 @@ const IDInfo = ({ data, errors, onChange }: any) => {
 
   const isImage = (file: File) => file.type.startsWith("image/");
 
-  return (
-    <motion.div
-      variants={fadeUp}
-      initial="hidden"
-      animate="show"
-      style={{ width: "100%" }}
+  const renderInput = (
+    label: string,
+    name: string,
+    value: string,
+    error: string,
+    icon?: any,
+    type = "text",
+    selectOptions?: string[]
+  ) => (
+    <TextField
+      fullWidth
+      required
+      select={!!selectOptions}
+      type={type}
+      label={label + " *"}
+      value={value}
+      error={!!error}
+      helperText={error}
+      onChange={(e) => onChange(name, e.target.value)}
+      InputProps={
+        icon
+          ? {
+              startAdornment: <InputAdornment position="start">{icon}</InputAdornment>,
+            }
+          : undefined
+      }
+      sx={{
+        mb: 2,
+        "& .MuiOutlinedInput-root": {
+          borderRadius: "12px",
+          "& fieldset": { borderColor: PRIMARY },
+          "&.Mui-focused fieldset": { borderColor: PRIMARY },
+        },
+        "& label": { color: PRIMARY, fontWeight: 600 },
+        "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY }, // Keep label color on focus
+      }}
     >
+      {selectOptions &&
+        selectOptions.map((opt) => (
+          <MenuItem key={opt} value={opt}>
+            {opt}
+          </MenuItem>
+        ))}
+    </TextField>
+  );
+
+  return (
+    <motion.div variants={fadeUp} initial="hidden" animate="show" style={{ width: "100%" }}>
       <Typography
         variant="h5"
-        sx={{
-          fontWeight: 700,
-          mb: 3,
-          color: PRIMARY,
-          textAlign: "center",
-        }}
+        sx={{ fontWeight: 700, mb: 3, color: PRIMARY, textAlign: "center" }}
       >
         ID Information
       </Typography>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {/* Document Type */}
-        <TextField
-          fullWidth
-          select
-          required
-          label="Document Type *"
-          value={data.docType}
-          error={!!errors.docType}
-          helperText={errors.docType}
-          onChange={(e) => onChange("docType", e.target.value)}
-          sx={{
-            "& .MuiOutlinedInput-root fieldset": { borderColor: PRIMARY },
-            "& .MuiOutlinedInput-root.Mui-focused fieldset": { borderColor: PRIMARY },
-            "& label": { color: PRIMARY, fontWeight: 600 },
-          }}
-        >
-          {idTypes.map((type) => (
-            <MenuItem key={type} value={type}>
-              {type}
-            </MenuItem>
-          ))}
-        </TextField>
+        {renderInput("Document Type", "docType", data.docType, errors.docType, undefined, "text", idTypes)}
 
         {/* Document Number */}
-        <TextField
-          fullWidth
-          required
-          label="Document Number *"
-          value={data.docNumber}
-          error={!!errors.docNumber}
-          helperText={errors.docNumber}
-          onChange={(e) => onChange("docNumber", e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <BadgeIcon sx={{ color: PRIMARY }} />
-              </InputAdornment>
-            ),
-          }}
-          sx={{
-            "& .MuiOutlinedInput-root fieldset": { borderColor: PRIMARY },
-            "& .MuiOutlinedInput-root.Mui-focused fieldset": { borderColor: PRIMARY },
-            "& label": { color: PRIMARY, fontWeight: 600 },
-          }}
-        />
+        {renderInput("Document Number", "docNumber", data.docNumber, errors.docNumber, <BadgeIcon sx={{ color: PRIMARY }} />)}
 
         {/* File Upload */}
         <Button

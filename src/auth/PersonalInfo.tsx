@@ -7,15 +7,14 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-
 import { motion } from "framer-motion";
-
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import WcIcon from "@mui/icons-material/Wc";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import EventIcon from "@mui/icons-material/Event";
+import React from "react";
 
 const PRIMARY = "#c14365";
 const ERROR_COLOR = "#333"; // blackish error text
@@ -44,7 +43,7 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
       onChange={(e) => onChange(name, e.target.value)}
       helperText={error}
       FormHelperTextProps={{
-        sx: { color: "#000", fontWeight: 600 }, // error text color
+        sx: { color: ERROR_COLOR, fontWeight: 600 },
       }}
       InputProps={{
         startAdornment: (
@@ -52,38 +51,30 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
         ),
       }}
       sx={{
-        // ★ Rounded, modern look
         "& .MuiOutlinedInput-root": {
           borderRadius: "12px",
           transition: "all 0.25s ease",
-  
-          // ★ Hover effect
-          "&:hover fieldset": {
-            borderColor: PRIMARY,
-          },
-  
-          // ★ Focus effect (smooth animation + color)
+          "&:hover fieldset": { borderColor: PRIMARY },
           "&.Mui-focused fieldset": {
             borderColor: PRIMARY,
-            boxShadow: `0 0 0 2px ${PRIMARY}33`, // light glow
+            boxShadow: `0 0 0 2px ${PRIMARY}33`,
           },
         },
-  
-        // ★ Default and required * color
+
+        // Label default color
         "& label": {
           color: PRIMARY,
           fontWeight: 600,
         },
+        // Label color when focused
+        "& .MuiInputLabel-root.Mui-focused": {
+          color: PRIMARY,
+        },
+
         "& .MuiFormLabel-asterisk": {
           color: PRIMARY,
         },
-  
-        // ★ Focused label color
-        "& .Mui-focused": {
-          color: PRIMARY,
-        },
-  
-        // ★ Placeholder style
+
         "& input::placeholder": {
           opacity: 0.7,
           color: "#999",
@@ -91,8 +82,6 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
       }}
     />
   );
-  
-  
 
   return (
     <motion.div
@@ -101,15 +90,9 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
       animate="show"
       style={{ width: "100%" }}
     >
-      {/* Title */}
       <Typography
         variant="h5"
-        sx={{
-          fontWeight: 700,
-          mb: 2,
-          color: PRIMARY,
-          textAlign: "center",
-        }}
+        sx={{ fontWeight: 700, mb: 2, color: PRIMARY, textAlign: "center" }}
       >
         Personal Information
       </Typography>
@@ -122,7 +105,6 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           errors.fullName,
           <PersonIcon sx={{ color: PRIMARY }} />
         )}
-
         {renderInput(
           "Email",
           "email",
@@ -130,7 +112,6 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           errors.email,
           <EmailIcon sx={{ color: PRIMARY }} />
         )}
-
         <Box
           sx={{
             display: "flex",
@@ -146,7 +127,6 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
             <LockIcon sx={{ color: PRIMARY }} />,
             "password"
           )}
-
           {renderInput(
             "Confirm Password",
             "confirmPassword",
@@ -160,7 +140,6 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
         {/* DOB */}
         <TextField
           fullWidth
-          // required
           type="date"
           label="Date of Birth *"
           value={data.dob}
@@ -177,9 +156,13 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           }}
           InputLabelProps={{ shrink: true }}
           sx={{
-            "& .MuiOutlinedInput-root fieldset": { borderColor: PRIMARY },
-            "& .MuiOutlinedInput-root.Mui-focused fieldset": { borderColor: PRIMARY },
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "12px",
+              "&:hover fieldset": { borderColor: PRIMARY },
+              "&.Mui-focused fieldset": { borderColor: PRIMARY },
+            },
             "& label": { color: PRIMARY, fontWeight: 600 },
+            "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY }, // Focused label color
             "& .MuiFormLabel-asterisk": { color: PRIMARY },
           }}
         />
@@ -188,7 +171,6 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
         <TextField
           select
           fullWidth
-          // required
           label="Gender *"
           value={data.gender}
           error={!!errors.gender}
@@ -203,9 +185,13 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
             ),
           }}
           sx={{
-            "& .MuiOutlinedInput-root fieldset": { borderColor: PRIMARY },
-            "& .MuiOutlinedInput-root.Mui-focused fieldset": { borderColor: PRIMARY },
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "12px",
+              "&:hover fieldset": { borderColor: PRIMARY },
+              "&.Mui-focused fieldset": { borderColor: PRIMARY },
+            },
             "& label": { color: PRIMARY, fontWeight: 600 },
+            "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY }, // Focused label color
             "& .MuiFormLabel-asterisk": { color: PRIMARY },
           }}
         >
@@ -214,7 +200,6 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           <MenuItem value="Other">Other</MenuItem>
         </TextField>
 
-        {/* Primary Phone */}
         {renderInput(
           "Primary Phone *",
           "contact",
@@ -222,8 +207,6 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           errors.contact,
           <PhoneIphoneIcon sx={{ color: PRIMARY }} />
         )}
-
-        {/* Alternate Phone */}
         {renderInput(
           "Alternate Phone",
           "alternatePhone",
@@ -237,30 +220,22 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           <Typography sx={{ fontWeight: 700, color: PRIMARY, mb: 1 }}>
             Select User Type
           </Typography>
-
           <FormControlLabel
             control={
               <Checkbox
                 checked={data.isUser}
                 onChange={(e) => onChange("isUser", e.target.checked)}
-                sx={{
-                  color: PRIMARY,
-                  "&.Mui-checked": { color: PRIMARY }, // theme color when selected
-                }}
+                sx={{ color: PRIMARY, "&.Mui-checked": { color: PRIMARY } }}
               />
             }
             label="User"
           />
-
           <FormControlLabel
             control={
               <Checkbox
                 checked={data.isHost}
                 onChange={(e) => onChange("isHost", e.target.checked)}
-                sx={{
-                  color: PRIMARY,
-                  "&.Mui-checked": { color: PRIMARY },
-                }}
+                sx={{ color: PRIMARY, "&.Mui-checked": { color: PRIMARY } }}
               />
             }
             label="Host"

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   TextField,
   InputAdornment,
@@ -39,10 +40,13 @@ const AddressInfo = ({ data, errors, onChange }: any) => {
       }}
       sx={{
         mb: 2,
-        "& .MuiOutlinedInput-root": { borderRadius: "12px" },
-        "& .MuiOutlinedInput-root fieldset": { borderColor: PRIMARY },
-        "& .MuiOutlinedInput-root.Mui-focused fieldset": { borderColor: PRIMARY },
+        "& .MuiOutlinedInput-root": {
+          borderRadius: "12px",
+          "& fieldset": { borderColor: PRIMARY },
+          "&.Mui-focused fieldset": { borderColor: PRIMARY },
+        },
         "& label": { color: PRIMARY, fontWeight: 600 },
+        "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY }, // Keep label color on focus
       }}
     />
   );
@@ -70,9 +74,13 @@ const AddressInfo = ({ data, errors, onChange }: any) => {
         }}
         sx={{
           mb: 2,
-          "& .MuiOutlinedInput-root fieldset": { borderColor: PRIMARY },
-          "& .MuiOutlinedInput-root.Mui-focused fieldset": { borderColor: PRIMARY },
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "12px",
+            "& fieldset": { borderColor: PRIMARY },
+            "&.Mui-focused fieldset": { borderColor: PRIMARY },
+          },
           "& label": { color: PRIMARY, fontWeight: 600 },
+          "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY },
         }}
       />
 
@@ -91,9 +99,13 @@ const AddressInfo = ({ data, errors, onChange }: any) => {
         }}
         sx={{
           mb: 2,
-          "& .MuiOutlinedInput-root fieldset": { borderColor: PRIMARY },
-          "& .MuiOutlinedInput-root.Mui-focused fieldset": { borderColor: PRIMARY },
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "12px",
+            "& fieldset": { borderColor: PRIMARY },
+            "&.Mui-focused fieldset": { borderColor: PRIMARY },
+          },
           "& label": { color: PRIMARY, fontWeight: 600 },
+          "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY },
         }}
       >
         <MenuItem value="X">X</MenuItem>

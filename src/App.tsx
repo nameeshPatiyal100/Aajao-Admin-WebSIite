@@ -5,7 +5,7 @@ import {
   Navigate,
   // Outlet,
 } from "react-router-dom";
-import "./App.css"
+import "./App.css";
 import notFound from "./assets/UI/404.jpg";
 import { AdminLayout } from "./components";
 
@@ -39,7 +39,7 @@ import {
   HelpCenter,
   TermsAndConditions,
   WhyHostsListWithAajoo,
-  PrivacyPolicyPage
+  PrivacyPolicyPage,
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -69,15 +69,24 @@ function App() {
           <Route path="property/list" element={<PropertyListing />} />
           <Route path="faqs" element={<FAQ />} />
           <Route path="/user-dashboard" element={<DashboardLayout />} />
-          <Route path="/property-booking/final" element={<FinalBookingPage />} />
+          <Route
+            path="/property-booking/final"
+            element={<FinalBookingPage />}
+          />
           <Route path="/booking/confirmation" element={<BookingConfirmed />} />
-          <Route path="/booking/cancel-result/:bookingId" element={<CancelBookResult />} />
+          <Route
+            path="/booking/cancel-result/:bookingId"
+            element={<CancelBookResult />}
+          />
           <Route path="/user/checkout/:id" element={<UserCheckoutPage />} />
           <Route path="/state-regulation" element={<StateRegulation />} />
           {/* <Route path="/state-regulation" element={<StateRegulation />} /> */}
           <Route path="/help-center" element={<HelpCenter />} />
           <Route path="/terms-condition" element={<TermsAndConditions />} />
-          <Route path="/Why-Hosts-List-With-Aajoo" element={<WhyHostsListWithAajoo />} />
+          <Route
+            path="/Why-Hosts-List-With-Aajoo"
+            element={<WhyHostsListWithAajoo />}
+          />
           <Route path="/Privacy-Policy" element={<PrivacyPolicyPage />} />
           <Route path="*" element={<NotFound image={notFound} />} />
         </Route>
@@ -89,7 +98,10 @@ function App() {
             <Route path="forget" element={<ForgotPassword />} />
             <Route path="signup" element={<UserSignup />} />
             <Route path="verifyOtp" element={<VerifyOtp />} />
-            <Route path="signup-verication" element={<SignupOtpVerification />} />
+            <Route
+              path="signup-verication"
+              element={<SignupOtpVerification />}
+            />
             <Route path="reset-password" element={<ResetPassword />} />
           </Route>
         </Route>
