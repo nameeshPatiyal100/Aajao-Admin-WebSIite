@@ -54,6 +54,8 @@ const PrivacyPolicy: React.FC = () => {
         </Box>
       </Box>
 
+
+
       {/* Breadcrumbs */}
       <Box sx={{ maxWidth: "1100px", mx: "auto", mt: 3, px: 2 }}>
         <Breadcrumbs

@@ -8,8 +8,11 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
+  Button,
 } from "@mui/material";
-import { OngoingBookingModal } from "../../components"; // <-- Import Modal
+import { motion } from "framer-motion";
+import RoomIcon from "@mui/icons-material/Room";
+import { OngoingBookingModal } from "../../components";
 
 const bookings = [
   {
@@ -21,6 +24,8 @@ const bookings = [
     checkOut: "2025-10-23",
     totalPrice: 12500,
     status: "Confirmed",
+    lat: 15.2993,
+    lng: 74.124,
   },
   {
     id: "BK67890",
@@ -31,6 +36,8 @@ const bookings = [
     checkOut: "2025-10-18",
     totalPrice: 8700,
     status: "Pending",
+    lat: 32.2396,
+    lng: 77.1887,
   },
 ];
 
@@ -50,6 +57,12 @@ const UserOngoingBooking: React.FC = () => {
       default:
         return "default";
     }
+  };
+
+  // 🌍 Redirect to Google Maps
+  const handleDirection = (lat: number, lng: number) => {
+    const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+    window.open(googleMapsUrl, "_blank");
   };
 
   return (
@@ -74,102 +87,216 @@ const UserOngoingBooking: React.FC = () => {
         Ongoing Bookings
       </Typography>
 
-      {bookings.map((booking) => (
-        <Card
+      {bookings.map((booking, index) => (
+        <motion.div
           key={booking.id}
-          onClick={() => setSelectedBooking(booking)}
-          sx={{
-            width: "100%",
-            borderRadius: 3,
-            boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-            transition: "all 0.2s ease",
-            cursor: "pointer",
-            "&:hover": {
-              transform: "scale(1.01)",
-              boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-            },
-          }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1, duration: 0.4 }}
         >
-          <CardContent
+          <Card
+            onClick={() => setSelectedBooking(booking)}
             sx={{
-              display: "flex",
-              flexDirection: isMobile ? "column" : "row",
-              justifyContent: "space-between",
-              alignItems: isMobile ? "flex-start" : "center",
-              gap: 2,
-              fontFamily: "'Inter', sans-serif",
+              width: "100%",
+              borderRadius: 3,
+              boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+              transition: "all 0.2s ease",
+              cursor: "pointer",
+              "&:hover": {
+                transform: "scale(1.01)",
+                boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+              },
             }}
           >
-            {/* Left Section */}
-            <Box sx={{ flex: 1 }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 700,
-                  color: "#1A237E",
-                  mb: 0.5,
-                  fontFamily: "'Poppins', sans-serif",
-                }}
-              >
-                {booking.propertyName}
-              </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ fontSize: 15 }}
-              >
-                {booking.location}
-              </Typography>
-
-              <Divider sx={{ my: 1.5 }} />
-
-              <Typography variant="body2" sx={{ fontSize: 14, mb: 0.5 }}>
-                <strong>Booking ID:</strong> {booking.id}
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: 14, mb: 0.5 }}>
-                <strong>Booked On:</strong> {booking.bookedDate}
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: 14, mb: 0.5 }}>
-                <strong>Check-In:</strong> {booking.checkIn}
-              </Typography>
-              <Typography variant="body2" sx={{ fontSize: 14 }}>
-                <strong>Check-Out:</strong> {booking.checkOut}
-              </Typography>
-            </Box>
-
-            {/* Right Section */}
-            <Box
+            <CardContent
               sx={{
                 display: "flex",
-                flexDirection: "column",
-                alignItems: isMobile ? "flex-start" : "flex-end",
-                gap: 1,
-                minWidth: isMobile ? "100%" : "180px",
+                flexDirection: isMobile ? "column" : "row",
+                justifyContent: "space-between",
+                alignItems: isMobile ? "flex-start" : "center",
+                gap: 2,
+                fontFamily: "'Inter', sans-serif",
               }}
             >
-              <Chip
-                label={booking.status}
-                color={getStatusColor(booking.status) as any}
+              {/* Left Section */}
+              <Box
                 sx={{
-                  fontWeight: 600,
-                  fontSize: 14,
-                  borderRadius: "8px",
-                  fontFamily: "'Poppins', sans-serif",
-                }}
-              />
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 700,
-                  color: "#2E7D32",
-                  fontFamily: "'Poppins', sans-serif",
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1.2,
+                  p: 1,
                 }}
               >
-                ₹ {booking.totalPrice.toLocaleString()}
-              </Typography>
-            </Box>
-          </CardContent>
-        </Card>
+                {/* Property Name */}
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 800,
+                    color: "#162447",
+                    mb: 0.2,
+                    lineHeight: 1.2,
+                    fontFamily: "'Poppins', sans-serif",
+                    fontSize: { xs: "18px", sm: "20px" },
+                  }}
+                >
+                  {booking.propertyName}
+                </Typography>
+
+                {/* Location */}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 0.8,
+                    color: "#6c757d",
+                    fontSize: "14px",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  📍 {booking.location}
+                </Typography>
+
+                <Divider sx={{ my: 1, opacity: 0.5 }} />
+
+                {/* Detail Box */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1,
+                    background: "#f8f9fc",
+                    p: 2,
+                    borderRadius: 2,
+                    border: "1px solid #e3e6f0",
+                  }}
+                >
+                  {/* Booking ID */}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      color: "#3a3a3a",
+                    }}
+                  >
+                    <strong style={{ color: "#1d3557" }}>📄 Booking ID:</strong>
+                    {booking.id}
+                  </Typography>
+
+                  {/* Booked On */}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      color: "#3a3a3a",
+                    }}
+                  >
+                    <strong style={{ color: "#1d3557" }}>🗓 Booked On:</strong>
+                    {booking.bookedDate}
+                  </Typography>
+
+                  {/* Check-in */}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      color: "#3a3a3a",
+                    }}
+                  >
+                    <strong style={{ color: "#1d3557" }}>🏨 Check-In:</strong>
+                    {booking.checkIn}
+                  </Typography>
+
+                  {/* Check-out */}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: "14px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1,
+                      color: "#3a3a3a",
+                    }}
+                  >
+                    <strong style={{ color: "#1d3557" }}>🚪 Check-Out:</strong>
+                    {booking.checkOut}
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* Right Section */}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: isMobile ? "flex-start" : "flex-end",
+                  gap: 1.5,
+                  minWidth: isMobile ? "100%" : "200px",
+                }}
+              >
+                <Chip
+                  label={booking.status}
+                  color={getStatusColor(booking.status) as any}
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: 14,
+                    borderRadius: "8px",
+                    fontFamily: "'Poppins', sans-serif",
+                  }}
+                />
+
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    color: "#2E7D32",
+                    fontFamily: "'Poppins', sans-serif",
+                  }}
+                >
+                  ₹ {booking.totalPrice.toLocaleString()}
+                </Typography>
+
+                {/* 🌍 Get Direction Button */}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<RoomIcon />}
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent modal open
+                    handleDirection(booking.lat, booking.lng);
+                  }}
+                  sx={{
+                    mt: 1,
+                    textTransform: "none",
+                    borderRadius: 2,
+                    fontWeight: 600,
+                    px: 2,
+                    py: 1,
+                    background: "#c14365",
+                    "&:hover": { background: "#a83654" },
+                    width: isMobile ? "100%" : "auto",
+                  }}
+                >
+                  Get Direction
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </motion.div>
       ))}
 
       {/* Booking Details Modal */}

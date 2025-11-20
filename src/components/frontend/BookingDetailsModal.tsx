@@ -1,7 +1,15 @@
 import React from "react";
 import Modal from "react-modal";
-import { Box, Typography, Divider, Button, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  // Divider,
+  Button,
+  IconButton,
+  useMediaQuery,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import DownloadIcon from "@mui/icons-material/Download";
 
 interface BookingDetailsModalProps {
   open: boolean;
@@ -20,6 +28,8 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
 }) => {
   if (!bookingId) return null;
 
+  const isMobile = useMediaQuery("(max-width: 600px)");
+
   const booking = {
     id: bookingId,
     propertyName: "Luxury Apartment in Chennai",
@@ -29,8 +39,15 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
     date: "2025-10-10",
     checkIn: "2025-10-15",
     checkOut: "2025-10-18",
-    transactions: [],
   };
+
+  // const starAnimation = {
+  //   "@keyframes pulseStar": {
+  //     "0%": { transform: "scale(1)" },
+  //     "50%": { transform: "scale(1.25)" },
+  //     "100%": { transform: "scale(1)" },
+  //   },
+  // };
 
   return (
     <Modal
@@ -40,194 +57,263 @@ const BookingDetailsModal: React.FC<BookingDetailsModalProps> = ({
       contentLabel="Booking Details"
       style={{
         overlay: {
-          backgroundColor: "rgba(0,0,0,0.5)",
+          backgroundColor: "rgba(0,0,0,0.55)",
           zIndex: 1000,
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingTop: "80px",
+          alignItems: "center", // center vertically
+          justifyContent: "center", // center horizontally
+          padding: 0,
         },
         content: {
-          width: "600px",
-          height: "70vh",
-          maxHeight: "80vh",
-          borderRadius: "16px",
-          padding: "2rem",
+          width: isMobile ? "92%" : "620px",
+          maxHeight: "85vh",
+          borderRadius: "18px",
+          padding: 0,
           border: "none",
-          boxShadow: "0 6px 18px rgba(0,0,0,0.2)",
-          margin: "auto",
-          display: "flex",
-          flexDirection: "column",
+          overflow: "hidden",
+          margin: "0 auto",
+          marginTop: isMobile ? "40px" : "80px", // ← clean margin from top
+          inset: "auto", // prevents default fixed positioning
         },
       }}
     >
+      {/* Header */}
       <Box
         sx={{
+          bgcolor: themeColor,
+          color: "#fff",
+          px: isMobile ? 2 : 3,
+          py: isMobile ? 1.5 : 2,
           position: "relative",
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
+          fontFamily: "'Poppins', sans-serif",
         }}
       >
-        {/* Close Icon */}
+        <Typography variant={isMobile ? "h6" : "h5"} sx={{ fontWeight: 700 }}>
+          Booking Details
+        </Typography>
+
         <IconButton
           onClick={onClose}
           sx={{
             position: "absolute",
-            top: 8,
-            right: 8,
-            color: "#555",
-            "&:hover": { color: themeColor },
+            top: isMobile ? 6 : 10,
+            right: isMobile ? 6 : 10,
+            color: "#fff",
+            "&:hover": { color: "#fbdce4" },
           }}
         >
           <CloseIcon />
         </IconButton>
+      </Box>
 
-        {/* Scrollable Content */}
-        <Box sx={{ flex: 1, overflowY: "auto", pr: 1 }}>
+      {/* Body */}
+      <Box
+        sx={{
+          p: isMobile ? 2 : 3,
+          overflowY: "auto",
+          maxHeight: isMobile ? "65vh" : "60vh",
+        }}
+      >
+        {/* Booking Card */}
+        <Box
+          sx={{
+            p: isMobile ? 2 : 3,
+            borderRadius: 3,
+            bgcolor: "#fff",
+            boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
+            border: "1px solid #eee",
+            mb: 3,
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
           <Typography
-            variant="h5"
             sx={{
-              color: themeColor,
               fontWeight: 700,
-              mb: 2,
-              textAlign: "center",
-              fontFamily: "'Poppins', sans-serif",
+              fontSize: isMobile ? "1rem" : "1.1rem",
+              mb: 0.5,
             }}
           >
-            Booking Details
+            {booking.propertyName}
           </Typography>
 
-          <Divider sx={{ mb: 2 }} />
+          <Typography
+            sx={{
+              color: "#777",
+              fontSize: "0.85rem",
+              mb: 2,
+              fontStyle: "italic",
+            }}
+          >
+            Booking ID: {booking.id}
+          </Typography>
 
-          {/* Booking Info */}
+          {/* Responsive Grid */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              rowGap: 1.5,
+              columnGap: 2,
+              fontSize: "0.95rem",
+            }}
+          >
+            <Typography>
+              <strong>Guest:</strong> {booking.guestName}
+            </Typography>
+
+            <Typography>
+              <strong>Price:</strong> ₹ {booking.price.toLocaleString()}
+            </Typography>
+
+            <Typography>
+              <strong>Status:</strong>{" "}
+              <span
+                style={{
+                  color:
+                    booking.status === "Confirmed"
+                      ? "green"
+                      : booking.status === "Pending"
+                        ? "#e6a100"
+                        : "red",
+                  fontWeight: 600,
+                }}
+              >
+                {booking.status}
+              </span>
+            </Typography>
+
+            <Typography>
+              <strong>Booking Date:</strong> {booking.date}
+            </Typography>
+
+            <Typography sx={{ gridColumn: "1 / -1" }}>
+              <strong>Stay:</strong> {booking.checkIn} – {booking.checkOut}
+            </Typography>
+          </Box>
+
+          {/* Ratings Section */}
+
+          <Typography
+            sx={{
+              fontWeight: 700,
+              mb: 2,
+              fontSize: isMobile ? "1rem" : "1.1rem",
+              color: "#c14365",
+              marginTop: "20px",
+            }}
+          >
+            Ratings
+          </Typography>
+
+          {/* Host Rating */}
           <Box
             sx={{
               display: "flex",
-              flexWrap: "wrap",
-              columnGap: 3,
-              rowGap: 1.5,
-              mb: 3,
-              fontFamily: "'Poppins', sans-serif",
+              alignItems: "center",
+              mb: 2,
+              justifyContent: "space-between",
             }}
           >
-            <Box sx={{ flex: "1 1 45%" }}>
-              <Typography variant="body1">
-                <strong>Booking ID:</strong> {booking.id}
-              </Typography>
-            </Box>
-            <Box sx={{ flex: "1 1 45%" }}>
-              <Typography variant="body1">
-                <strong>Property:</strong> {booking.propertyName}
-              </Typography>
-            </Box>
-            <Box sx={{ flex: "1 1 45%" }}>
-              <Typography variant="body1">
-                <strong>Guest:</strong> {booking.guestName}
-              </Typography>
-            </Box>
-            <Box sx={{ flex: "1 1 45%" }}>
-              <Typography variant="body1">
-                <strong>Price:</strong> ₹ {booking.price.toLocaleString()}
-              </Typography>
-            </Box>
-            <Box sx={{ flex: "1 1 45%" }}>
-              <Typography variant="body1">
-                <strong>Status:</strong>{" "}
+            <Typography sx={{ fontWeight: 600 }}>Host Rating</Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+              {[1, 2, 3, 4].map((i) => (
                 <span
+                  key={i}
                   style={{
-                    color:
-                      booking.status === "Confirmed"
-                        ? "green"
-                        : booking.status === "Pending"
-                          ? "#e6a100"
-                          : "red",
+                    color: "#FFC107",
+                    fontSize: isMobile ? "20px" : "24px",
+                    animation: "pulseStar 1.5s ease-in-out",
+                    animationDelay: `${i * 0.15}s`,
+                    display: "inline-block",
                   }}
                 >
-                  {booking.status}
+                  ★
                 </span>
-              </Typography>
-            </Box>
-            <Box sx={{ flex: "1 1 45%" }}>
-              <Typography variant="body1">
-                <strong>Booking Date:</strong> {booking.date}
-              </Typography>
-            </Box>
-            <Box sx={{ flex: "1 1 100%" }}>
-              <Typography variant="body1">
-                <strong>Stay:</strong> {booking.checkIn} – {booking.checkOut}
-              </Typography>
+              ))}
+              <span
+                style={{
+                  color: "#ddd",
+                  fontSize: isMobile ? "20px" : "24px",
+                }}
+              >
+                ★
+              </span>
             </Box>
           </Box>
 
-          <Divider sx={{ mb: 2 }} />
-
-          {/* Transactions Section */}
-          <Typography
-            variant="h6"
+          {/* Property Rating */}
+          <Box
             sx={{
-              fontWeight: 600,
-              color: themeColor,
-              mb: 1,
-              fontFamily: "'Poppins', sans-serif",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            Transactions
-          </Typography>
-
-          {booking.transactions.length > 0 ? (
-            booking.transactions.map((_tx, index) => (
-              <Box
-                key={index}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  py: 1,
-                  borderBottom: "1px solid #eee",
-                }}
-              >
-                {/* <Typography variant="body2">{tx.id}</Typography>
-                <Typography variant="body2">₹ {tx.amount}</Typography>
-                <Typography variant="body2" sx={{ color: "green" }}>
-                  {tx.status}
-                </Typography> */}
-              </Box>
-            ))
-          ) : (
-            <Typography
-              variant="body2"
-              sx={{
-                color: "#777",
-                fontStyle: "italic",
-                mb: 3,
-                fontFamily: "'Poppins', sans-serif",
-              }}
-            >
-              No transactions
-            </Typography>
-          )}
+            <Typography sx={{ fontWeight: 600 }}>Property Rating</Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <span
+                  key={i}
+                  style={{
+                    color: "#FFC107",
+                    fontSize: isMobile ? "20px" : "24px",
+                    animation: "pulseStar 1.5s ease-in-out",
+                    animationDelay: `${i * 0.15}s`,
+                    display: "inline-block",
+                  }}
+                >
+                  ★
+                </span>
+              ))}
+            </Box>
+          </Box>
         </Box>
 
-        {/* Close Button fixed at bottom */}
-        <Box sx={{ mt: "auto" }}>
-          <Button
-            variant="contained"
-            sx={{
-              bgcolor: themeColor,
-              "&:hover": { bgcolor: "#a83454" },
-              borderRadius: "10px",
-              textTransform: "none",
-              px: 3,
-              py: 1.2,
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: 600,
-            }}
-            onClick={onClose}
-            fullWidth
-          >
-            Close
-          </Button>
-        </Box>
+        {/* Download Invoice Button */}
+        <Button
+          variant="contained"
+          startIcon={<DownloadIcon />}
+          sx={{
+            bgcolor: themeColor,
+            "&:hover": { bgcolor: "#a83355" },
+            py: 1.2,
+            px: 3,
+            borderRadius: "10px",
+            width: "100%",
+            textTransform: "none",
+            fontWeight: 600,
+            fontFamily: "'Poppins', sans-serif",
+            fontSize: isMobile ? "0.9rem" : "1rem",
+            mb: 2,
+          }}
+        >
+          Download Invoice
+        </Button>
+      </Box>
+
+      {/* Footer */}
+      <Box
+        sx={{
+          p: isMobile ? 1.5 : 2,
+          borderTop: "1px solid #eee",
+          textAlign: "right",
+        }}
+      >
+        <Button
+          onClick={onClose}
+          sx={{
+            textTransform: "none",
+            px: isMobile ? 3 : 4,
+            py: 1.2,
+            borderRadius: "10px",
+            bgcolor: "#f2f2f2",
+            "&:hover": { bgcolor: "#e6e6e6" },
+            fontFamily: "'Poppins', sans-serif",
+            fontWeight: 600,
+          }}
+        >
+          Close
+        </Button>
       </Box>
     </Modal>
   );

@@ -3,14 +3,15 @@ import {
   Box,
   Typography,
   Container,
-  Breadcrumbs,
-  Link,
+  // Breadcrumbs,
+  // Link,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+// import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import termsTopImage from "../../assets/hotel.jpg";
 import termsBottomImage from "../../assets/hotel.jpg";
+import { AppBreadcrumbs } from "../../components";
 
 const WhyHostsListWithAajoo: React.FC = () => {
   const theme = useTheme();
@@ -63,32 +64,83 @@ const WhyHostsListWithAajoo: React.FC = () => {
     <Box sx={{ bgcolor: "#fff", color: "#333", py: 6 }}>
       <Container maxWidth="md">
         {/* Breadcrumb Section */}
-        <Breadcrumbs
-          separator={<NavigateNextIcon fontSize="small" />}
-          sx={{ mb: 3, color: "#C14365" }}
-        >
-          <Link underline="hover" color="inherit" href="/">
-            Home
-          </Link>
-          <Typography sx={{ color: "#C14365", fontWeight: 600 }}>
-            Why Hosts List with Aajoo
-          </Typography>
-        </Breadcrumbs>
 
-        {/* Top Image */}
         <Box
-          component="img"
-          src={termsTopImage}
-          alt="Aajoo Hosting"
+      sx={{
+        width: "100vw",
+        position: "relative",
+        left: "50%",
+        right: "50%",
+        marginLeft: "-50vw",
+        marginRight: "-50vw",
+        height: isMobile ? "220px" : "380px",
+        backgroundImage: `url(${termsTopImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        overflow: "hidden",
+        mb: 3,
+      }}
+    >
+      {/* Overlay */}
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          bgcolor: "rgba(0, 0, 0, 0.45)",
+          backdropFilter: "blur(2px)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "#fff",
+          textAlign: "center",
+          px: 2,
+        }}
+      >
+        <Typography
+          variant={isMobile ? "h5" : "h3"}
+          fontWeight={700}
+          sx={{ letterSpacing: "0.5px", fontFamily: "'Poppins', sans-serif" }}
+        >
+          AAJOO PRIVACY POLICY
+        </Typography>
+
+        <Typography
+          variant="subtitle1"
           sx={{
-            width: "100%",
-            height: isMobile ? 180 : 300,
-            objectFit: "cover",
-            borderRadius: 3,
-            mb: 4,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+            mt: 1,
+            fontWeight: 300,
+            opacity: 0.9,
+            fontFamily: "'Inter', sans-serif",
           }}
-        />
+        >
+          Your privacy, our responsibility.
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: -1,
+          left: 0,
+          width: "100%",
+          height: "60px",
+          backgroundColor: "#fff",
+          borderTopLeftRadius: "50px",
+          borderTopRightRadius: "50px",
+        }}
+      />
+    </Box>
+
+    {/* Breadcrumb Below Header */}
+    <Box sx={{ mb: 2, mt: 1 }}>
+      <AppBreadcrumbs
+        items={[
+          { label: "Home", link: "/" },
+          { label: "Privacy Policy" },
+        ]}
+      />
+    </Box>
 
         {/* Header */}
         <Typography

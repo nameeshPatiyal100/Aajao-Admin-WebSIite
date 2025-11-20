@@ -3,254 +3,190 @@ import {
   Box,
   Container,
   Typography,
-  //   Grid,
   Card,
-  CardContent,
-  //   Accordion,
-  //   AccordionSummary,
-  //   AccordionDetails,
-  useTheme,
+  // CardContent,
   useMediaQuery,
+  useTheme,
+  Button,
 } from "@mui/material";
-// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import helpcenter2 from "../../assets/UI/helpcenter2.svg";
+// import helpcenter2 from "../../assets/UI/helpcenter2.svg";
+import { AppBreadcrumbs } from "../../components";
+import termsTopImage from "../../assets/hotel.jpg";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 
-interface Section {
-  title: string;
-  topics: { question: string; answer: string }[];
-}
-
-const helpSections: Section[] = [
+const sections = [
   {
     title: "Getting Started",
-    topics: [
+    items: [
       {
-        question: "What is Aajoo?",
-        answer:
-          "Aajoo connects travelers with local hosts offering authentic homestays and unique experiences.",
+        q: "What is Aajoo?",
+        a: "Aajoo connects travelers with local hosts offering authentic homestays and unique experiences.",
       },
       {
-        question: "How to Sign Up",
-        answer:
-          "You can register using your email or Google account as a guest or host within minutes.",
+        q: "How to Sign Up",
+        a: "Register using your email or Google account as a guest or host within minutes.",
       },
       {
-        question: "How to List Your Property",
-        answer:
-          "Follow our step-by-step listing guide with tips on descriptions, pricing, and images.",
+        q: "How to List Your Property",
+        a: "Follow our step-by-step listing guide with tips on descriptions, pricing, and images.",
       },
       {
-        question: "How to Book a Stay",
-        answer:
-          "Easily search, filter, and book safe and verified properties with instant confirmation.",
+        q: "How to Book a Stay",
+        a: "Search, filter, and book safe properties with instant confirmation.",
       },
     ],
   },
   {
     title: "Hosting with Aajoo",
-    topics: [
+    items: [
       {
-        question: "Crafting the Perfect Listing",
-        answer:
-          "Highlight unique features, upload high-quality photos, and write engaging descriptions.",
+        q: "Crafting the Perfect Listing",
+        a: "Highlight unique features, upload good photos, and write engaging descriptions.",
       },
       {
-        question: "Host Responsibilities",
-        answer:
-          "Maintain cleanliness, communicate clearly, and ensure guest safety and comfort.",
+        q: "Host Responsibilities",
+        a: "Maintain cleanliness, communicate clearly, and ensure guest comfort.",
       },
       {
-        question: "Preparing Your Home for Guests",
-        answer:
-          "Offer essentials, check safety devices, and add personal touches for a memorable stay.",
+        q: "Preparing Your Home",
+        a: "Provide essentials, check safety devices, and add personal touches.",
       },
       {
-        question: "Getting Paid as a Host",
-        answer:
-          "Aajoo supports multiple payout methods with timely and transparent transactions.",
+        q: "Getting Paid",
+        a: "Aajoo supports multiple payout methods with secure transactions.",
       },
     ],
   },
   {
     title: "Guest Support",
-    topics: [
+    items: [
       {
-        question: "Guest Responsibilities",
-        answer:
-          "Respect property rules, treat hosts courteously, and follow Aajoo’s code of conduct.",
+        q: "Guest Responsibilities",
+        a: "Respect property rules, treat hosts courteously, and follow guidelines.",
       },
       {
-        question: "Safety During Your Stay",
-        answer:
-          "Ensure safe check-ins, keep emergency contacts ready, and report any issues promptly.",
+        q: "Safety During Stay",
+        a: "Ensure safe check-ins, prepare emergency contacts, and report issues.",
       },
       {
-        question: "Refunds & Cancellations",
-        answer:
-          "Check your booking’s cancellation policy for eligible refund timelines.",
+        q: "Refunds & Cancellations",
+        a: "Check your booking’s cancellation policy for refund eligibility.",
       },
       {
-        question: "How to Contact Your Host",
-        answer:
-          "Use Aajoo’s secure messaging system to reach your host before or during your stay.",
+        q: "Contact Your Host",
+        a: "Use Aajoo’s secure messaging system to reach your host.",
       },
     ],
   },
 ];
 
-const HelpCenter: React.FC = () => {
+const HelpCenter = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Box sx={{ bgcolor: "#fff" }}>
-      {/* 🌐 Hero Section */}
       <Box
         sx={{
-          textAlign: "center",
-          py: { xs: 6, md: 10 },
-          background:
-            "linear-gradient(180deg, #fff 0%, #ffe5ec 60%, #fff 100%)",
+          position: "relative",
+          height: isMobile ? "220px" : "360px",
+          backgroundImage: `url(${termsTopImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          borderBottomLeftRadius: "50px",
+          borderBottomRightRadius: "50px",
+          overflow: "hidden",
         }}
       >
-        <Container maxWidth="md">
-          <Typography
-            variant={isMobile ? "h5" : "h4"}
-            fontWeight={700}
-            sx={{ color: "#C14365", mb: 2 }}
-          >
-            🌐 Aajoo Help Center
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ mb: 4, lineHeight: 1.8 }}
-          >
-            Your all-in-one guide for hosting, traveling, safety, and support.
-            Whether you’re a guest searching for authentic stays or a host
-            sharing your home, Aajoo ensures your experience is smooth and
-            rewarding.
-          </Typography>
+      
 
-          {/* 🖼 Illustration Placeholder */}
-          <Box
-            sx={{
-              width: "90%",
-              height: isMobile ? 200 : 300,
-              backgroundColor: "#fde7ec",
-              borderRadius: 4,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: isMobile ? "0.9rem" : "1.2rem",
-              color: "#C14365",
-              fontWeight: 600,
-              boxShadow: "inset 0 0 30px rgba(193,67,101,0.1)",
-            }}
-          >
-            {/* <img src={helpcenter} alt="" /> */}
-            <Box
-              component="img"
-              src={helpcenter2}
-              alt="Help Center"
-              sx={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain", // keeps image inside box while maintaining aspect ratio
-                borderRadius: 4,
-              }}
-            />
-          </Box>
-        </Container>
-      </Box>
-
-      {/* 📚 Help Center Section */}
-      <Container
-        maxWidth="md"
-        sx={{
-          py: { xs: 6, md: 10 },
-          textAlign: "center",
-        }}
-      >
-        <Card
-          elevation={4}
+        {/* Dark Overlay */}
+        <Box
           sx={{
-            borderRadius: 4,
-            p: { xs: 3, sm: 5 },
-            backgroundColor: "#fff8fa",
-            boxShadow: "0 6px 25px rgba(193,67,101,0.15)",
+            position: "absolute",
+            inset: 0,
+            bgcolor: "rgba(0, 0, 0, 0.45)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "#fff",
+            textAlign: "center",
+            px: 2,
           }}
         >
-          <CardContent>
+          <Typography variant={isMobile ? "h5" : "h3"} fontWeight={700}>
+            HELP CENTER
+          </Typography>
+          <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 300 }}>
+            Find answers, support, and guidance for your Aajoo experience.
+          </Typography>
+        </Box>
+        
+      </Box>
+        {/* Breadcrumb */}
+        <Box sx={{ ml: 10,mb: 1, mt: 1 }}>
+          <AppBreadcrumbs
+            items={[{ label: "Home", link: "/" }, { label: "Privacy Policy" }]}
+          />
+        </Box>
+    
+      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
+        {sections.map((section, index) => (
+          <Card
+            key={index}
+            elevation={4}
+            sx={{
+              p: { xs: 3, md: 4 },
+              mb: 5,
+              borderRadius: 4,
+              background: "#fff5f8",
+              boxShadow: "0 8px 30px rgba(193,67,101,0.15)",
+            }}
+          >
             <Typography
               variant="h5"
-              fontWeight={700}
               sx={{
-                color: "#C14365",
-                mb: 4,
+                fontFamily: "Poppins",
+                fontWeight: 700,
+                color: "#c14365",
+                mb: 3,
                 textTransform: "uppercase",
-                fontFamily: "Poppins, sans-serif",
+                letterSpacing: 0.5,
               }}
             >
-              Aajoo Help Center
+              {section.title}
             </Typography>
 
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{
-                maxWidth: 700,
-                mx: "auto",
-                mb: 5,
-                lineHeight: 1.8,
-              }}
-            >
-              Welcome to the Aajoo Help Center – your complete guide for
-              hosting, traveling, safety, and support. Whether you’re a guest
-              looking for authentic stays or a host opening your home, Aajoo
-              ensures a smooth, transparent, and rewarding experience.
-            </Typography>
-
-            {helpSections.flatMap((section, sIndex) =>
-              section.topics.map((topic, tIndex) => (
-                <Box
-                  key={`${sIndex}-${tIndex}`}
+            {section.items.map((item, idx) => (
+              <Box key={idx} sx={{ mb: 4 }}>
+                <Typography
+                  variant="h6"
+                  fontWeight={700}
                   sx={{
-                    mb: 4,
-                    px: { xs: 1, sm: 2 },
+                    fontFamily: "Poppins",
+                    color: "#c14365",
+                    mb: 1,
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    fontWeight={700}
-                    sx={{
-                      color: "#C14365",
-                      mb: 1,
-                      fontFamily: "Poppins, sans-serif",
-                    }}
-                  >
-                    {topic.question}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{
-                      maxWidth: 650,
-                      mx: "auto",
-                      lineHeight: 1.7,
-                      fontSize: "1rem",
-                    }}
-                  >
-                    {topic.answer}
-                  </Typography>
-                </Box>
-              ))
-            )}
-          </CardContent>
-        </Card>
+                  {item.q}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "#5a5a5a",
+                    lineHeight: 1.7,
+                    maxWidth: "90%",
+                  }}
+                >
+                  {item.a}
+                </Typography>
+              </Box>
+            ))}
+          </Card>
+        ))}
       </Container>
 
-      {/* 🌈 Footer Note */}
       <Box
         sx={{
           py: 4,
@@ -261,11 +197,35 @@ const HelpCenter: React.FC = () => {
           fontSize: "0.95rem",
         }}
       >
-        Need more help? Reach out to us at{" "}
+        Need more help? Email us at{" "}
         <Box component="span" sx={{ fontWeight: 700 }}>
           contactus@aajoohomes.com
         </Box>
       </Box>
+
+      {/* ===========================
+          Floating Support Button
+      ============================ */}
+      <Button
+        variant="contained"
+        startIcon={<SupportAgentIcon />}
+        sx={{
+          position: "fixed",
+          bottom: 20,
+          right: 20,
+          zIndex: 2000,
+          backgroundColor: "#c14365",
+          borderRadius: "50px",
+          px: 3,
+          py: 1.3,
+          fontWeight: 600,
+          "&:hover": { backgroundColor: "#a83250" },
+          textTransform: "none",
+          fontSize: isMobile ? "0.85rem" : "1rem",
+        }}
+      >
+        Need Support?
+      </Button>
     </Box>
   );
 };

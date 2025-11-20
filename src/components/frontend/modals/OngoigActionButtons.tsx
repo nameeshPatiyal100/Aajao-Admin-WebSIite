@@ -122,14 +122,14 @@ const OngoigActionButtons: React.FC<OngoigActionButtonsProps> = ({
           Customer Support
         </Button>
 
-        <Button
+        {/* <Button
           startIcon={<RateReviewIcon />}
           variant="contained"
           sx={{ bgcolor: "#ff9800", px: 2.5, py: 0.7, minWidth: 150, textTransform: "none", fontWeight: 700 }}
           onClick={() => navigate(`/user/review/${booking.id}`)}
         >
           Rate Stay
-        </Button>
+        </Button> */}
       </Box>
     </Box>
   );
