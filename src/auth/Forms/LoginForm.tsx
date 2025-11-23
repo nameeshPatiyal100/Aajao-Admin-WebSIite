@@ -41,7 +41,7 @@ export const LoginForm = () => {
               display: "flex",
               justifyContent: "center",
               mb: 3,
-              height: "38px",
+              height: "40px",
               borderRadius: "30px",
               overflow: "hidden",
               "& .MuiToggleButton-root": {
@@ -50,9 +50,10 @@ export const LoginForm = () => {
                 py: 1.2,
                 border: "1px solid #C14365",
                 color: "#C14365",
-                fontWeight: 500,
+                fontWeight: 600,
                 borderRadius: 0,
-                transition: "all 0.2s ease-in-out",
+                transition: "all 0.25s ease-in-out",
+
                 "&:first-of-type": {
                   borderTopLeftRadius: "30px",
                   borderBottomLeftRadius: "30px",
@@ -61,13 +62,28 @@ export const LoginForm = () => {
                   borderTopRightRadius: "30px",
                   borderBottomRightRadius: "30px",
                 },
-                "&.Mui-selected": {
-                  backgroundColor: "#c14365",
-                  color: "white",
+
+                // 🔥 Hover effect on unselected items
+                "&:hover": {
+                  backgroundColor: "#f8d6e2",
+                  color: "#C14365",
                   borderColor: "#C14365",
                 },
-                "&:hover": {
-                  backgroundColor: "#fcd2e0",
+
+                // 🔥 Selected Button
+                "&.Mui-selected": {
+                  backgroundColor: "#C14365",
+                  color: "#ffffff",
+                  borderColor: "#C14365",
+                  boxShadow: "0 0 8px rgba(193, 67, 101, 0.6)",
+                },
+
+                // 🔥 Hover on selected button (improved)
+                "&.Mui-selected:hover": {
+                  backgroundColor: "#a93250",
+                  borderColor: "#a93250",
+                  color: "#fff",
+                  boxShadow: "0 0 10px rgba(169, 50, 80, 0.7)",
                 },
               },
             }}
@@ -167,7 +183,7 @@ export const LoginForm = () => {
             Login with Google
           </Button>
           <div className="singuponLogin">
-            <Link to="/auth/forget" className="forgot-password">
+            <Link to="/auth/signup" className="forgot-password">
               Don't Have Account? Sign-up
             </Link>
           </div>
