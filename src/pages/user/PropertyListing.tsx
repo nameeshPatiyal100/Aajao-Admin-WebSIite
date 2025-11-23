@@ -1,275 +1,147 @@
-import { useEffect, useState } from "react";
+import { useState} from "react";
 import {
   Box,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  InputAdornment,
-  Typography,
-  Slider,
-  IconButton,
   Drawer,
-  FormControlLabel,
-  Checkbox,
+  IconButton,
+  // Dialog,
+  // DialogActions,
+  // DialogContent,
+  // DialogTitle,
+  // Button,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import ClearIcon from "@mui/icons-material/Clear";
-import SearchIcon from "@mui/icons-material/Search";
-// import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import { HomePropCard } from "../../components";
-import "../../styles/user/PropertyListing.css";
+import {
+  PageHeaderWithCategories,
+  SidebarFilters,
+  PropertyGrid,
+} from "../../components";
+// import PageHeaderWithCategories from "./PageHeaderWithCategories";
+// import SidebarFilters from "./SidebarFilters";
+// import PropertyGrid from "./PropertyGrid";
+
+import single from "../../assets/provided asset/single.png";
+import couple3 from "../../assets/provided asset/couple.png";
+import family from "../../assets/provided asset/family.png";
+import sharing from "../../assets/provided asset/sharing.png";
+import party from "../../assets/provided asset/party.png";
+
+const categories = [
+  { img: single, label: "Single" },
+  { img: couple3, label: "Couple" },
+  { img: family, label: "Family" },
+  { img: sharing, label: "Sharing" },
+  { img: party, label: "Party" },
+];
 
 const PropertyListing = () => {
-  const [locationName, setLocationName] = useState("");
-  const [openDialog, setOpenDialog] = useState(false);
-  const [distance, setDistance] = useState<number>(5);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Filters States
+  const [locationName, setLocationName] = useState("");
+  const [distance, setDistance] = useState(5);
   const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  // const [openDialog, setOpenDialog] = useState(false);
 
-  const toggleDrawer = () => setMobileOpen(!mobileOpen);
-
-  const priceOptions = [
-    "₹0–₹1,000",
-    "₹1,000–₹5,000",
-    "₹5,000–₹10,000",
-    "₹10,000+",
-  ];
-  const amenitiesOptions = ["WiFi", "Parking", "Pool", "AC", "TV", "Kitchen"];
-
-  const togglePrice = (price: string) =>
+  const togglePrice = (p: string) =>
     setSelectedPrices((prev) =>
-      prev.includes(price) ? prev.filter((p) => p !== price) : [...prev, price]
+      prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
     );
 
-  const toggleAmenity = (amenity: string) =>
+  const toggleAmenity = (a: string) =>
     setSelectedAmenities((prev) =>
-      prev.includes(amenity)
-        ? prev.filter((a) => a !== amenity)
-        : [...prev, amenity]
+      prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]
     );
 
-  const properties = Array.from({ length: 15 }, (_, i) => ({
+  // Dummy properties
+  const properties = Array.from({ length: 20 }, (_, i) => ({
     image: `https://picsum.photos/400/250?random=${i + 1}`,
     name: `Property ${i + 1}`,
-    description: "Beautiful stay with modern amenities and comfort.",
-    location: "India",
-    price: `₹${4000 + i * 300}/night`,
+    description: "Beautiful stay with modern amenities.",
+    price: `₹${4000 + i * 200}`,
   }));
-
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          try {
-            const response = await fetch(
-              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-            );
-            const data = await response.json();
-            setLocationName(data.display_name || "");
-          } catch {
-            setLocationName("");
-          }
-        },
-        () => setOpenDialog(true)
-      );
-    } else setOpenDialog(true);
-  }, []);
-
-  const filterContent = (
-    <Box className="sidebarContent">
-      {/* Search Field */}
-      <Typography sx={{ color: "#c14365", fontWeight: 600, mb: 1 }}>
-        Search
-      </Typography>
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Search location..."
-        value={locationName}
-        onChange={(e) => setLocationName(e.target.value)}
-        InputProps={{
-          endAdornment: locationName && (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={() => setLocationName("")}
-                sx={{
-                  color: "#c14365",
-                  "&:hover": { backgroundColor: "rgba(193, 67, 101, 0.1)" },
-                }}
-              >
-                <ClearIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            color: "#c14365",
-            "& fieldset": { borderColor: "#c14365" },
-          },
-          mb: 3,
-        }}
-      />
-
-      {/* Distance Slider */}
-      <Typography sx={{ color: "#c14365", fontWeight: 600 }}>
-        Distance: {distance} KM
-      </Typography>
-      <Slider
-        value={distance}
-        onChange={(_e, val) => setDistance(val as number)}
-        min={1}
-        max={50}
-        valueLabelDisplay="auto"
-        sx={{
-          color: "#c14365",
-          "& .MuiSlider-thumb": {
-            backgroundColor: "#fff",
-            border: "2px solid #c14365",
-          },
-          mb: 3,
-        }}
-      />
-
-      {/* Price Filter */}
-      <Typography sx={{ color: "#c14365", fontWeight: 600, mb: 1 }}>
-        Price Range
-      </Typography>
-      {priceOptions.map((price) => (
-        <FormControlLabel
-          key={price}
-          control={
-            <Checkbox
-              checked={selectedPrices.includes(price)}
-              onChange={() => togglePrice(price)}
-              // sx={{ color: "#c14365" }}
-              sx={{
-                color: "#c14365", // default color when unchecked
-                "&.Mui-checked": {
-                  color: "#c14365", // color when checked
-                },
-              }}
-            />
-          }
-          label={price}
-        />
-      ))}
-
-      {/* Amenities Filter */}
-      <Typography sx={{ color: "#c14365", fontWeight: 600, mt: 2, mb: 1 }}>
-        Amenities
-      </Typography>
-      {amenitiesOptions.map((amenity) => (
-        <FormControlLabel
-          key={amenity}
-          control={
-            <Checkbox
-              checked={selectedAmenities.includes(amenity)}
-              onChange={() => toggleAmenity(amenity)}
-              // sx={{ color: "#c14365 !impotant" }}
-              sx={{
-                color: "#c14365", // default color when unchecked
-                "&.Mui-checked": {
-                  color: "#c14365", // color when checked
-                },
-              }}
-            />
-          }
-          label={amenity}
-        />
-      ))}
-
-      <Button
-        fullWidth
-        variant="contained"
-        startIcon={<SearchIcon />}
-        sx={{
-          mt: 3,
-          py: 1,
-          backgroundColor: "#c14365",
-          "&:hover": { backgroundColor: "#a83250" },
-        }}
-      >
-        Search
-      </Button>
-    </Box>
-  );
 
   return (
     <>
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Location Access Needed</DialogTitle>
-        <DialogContent>
-          Please allow access to your location for better search results.
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setOpenDialog(false)}
-            sx={{ color: "#c14365" }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Hamburger for Mobile */}
+      {/* Sidebar Drawer Mobile */}
       <IconButton
-        className="sidebarToggle"
-        onClick={toggleDrawer}
-        // sx={{
-        //   position: "fixed",
-        //   top: 90,
-        //   left: 20,
-        //   zIndex: 1300,
-        //   backgroundColor: "#c14365",
-        //   color: "#fff",
-        //   "&:hover": { backgroundColor: "#a83250" },
-        // }}
+        sx={{
+          position: "fixed",
+          top: 18,
+          left: 18,
+          zIndex: 20,
+          display: { xs: "block", md: "none" },
+          background: "#fff",
+        }}
+        onClick={() => setMobileOpen(true)}
       >
         <MenuIcon />
       </IconButton>
 
-      <Box className="propertyPageContainer">
+      <Drawer
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        sx={{ "& .MuiDrawer-paper": { width: 280, p: 2 } }}
+      >
+        <IconButton onClick={() => setMobileOpen(false)}>
+          <CloseIcon />
+        </IconButton>
+        <SidebarFilters
+          {...{
+            locationName,
+            setLocationName,
+            distance,
+            setDistance,
+            selectedPrices,
+            togglePrice,
+            selectedAmenities,
+            toggleAmenity,
+          }}
+        />
+      </Drawer>
+
+      {/* MAIN LAYOUT */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "280px 1fr" },
+          gap: 2,
+          p: 2,
+        }}
+      >
         {/* Desktop Sidebar */}
-        <Box className="sidebarSection">{filterContent}</Box>
-
-        {/* Mobile Drawer */}
-        <Drawer
-          anchor="left"
-          open={mobileOpen}
-          onClose={toggleDrawer}
-          sx={{ "& .MuiDrawer-paper": { width: 280, padding: "20px" } }}
+        <Box
+          sx={{
+            display: { xs: "none", md: "block" },
+            borderRight: "1px solid #eee",
+            pr: 2,
+          }}
         >
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-            <Typography variant="h6" sx={{ color: "#c14365", fontWeight: 600 }}>
-              Filters
-            </Typography>
-            <IconButton onClick={toggleDrawer}>
-              <CloseIcon sx={{ color: "#c14365" }} />
-            </IconButton>
-          </Box>
-          {filterContent}
-        </Drawer>
+          <SidebarFilters
+            {...{
+              locationName,
+              setLocationName,
+              distance,
+              setDistance,
+              selectedPrices,
+              togglePrice,
+              selectedAmenities,
+              toggleAmenity,
+            }}
+          />
+        </Box>
 
-        {/* Property Grid */}
-        <Box className="propertyListingContainer">
-          {properties.map((prop, idx) => (
-            // <HomePropCard key={idx} {...prop} />
-            <Link
-              to={`/property/detail/1`}
-              key={idx}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <HomePropCard {...prop} />
-            </Link>
-          ))}
+        {/* Right Side Content */}
+        <Box>
+          <PageHeaderWithCategories
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelect={(c) => setSelectedCategory(c)}
+          />
+
+          <PropertyGrid properties={properties} />
         </Box>
       </Box>
     </>

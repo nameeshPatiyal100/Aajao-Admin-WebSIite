@@ -102,6 +102,34 @@ export const hotels = [
     location: "Rajasthan, India",
     price: "₹3,800 / night",
   },
+  {
+    image: "/room3.jpg",
+    name: "Mountain Retreat",
+    description: "Peaceful getaway in the hills with cozy rooms.",
+    location: "Manali, India",
+    price: "₹4,200 / night",
+  },
+  {
+    image: "/room4.jpg",
+    name: "City Lights Inn",
+    description: "Stay in the heart of the city with premium service.",
+    location: "Mumbai, India",
+    price: "₹6,000 / night",
+  },
+  {
+    image: "/room1.jpg",
+    name: "Desert Oasis",
+    description: "Experience the charm of desert landscapes and comfort.",
+    location: "Rajasthan, India",
+    price: "₹3,800 / night",
+  },
+  {
+    image: "/room1.jpg",
+    name: "Desert Oasis",
+    description: "Experience the charm of desert landscapes and comfort.",
+    location: "Rajasthan, India",
+    price: "₹3,800 / night",
+  },
 ];
 export const faqs = [
   {

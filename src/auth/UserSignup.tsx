@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -106,10 +106,10 @@ const UserSignup = () => {
   };
   const handleBack = () => setActiveStep((prev) => prev - 1);
 
-  const handleGoogleSignup = () => {
-    alert("Google Signup clicked!");
-    // Integrate Google OAuth here
-  };
+  // const handleGoogleSignup = () => {
+  //   alert("Google Signup clicked!");
+  //   // Integrate Google OAuth here
+  // };
 
   return (
     <>

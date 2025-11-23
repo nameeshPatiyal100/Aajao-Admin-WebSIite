@@ -154,26 +154,7 @@ const MapandFilter: React.FC = () => {
       setError("Geolocation not supported by your browser.");
     }
   }, []);
-  // // ✅ Reverse geocode location to get readable address
-  // useEffect(() => {
-  //   if (location) {
-  //     fetch(
-  //       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lng}`
-  //     )
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         const displayName =
-  //           data.address.city ||
-  //           data.address.town ||
-  //           data.address.village ||
-  //           data.display_name;
-  //         setAddress(displayName || "Your Location");
-  //       })
-  //       .catch(() => setAddress("Location not available"));
-  //   }
-  // }, [location]);
-   // ✅ Get user location
-   useEffect(() => {
+  useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
@@ -216,20 +197,25 @@ const MapandFilter: React.FC = () => {
           mb: { xs: 2, sm: 3 },
         }}
       >
-        {/* ✅ Category Section */}
+        {/* ✅ Category Section (Aligned Left + Reduced Gap) */}
         <Box
           sx={{
             width: "100%",
             display: "flex",
             flexDirection: "row",
-            flexWrap: "nowrap", // ❌ disables wrapping — all items in one line
-            justifyContent: "center", // keeps items centered
+            flexWrap: "nowrap",
             alignItems: "center",
-            overflowX: "auto", // ✅ allows horizontal scroll on small screens
-            gap: { xs: 3, sm: 4, md: 5 },
-            py: 2,
-            scrollbarWidth: "none", // hides scrollbar (for Firefox)
-            "&::-webkit-scrollbar": { display: "none" }, // hides scrollbar (for Chrome)
+
+            justifyContent: "center", // 🔥 FIX: align categories to the LEFT
+
+            overflowX: "auto",
+            gap: { xs: 1, sm: 1.5, md: 2 }, // 🔥 REDUCED GAP BETWEEN ITEMS
+
+            py: 1,
+            scrollbarWidth: "none",
+            "&::-webkit-scrollbar": { display: "none" },
+
+            px: { xs: 0.5, sm: 1 }, // smaller padding so everything fits
           }}
         >
           {categories.map((cat, index) => (
@@ -241,8 +227,9 @@ const MapandFilter: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
-                flex: "0 0 auto", // ✅ prevents shrinking
-                minWidth: 90, // keeps spacing consistent
+
+                flex: "0 0 auto",
+                minWidth: { xs: 60, sm: 75 }, // 🔥 smaller, fits more items on mobile
               }}
             >
               <Box
@@ -250,20 +237,21 @@ const MapandFilter: React.FC = () => {
                 src={cat.img}
                 alt={cat.label}
                 sx={{
-                  width: 40,
-                  height: 40,
+                  width: { xs: 28, sm: 34 }, // 🔥 smaller icons
+                  height: { xs: 28, sm: 34 },
                   objectFit: "contain",
                 }}
               />
+
               <Typography
                 variant="body2"
                 sx={{
                   color: "#c14365",
-                  fontSize: { xs: "0.8rem", sm: "0.95rem" },
-                  fontFamily: "Poppins, sans-serif",
+                  fontSize: { xs: "0.65rem", sm: "0.8rem" },
                   fontWeight: 600,
+                  mt: 0.4, // 🔥 reduced top gap
+                  whiteSpace: "nowrap",
                   textAlign: "center",
-                  mt: 1,
                 }}
               >
                 {cat.label}
@@ -276,17 +264,16 @@ const MapandFilter: React.FC = () => {
         <Box
           sx={{
             width: "100%",
-            maxWidth: 700, // keeps the box from stretching too wide on large screens
-            mx: "auto", // centers the box horizontally
+            maxWidth: 700,
+            mx: "auto",
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: { xs: 2, sm: 3 },
-            flexWrap: "wrap", // ensures responsiveness on smaller screens
+            gap: { xs: 1.5, sm: 3 },
           }}
         >
-          {/* 🔹 Prebooking Button */}
+          {/* 🔹 Prebooking Button → "Resv" on Mobile */}
           <Button
             variant="contained"
             startIcon={
@@ -295,29 +282,29 @@ const MapandFilter: React.FC = () => {
                 src={prebooking}
                 alt="Prebooking"
                 sx={{
-                  width: { xs: 28, sm: 35, md: 40 },
-                  height: { xs: 28, sm: 35, md: 40 },
+                  width: { xs: 22, sm: 28, md: 35 },
+                  height: { xs: 22, sm: 28, md: 35 },
                 }}
               />
             }
             sx={{
-              flex: "1 1 45%", // ensures equal width buttons
-              minWidth: { xs: "48%", sm: 250, md: 280 },
-              maxWidth: 300,
-              height: { xs: 45, sm: 50, md: 55 },
+              flex: "1",
+              height: { xs: 42, sm: 50 },
               backgroundColor: "#c14365",
               textTransform: "none",
-              fontSize: { xs: "0.85rem", sm: "0.95rem" },
+              fontSize: { xs: "0.8rem", sm: "0.95rem" },
               fontFamily: "Poppins, sans-serif",
               fontWeight: 600,
-              borderRadius: "12px",
+              borderRadius: "10px",
               "&:hover": { backgroundColor: "#a83756" },
             }}
           >
-            Prebooking
+            {/* ⬇️ Replace title on mobile */}
+            <Box sx={{ display: { xs: "inline", sm: "none" } }}>Resv</Box>
+            <Box sx={{ display: { xs: "none", sm: "inline" } }}>Prebooking</Box>
           </Button>
 
-          {/* 🔹 Luxury Homes Button */}
+          {/* 🔹 Luxury Homes Button → "Lux" on Mobile */}
           <Button
             variant="outlined"
             startIcon={
@@ -326,30 +313,32 @@ const MapandFilter: React.FC = () => {
                 src={crown1}
                 alt="Luxury"
                 sx={{
-                  width: { xs: 28, sm: 35, md: 40 },
-                  height: { xs: 28, sm: 35, md: 40 },
+                  width: { xs: 22, sm: 28, md: 35 },
+                  height: { xs: 22, sm: 28, md: 35 },
                 }}
               />
             }
             sx={{
-              flex: "1 1 45%",
-              minWidth: { xs: "48%", sm: 250, md: 280 },
-              maxWidth: 300,
-              height: { xs: 45, sm: 50, md: 55 },
+              flex: "1",
+              height: { xs: 42, sm: 50 },
               borderColor: "#c14365",
               color: "#c14365",
               textTransform: "none",
-              fontSize: { xs: "0.85rem", sm: "0.95rem" },
+              fontSize: { xs: "0.8rem", sm: "0.95rem" },
               fontFamily: "Poppins, sans-serif",
               fontWeight: 600,
-              borderRadius: "12px",
+              borderRadius: "10px",
               "&:hover": {
                 backgroundColor: "#c1436510",
                 borderColor: "#c14365",
               },
             }}
           >
-            Luxury Homes
+            {/* ⬇️ Replace title on mobile */}
+            <Box sx={{ display: { xs: "inline", sm: "none" } }}>Lux</Box>
+            <Box sx={{ display: { xs: "none", sm: "inline" } }}>
+              Luxury Homes
+            </Box>
           </Button>
         </Box>
       </Box>

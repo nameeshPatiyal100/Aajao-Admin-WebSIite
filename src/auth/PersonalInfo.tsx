@@ -14,7 +14,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import WcIcon from "@mui/icons-material/Wc";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import EventIcon from "@mui/icons-material/Event";
-import React from "react";
+// import React from "react";
 
 const PRIMARY = "#c14365";
 const ERROR_COLOR = "#333"; // blackish error text
