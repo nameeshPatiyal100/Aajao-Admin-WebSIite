@@ -168,7 +168,7 @@ const Header: React.FC = () => {
             </IconButton>
           </Box>
 
-          {/* Menu Items */}
+          {/* Menu Items
           <List>
             {menuItems.map((item) => (
               <ListItem
@@ -187,51 +187,83 @@ const Header: React.FC = () => {
                   sx={{
                     color: "#c14365",
                     fontWeight: 500,
+                    fontSize: "10px",
+                  }}
+                />
+              </ListItem>
+            ))}
+          </List> */}
+
+          {/* Menu Items */}
+          <List sx={{ mb: 1 }}>
+            {" "}
+            {/* reduce bottom space */}
+            {menuItems.map((item) => (
+              <ListItem
+                key={item.to}
+                component={Link}
+                to={item.to}
+                onClick={toggleDrawer(false)}
+                sx={{
+                  "&:hover": { bgcolor: "#fce4ec" },
+                  py: 0.8, // smaller item height
+                }}
+              >
+                <ListItemText
+                  primary={item.label}
+                  sx={{
+                    "& .MuiTypography-root": {
+                      fontSize: "0.85rem",  
+                      color: "#c14365",
+                      fontWeight: 500,
+                      mb: 0.2, 
+                    },
                   }}
                 />
               </ListItem>
             ))}
           </List>
 
-          {/* Auth Buttons */}
-          <Box sx={{ mt: 2 }}>
-            <Button
-              fullWidth
-              onClick={() => {
-                navigate("/auth/login");
-                setDrawerOpen(false);
-              }}
-              variant="outlined"
-              sx={{
-                color: "#c14365",
-                borderColor: "#c14365",
-                textTransform: "none",
-                mb: 1.5,
-                "&:hover": { bgcolor: "#fce4ec" },
-              }}
-            >
-              Login
-            </Button>
+        {/* Auth Buttons */}
+<Box sx={{ mt: 1 }}>   {/* reduced from 2 → 1 */}
+  <Button
+    fullWidth
+    onClick={() => {
+      navigate("/auth/login");
+      setDrawerOpen(false);
+    }}
+    variant="outlined"
+    sx={{
+      color: "#c14365",
+      borderColor: "#c14365",
+      textTransform: "none",
+      mb: 1.2,           // reduce space below login button
+      "&:hover": { bgcolor: "#fce4ec" },
+    }}
+  >
+    Login
+  </Button>
 
-            <Button
-              fullWidth
-              onClick={() => {
-                navigate("/auth/signup");
-                setDrawerOpen(false);
-              }}
-              variant="contained"
-              sx={{
-                textTransform: "none",
-                bgcolor: "#c14365",
-                color: "#fff",
-                "&:hover": {
-                  bgcolor: "#ab3864",
-                },
-              }}
-            >
-              Register
-            </Button>
-          </Box>
+  <Button
+    fullWidth
+    onClick={() => {
+      navigate("/auth/signup");
+      setDrawerOpen(false);
+    }}
+    variant="contained"
+    sx={{
+      textTransform: "none",
+      bgcolor: "#c14365",
+      color: "#fff",
+      "&:hover": {
+        bgcolor: "#ab3864",
+      },
+    }}
+  >
+    Register
+  </Button>
+</Box>
+
         </Box>
       </Drawer>
     </>

@@ -10,7 +10,8 @@ const faqs = [
   },
   {
     title: "Can I negotiate the price before booking?",
-    description: "Yes! AAJOO allows real-time price negotiation with the host. You can propose a price and the host may accept, decline, or counter it.",
+    description:
+      "Yes! AAJOO allows real-time price negotiation with the host. You can propose a price and the host may accept, decline, or counter it.",
   },
   {
     title: "Can I book for one night, a week, or a month?",
@@ -24,11 +25,13 @@ const faqs = [
   },
   {
     title: "Do I have to pay a security deposit?",
-    description: "For monthly stays, a minimal security deposit may apply. For daily or short stays, no deposit is required.",
+    description:
+      "For monthly stays, a minimal security deposit may apply. For daily or short stays, no deposit is required.",
   },
   {
     title: "Is KYC mandatory to book?",
-    description: "Yes, to ensure safety for both user and host, basic KYC (ID verification with photo) is required before final booking.",
+    description:
+      "Yes, to ensure safety for both user and host, basic KYC (ID verification with photo) is required before final booking.",
   },
   {
     title: "What if I have an issue during the stay?",
@@ -37,7 +40,8 @@ const faqs = [
   },
   {
     title: "What is the cancellation policy?",
-    description: "You can cancel your booking according to the cancellation terms.",
+    description:
+      "You can cancel your booking according to the cancellation terms.",
   },
   {
     title: "Can I talk to the host before booking?",
@@ -81,12 +85,7 @@ const FAQ = () => {
           </Box>
         ))}
       </Box>
-      <CTAoneHome
-        backgroundImage="/room3.jpg"
-        title="Looking for a relaxing vacation?"
-        buttonText="Book now"
-        onButtonClick={handleApiCall}
-      />
+
       <Box className="getintouchFaq">
         <Box className="getintouchFaqChild">
           <Typography variant="h4" className="getintouchFaqTitle">
@@ -101,6 +100,12 @@ const FAQ = () => {
           </a>
         </Box>
       </Box>
+      <CTAoneHome
+        backgroundImage="/room3.jpg"
+        title="Looking for a relaxing vacation?"
+        buttonText="Book now"
+        onButtonClick={handleApiCall}
+      />
     </>
   );
 };

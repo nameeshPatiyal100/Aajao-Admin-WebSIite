@@ -235,7 +235,7 @@ const MapandFilter: React.FC = () => {
                 src={cat.img}
                 alt={cat.label}
                 sx={{
-                  width: { xs: 28, sm: 30 },
+                  width: { xs: 28, sm: 30 },  
                   height: { xs: 28, sm: 30 },
                   objectFit: "contain",
                 }}

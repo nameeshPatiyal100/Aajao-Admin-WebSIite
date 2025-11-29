@@ -9,12 +9,10 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import GoogleIcon from "@mui/icons-material/Google";
-// import { useNavigate } from "react-router-dom";
 import loginPage from "../../assets/UI/loginpagesvg.svg";
 import "../../styles/LoginForm.css";
 
-export const LoginForm = () => {
-  // const navigate = useNavigate();
+export const LoginForm = () => {;
   const [userType, setUserType] = useState<"renter" | "host">("renter");
   const [rememberMe, setRememberMe] = useState(false);
 

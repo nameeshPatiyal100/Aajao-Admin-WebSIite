@@ -6,18 +6,21 @@ import {
   FormControlLabel,
   Typography,
   Box,
+  IconButton,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import WcIcon from "@mui/icons-material/Wc";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import EventIcon from "@mui/icons-material/Event";
-// import React from "react";
+import React, { useState } from "react";
 
 const PRIMARY = "#c14365";
-const ERROR_COLOR = "#333"; // blackish error text
+const ERROR_COLOR = "#333";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -25,13 +28,29 @@ const fadeUp = {
 };
 
 const PersonalInfo = ({ data, errors, onChange }: any) => {
+  // Password visibility state
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  // SINGLE SELECT CHECKBOX HANDLER
+  const handleUserTypeChange = (type: "user" | "host") => {
+    if (type === "user") {
+      onChange("isUser", true);
+      onChange("isHost", false);
+    } else {
+      onChange("isUser", false);
+      onChange("isHost", true);
+    }
+  };
+
   const renderInput = (
     label: string,
     name: string,
     value: string,
     error: string,
     icon: any,
-    type = "text"
+    type = "text",
+    extraEndAdornment: any = null
   ) => (
     <TextField
       fullWidth
@@ -49,6 +68,7 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
         startAdornment: (
           <InputAdornment position="start">{icon}</InputAdornment>
         ),
+        endAdornment: extraEndAdornment,
       }}
       sx={{
         "& .MuiOutlinedInput-root": {
@@ -60,24 +80,15 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
             boxShadow: `0 0 0 2px ${PRIMARY}33`,
           },
         },
-
-        // Label default color
         "& label": {
           color: PRIMARY,
           fontWeight: 600,
         },
-        // Label color when focused
         "& .MuiInputLabel-root.Mui-focused": {
           color: PRIMARY,
         },
-
         "& .MuiFormLabel-asterisk": {
           color: PRIMARY,
-        },
-
-        "& input::placeholder": {
-          opacity: 0.7,
-          color: "#999",
         },
       }}
     />
@@ -98,6 +109,7 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
       </Typography>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        {/* Name */}
         {renderInput(
           "Full Name",
           "fullName",
@@ -105,6 +117,8 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           errors.fullName,
           <PersonIcon sx={{ color: PRIMARY }} />
         )}
+
+        {/* Email */}
         {renderInput(
           "Email",
           "email",
@@ -112,6 +126,8 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           errors.email,
           <EmailIcon sx={{ color: PRIMARY }} />
         )}
+
+        {/* Password + Confirm Password */}
         <Box
           sx={{
             display: "flex",
@@ -119,21 +135,42 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
             flexDirection: { xs: "column", sm: "row" },
           }}
         >
+          {/* Password */}
           {renderInput(
             "Password",
             "password",
             data.password,
             errors.password,
             <LockIcon sx={{ color: PRIMARY }} />,
-            "password"
+            showPassword ? "text" : "password",
+            <InputAdornment position="end">
+              <IconButton onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? (
+                  <VisibilityOffIcon />
+                ) : (
+                  <VisibilityIcon />
+                )}
+              </IconButton>
+            </InputAdornment>
           )}
+
+          {/* Confirm Password */}
           {renderInput(
             "Confirm Password",
             "confirmPassword",
             data.confirmPassword,
             errors.confirmPassword,
             <LockIcon sx={{ color: PRIMARY }} />,
-            "password"
+            showConfirm ? "text" : "password",
+            <InputAdornment position="end">
+              <IconButton onClick={() => setShowConfirm(!showConfirm)}>
+                {showConfirm ? (
+                  <VisibilityOffIcon />
+                ) : (
+                  <VisibilityIcon />
+                )}
+              </IconButton>
+            </InputAdornment>
           )}
         </Box>
 
@@ -162,7 +199,7 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
               "&.Mui-focused fieldset": { borderColor: PRIMARY },
             },
             "& label": { color: PRIMARY, fontWeight: 600 },
-            "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY }, // Focused label color
+            "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY },
             "& .MuiFormLabel-asterisk": { color: PRIMARY },
           }}
         />
@@ -191,7 +228,7 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
               "&.Mui-focused fieldset": { borderColor: PRIMARY },
             },
             "& label": { color: PRIMARY, fontWeight: 600 },
-            "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY }, // Focused label color
+            "& .MuiInputLabel-root.Mui-focused": { color: PRIMARY },
             "& .MuiFormLabel-asterisk": { color: PRIMARY },
           }}
         >
@@ -200,8 +237,9 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           <MenuItem value="Other">Other</MenuItem>
         </TextField>
 
+        {/* Phones */}
         {renderInput(
-          "Primary Phone *",
+          "Primary Phone",
           "contact",
           data.contact,
           errors.contact,
@@ -215,26 +253,28 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
           <PhoneIphoneIcon sx={{ color: PRIMARY }} />
         )}
 
-        {/* User Type */}
+        {/* User Type Radio-like Checkboxes */}
         <Box sx={{ mt: 1 }}>
           <Typography sx={{ fontWeight: 700, color: PRIMARY, mb: 1 }}>
             Select User Type
           </Typography>
+
           <FormControlLabel
             control={
               <Checkbox
                 checked={data.isUser}
-                onChange={(e) => onChange("isUser", e.target.checked)}
+                onChange={() => handleUserTypeChange("user")}
                 sx={{ color: PRIMARY, "&.Mui-checked": { color: PRIMARY } }}
               />
             }
             label="User"
           />
+
           <FormControlLabel
             control={
               <Checkbox
                 checked={data.isHost}
-                onChange={(e) => onChange("isHost", e.target.checked)}
+                onChange={() => handleUserTypeChange("host")}
                 sx={{ color: PRIMARY, "&.Mui-checked": { color: PRIMARY } }}
               />
             }

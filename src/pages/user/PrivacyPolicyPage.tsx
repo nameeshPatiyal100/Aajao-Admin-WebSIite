@@ -19,41 +19,53 @@ const PrivacyPolicy: React.FC = () => {
 
   return (
     <Box sx={{ bgcolor: "#fafafa", minHeight: "100vh", pb: 6 }}>
-      {/* Top Banner */}
-      <Box
-        sx={{
-          position: "relative",
-          height: isMobile ? "200px" : "350px",
-          backgroundImage: `url(${termsTopImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          borderBottomLeftRadius: "50px",
-          borderBottomRightRadius: "50px",
-          overflow: "hidden",
-        }}
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            bgcolor: "rgba(0, 0, 0, 0.4)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#fff",
-            textAlign: "center",
-          }}
-        >
-          <Typography variant={isMobile ? "h5" : "h3"} fontWeight={700}>
-            AAJOO PRIVACY POLICY
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 300 }}>
-            Your privacy, our responsibility.
-          </Typography>
-        </Box>
-      </Box>
+   {/* Top Banner */}
+<Box
+  sx={{
+    position: "relative",
+    height: isMobile ? "150px" : "250px", // Smaller height
+    backgroundImage: `url(${termsTopImage})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    borderBottomLeftRadius: "40px",
+    borderBottomRightRadius: "40px",
+    overflow: "hidden",
+  }}
+>
+  <Box
+    sx={{
+      position: "absolute",
+      inset: 0,
+      bgcolor: "rgba(0, 0, 0, 0.35)",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      color: "#fff",
+      textAlign: "center",
+      px: 2,
+    }}
+  >
+    <Typography
+      variant={isMobile ? "h6" : "h4"}   // Reduced size
+      fontWeight={700}
+      sx={{ letterSpacing: 0.5 }}
+    >
+      AAJOO PRIVACY POLICY
+    </Typography>
 
+    <Typography
+      variant="body2"      // Smaller subtitle
+      sx={{
+        mt: 0.5,
+        fontWeight: 300,
+        opacity: 0.9,
+      }}
+    >
+      Your privacy, our responsibility.
+    </Typography>
+  </Box>
+</Box>
 
 
       {/* Breadcrumbs */}
@@ -106,7 +118,6 @@ const PrivacyPolicy: React.FC = () => {
             described below.
           </Typography>
         </Paper>
-
         {/* Sectioned Content */}
         {[
           {
@@ -148,20 +159,20 @@ const PrivacyPolicy: React.FC = () => {
         ].map((section, index) => (
           <Paper
             key={index}
-            elevation={2}
+            elevation={1}
             sx={{
-              p: isMobile ? 3 : 5,
-              borderRadius: "16px",
-              borderLeft: "6px solid #c14365",
+              p: isMobile ? 2.2 : 3.5,
+              borderRadius: "14px",
+              borderLeft: "4px solid #c14365",
               background: "#fff",
-              transition: "transform 0.3s",
-              "&:hover": { transform: "translateY(-5px)" },
+              transition: "transform 0.25s",
+              "&:hover": { transform: "translateY(-3px)" },
             }}
           >
-            <Typography variant="h6" fontWeight={700} gutterBottom>
+            <Typography variant="subtitle1" fontWeight={700} gutterBottom>
               {section.title}
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               {section.content}
             </Typography>
           </Paper>
