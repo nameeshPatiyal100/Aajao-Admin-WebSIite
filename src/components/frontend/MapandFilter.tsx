@@ -205,17 +205,15 @@ const MapandFilter: React.FC = () => {
             flexDirection: "row",
             flexWrap: "nowrap",
             alignItems: "center",
-
-            justifyContent: "center", // 🔥 FIX: align categories to the LEFT
-
+            justifyContent: "center",
             overflowX: "auto",
-            gap: { xs: 1, sm: 1.5, md: 2 }, // 🔥 REDUCED GAP BETWEEN ITEMS
+            gap: { xs: 1, sm: 1.5, md: 2 },
 
             py: 1,
             scrollbarWidth: "none",
             "&::-webkit-scrollbar": { display: "none" },
 
-            px: { xs: 0.5, sm: 1 }, // smaller padding so everything fits
+            px: { xs: 0.5, sm: 1 },
           }}
         >
           {categories.map((cat, index) => (
@@ -229,7 +227,7 @@ const MapandFilter: React.FC = () => {
                 cursor: "pointer",
 
                 flex: "0 0 auto",
-                minWidth: { xs: 60, sm: 75 }, // 🔥 smaller, fits more items on mobile
+                minWidth: { xs: 60, sm: 75 },
               }}
             >
               <Box
@@ -237,8 +235,8 @@ const MapandFilter: React.FC = () => {
                 src={cat.img}
                 alt={cat.label}
                 sx={{
-                  width: { xs: 28, sm: 34 }, // 🔥 smaller icons
-                  height: { xs: 28, sm: 34 },
+                  width: { xs: 28, sm: 30 },
+                  height: { xs: 28, sm: 30 },
                   objectFit: "contain",
                 }}
               />
