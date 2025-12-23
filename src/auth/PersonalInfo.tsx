@@ -60,6 +60,7 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
       value={value}
       error={!!error}
       onChange={(e) => onChange(name, e.target.value)}
+      
       helperText={error}
       FormHelperTextProps={{
         sx: { color: ERROR_COLOR, fontWeight: 600 },
