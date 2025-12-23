@@ -36,16 +36,7 @@ const AdminNavbar = () => {
 
       <div className="adminNavbarHeaderActions">
         {/* Search Input */}
-        {/* <div className="adminNavbarHeaderSearchContainer">
-          <input
-            type="text"
-            className="adminNavbarHeaderSearchInput"
-            placeholder="Search for anything..."
-          />
-          <button className="adminNavbarHeaderSearchButton">
-            <Search size={16} />
-          </button>
-        </div> */}
+    
 
         {/* Notification Bell */}
         <div className="adminNavbarHeaderButtonOfNotifications">

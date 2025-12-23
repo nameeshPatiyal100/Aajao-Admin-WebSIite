@@ -5,6 +5,12 @@ import {
   Button,
   Paper,
   Container,
+  Grid,
+  Collapse,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -14,15 +20,15 @@ import {
   Assessment,
   FilterList as FilterIcon,
 } from "@mui/icons-material";
-import { PropertyRow, GenericRow } from "../../../components/types";
+import { motion, AnimatePresence } from "framer-motion"; // ✅ Add Framer Motion
 import {
   SearchBar,
   StatCard,
   ConfirmDialog,
   PropertyListItem,
 } from "../../../components";
-import "./AdminProperties.css"; // ✅ custom CSS
 import PropertyModal from "./PropertyModal";
+import { PropertyRow, GenericRow } from "../../../components/types";
 
 const purpleTheme = {
   primary: {
@@ -92,6 +98,7 @@ export default function AdminProperties() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
 
   const handleToggle = (id: string) => {
     setRows((prev) =>
@@ -175,8 +182,16 @@ export default function AdminProperties() {
     >
       <Container maxWidth="xl" sx={{ pt: 3 }}>
         {/* Header */}
-        <div className="admin-header">
-          <div>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 2,
+            mb: 4,
+          }}
+        >
+          <Box>
             <Typography
               variant="h4"
               sx={{
@@ -193,7 +208,8 @@ export default function AdminProperties() {
             <Typography variant="body1" color="text.secondary">
               Manage and monitor all properties in your portfolio
             </Typography>
-          </div>
+          </Box>
+
           <Button
             variant="contained"
             startIcon={<AddIcon />}
@@ -209,15 +225,17 @@ export default function AdminProperties() {
           >
             Add Property
           </Button>
-        </div>
-  
+        </Box>
+
         {/* Stats Section */}
-        <div className="stats-grid">
+        <Grid container spacing={3} sx={{ mb: 4 }}>
           {stats.map((stat, i) => (
-            <StatCard {...stat} key={i} />
+            <Grid item xs={12} sm={6} md={3} key={i}>
+              <StatCard {...stat} />
+            </Grid>
           ))}
-        </div>
-  
+        </Grid>
+
         {/* Search + Filter */}
         <Paper
           elevation={0}
@@ -229,51 +247,134 @@ export default function AdminProperties() {
             overflow: "hidden",
           }}
         >
-          <div className="search-filter">
-            <div className="search-box">
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 2,
+              p: 3,
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ flex: 2, minWidth: 250 }}>
               <SearchBar
                 placeholder="Search properties by name, location, or type..."
                 value={searchTerm}
                 onChange={setSearchTerm}
                 color={purpleTheme.primary.main}
               />
-            </div>
-            <div className="filter-btn">
+            </Box>
+            <Box sx={{ flex: 1, minWidth: 200 }}>
               <Button
                 startIcon={<FilterIcon />}
                 variant="outlined"
                 fullWidth
+                onClick={() => setShowAdvancedFilter((prev) => !prev)}
                 sx={{
                   borderRadius: 3,
                   py: 1.5,
+                  color: purpleTheme.primary.main,
                   fontWeight: 500,
                   textTransform: "none",
                 }}
               >
                 Advanced Filter
               </Button>
-            </div>
-          </div>
-  
-          {/* ✅ Property List */}
-          <div className="property-list">
-            {filteredRows.map((row) => (
-              <div className="property-item" key={row.id}>
-                <PropertyListItem
-                  row={row}
-                  onToggle={handleToggle}
-                  onView={handleView}
-                  onDelete={handleDelete}
-                  theme={purpleTheme}
-                  formatDate={formatDate}
-                  variant="property"
-                  editable={true}
-                />
-              </div>
-            ))}
-          </div>
+            </Box>
+          </Box>
+
+          {/* Advanced Filter Section */}
+          <Collapse in={showAdvancedFilter} timeout="auto" unmountOnExit>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 2,
+                p: 3,
+                borderTop: "1px solid",
+                borderColor: "grey.100",
+                bgcolor: "#FAFAFA",
+                transition: "all 0.3s ease",
+              }}
+            >
+              <Button variant="contained" color="primary">
+                Filter by Active
+              </Button>
+              <Button variant="outlined" color="primary">
+                Filter by Type
+              </Button>
+
+              <FormControl sx={{ minWidth: 180 }}>
+                <InputLabel>Property Type</InputLabel>
+                <Select defaultValue="">
+                  <MenuItem value="">All Types</MenuItem>
+                  <MenuItem value="Residential">Residential</MenuItem>
+                  <MenuItem value="Commercial">Commercial</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl sx={{ minWidth: 180 }}>
+                <InputLabel>Location</InputLabel>
+                <Select defaultValue="">
+                  <MenuItem value="">All Locations</MenuItem>
+                  <MenuItem value="Beverly Hills">Beverly Hills</MenuItem>
+                  <MenuItem value="Manhattan">Manhattan</MenuItem>
+                  <MenuItem value="Miami Beach">Miami Beach</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Collapse>
+
+          {/* Property List with Animation */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              p: 2.5,
+            }}
+          >
+            <AnimatePresence>
+              {filteredRows.map((row) => (
+                <motion.div
+                  key={row.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      background: purpleTheme.background.paper,
+                      borderRadius: 3,
+                      p: 2.5,
+                      boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.06)",
+                      "&:hover": {
+                        transform: "translateY(-3px)",
+                        boxShadow: `0px 6px 12px ${purpleTheme.primary.main}25`,
+                      },
+                      flexWrap: { xs: "wrap", md: "nowrap" },
+                    }}
+                  >
+                    <PropertyListItem
+                      row={row}
+                      onToggle={handleToggle}
+                      onView={handleView}
+                      onDelete={handleDelete}
+                      formatDate={formatDate}
+                      variant="property"
+                      editable={true}
+                    />
+                  </Box>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </Box>
         </Paper>
-  
+
         {/* Confirm Delete Modal */}
         <ConfirmDialog
           open={isDeleteModalOpen}
@@ -286,18 +387,14 @@ export default function AdminProperties() {
           confirmText="Delete Property"
           cancelText="Cancel"
         />
-  
-        {/* ✅ Property Add/Edit Modal */}
+
+        {/* Add/Edit Property Modal */}
         <PropertyModal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSubmit={() => {
-            // setRows((prev) => [...prev, newProperty]);
-            setIsModalOpen(false);
-          }}
+          onSubmit={() => setIsModalOpen(false)}
         />
       </Container>
     </Box>
   );
-  
 }

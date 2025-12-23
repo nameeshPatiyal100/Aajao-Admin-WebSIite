@@ -168,3 +168,46 @@ export const faqs = [
       "You can contact AAJOO support via in-app chat, email, or WhatsApp support for any help during your stay.",
   },
 ];
+
+export const AdminPropDummyData = [
+  {
+    id: "P001",
+    name: "Sunset Villa",
+    email: "owner@sunsetvilla.com",
+    date: "2025-08-10",
+    active: true,
+    type: "Residential",
+    value: "$1,250,000",
+    location: "Beverly Hills, CA",
+  },
+  {
+    id: "P002",
+    name: "Downtown Loft",
+    email: "contact@dtloft.com",
+    date: "2025-08-12",
+    active: false,
+    type: "Commercial",
+    value: "$850,000",
+    location: "Manhattan, NY",
+  },
+  {
+    id: "P003",
+    name: "Ocean View Condo",
+    email: "info@oceanview.com",
+    date: "2025-08-15",
+    active: true,
+    type: "Residential",
+    value: "$980,000",
+    location: "Miami Beach, FL",
+  },
+  {
+    id: "P004",
+    name: "City Center Plaza",
+    email: "admin@cityplaza.com",
+    date: "2025-08-18",
+    active: true,
+    type: "Commercial",
+    value: "$2,100,000",
+    location: "Chicago, IL",
+  },
+];
