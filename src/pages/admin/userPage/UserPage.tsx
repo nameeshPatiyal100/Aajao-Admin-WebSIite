@@ -22,8 +22,6 @@ import {
   Visibility as VisibilityIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-
-  
 } from "@mui/icons-material";
 import { faker } from "@faker-js/faker";
 import {
@@ -50,25 +48,21 @@ interface Attendant {
   date: string;
   status: "Active" | "Inactive";
 }
+type ModalMode = "add" | "view" | "edit";
 
 export default function UserManagementPage() {
 
-
+  const [modalMode, setModalMode] = useState<ModalMode>("add");
   // State Management
   const [data, setData] = useState<Attendant[]>([]);
   const [filteredData, setFilteredData] = useState<Attendant[]>([]);
   const [page, setPage] = useState(0);
-  // const [filterOpen, setFilterOpen] = useState<boolean>(true);
-  // const [activeStatus, setActiveStatus] = useState<"Active" | "Inactive">("Active");
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isInactive, setIsInactive] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter] = useState<"Active" | "Inactive" | "">(
     ""
   );
-
-  // Modal and Menu States
-  // const [ setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<Attendant | null>(null);
@@ -133,32 +127,39 @@ export default function UserManagementPage() {
       setSelectedUser(null);
     }
   };
-
-  // const handleMenuOpen = (
-  //   event: React.MouseEvent<HTMLElement>,
-  //   user: Attendant
-  // ) => {
-  //   setAnchorEl(event.currentTarget);
-  //   setSelectedUser(user);
-  // };
-
-  // const handleMenuClose = () => {
-  //   setAnchorEl(null);
-  //   setSelectedUser(null);
-  // };
-
   const renderUserActions = (user: Attendant) => (
     <>
-      <Tooltip title="View Details">
-        <IconButton size="small" sx={{ color: COLORS.primary, mr: 1 }}>
-          <VisibilityIcon fontSize="small" />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Edit User">
-        <IconButton size="small" sx={{ color: COLORS.secondary, mr: 1 }}>
-          <EditIcon fontSize="small" />
-        </IconButton>
-      </Tooltip>
+     <Tooltip title="View Details">
+  <IconButton
+    size="small"
+    sx={{ color: COLORS.primary, mr: 1 }}
+    onClick={() => {
+      setSelectedUser(user);
+      setModalMode("view");
+      setIsAddModalOpen(true);
+    }}
+  >
+    <VisibilityIcon fontSize="small" />
+  </IconButton>
+</Tooltip>
+
+
+
+<Tooltip title="Edit User">
+  <IconButton
+    size="small"
+    sx={{ color: COLORS.secondary, mr: 1 }}
+    onClick={() => {
+      setSelectedUser(user);
+      setModalMode("edit");
+      setIsAddModalOpen(true);
+    }}
+  >
+    <EditIcon fontSize="small" />
+  </IconButton>
+</Tooltip>
+
+
       <Tooltip title="Delete User">
         <IconButton
           size="small"
@@ -174,14 +175,6 @@ export default function UserManagementPage() {
     </>
   );
 
-  // const handleToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   const newState = !filterOpen;
-  //   setFilterOpen(newState);
-  //   console.log("Filter active:", newState);
-
-  //   // You can do something like:
-  //   // setFilterAnchorEl(newState ? e.currentTarget : null);
-  // };
 
   return (
     <Box
@@ -244,7 +237,6 @@ export default function UserManagementPage() {
 
             <Button
               variant="contained"
-              // onChange={(e) => setSearchTerm(e.target.value)}
               sx={{
                 background: COLORS.primary,
               }}
@@ -297,7 +289,12 @@ export default function UserManagementPage() {
           {/* Add User Button */}
           <Button
             variant="contained"
-            onClick={() => setIsAddModalOpen(true)}
+            // onClick={() => setIsAddModalOpen(true)}
+            onClick={() => {
+              setSelectedUser(null);
+              setModalMode("add");
+              setIsAddModalOpen(true);
+            }}
             sx={{
               backgroundColor: COLORS.primary,
               borderRadius: 2,
@@ -422,9 +419,11 @@ export default function UserManagementPage() {
       />
 
       <AddUserModal
-        open={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAddUser={handleAddUser}
+       open={isAddModalOpen}
+       onClose={() => setIsAddModalOpen(false)}
+       onAddUser={handleAddUser}
+       mode={modalMode}
+       user={selectedUser}
       />
     </Box>
   );

@@ -1,17 +1,6 @@
 import { useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  Paper,
-  Container,
-  Grid,
-  Collapse,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
+import { Box, Typography, Button, Paper, Container } from "@mui/material";
+
 import {
   Add as AddIcon,
   TrendingUp,
@@ -20,35 +9,32 @@ import {
   Assessment,
   FilterList as FilterIcon,
 } from "@mui/icons-material";
-import { motion, AnimatePresence } from "framer-motion"; // ✅ Add Framer Motion
+import { motion, AnimatePresence } from "framer-motion";
+
 import {
   SearchBar,
   StatCard,
   ConfirmDialog,
   PropertyListItem,
 } from "../../../components";
+
 import PropertyModal from "./PropertyModal";
+import AdvancedFilters from "./AdvancedFilters";
+
 import { PropertyRow, GenericRow } from "../../../components/types";
 
-const purpleTheme = {
-  primary: {
-    main: "#7C3AED",
-    light: "#A855F7",
-    dark: "#5B21B6",
-    contrastText: "#FFFFFF",
-  },
-  secondary: {
-    main: "#EC4899",
-    light: "#F472B6",
-    dark: "#BE185D",
-  },
-  background: {
-    default: "#F8FAFC",
-    paper: "#FFFFFF",
-  },
-};
+/* ===================== COLORS ===================== */
+
+const PRIMARY_COLOR = "#5B21B6"; // 🔥 PURPLE.dark
+const PRIMARY_LIGHT = "#E9D5FF";
+const SECONDARY_COLOR = "#A855F7";
+const BACKGROUND_COLOR = "#F9FAFB";
+
+/* ---------------------------------- */
 
 export default function AdminProperties() {
+  /* ===================== STATE ===================== */
+
   const [rows, setRows] = useState<PropertyRow[]>([
     {
       id: "P001",
@@ -70,69 +56,76 @@ export default function AdminProperties() {
       value: "$850,000",
       location: "Manhattan, NY",
     },
-    {
-      id: "P003",
-      name: "Ocean View Condo",
-      email: "info@oceanview.com",
-      date: "2025-08-15",
-      active: true,
-      type: "Residential",
-      value: "$980,000",
-      location: "Miami Beach, FL",
-    },
-    {
-      id: "P004",
-      name: "City Center Plaza",
-      email: "admin@cityplaza.com",
-      date: "2025-08-18",
-      active: true,
-      type: "Commercial",
-      value: "$2,100,000",
-      location: "Chicago, IL",
-    },
   ]);
 
-  const [selectedProperty, setSelectedProperty] = useState<PropertyRow | null>(
-    null
-  );
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
 
+  const [statusFilter, setStatusFilter] = useState<
+    "active" | "inactive" | null
+  >(null);
+  const [category, setCategory] = useState("");
+  const [date, setDate] = useState<any>(null);
+  const [price, setPrice] = useState("");
+  const [rating, setRating] = useState("");
+
+  const [selectedProperty, setSelectedProperty] =
+    useState<PropertyRow | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  /* ===================== HANDLERS ===================== */
+
   const handleToggle = (id: string) => {
     setRows((prev) =>
-      prev.map((row) => (row.id === id ? { ...row, active: !row.active } : row))
+      prev.map((row) =>
+        row.id === id ? { ...row, active: !row.active } : row
+      )
     );
   };
 
+  const handleFilterSubmit = () => {
+    const payload = {
+      status: statusFilter,
+      category,
+      date,
+      price,
+      rating,
+    };
+
+    console.log("Filter Payload →", payload);
+    // 🔥 API call goes here
+  };
+
+  const handleClearFilters = () => {
+    setStatusFilter(null);
+    setCategory("");
+    setDate(null);
+    setPrice("");
+    setRating("");
+  };
+
   const handleView = (id: string) => {
-    alert("Viewing details for property " + id);
+    alert("Viewing property " + id);
   };
 
   const handleDelete = (row: GenericRow | PropertyRow | string) => {
-    if (typeof row === "string") {
-      setSelectedProperty(rows.find((r) => r.id === row) || null);
-    } else {
-      setSelectedProperty(row as PropertyRow);
-    }
+    const selected =
+      typeof row === "string"
+        ? rows.find((r) => r.id === row)
+        : (row as PropertyRow);
+
+    setSelectedProperty(selected || null);
     setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = () => {
-    if (selectedProperty) {
-      setRows((prev) => prev.filter((row) => row.id !== selectedProperty.id));
-      setIsDeleteModalOpen(false);
-      setSelectedProperty(null);
-    }
+    if (!selectedProperty) return;
+    setRows((prev) => prev.filter((r) => r.id !== selectedProperty.id));
+    setIsDeleteModalOpen(false);
   };
 
-  const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+  /* ===================== FILTERING ===================== */
 
   const filteredRows = rows.filter(
     (row) =>
@@ -141,24 +134,26 @@ export default function AdminProperties() {
       row.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  /* ===================== STATS ===================== */
+
   const stats = [
     {
       label: "Total Properties",
       value: rows.length.toString(),
       icon: Business,
-      color: purpleTheme.primary.main,
-      bgColor: `${purpleTheme.primary.main}15`,
+      color: PRIMARY_COLOR,
+      bgColor: `${PRIMARY_COLOR}15`,
     },
     {
       label: "Active Properties",
       value: rows.filter((r) => r.active).length.toString(),
       icon: Assessment,
-      color: "#10B981",
-      bgColor: "#10B98115",
+      color: "#16A34A",
+      bgColor: "#16A34A15",
     },
     {
       label: "Total Value",
-      value: "$5.28M",
+      value: "$2.1M",
       icon: TrendingUp,
       color: "#3B82F6",
       bgColor: "#3B82F615",
@@ -172,16 +167,12 @@ export default function AdminProperties() {
     },
   ];
 
+  /* ===================== UI ===================== */
+
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        bgcolor: purpleTheme.background.default,
-        pb: 4,
-      }}
-    >
-      <Container maxWidth="xl" sx={{ pt: 3 }}>
-        {/* Header */}
+    <Box sx={{ minHeight: "100vh", bgcolor: BACKGROUND_COLOR }}>
+      <Container maxWidth="xl" sx={{ py: 3 }}>
+        {/* HEADER */}
         <Box
           sx={{
             display: "flex",
@@ -195,31 +186,37 @@ export default function AdminProperties() {
             <Typography
               variant="h4"
               sx={{
-                fontWeight: 700,
-                background: `linear-gradient(135deg, ${purpleTheme.primary.main}, ${purpleTheme.secondary.main})`,
-                backgroundClip: "text",
+                fontWeight: 800,
+                background: `linear-gradient(
+                  135deg,
+                  ${PRIMARY_COLOR},
+                  ${SECONDARY_COLOR}
+                )`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                mb: 1,
               }}
             >
               Property Management
             </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Manage and monitor all properties in your portfolio
+            <Typography color="text.secondary">
+              Manage and monitor all properties
             </Typography>
           </Box>
 
           <Button
-            variant="contained"
             startIcon={<AddIcon />}
             onClick={() => setIsModalOpen(true)}
             sx={{
-              background: `linear-gradient(135deg, ${purpleTheme.primary.main}, ${purpleTheme.primary.light})`,
-              borderRadius: 3,
+              background: `linear-gradient(
+                135deg,
+                ${PRIMARY_COLOR},
+                ${PRIMARY_LIGHT}
+              )`,
+              color: "#fff",
               px: 4,
               py: 1.5,
-              fontWeight: 600,
+              fontWeight: 700,
+              borderRadius: 3,
               textTransform: "none",
             }}
           >
@@ -227,136 +224,86 @@ export default function AdminProperties() {
           </Button>
         </Box>
 
-        {/* Stats Section */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          {stats.map((stat, i) => (
-            <Grid item xs={12} sm={6} md={3} key={i}>
-              <StatCard {...stat} />
-            </Grid>
-          ))}
-        </Grid>
-
-        {/* Search + Filter */}
-        <Paper
-          elevation={0}
+        {/* STATS */}
+        <Box
           sx={{
-            borderRadius: 4,
-            border: "1px solid",
-            borderColor: "grey.100",
-            mb: 3,
-            overflow: "hidden",
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2,1fr)",
+              md: "repeat(4,1fr)",
+            },
+            gap: 3,
+            mb: 4,
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 2,
-              p: 3,
-              alignItems: "center",
-            }}
-          >
-            <Box sx={{ flex: 2, minWidth: 250 }}>
+          {stats.map((stat, i) => (
+            <StatCard key={i} {...stat} />
+          ))}
+        </Box>
+
+        {/* SEARCH + FILTER */}
+        <Paper sx={{ borderRadius: 4, mb: 3 }}>
+          <Box sx={{ p: 3, display: "flex", gap: 2, flexWrap: "wrap" }}>
+            <Box sx={{ flex: 2, minWidth: 260 }}>
               <SearchBar
-                placeholder="Search properties by name, location, or type..."
                 value={searchTerm}
                 onChange={setSearchTerm}
-                color={purpleTheme.primary.main}
+                placeholder="Search properties..."
+                color={PRIMARY_COLOR}
               />
             </Box>
+
             <Box sx={{ flex: 1, minWidth: 200 }}>
               <Button
-                startIcon={<FilterIcon />}
-                variant="outlined"
                 fullWidth
-                onClick={() => setShowAdvancedFilter((prev) => !prev)}
+                startIcon={<FilterIcon />}
+                onClick={() => setShowAdvancedFilter((p) => !p)}
                 sx={{
-                  borderRadius: 3,
                   py: 1.5,
-                  color: purpleTheme.primary.main,
-                  fontWeight: 500,
+                  borderRadius: 3,
+                  fontWeight: 600,
+                  color: PRIMARY_COLOR,
+                  border: `1px solid ${PRIMARY_COLOR}`,
                   textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: `${PRIMARY_COLOR}10`,
+                  },
                 }}
               >
-                Advanced Filter
+                Advanced Filters
               </Button>
             </Box>
           </Box>
+          {/* ADVANCED FILTERS COMPONENT */}
+          <AdvancedFilters
+            open={showAdvancedFilter}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            category={category}
+            setCategory={setCategory}
+            date={date}
+            setDate={setDate}
+            price={price}
+            setPrice={setPrice}
+            rating={rating}
+            setRating={setRating}
+            onApply={handleFilterSubmit}
+            onClear={handleClearFilters}
+          />
 
-          {/* Advanced Filter Section */}
-          <Collapse in={showAdvancedFilter} timeout="auto" unmountOnExit>
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 2,
-                p: 3,
-                borderTop: "1px solid",
-                borderColor: "grey.100",
-                bgcolor: "#FAFAFA",
-                transition: "all 0.3s ease",
-              }}
-            >
-              <Button variant="contained" color="primary">
-                Filter by Active
-              </Button>
-              <Button variant="outlined" color="primary">
-                Filter by Type
-              </Button>
-
-              <FormControl sx={{ minWidth: 180 }}>
-                <InputLabel>Property Type</InputLabel>
-                <Select defaultValue="">
-                  <MenuItem value="">All Types</MenuItem>
-                  <MenuItem value="Residential">Residential</MenuItem>
-                  <MenuItem value="Commercial">Commercial</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl sx={{ minWidth: 180 }}>
-                <InputLabel>Location</InputLabel>
-                <Select defaultValue="">
-                  <MenuItem value="">All Locations</MenuItem>
-                  <MenuItem value="Beverly Hills">Beverly Hills</MenuItem>
-                  <MenuItem value="Manhattan">Manhattan</MenuItem>
-                  <MenuItem value="Miami Beach">Miami Beach</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-          </Collapse>
-
-          {/* Property List with Animation */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              p: 2.5,
-            }}
-          >
+          {/* PROPERTY LIST */}
+          <Box sx={{ p: 2.5 }}>
             <AnimatePresence>
               {filteredRows.map((row) => (
-                <motion.div
-                  key={row.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <motion.div key={row.id}>
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      background: purpleTheme.background.paper,
-                      borderRadius: 3,
+                      mb: 2,
                       p: 2.5,
-                      boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.06)",
-                      "&:hover": {
-                        transform: "translateY(-3px)",
-                        boxShadow: `0px 6px 12px ${purpleTheme.primary.main}25`,
-                      },
-                      flexWrap: { xs: "wrap", md: "nowrap" },
+                      borderRadius: 3,
+                      bgcolor: "#fff",
+                      boxShadow: "0 3px 6px rgba(0,0,0,0.06)",
                     }}
                   >
                     <PropertyListItem
@@ -364,9 +311,8 @@ export default function AdminProperties() {
                       onToggle={handleToggle}
                       onView={handleView}
                       onDelete={handleDelete}
-                      formatDate={formatDate}
+                      editable
                       variant="property"
-                      editable={true}
                     />
                   </Box>
                 </motion.div>
@@ -375,7 +321,7 @@ export default function AdminProperties() {
           </Box>
         </Paper>
 
-        {/* Confirm Delete Modal */}
+        {/* MODALS */}
         <ConfirmDialog
           open={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
@@ -383,12 +329,9 @@ export default function AdminProperties() {
           title="Confirm Delete"
           message="Are you sure you want to delete"
           highlight={selectedProperty?.name || ""}
-          highlightColor={purpleTheme.primary.main}
-          confirmText="Delete Property"
-          cancelText="Cancel"
+          highlightColor={PRIMARY_COLOR}
         />
 
-        {/* Add/Edit Property Modal */}
         <PropertyModal
           open={isModalOpen}
           onClose={() => setIsModalOpen(false)}

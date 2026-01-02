@@ -24,11 +24,15 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { useEffect } from "react";
 
 interface AddUserModalProps {
   open: boolean;
   onClose: () => void;
   onAddUser: (user: any) => void;
+  mode: "add" | "view" | "edit";
+  user: any | null;
 }
 
 interface FormValues {
@@ -69,6 +73,8 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
   open,
   onClose,
   onAddUser,
+  mode,
+  user,
 }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -93,10 +99,13 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
     },
     validationSchema,
     onSubmit: (values) => {
+      if (mode === "view") return;
+
       onAddUser({
         ...values,
         dob: values.dob ? values.dob.format("YYYY-MM-DD") : null,
       });
+
       handleCancel();
     },
   });
@@ -123,6 +132,34 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
     }
   };
 
+  useEffect(() => {
+    if ((mode === "view" || mode === "edit") && user) {
+      formik.setValues({
+        name: user.name || "",
+        dob: user.dob ? dayjs(user.dob) : null,
+        email: user.email || "",
+        address: user.address || "",
+        phone: user.phone || "",
+        city: user.city || "",
+        zipcode: user.zipcode || "",
+        status: user.status || "",
+        verification: user.verification || "",
+        username: user.username || "",
+        password: "",
+        referralCode: user.referralCode || "",
+        user: true,
+        host: false,
+        image: null,
+      });
+    }
+
+    if (mode === "add") {
+      formik.resetForm();
+      setImagePreview(null);
+    }
+  }, [mode, user, open]);
+  const isViewMode = mode === "view";
+
   return (
     <Modal open={open} onClose={handleCancel}>
       <Box sx={modalStyles.container}>
@@ -131,7 +168,11 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
         </IconButton>
 
         <Typography variant="h5" sx={modalStyles.title}>
-          Add New User
+          {mode === "add"
+            ? "Add New User"
+            : mode === "edit"
+              ? "Edit User"
+              : "User Details"}
         </Typography>
 
         <form onSubmit={formik.handleSubmit}>
@@ -151,6 +192,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
                 <FormControl key={field.name} sx={modalStyles.formControl}>
                   <FormLabel sx={modalStyles.label}>{field.label}</FormLabel>
                   <Input
+                    disabled={isViewMode}
                     name={field.name}
                     type={field.type || "text"}
                     value={(formik.values as any)[field.name]}
@@ -175,6 +217,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               <FormControl sx={modalStyles.formControl}>
                 <FormLabel sx={modalStyles.label}>Date of Birth</FormLabel>
                 <DatePicker
+                  disabled={isViewMode}
                   value={formik.values.dob}
                   onChange={(date) => formik.setFieldValue("dob", date)}
                   slotProps={{
@@ -204,6 +247,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               <FormControl sx={modalStyles.formControl}>
                 <FormLabel sx={modalStyles.label}>Status</FormLabel>
                 <Select
+                  disabled={isViewMode}
                   name="status"
                   value={formik.values.status}
                   onChange={formik.handleChange}
@@ -222,6 +266,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               <FormControl sx={modalStyles.formControl}>
                 <FormLabel sx={modalStyles.label}>Verification</FormLabel>
                 <Select
+                  disabled={isViewMode}
                   name="verification"
                   value={formik.values.verification}
                   onChange={formik.handleChange}
@@ -247,6 +292,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               >
                 <FormLabel sx={modalStyles.label}>Address</FormLabel>
                 <TextareaAutosize
+                  disabled={isViewMode}
                   name="address"
                   minRows={3}
                   value={formik.values.address}
@@ -275,6 +321,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
             <FormControl>
               <Box sx={modalStyles.checkboxWrapper}>
                 <Checkbox
+                  disabled={isViewMode}
                   name="user"
                   checked={formik.values.user}
                   onChange={formik.handleChange}
@@ -331,6 +378,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
               <Avatar sx={{ width: 120, height: 120, mb: 2 }} />
             )}
             <input
+              disabled={isViewMode}
               type="file"
               accept="image/*"
               hidden
@@ -370,13 +418,15 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ bgcolor: "#881f9b" }}
-            >
-              Add User
-            </Button>
+            {mode !== "view" && (
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{ bgcolor: "#881f9b" }}
+              >
+                {mode === "edit" ? "Update User" : "Add User"}
+              </Button>
+            )}
           </Box>
         </form>
       </Box>
