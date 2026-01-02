@@ -15,7 +15,7 @@ import AdminBooking from "./pages/admin/adminBooking/AdminBooking";
 import { Toaster } from "react-hot-toast";
 import {
   AdminAmmenities,
-  AdminCategory,
+  // AdminCategory,
   AdminLogin,
   AdminProperties,
   AdminPropertyTags,
@@ -40,6 +40,7 @@ import {
   TermsAndConditions,
   WhyHostsListWithAajoo,
   PrivacyPolicyPage,
+  PropertyCategory
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -129,7 +130,8 @@ function App() {
           <Route path="transactions" element={<Transactions />} />
           <Route path="properties" element={<AdminProperties />} />
           <Route path="tags" element={<AdminPropertyTags />} />
-          <Route path="categories" element={<AdminCategory />} />
+          {/* <Route path="categories" element={<AdminCategory />} /> */}
+          <Route path="categories" element={<PropertyCategory />} />
           <Route path="ammenities" element={<AdminAmmenities />} />
           <Route
             path="property-verification"
