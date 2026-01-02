@@ -1,47 +1,56 @@
-import {
-  Box,
-  Button,
-  Stack,
-  Typography,
-  TextField,
-  MenuItem,
-} from "@mui/material";
-import { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
+import { Box, Button, Stack, Typography, TextField, MenuItem } from "@mui/material";
+import { PurpleThemeColor } from "../../../theme/themeColor";
 
-export default function SearchBar(props) {
-  const {
-    COLORS,
-    filterData,
-    handleFilterUpdate,
-    handleFilter,
-    handleClear,
-    handleFormShow,
-  } = props;
+interface SearchBarProps {
+  COLORS: {
+    primary: string;
+    secondary?: string;
+    background?: string;
+    text?: {
+      primary?: string;
+      secondary?: string;
+    };
+  };
+  filterData: {
+    status: string;
+    [key: string]: any;
+  };
+  handleFilterUpdate: (key: string, value: any, apply: boolean) => void;
+  handleFilter: () => void;
+  handleClear: () => void;
+  handleFormShow: (id?: string) => void; // <-- now optional string
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({
+  COLORS,
+  filterData,
+  handleFilterUpdate,
+  handleFilter,
+  handleClear,
+  handleFormShow,
+}) => {
   const [searchItem, setSearchItem] = useState("");
-  const handleInputChange = (event) => {
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchItem(event.target.value);
     handleFilterUpdate("keyword", event.target.value, false);
   };
+
   const handleCancel = () => {
     setSearchItem("");
     handleClear();
   };
+
   return (
-    <Box
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-      mb={4}
-      flexWrap="wrap"
-      gap={2}
-    >
+    <Box display="flex" flexDirection="column" gap={3} mb={4}>
       <Box
         display="flex"
         alignItems="center"
         gap={2}
         flexWrap="wrap"
-        justifyContent={"space-between"}
-        width={"100%"}
+        justifyContent="space-between"
+        width="100%"
       >
         <Typography
           variant="h4"
@@ -52,10 +61,10 @@ export default function SearchBar(props) {
         >
           Property Category
         </Typography>
-        {/* Add Category Button */}
+
         <Button
           variant="contained"
-          onClick={() => handleFormShow(0)}
+          onClick={() => handleFormShow()} // <-- no id needed for Add
           sx={{
             backgroundColor: COLORS.primary,
             borderRadius: 2,
@@ -68,18 +77,29 @@ export default function SearchBar(props) {
         </Button>
       </Box>
 
-      <form onSubmit={(e) => { e.preventDefault(); handleFilter();}}>
+      <form
+        onSubmit={(e: FormEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          handleFilter();
+        }}
+      >
         <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
-          {/* Search Text */}
+          {/* Search TextField */}
           <TextField
             label="Search name or email"
             variant="outlined"
             size="small"
             value={searchItem}
-            onChange={(e) => {
-              handleInputChange(e);
+            onChange={handleInputChange}
+            sx={{
+              minWidth: 220,
+              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                borderColor: PurpleThemeColor,
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: PurpleThemeColor,
+              },
             }}
-            sx={{ minWidth: 220 }}
           />
 
           {/* Status Select */}
@@ -89,10 +109,18 @@ export default function SearchBar(props) {
             size="small"
             name="status"
             value={filterData.status}
-            onChange={(e) => {
-              handleFilterUpdate("status", e.target.value, true);
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleFilterUpdate("status", e.target.value, true)
+            }
+            sx={{
+              minWidth: 160,
+              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                borderColor: PurpleThemeColor,
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: PurpleThemeColor,
+              },
             }}
-            sx={{ minWidth: 160 }}
           >
             <MenuItem value="">Select</MenuItem>
             <MenuItem value="1">Active</MenuItem>
@@ -104,11 +132,7 @@ export default function SearchBar(props) {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
-              sx={{
-                background: COLORS.primary,
-              }}
-              onClick={() => handleFilter()}
+              sx={{ background: COLORS.primary }}
             >
               Search
             </Button>
@@ -116,9 +140,7 @@ export default function SearchBar(props) {
             <Button
               variant="outlined"
               color="secondary"
-              onClick={() => {
-                handleCancel();
-              }}
+              onClick={handleCancel}
             >
               Clear
             </Button>
@@ -127,4 +149,6 @@ export default function SearchBar(props) {
       </form>
     </Box>
   );
-}
+};
+
+export default SearchBar;

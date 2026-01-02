@@ -400,6 +400,8 @@ export default function Transactions() {
         open={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAddUser={handleAddUser}
+        mode={selectedUser ? "edit" : "add"}
+        user={selectedUser}
       />
     </Box>
   );

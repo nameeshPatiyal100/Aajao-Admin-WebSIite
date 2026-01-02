@@ -1,0 +1,1 @@
+export const PurpleThemeColor = "#881f9b";

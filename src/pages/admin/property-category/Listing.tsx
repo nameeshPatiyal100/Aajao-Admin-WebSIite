@@ -16,10 +16,11 @@ import {
 
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
+import { PurpleThemeColor } from "../../../theme/themeColor";
 
 interface ListingProps {
   COLORS: { text: { secondary: string }; secondary: string };
-  categoryListing: { id: string; name: string; status: string }[];
+  categoryListing: { id: string; name: string; status: "0" | "1" }[];
   totalRecords: number;
   loading: boolean;
   handleFormShow: (id: string) => void;
@@ -30,26 +31,25 @@ interface ListingProps {
   handleDeleteClick: (id: string) => void;
 }
 
-export default function Listing(props: ListingProps) {
-  const {
-    COLORS,
-    categoryListing,
-    totalRecords,
-    loading,
-    handleFormShow,
-    handlePaginate,
-    page,
-    rowsPerPage,
-    handleToggleActive,
-    handleDeleteClick,
-  } = props;
-
+export default function Listing({
+  COLORS,
+  categoryListing,
+  totalRecords,
+  loading,
+  handleFormShow,
+  handlePaginate,
+  page,
+  rowsPerPage,
+  handleToggleActive,
+  handleDeleteClick,
+}: ListingProps) {
   return (
     <Paper
       elevation={0}
       sx={{
         borderRadius: 3,
         overflow: "hidden",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
       }}
     >
       <TableContainer>
@@ -62,7 +62,7 @@ export default function Listing(props: ListingProps) {
                   sx={{
                     fontWeight: 600,
                     color: COLORS.text.secondary,
-                    fontSize: "0.8rem",
+                    fontSize: "0.85rem",
                   }}
                 >
                   {header}
@@ -75,7 +75,7 @@ export default function Listing(props: ListingProps) {
             {loading ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
-                  <CircularProgress size={24} />
+                  <CircularProgress size={28} />
                 </TableCell>
               </TableRow>
             ) : categoryListing.length === 0 ? (
@@ -95,20 +95,29 @@ export default function Listing(props: ListingProps) {
                   key={user.id}
                   hover
                   sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    transition: "background-color 0.2s",
-                    fontSize: "0.7rem",
+                    transition: "all 0.3s ease",
+                    "&:hover": { backgroundColor: "#f5f3ff" },
+                    fontSize: "0.8rem",
                   }}
                 >
                   <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
 
-                  <TableCell sx={{ fontSize: "0.8rem" }}>{user.name}</TableCell>
+                  <TableCell sx={{ fontSize: "0.85rem" }}>{user.name}</TableCell>
 
-                  <TableCell sx={{ fontSize: "0.8rem" }}>
+                  <TableCell>
                     <Switch
                       size="small"
                       checked={user.status === "1"}
                       onChange={() => handleToggleActive(user.id)}
+                      sx={{
+                        "& .MuiSwitch-switchBase.Mui-checked": {
+                          color: PurpleThemeColor,
+                        },
+                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                          backgroundColor: PurpleThemeColor,
+                        },
+                        transition: "all 0.3s ease",
+                      }}
                     />
                   </TableCell>
 
@@ -116,7 +125,12 @@ export default function Listing(props: ListingProps) {
                     <Tooltip title="Edit Category">
                       <IconButton
                         size="small"
-                        sx={{ color: COLORS.secondary, mr: 1 }}
+                        sx={{
+                          color: COLORS.secondary,
+                          mr: 1,
+                          transition: "all 0.3s ease",
+                          "&:hover": { transform: "scale(1.1)" },
+                        }}
                         onClick={() => handleFormShow(user.id)}
                       >
                         <EditIcon fontSize="small" />
@@ -126,7 +140,11 @@ export default function Listing(props: ListingProps) {
                     <Tooltip title="Delete Category">
                       <IconButton
                         size="small"
-                        sx={{ color: "error.main" }}
+                        sx={{
+                          color: "error.main",
+                          transition: "all 0.3s ease",
+                          "&:hover": { transform: "scale(1.1)" },
+                        }}
                         onClick={() => handleDeleteClick(user.id)}
                       >
                         <DeleteIcon fontSize="small" />

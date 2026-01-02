@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Modal,
   Box,
@@ -5,26 +6,26 @@ import {
   IconButton,
   Button,
   FormControl,
-  FormLabel,
-  Input,
   FormHelperText,
   MenuItem,
   Select,
+  OutlinedInput,
+  InputLabel,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import { PurpleThemeColor } from "../../../theme/themeColor";
+// import * as Yup from "yup";
+import { addUpdateFormValidationSchema } from "../../../validations/property-category";
 
-const validationSchema = Yup.object({
-  name: Yup.string().required("Full name is required"),
-  status: Yup.string().required("Status is required"),
-});
+// const PurpleThemeColor = "#881f9b";
+
+const validationSchema = addUpdateFormValidationSchema;
 
 interface FormValues {
   id: string;
   name: string;
-  status: string;
+  status: "0" | "1";
 }
 
 interface AddUpdateFormProps {
@@ -34,19 +35,17 @@ interface AddUpdateFormProps {
   handleAddOrUpdateCategory: (values: FormValues) => void;
 }
 
-export default function AddUpdateForm(props: AddUpdateFormProps) {
-  const {
-    formData,
-    formshow,
-    handleFormClose,
-    handleAddOrUpdateCategory
-  } = props;
-
+export default function AddUpdateForm({
+  formData,
+  formshow,
+  handleFormClose,
+  handleAddOrUpdateCategory,
+}: AddUpdateFormProps) {
   const formik = useFormik<FormValues>({
     initialValues: {
-      id: formData ? formData.id : "",
-      name: formData ? formData.name : "",
-      status: formData ? formData.status : "1",
+      id: formData?.id || "",
+      name: formData?.name || "",
+      status: formData?.status || "1",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -63,14 +62,13 @@ export default function AddUpdateForm(props: AddUpdateFormProps) {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: { xs: "90%", md: "80%" },
-          maxWidth: 900,
-          maxHeight: "90vh",
+          width: { xs: "90%", sm: 500, md: 600 },
           bgcolor: "background.paper",
-          borderRadius: 3,
-          boxShadow: 24,
-          p: 4,
+          borderRadius: 4,
+          boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+          p: 5,
           overflowY: "auto",
+          transition: "all 0.3s ease-in-out",
         }}
       >
         <IconButton
@@ -86,87 +84,106 @@ export default function AddUpdateForm(props: AddUpdateFormProps) {
             mb: 4,
             textAlign: "center",
             fontWeight: "bold",
-            color: "#881f9b",
+            color: PurpleThemeColor,
           }}
         >
-          Add / Update Category
+          {formData ? "Update Category" : "Add Category"}
         </Typography>
 
         <form onSubmit={formik.handleSubmit}>
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-              gap: 3,
-              mb: 3,
-            }}
-          >
-            <FormControl sx={{ mb: 2 }}>
-              <FormLabel
+          <Box display="flex" flexDirection="column" gap={3}>
+            {/* Name Field */}
+            <FormControl fullWidth>
+              <InputLabel
+                htmlFor="name"
                 sx={{
-                  mb: 1,
-                  fontWeight: "medium",
+                  color:
+                    formik.touched.name && formik.errors.name
+                      ? "error.main"
+                      : undefined,
+                  "&.Mui-focused": {
+                    color: PurpleThemeColor, // <-- label turns purple when focused
+                  },
+                  transition: "color 0.3s ease", // smooth animation
                 }}
               >
                 Name
-              </FormLabel>
-              <Input
-                name={"name"}
-                type={"text"}
+              </InputLabel>
+
+              <OutlinedInput
+                id="name"
+                name="name"
                 value={formik.values.name}
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 error={formik.touched.name && !!formik.errors.name}
-                sx={{ width: "100%" }}
+                sx={{
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: PurpleThemeColor, // border turns purple on focus
+                  },
+                  transition: "all 0.3s ease", // smooth animation
+                }}
               />
+
               {formik.touched.name && formik.errors.name && (
                 <FormHelperText error>{formik.errors.name}</FormHelperText>
               )}
             </FormControl>
 
-            {/* Dropdown Fields */}
-            <FormControl sx={{ mb: 2 }}>
-              <FormLabel
+            {/* Status Field */}
+            <FormControl fullWidth>
+              <InputLabel
+                id="status-label"
                 sx={{
-                  mb: 1,
-                  fontWeight: "medium",
+                  color:
+                    formik.touched.status && formik.errors.status
+                      ? "error.main"
+                      : undefined,
+                  "&.Mui-focused": {
+                    color: PurpleThemeColor, // <-- label turns purple when focused
+                  },
+                  transition: "color 0.3s ease",
                 }}
               >
                 Status
-              </FormLabel>
+              </InputLabel>
+
               <Select
+                labelId="status-label"
+                id="status"
                 name="status"
                 value={formik.values.status}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                input={<OutlinedInput label="Status" />}
+                sx={{
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: PurpleThemeColor, // border turns purple when focused
+                  },
+                  transition: "all 0.3s ease",
+                }}
                 error={formik.touched.status && !!formik.errors.status}
               >
                 <MenuItem value="">Select Status</MenuItem>
                 <MenuItem value="1">Active</MenuItem>
                 <MenuItem value="0">Inactive</MenuItem>
               </Select>
-              {formik.touched.status && formik.errors.status && (
-                <FormHelperText error>{formik.errors.status}</FormHelperText>
-              )}
             </FormControl>
           </Box>
 
-          {/* Form Actions */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 2,
-            }}
-          >
+          {/* Actions */}
+          <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
             <Button
               variant="outlined"
               onClick={handleFormClose}
               sx={{
                 color: "#cf1f1f",
                 borderColor: "#cf1f1f",
+                transition: "all 0.3s ease",
                 "&:hover": {
+                  backgroundColor: "#fcecec",
                   borderColor: "#cf1f1f",
-                  backgroundColor: "#c4a3a3",
+                  transform: "scale(1.05)",
                 },
               }}
             >
@@ -175,7 +192,14 @@ export default function AddUpdateForm(props: AddUpdateFormProps) {
             <Button
               type="submit"
               variant="contained"
-              sx={{ bgcolor: "#881f9b" }}
+              sx={{
+                bgcolor: PurpleThemeColor,
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  bgcolor: "#6f137f",
+                  transform: "scale(1.05)",
+                },
+              }}
             >
               Submit
             </Button>

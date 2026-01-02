@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { faker } from "@faker-js/faker";
 import { ConfirmDeleteModal } from "../../../components";
+import { PurpleThemeColor } from "../../../theme/themeColor";
 
 import Listing from "./Listing";
 import SearchBar from "./SearchBar";
 import AddUpdateForm from "./AddUpdateForm";
 
 const COLORS = {
-  primary: "#881f9b",
-  secondary: "#10b981", // Emerald green
-  background: "#f4f5f7", // Soft gray
+  primary: PurpleThemeColor,
+  secondary: "#10b981",
+  background: "#f4f5f7",
   text: {
     primary: "#111827",
     secondary: "#6b7280",
@@ -23,17 +24,22 @@ interface Attendant {
   status: "1" | "0";
 }
 
+interface FilterData {
+  status: string;
+  keyword: string;
+  [key: string]: any;
+}
+
 let fakeData: Attendant[] = Array.from({ length: 50 }).map(() => ({
   id: faker.string.uuid(),
   name: faker.company.name(),
-  status: faker.helpers.arrayElement(["1", "0"]),
+  status: faker.helpers.arrayElement(["1", "0"]) as "1" | "0",
 }));
 
 export default function PropertyCategory() {
   // State Management
   const [categoryListing, setCategoryListing] = useState<Attendant[]>([]);
   const [totalRecords, setTotalRecords] = useState(fakeData.length);
-
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState<Attendant | null>(null);
   const [formshow, setFormShow] = useState(false);
@@ -41,53 +47,51 @@ export default function PropertyCategory() {
 
   const rowsPerPage = 10;
 
-  const requestBody = {
+  const requestBody: FilterData = {
     page: page,
     limit: rowsPerPage,
     keyword: "",
     status: "",
   };
 
-  const [filterData, setFilterData] = useState(requestBody);
+  const [filterData, setFilterData] = useState<FilterData>(requestBody);
   const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
-    if (fakeData && fakeData.length > 0) {
-      handleCategoryListing(requestBody);
-    }
+    handleCategoryListing(requestBody);
   }, []);
 
-  const handleCategoryListing = (filterData) => {
+  const handleCategoryListing = (filter: FilterData) => {
     setLoading(true);
 
     let records = [...fakeData];
 
-    // 🔍 Search filter
-    if (filterData.keyword) {
+    // Search filter
+    if (filter.keyword) {
       records = records.filter((item) =>
-        item.name.toLowerCase().includes(filterData.keyword.toLowerCase())
+        item.name.toLowerCase().includes(filter.keyword.toLowerCase())
       );
     }
 
-    // 🔄 Status filter
-    if (filterData.status !== "") {
-      records = records.filter((item) => item.status === filterData.status);
+    // Status filter
+    if (filter.status !== "") {
+      records = records.filter((item) => item.status === filter.status);
     }
+
     setTotalRecords(records.length);
 
-    // 📄 Pagination (API-style)
-    const startIndex = (filterData.page - 1) * filterData.limit;
-    const endIndex = startIndex + filterData.limit;
-
+    // Pagination
+    const startIndex = (filter.page - 1) * filter.limit;
+    const endIndex = startIndex + filter.limit;
     const paginatedRecords = records.slice(startIndex, endIndex);
 
     setCategoryListing(paginatedRecords);
     setLoading(false);
   };
 
-  const handlePaginate = (event, value) => {
-    const updatedFilterData = {
+  const handlePaginate = (_event: unknown, value: number) => {
+    const updatedFilterData: FilterData = {
       ...filterData,
       page: value,
     };
@@ -97,29 +101,30 @@ export default function PropertyCategory() {
     handleCategoryListing(updatedFilterData);
   };
 
-  const handleFilterUpdate = async (name, value, boolen = false) => {
-    let updatedFilterData;
-    updatedFilterData = {
+  const handleFilterUpdate = (
+    name: keyof FilterData,
+    value: string,
+    apply: boolean = false
+  ) => {
+    const updatedFilterData: FilterData = {
       ...filterData,
       [name]: value,
     };
     setFilterData(updatedFilterData);
-    if (boolen === true) {
+    if (apply) {
       handleCategoryListing(updatedFilterData);
     }
   };
 
   const handleFilter = () => {
-    let updatedFilterData = {
-      ...filterData,
-      page: 1,
-    };
+    const updatedFilterData: FilterData = { ...filterData, page: 1 };
     setPage(1);
     handleCategoryListing(updatedFilterData);
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
+    setPage(1);
     handleCategoryListing(requestBody);
   };
 
@@ -135,14 +140,11 @@ export default function PropertyCategory() {
     setFormData(null);
   };
 
-  const handleFormShow = async (id) => {
-    try {
-      if (id) {
-        const result =
-          categoryListing && categoryListing.find((cat) => cat.id === id);
-        setFormData(result);
-      }
-    } catch (error) {}
+  const handleFormShow = (id?: string) => {
+    if (id) {
+      const result = categoryListing.find((cat) => cat.id === id) || null;
+      setFormData(result);
+    }
     setFormShow(true);
   };
 
@@ -153,18 +155,16 @@ export default function PropertyCategory() {
 
   const handleDeleteCategory = () => {
     if (!deleteCategoryId) return;
+
     fakeData = fakeData.filter((cat) => cat.id !== deleteCategoryId);
-    const remainingItems = fakeData.filter((cat) => {
-      if (filterData.keyword) {
-        return cat.name
-          .toLowerCase()
-          .includes(filterData.keyword.toLowerCase());
-      }
-      return true;
-    }).length;
+
+    const remainingItems = fakeData.filter((cat) =>
+      filterData.keyword
+        ? cat.name.toLowerCase().includes(filterData.keyword.toLowerCase())
+        : true
+    ).length;
 
     const totalPages = Math.ceil(remainingItems / rowsPerPage);
-
     const newPage = page > totalPages ? totalPages : page;
 
     setPage(newPage || 1);
@@ -183,7 +183,7 @@ export default function PropertyCategory() {
       );
     } else {
       // Add
-      const newRecord = {
+      const newRecord: Attendant = {
         id: faker.string.uuid(),
         name: values.name,
         status: values.status,
@@ -191,7 +191,6 @@ export default function PropertyCategory() {
       fakeData.unshift(newRecord);
     }
 
-    // Refresh listing
     handleCategoryListing(filterData);
   };
 
@@ -200,17 +199,25 @@ export default function PropertyCategory() {
       sx={{
         backgroundColor: COLORS.background,
         minHeight: "100vh",
-        fontFamily: "Inter', sans-serif",
+        fontFamily: "Inter, sans-serif",
       }}
     >
       {/* Header Section */}
-      <SearchBar
+      {/* <SearchBar
         COLORS={COLORS}
         filterData={filterData}
         handleFormShow={handleFormShow}
         handleFilterUpdate={handleFilterUpdate}
         handleFilter={handleFilter}
         handleClear={handleClear}
+      /> */}
+      <SearchBar
+        COLORS={COLORS}
+        filterData={filterData}
+        handleFilterUpdate={handleFilterUpdate}
+        handleFilter={handleFilter}
+        handleClear={handleClear}
+        handleFormShow={handleFormShow}
       />
 
       {/* Category Table */}
@@ -224,7 +231,7 @@ export default function PropertyCategory() {
         handlePaginate={handlePaginate}
         rowsPerPage={rowsPerPage}
         handleToggleActive={handleToggleActive}
-        setPage={setPage}
+        // setPage={setPage}
         handleDeleteClick={handleDeleteClick}
       />
 
@@ -237,7 +244,7 @@ export default function PropertyCategory() {
         description="Are you sure you want to permanently remove this category?"
       />
 
-      {formshow === true && (
+      {formshow && (
         <AddUpdateForm
           formData={formData}
           formshow={formshow}
