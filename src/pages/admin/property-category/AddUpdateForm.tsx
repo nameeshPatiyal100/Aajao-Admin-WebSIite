@@ -27,7 +27,14 @@ interface FormValues {
   status: string;
 }
 
-export default function AddUpdateForm(props) {
+interface AddUpdateFormProps {
+  formData: FormValues | null;
+  formshow: boolean;
+  handleFormClose: () => void;
+  handleAddOrUpdateCategory: (values: FormValues) => void;
+}
+
+export default function AddUpdateForm(props: AddUpdateFormProps) {
   const {
     formData,
     formshow,

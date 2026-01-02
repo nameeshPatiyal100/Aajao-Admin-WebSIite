@@ -17,7 +17,20 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
 
-export default function Listing(props) {
+interface ListingProps {
+  COLORS: { text: { secondary: string }; secondary: string };
+  categoryListing: { id: string; name: string; status: string }[];
+  totalRecords: number;
+  loading: boolean;
+  handleFormShow: (id: string) => void;
+  handlePaginate: (event: React.ChangeEvent<unknown>, page: number) => void;
+  page: number;
+  rowsPerPage: number;
+  handleToggleActive: (id: string) => void;
+  handleDeleteClick: (id: string) => void;
+}
+
+export default function Listing(props: ListingProps) {
   const {
     COLORS,
     categoryListing,

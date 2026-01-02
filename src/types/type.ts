@@ -3,10 +3,9 @@ export type APIResponse<T> = {
   message: string;
   data: T;
 };
-
 export type User = {
     name:string
-}
+};
 export type UserType = {
   user_fullName: string;
   user_pnumber: string;
