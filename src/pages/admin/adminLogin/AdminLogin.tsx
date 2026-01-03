@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { CustomSnackbar } from "../../../components";
 import login_illustration from "../../../assets/admin/login_illustration.png";
 import { motion } from "framer-motion";
 
@@ -23,7 +24,13 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
+  const handleSignIn = () => {
+    // Your login logic here
+    // For demo, we just show snackbar
+    setSnackbarOpen(true);
+  };
   const validationSchema = Yup.object({
     email: Yup.string()
       .email("Please enter a valid email address")
@@ -121,7 +128,7 @@ const AdminLogin = () => {
             flexDirection: "column",
             justifyContent: "center",
             boxShadow: "-20px 0 40px rgba(0,0,0,0.05)",
-            border: "1px solid red",
+            // border: "1px solid red",
           }}
         >
           {/* Header */}
@@ -284,9 +291,16 @@ const AdminLogin = () => {
                 fontSize: "1rem",
                 "&:hover": { opacity: 0.95 },
               }}
+              onClick={handleSignIn}
             >
               Sign In
             </Button>
+            <CustomSnackbar
+              open={snackbarOpen}
+              message="Login Successful!"
+              severity="success"
+              onClose={() => setSnackbarOpen(false)}
+            />
 
             <Typography
               textAlign="center"

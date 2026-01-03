@@ -104,8 +104,8 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
                   mx: "auto",
                   fontSize: "1rem",
                   lineHeight: 1.6,
-                  color: "#6b7280", 
-                  fontFamily : "Lato"
+                  color: "#6b7280",
+                  fontFamily: "Lato",
                 }}
               >
                 {description}
@@ -162,10 +162,17 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
         </Box>
       </Modal>
 
-      <DeleteSnackbar
+      {/* <DeleteSnackbar
         open={snackbarOpen}
         onClose={handleSnackbarClose}
+        message="Item deleted successfully test"
+      /> */}
+
+      <DeleteSnackbar
+        open={snackbarOpen}
         message="Item deleted successfully"
+        type="error" // 👈 forces RED color
+        onClose={handleSnackbarClose}
       />
     </>
   );

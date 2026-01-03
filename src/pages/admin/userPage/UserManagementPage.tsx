@@ -83,7 +83,7 @@ export default function UserManagementPage() {
       <AddUserModal
         open={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAddUser={(u) => setData((prev) => [u as Attendant, ...prev])}
+        onAddUser={(u: Attendant) => setData((prev) => [u, ...prev])}
         mode={modalMode}
         user={selectedUser}
       />

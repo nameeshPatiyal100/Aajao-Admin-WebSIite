@@ -13,7 +13,7 @@ let fakeData: TagRecord[] = Array.from({ length: 50 }).map(() => ({
   id: faker.string.uuid(),
   name: faker.company.name(),
   status: faker.helpers.arrayElement(["1", "0"]) as "1" | "0",
-}));
+}));  
 
 export default function PropertyTag() {
   // State Management

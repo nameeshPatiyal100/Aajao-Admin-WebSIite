@@ -24,6 +24,7 @@ import {
   StatusPage,
   Transactions,
   UserPage,
+  UserManagementPage,
   AboutUs,
   ContactUs,
   PropertyDetail,
@@ -128,7 +129,7 @@ function App() {
           }
         >
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="users" element={<UserPage />} />
+          <Route path="users" element={<UserManagementPage />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="properties" element={<AdminProperties />} />
           {/* <Route path="tags" element={<AdminPropertyTags />} /> */}

@@ -16,7 +16,7 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
   onClose,
 }) => {
   return (
-    <Snackbar
+    <Snackbar 
       open={open}
       autoHideDuration={4000}
       onClose={onClose}
