@@ -21,7 +21,7 @@ import type { ListingProps } from './types';
 
 export default function Listing({
   ThemeColors,
-  categoryListing,
+  tagsListing,
   totalRecords,
   loading,
   handleFormShow,
@@ -66,7 +66,7 @@ export default function Listing({
                   <CircularProgress size={28} />
                 </TableCell>
               </TableRow>
-            ) : categoryListing.length === 0 ? (
+            ) : tagsListing.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography
@@ -78,7 +78,7 @@ export default function Listing({
                 </TableCell>
               </TableRow>
             ) : (
-              categoryListing.map((user, index) => (
+              tagsListing.map((user, index) => (
                 <TableRow
                   key={user.id}
                   hover
@@ -147,7 +147,7 @@ export default function Listing({
       </TableContainer>
 
       {/* Pagination */}
-      {categoryListing.length > 0 && (
+      {tagsListing.length > 0 && (
         <Box display="flex" justifyContent="center" alignItems="center" p={2}>
           <Pagination
             count={Math.ceil(totalRecords / rowsPerPage)}

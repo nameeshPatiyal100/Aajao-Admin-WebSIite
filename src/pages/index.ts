@@ -5,10 +5,12 @@ export { default as AdminLogin } from "./admin/adminLogin/AdminLogin";
 export { default as Dashboard } from "./admin/admindashboard/Dashboard";
 export { default as Transactions } from "./admin/transactions/Transactions";
 export { default as AdminBookings } from "./admin/adminBooking/AdminBooking";
-export { default as AdminCategory } from "./admin/adminProperty/AdminCategory";
+// export { default as AdminCategory } from "./admin/adminProperty/AdminCategory";
+// export { default as AdminPropertyTags } from "./admin/adminProperty/AdminPropertyTags";
+// export { default as AdminAmmenities } from "./admin/adminProperty/AdminAmmenities";
 export { default as PropertyCategory } from "./admin/property-category/index";
-export { default as AdminPropertyTags } from "./admin/adminProperty/AdminPropertyTags";
-export { default as AdminAmmenities } from "./admin/adminProperty/AdminAmmenities";
+export { default as PropertyAmenity } from "./admin/property-amenity/index";
+export { default as PropertyTag } from "./admin/property-tags/index";
 export { default as AdminPropertyVerification } from "./admin/adminProperty/AdminPropertyVerification";
 
 //USER SECTION EXPORTS

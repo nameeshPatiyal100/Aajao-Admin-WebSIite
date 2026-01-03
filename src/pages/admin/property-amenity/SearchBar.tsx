@@ -40,7 +40,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             fontWeight: 700,
           }}
         >
-          Property Category
+          Property Amenity
         </Typography>
 
         <Button
@@ -54,7 +54,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             },
           }}
         >
-          Add Category
+          Add Amenity
         </Button>
       </Box>
 

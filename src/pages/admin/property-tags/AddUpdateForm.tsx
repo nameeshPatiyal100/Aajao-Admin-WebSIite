@@ -14,7 +14,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useFormik } from "formik";
 import { PurpleThemeColor } from "../../../theme/themeColor";
-import { setupCategorySchema } from "../../../validations/admin-validations";
+import { setupTagSchema } from "../../../validations/admin-validations";
 import type { FormValues, AddUpdateFormProps } from './types';
 import { themeCss } from "../../../theme/themeCss";
 
@@ -22,7 +22,7 @@ export default function AddUpdateForm({
   formData,
   formshow,
   handleFormClose,
-  handleAddOrUpdateCategory,
+  handleAddOrUpdateTag,
 }: AddUpdateFormProps) {
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -30,9 +30,9 @@ export default function AddUpdateForm({
       name: formData?.name || "",
       status: formData?.status || "1",
     },
-    validationSchema: setupCategorySchema,
+    validationSchema: setupTagSchema,
     onSubmit: (values) => {
-      handleAddOrUpdateCategory(values);
+      handleAddOrUpdateTag(values);
       handleFormClose();
     },
   });
@@ -48,7 +48,7 @@ export default function AddUpdateForm({
               fontWeight: 600,
             }}
           >
-            {formData ? "Update Category" : "Add Category"}
+            {formData ? "Update Tag" : "Add Tag"}
           </Typography>
 
           <IconButton onClick={handleFormClose} sx={{ color: "#fff" }}>
@@ -94,7 +94,6 @@ export default function AddUpdateForm({
                   <FormHelperText error>{formik.errors.name}</FormHelperText>
                 )}
               </FormControl>
-
 
               {/* Status Field */}
               <FormControl fullWidth>

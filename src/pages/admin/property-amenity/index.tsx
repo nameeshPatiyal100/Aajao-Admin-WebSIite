@@ -7,20 +7,20 @@ import { ThemeColors } from "../../../theme/themeColor";
 import Listing from "./Listing";
 import SearchBar from "./SearchBar";
 import AddUpdateForm from "./AddUpdateForm";
-import type { CategoryRecord, FilterData } from "./types";
+import type { AmenityRecord, FilterData } from "./types";
 
-let fakeData: CategoryRecord[] = Array.from({ length: 50 }).map(() => ({
+let fakeData: AmenityRecord[] = Array.from({ length: 50 }).map(() => ({
   id: faker.string.uuid(),
   name: faker.company.name(),
   status: faker.helpers.arrayElement(["1", "0"]) as "1" | "0",
 }));
 
-export default function PropertyCategory() {
+export default function PropertyAmenity() {
   // State Management
-  const [categoryListing, setCategoryListing] = useState<CategoryRecord[]>([]);
+  const [amenitiesListing, setAmentiesListing] = useState<AmenityRecord[]>([]);
   const [totalRecords, setTotalRecords] = useState(fakeData.length);
   const [page, setPage] = useState(1);
-  const [formData, setFormData] = useState<CategoryRecord | null>(null);
+  const [formData, setFormData] = useState<AmenityRecord | null>(null);
   const [formshow, setFormShow] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -34,14 +34,14 @@ export default function PropertyCategory() {
   };
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
-  const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
+  const [deleteAmenityId, setDeleteAmenityId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
-    CandlecategoryListing(requestBody);
+    handleAmenitiesListing(requestBody);
   }, []);
 
-  const CandlecategoryListing = (filter: FilterData) => {
+  const handleAmenitiesListing = (filter: FilterData) => {
     setLoading(true);
 
     let records = [...fakeData];
@@ -65,7 +65,7 @@ export default function PropertyCategory() {
     const endIndex = startIndex + filter.limit;
     const paginatedRecords = records.slice(startIndex, endIndex);
 
-    setCategoryListing(paginatedRecords);
+    setAmentiesListing(paginatedRecords);
     setLoading(false);
   };
 
@@ -77,7 +77,7 @@ export default function PropertyCategory() {
 
     setPage(value);
     setFilterData(updatedFilterData);
-    CandlecategoryListing(updatedFilterData);
+    handleAmenitiesListing(updatedFilterData);
   };
 
   const handleFilterUpdate = (
@@ -91,27 +91,27 @@ export default function PropertyCategory() {
     };
     setFilterData(updatedFilterData);
     if (apply) {
-      CandlecategoryListing(updatedFilterData);
+      handleAmenitiesListing(updatedFilterData);
     }
   };
 
   const handleFilter = () => {
     const updatedFilterData: FilterData = { ...filterData, page: 1 };
     setPage(1);
-    CandlecategoryListing(updatedFilterData);
+    handleAmenitiesListing(updatedFilterData);
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
     setPage(1);
-    CandlecategoryListing(requestBody);
+    handleAmenitiesListing(requestBody);
   };
 
   const handleToggleActive = (id: string) => {
     fakeData = fakeData.map((item) =>
       item.id === id ? { ...item, status: item.status === "1" ? "0" : "1" } : item
     );
-    CandlecategoryListing(filterData);
+    handleAmenitiesListing(filterData);
   };
 
   const handleFormClose = () => {
@@ -121,21 +121,21 @@ export default function PropertyCategory() {
 
   const handleFormShow = (id?: string) => {
     if (id) {
-      const result = categoryListing.find((item) => item.id === id) || null;
+      const result = amenitiesListing.find((item) => item.id === id) || null;
       setFormData(result);
     }
     setFormShow(true);
   };
 
   const handleDeleteClick = (id: string) => {
-    setDeleteCategoryId(id);
+    setDeleteAmenityId(id);
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteCategory = () => {
-    if (!deleteCategoryId) return;
+  const handleDeleteAmenity = () => {
+    if (!deleteAmenityId) return;
 
-    fakeData = fakeData.filter((item) => item.id !== deleteCategoryId);
+    fakeData = fakeData.filter((item) => item.id !== deleteAmenityId);
 
     const remainingItems = fakeData.filter((item) =>
       filterData.keyword
@@ -147,12 +147,12 @@ export default function PropertyCategory() {
     const newPage = page > totalPages ? totalPages : page;
 
     setPage(newPage || 1);
-    CandlecategoryListing({ ...filterData, page: newPage || 1 });
+    handleAmenitiesListing({ ...filterData, page: newPage || 1 });
     setIsDeleteModalOpen(false);
-    setDeleteCategoryId(null);
+    setDeleteAmenityId(null);
   };
 
-  const handleAddOrUpdateCategory = (values: CategoryRecord) => {
+  const handleAddOrUpdateAmenity = (values: AmenityRecord) => {
     if (values.id) {
       // Update
       fakeData = fakeData.map((item) =>
@@ -162,7 +162,7 @@ export default function PropertyCategory() {
       );
     } else {
       // Add
-      const newRecord: CategoryRecord = {
+      const newRecord: AmenityRecord = {
         id: faker.string.uuid(),
         name: values.name,
         status: values.status,
@@ -170,7 +170,7 @@ export default function PropertyCategory() {
       fakeData.unshift(newRecord);
     }
 
-    CandlecategoryListing(filterData);
+    handleAmenitiesListing(filterData);
   };
 
   return (
@@ -191,10 +191,10 @@ export default function PropertyCategory() {
         handleFormShow={handleFormShow}
       />
 
-      {/* Category Table */}
+      {/* Amenity Table */}
       <Listing
         ThemeColors={ThemeColors}
-        categoryListing={categoryListing}
+        amenitiesListing={amenitiesListing}
         totalRecords={totalRecords}
         loading={loading}
         page={page}
@@ -210,9 +210,9 @@ export default function PropertyCategory() {
       <ConfirmDeleteModal
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDeleteCategory}
-        title="Delete Category"
-        description="Are you sure you want to permanently remove this Category?"
+        onConfirm={handleDeleteAmenity}
+        title="Delete Amenity"
+        description="Are you sure you want to permanently remove this Amenity?"
       />
 
       {formshow && (
@@ -220,7 +220,7 @@ export default function PropertyCategory() {
           formData={formData}
           formshow={formshow}
           handleFormClose={handleFormClose}
-          handleAddOrUpdateCategory={handleAddOrUpdateCategory}
+          handleAddOrUpdateAmenity={handleAddOrUpdateAmenity}
         />
       )}
     </Box>

@@ -7,20 +7,20 @@ import { ThemeColors } from "../../../theme/themeColor";
 import Listing from "./Listing";
 import SearchBar from "./SearchBar";
 import AddUpdateForm from "./AddUpdateForm";
-import type { CategoryRecord, FilterData } from "./types";
+import type { TagRecord, FilterData } from "./types";
 
-let fakeData: CategoryRecord[] = Array.from({ length: 50 }).map(() => ({
+let fakeData: TagRecord[] = Array.from({ length: 50 }).map(() => ({
   id: faker.string.uuid(),
   name: faker.company.name(),
   status: faker.helpers.arrayElement(["1", "0"]) as "1" | "0",
 }));
 
-export default function PropertyCategory() {
+export default function PropertyTag() {
   // State Management
-  const [categoryListing, setCategoryListing] = useState<CategoryRecord[]>([]);
+  const [tagsListing, setTagsListing] = useState<TagRecord[]>([]);
   const [totalRecords, setTotalRecords] = useState(fakeData.length);
   const [page, setPage] = useState(1);
-  const [formData, setFormData] = useState<CategoryRecord | null>(null);
+  const [formData, setFormData] = useState<TagRecord | null>(null);
   const [formshow, setFormShow] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -34,14 +34,14 @@ export default function PropertyCategory() {
   };
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
-  const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
+  const [deleteTagId, setDeleteTagId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
-    CandlecategoryListing(requestBody);
+    handleTagsListing(requestBody);
   }, []);
 
-  const CandlecategoryListing = (filter: FilterData) => {
+  const handleTagsListing = (filter: FilterData) => {
     setLoading(true);
 
     let records = [...fakeData];
@@ -65,7 +65,7 @@ export default function PropertyCategory() {
     const endIndex = startIndex + filter.limit;
     const paginatedRecords = records.slice(startIndex, endIndex);
 
-    setCategoryListing(paginatedRecords);
+    setTagsListing(paginatedRecords);
     setLoading(false);
   };
 
@@ -77,7 +77,7 @@ export default function PropertyCategory() {
 
     setPage(value);
     setFilterData(updatedFilterData);
-    CandlecategoryListing(updatedFilterData);
+    handleTagsListing(updatedFilterData);
   };
 
   const handleFilterUpdate = (
@@ -91,27 +91,27 @@ export default function PropertyCategory() {
     };
     setFilterData(updatedFilterData);
     if (apply) {
-      CandlecategoryListing(updatedFilterData);
+      handleTagsListing(updatedFilterData);
     }
   };
 
   const handleFilter = () => {
     const updatedFilterData: FilterData = { ...filterData, page: 1 };
     setPage(1);
-    CandlecategoryListing(updatedFilterData);
+    handleTagsListing(updatedFilterData);
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
     setPage(1);
-    CandlecategoryListing(requestBody);
+    handleTagsListing(requestBody);
   };
 
   const handleToggleActive = (id: string) => {
     fakeData = fakeData.map((item) =>
       item.id === id ? { ...item, status: item.status === "1" ? "0" : "1" } : item
     );
-    CandlecategoryListing(filterData);
+    handleTagsListing(filterData);
   };
 
   const handleFormClose = () => {
@@ -121,21 +121,21 @@ export default function PropertyCategory() {
 
   const handleFormShow = (id?: string) => {
     if (id) {
-      const result = categoryListing.find((item) => item.id === id) || null;
+      const result = tagsListing.find((item) => item.id === id) || null;
       setFormData(result);
     }
     setFormShow(true);
   };
 
   const handleDeleteClick = (id: string) => {
-    setDeleteCategoryId(id);
+    setDeleteTagId(id);
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteCategory = () => {
-    if (!deleteCategoryId) return;
+  const handleDeleteTag = () => {
+    if (!deleteTagId) return;
 
-    fakeData = fakeData.filter((item) => item.id !== deleteCategoryId);
+    fakeData = fakeData.filter((item) => item.id !== deleteTagId);
 
     const remainingItems = fakeData.filter((item) =>
       filterData.keyword
@@ -147,12 +147,12 @@ export default function PropertyCategory() {
     const newPage = page > totalPages ? totalPages : page;
 
     setPage(newPage || 1);
-    CandlecategoryListing({ ...filterData, page: newPage || 1 });
+    handleTagsListing({ ...filterData, page: newPage || 1 });
     setIsDeleteModalOpen(false);
-    setDeleteCategoryId(null);
+    setDeleteTagId(null);
   };
 
-  const handleAddOrUpdateCategory = (values: CategoryRecord) => {
+  const handleAddOrUpdateTag = (values: TagRecord) => {
     if (values.id) {
       // Update
       fakeData = fakeData.map((item) =>
@@ -162,7 +162,7 @@ export default function PropertyCategory() {
       );
     } else {
       // Add
-      const newRecord: CategoryRecord = {
+      const newRecord: TagRecord = {
         id: faker.string.uuid(),
         name: values.name,
         status: values.status,
@@ -170,7 +170,7 @@ export default function PropertyCategory() {
       fakeData.unshift(newRecord);
     }
 
-    CandlecategoryListing(filterData);
+    handleTagsListing(filterData);
   };
 
   return (
@@ -191,10 +191,10 @@ export default function PropertyCategory() {
         handleFormShow={handleFormShow}
       />
 
-      {/* Category Table */}
+      {/* Tag Table */}
       <Listing
         ThemeColors={ThemeColors}
-        categoryListing={categoryListing}
+        tagsListing={tagsListing}
         totalRecords={totalRecords}
         loading={loading}
         page={page}
@@ -210,9 +210,9 @@ export default function PropertyCategory() {
       <ConfirmDeleteModal
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDeleteCategory}
-        title="Delete Category"
-        description="Are you sure you want to permanently remove this Category?"
+        onConfirm={handleDeleteTag}
+        title="Delete Tag"
+        description="Are you sure you want to permanently remove this Tag?"
       />
 
       {formshow && (
@@ -220,7 +220,7 @@ export default function PropertyCategory() {
           formData={formData}
           formshow={formshow}
           handleFormClose={handleFormClose}
-          handleAddOrUpdateCategory={handleAddOrUpdateCategory}
+          handleAddOrUpdateTag={handleAddOrUpdateTag}
         />
       )}
     </Box>
