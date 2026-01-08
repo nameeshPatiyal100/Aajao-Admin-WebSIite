@@ -23,7 +23,7 @@ import {
   Dashboard,
   StatusPage,
   Transactions,
-  UserPage,
+  // UserPage,
   UserManagementPage,
   AboutUs,
   ContactUs,
@@ -39,6 +39,7 @@ import {
   StateRegulation,
   HelpCenter,
   TermsAndConditions,
+  HostManagementPage,
   WhyHostsListWithAajoo,
   PrivacyPolicyPage,
   PropertyCategory,
@@ -47,8 +48,6 @@ import {
 } from "./pages";
 
 // NEED TO SET ORDER
-// import { UserDashboard } from "./pages/user/dashboard";
-// import { HostDashboard } from "./pages/host/dashboard";
 import CommonLayout from "./components/layout/CommonLayout";
 import { Home } from "./pages";
 import GuestRoute from "./components/authGaurd";
@@ -58,7 +57,6 @@ import SignupOtpVerification from "./auth/SignupOtpVerification";
 import { ForgotPassword } from "./auth/ForgotPassword";
 import { VerifyOtp } from "./auth/VerifyOtp";
 import { ResetPassword } from "./auth/ResetPassword";
-// import ProtectedRoute from "./components/protectedRoute";
 
 function App() {
   return (
@@ -132,7 +130,7 @@ function App() {
           <Route path="users" element={<UserManagementPage />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="properties" element={<AdminProperties />} />
-          {/* <Route path="tags" element={<AdminPropertyTags />} /> */}
+          <Route path="host" element={<HostManagementPage />} />
           {/* <Route path="categories" element={<AdminCategory />} /> */}
           {/* <Route path="ammenities" element={<AdminAmmenities />} /> */}
           <Route path="tags" element={<PropertyTag />} />
