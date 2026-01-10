@@ -4,8 +4,8 @@ import AdminNavbar from "../adminnavbar/AdminNavbar";
 import AdminSidebar from "../adminsidebar/AdminSidebar";
 import { useSidebar } from "../../../context/AdminContext";
 
-const SIDEBAR_WIDTH = 240;   // 15rem
-const SIDEBAR_COLLAPSED = 64; // 4rem
+const SIDEBAR_WIDTH = 240;
+const SIDEBAR_COLLAPSED = 64;
 
 const AdminLayout = () => {
   const { isCollapsed } = useSidebar();
@@ -14,9 +14,9 @@ const AdminLayout = () => {
     <Box
       sx={{
         display: "flex",
-        height: "100vh",
+        minHeight: "100vh",
         width: "100%",
-        overflow: "hidden",
+        overflowX: "hidden", // ✅ NO horizontal scroll
         bgcolor: "#fff",
       }}
     >
@@ -26,22 +26,21 @@ const AdminLayout = () => {
           width: isCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_WIDTH,
           transition: "width 0.3s ease",
           flexShrink: 0,
-          borderRight: "1px solid #ccc",
           height: "100vh",
-          overflow: "hidden",
+          borderRight: "1px solid #e5e7eb",
           bgcolor: "#fff",
         }}
       >
         <AdminSidebar />
       </Box>
 
-      {/* RIGHT SIDE (NAVBAR + CONTENT) */}
+      {/* MAIN CONTENT */}
       <Box
         sx={{
           flexGrow: 1,
           display: "flex",
           flexDirection: "column",
-          height: "100vh",
+          minHeight: "100vh",
           bgcolor: "#f8f9fa",
         }}
       >
@@ -51,8 +50,8 @@ const AdminLayout = () => {
             height: "4.5rem",
             bgcolor: "#fff",
             boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
-            zIndex: 10,
             flexShrink: 0,
+            zIndex: 10,
           }}
         >
           <AdminNavbar />
@@ -66,8 +65,6 @@ const AdminLayout = () => {
             overflowY: "auto",
             overflowX: "hidden",
             bgcolor: "#f1f3f6",
-            fontSize: "1rem",
-            lineHeight: 1.6,
           }}
         >
           <Outlet />

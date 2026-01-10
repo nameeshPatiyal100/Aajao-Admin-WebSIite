@@ -4,7 +4,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import { Attendant, ModalMode } from "./types";
+import { Attendant } from "./types";
 
 const COLORS = {
   primary: "#881f9b",

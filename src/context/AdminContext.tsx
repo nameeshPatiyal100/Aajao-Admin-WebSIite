@@ -5,30 +5,27 @@ interface SidebarContextType {
   toggleSidebar: () => void;
 }
 
-// Create a default context value to avoid undefined checks
-const defaultContextValue: SidebarContextType = {
-  isCollapsed: false,
-  toggleSidebar: () => {},
-};
+const SidebarContext = createContext<SidebarContextType | undefined>(
+  undefined
+);
 
-// Create the context with the default value
-const SidebarContext = createContext<SidebarContextType>(defaultContextValue);
-
-// Hook for consuming the sidebar context
 export const useSidebar = (): SidebarContextType => {
-  return useContext(SidebarContext);
+  const context = useContext(SidebarContext);
+  if (!context) {
+    throw new Error("useSidebar must be used within SidebarProvider");
+  }
+  return context;
 };
 
 interface SidebarProviderProps {
   children: ReactNode;
 }
 
-// Provider component for the sidebar context
 export const SidebarProvider = ({ children }: SidebarProviderProps) => {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSidebar = () => {
-    setIsCollapsed(prev => !prev);
+    setIsCollapsed((prev) => !prev);
   };
 
   return (

@@ -9,7 +9,6 @@ import {
   Collapse,
   Typography,
   IconButton,
-  // Divider,
 } from "@mui/material";
 import {
   LayoutDashboard,
@@ -17,12 +16,12 @@ import {
   Settings,
   ChevronDown,
   ChevronUp,
-  BellElectric,
-  AlignVerticalJustifyCenterIcon,
-  BookIcon,
-  LucideOctagon,
+  Bell,
+  AlignVerticalJustifyCenter,
+  BookOpen,
+  Octagon,
   TrafficCone,
-  ThermometerSnowflakeIcon,
+  ThermometerSnowflake,
   ContactRound,
 } from "lucide-react";
 import { useEffect, useState, MouseEvent } from "react";
@@ -30,44 +29,68 @@ import { useEffect, useState, MouseEvent } from "react";
 interface NavItem {
   text: string;
   path: string;
-  icon: any;
+  icon: React.ElementType;
 }
 
 const NAV_ITEMS: NavItem[] = [
   { text: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
   { text: "Users", path: "/admin/users", icon: Users },
-  { text: "Host", path: "/admin/host", icon: LucideOctagon },
+  { text: "Host", path: "/admin/host", icon: Octagon },
   {
     text: "Properties",
     path: "/admin/properties",
-    icon: AlignVerticalJustifyCenterIcon,
+    icon: AlignVerticalJustifyCenter,
   },
-  { text: "Transactions", path: "/admin/transactions", icon: BellElectric },
-  { text: "Blog", path: "/admin/notifications", icon: BellElectric },
-  { text: "Notifications", path: "/admin/notifications", icon: BellElectric },
-  { text: "CMS", path: "/admin/notifications", icon: BellElectric },
-  { text: "Configuration", path: "/admin/settings", icon: Settings },
-  { text: "Bookings", path: "/admin/bookings", icon: BookIcon },
-  { text: "Support", path: "/admin/support", icon: LucideOctagon },
+  // { text: "Transactions", path: "/admin/transactions", icon: Bell },
+  // { text: "Blog", path: "/admin/blog", icon: Bell },
+  // { text: "Notifications", path: "/admin/notifications", icon: Bell },
+  // { text: "CMS", path: "/admin/cms", icon: Bell },
+  // { text: "Configuration", path: "/admin/settings", icon: Settings },
+  { text: "Bookings", path: "/admin/bookings", icon: BookOpen },
+  // { text: "Support", path: "/admin/support", icon: Octagon },
 ];
 
 const SUB_ITEMS: Record<string, NavItem[]> = {
-  Users: [
-    {
-      text: "Confirmation Pending",
-      path: "/admin/users/add",
-      icon: ContactRound,
-    },
-    { text: "Manage Users", path: "/admin/users/manage", icon: BellElectric },
-  ],
+  // Users: [
+  //   {
+  //     text: "Confirmation Pending",
+  //     path: "/admin/users/pending",
+  //     icon: ContactRound,
+  //   },
+  //   {
+  //     text: "Manage Users",
+  //     path: "/admin/users/manage",
+  //     icon: Bell,
+  //   },
+  // ],
   Properties: [
-    { text: "Property Categories", path: "/admin/categories", icon: ThermometerSnowflakeIcon },
-    { text: "Property Tags", path: "/admin/tags", icon: ThermometerSnowflakeIcon },
-    { text: "Amenities", path: "/admin/amenities", icon: ThermometerSnowflakeIcon },
-    { text: "Property Verification", path: "/admin/property-verification", icon: ThermometerSnowflakeIcon },
+    {
+      text: "Property Categories",
+      path: "/admin/categories",
+      icon: ThermometerSnowflake,
+    },
+    {
+      text: "Property Tags",
+      path: "/admin/tags",
+      icon: ThermometerSnowflake,
+    },
+    {
+      text: "Amenities",
+      path: "/admin/amenities",
+      icon: ThermometerSnowflake,
+    },
+    {
+      text: "Property Verification",
+      path: "/admin/property-verification",
+      icon: ThermometerSnowflake,
+    },
   ],
-  Settings: [
-    { text: "Status", path: "/admin/status", icon: TrafficCone },
+  Configuration: [
+    {
+      text: "Status",
+      path: "/admin/status",
+      icon: TrafficCone,
+    },
   ],
 };
 
@@ -77,6 +100,7 @@ const AdminSidebar = () => {
 
   const toggleDropdown = (e: MouseEvent, key: string) => {
     e.preventDefault();
+    e.stopPropagation(); // 🔑 prevents NavLink navigation
     setOpen((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
@@ -108,7 +132,7 @@ const AdminSidebar = () => {
           borderBottom: "1px solid #e5e7eb",
         }}
       >
-        <LucideOctagon size={28} color="#7115bd" />
+        <Octagon size={28} color="#7115bd" />
         {!isCollapsed && (
           <Typography fontWeight={600} color="#27548a">
             Your Logo
@@ -161,7 +185,11 @@ const AdminSidebar = () => {
                       onClick={(e) => toggleDropdown(e, item.text)}
                       sx={{ color: "inherit" }}
                     >
-                      {open[item.text] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                      {open[item.text] ? (
+                        <ChevronUp size={16} />
+                      ) : (
+                        <ChevronDown size={16} />
+                      )}
                     </IconButton>
                   )}
                 </ListItemButton>
@@ -191,7 +219,9 @@ const AdminSidebar = () => {
                             </ListItemIcon>
                             <ListItemText
                               primary={sub.text}
-                              primaryTypographyProps={{ fontSize: "0.8rem" }}
+                              primaryTypographyProps={{
+                                fontSize: "0.8rem",
+                              }}
                             />
                           </ListItemButton>
                         );
