@@ -112,7 +112,7 @@ export default function HostManagementPage() {
         onClose={() => setIsAddModalOpen(false)}
         onAddUser={(host: Host) => setData((prev) => [host, ...prev])}
         mode={modalMode}
-        user={selectedHost}
+        user={selectedHost || undefined}
       />
     </Box>
   );

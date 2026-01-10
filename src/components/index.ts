@@ -15,8 +15,6 @@ export { default as AdmindPieChart } from "./admin/charts/AdmindPieChart";
 export { default as AdminRadarChart } from "./admin/charts/AdminSparkLine";
 export { default as AdminGaugeChart } from "./admin/charts/AdminGaugeChart";
 //------------------Tables---------------->
-export { default as AdminLatestBookings } from "./admin/adminTable/AdminLatestBookings";
-export { default as AdminLatestTransactions } from "./admin/adminTable/AdminLatestTransactions";
 //------------------ELEMENT---------------->
 export { default as FECustomSnackbar } from "./Element/FECustomSnackbar.tsx";
 

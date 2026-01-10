@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 
 const AdminLineChart = () => {
@@ -14,54 +14,97 @@ const AdminLineChart = () => {
         backgroundColor: "#fff",
         mt: "3rem",
         px: "1rem",
-        display: "flex",
-        justifyContent: "center",
       }}
     >
-      <LineChart
-        xAxis={[
-          {
-            data: months, // ✅ use strings directly
-            // scaleType: "band",
-            scaleType: "point",
-            disableLine: true,
-            disableTicks: true,
-            tickLabelStyle: {
-              fill: "#547792",
-              fontFamily: "Poppins, sans-serif",
+      {/* ===== Heading ===== */}
+      <Typography
+        sx={{
+          fontSize: "1.2rem",
+          fontWeight: 600,
+          mb: 1,
+          color: "#374151",
+        }}
+      >
+        Monthly Bookings
+      </Typography>
+
+      {/* ===== Legend / Notation ===== */}
+      <Stack direction="row" spacing={3} sx={{ mb: 2 }}>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Box
+            sx={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              backgroundColor: "#AA60C8",
+            }}
+          />
+          <Typography sx={{ fontSize: "0.85rem", color: "#6b7280" }}>
+            Successful Booking
+          </Typography>
+        </Stack>
+
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Box
+            sx={{
+              width: 12,
+              height: 12,
+              borderRadius: "50%",
+              backgroundColor: "#A294F9",
+            }}
+          />
+          <Typography sx={{ fontSize: "0.85rem", color: "#6b7280" }}>
+            Cancelled Booking
+          </Typography>
+        </Stack>
+      </Stack>
+
+      {/* ===== Chart ===== */}
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <LineChart
+          xAxis={[
+            {
+              data: months,
+              scaleType: "point",
+              disableLine: true,
+              disableTicks: true,
+              tickLabelStyle: {
+                fill: "#547792",
+                fontFamily: "Poppins, sans-serif",
+              },
             },
-          },
-        ]}
-        yAxis={[
-          {
-            min: 0,
-            max: 100,
-            tickLabelStyle: {
-              fill: "#547792",
-              fontFamily: "Poppins, sans-serif",
+          ]}
+          yAxis={[
+            {
+              min: 0,
+              max: 100,
+              disableLine: true,
+              disableTicks: true,
+              tickLabelStyle: {
+                fill: "#547792",
+                fontFamily: "Poppins, sans-serif",
+              },
             },
-            disableLine: true,
-            disableTicks: true,
-          },
-        ]}
-        series={[
-          {
-            data: [25, 35, 64, 35, 64, 75, 94, 18, 23, 53, 64, 75],
-            color: "#AA60C8",
-            showMark: false,
-            curve: "monotoneX",
-          },
-          {
-            data: [24, 53, 56, 64, 73, 52, 23, 62, 92, 87, 77, 60],
-            color: "#A294F9",
-            showMark: false,
-            curve: "monotoneX",
-          },
-        ]}
-        height={300}
-        width={600}
-        grid={{ vertical: true, horizontal: true }}
-      />
+          ]}
+          series={[
+            {
+              data: [25, 35, 64, 35, 64, 75, 94, 18, 23, 53, 64, 75],
+              color: "#AA60C8",
+              showMark: false,
+              curve: "monotoneX",
+            },
+            {
+              data: [24, 53, 56, 64, 73, 52, 23, 62, 92, 87, 77, 60],
+              color: "#A294F9",
+              showMark: false,
+              curve: "monotoneX",
+            },
+          ]}
+          height={300}
+          width={600}
+          grid={{ vertical: true, horizontal: true }}
+        />
+      </Box>
     </Box>
   );
 };
