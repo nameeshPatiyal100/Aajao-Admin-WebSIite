@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import {
   Box,
@@ -24,11 +24,20 @@ interface Props {
 Modal.setAppElement("#root"); // ensure modal accessibility
 
 const labelStyle = {
+  "& .MuiOutlinedInput-root fieldset": {
+    borderColor: "#881f9b",
+  },
+  "& .MuiOutlinedInput-root:hover fieldset": {
+    borderColor: "#881f9b",
+  },
   "& .MuiOutlinedInput-root.Mui-focused fieldset": {
     borderColor: "#881f9b",
   },
   "& .MuiInputLabel-root.Mui-focused": {
     color: "#881f9b",
+  },
+  "& .Mui-disabled": {
+    color: "#881f9b", // ✅ show read-only data in purple
   },
 };
 
@@ -40,6 +49,7 @@ const BookingDetailModal = ({
   isEdit = false,
 }: Props) => {
   if (!booking) return null;
+  const [status, setStatus] = useState(booking.bookingStatus);
 
   return (
     <Modal
@@ -73,7 +83,7 @@ const BookingDetailModal = ({
           p: 4,
           maxHeight: "calc(100vh - 150px)",
           overflowY: "auto",
-          bgcolor: "#f4f6fa",
+          bgcolor: "#fff", // ✅ white background
         }}
       >
         {/* BOOKING INFO */}
@@ -81,25 +91,41 @@ const BookingDetailModal = ({
           <Grid container spacing={2}>
             <ReadOnly label="Booking ID" value={booking.id} />
             <ReadOnly label="Created At" value={booking.createdAt} />
-
-            <Grid item xs={12} md={4}>
-              <TextField
-                select
-                fullWidth
-                label="Booking Status"
-                value={booking.bookingStatus}
-                disabled={!isEdit}
-                sx={labelStyle}
-              >
-                <MenuItem value="confirmed">Confirmed</MenuItem>
-                <MenuItem value="pending">Pending</MenuItem>
-                <MenuItem value="cancelled">Cancelled</MenuItem>
-              </TextField>
-            </Grid>
-
             <ReadOnly label="Check In" value={booking.checkIn} />
             <ReadOnly label="Check Out" value={booking.checkOut} />
           </Grid>
+
+          {/* Booking Status moved outside grid for full width */}
+          <Box mt={2}>
+            <TextField
+              select
+              fullWidth
+              label="Booking Status"
+              value={status}
+              onChange={(e) =>
+                setStatus(
+                  e.target.value as
+                    | "confirmed"
+                    | "pending"
+                    | "cancelled"
+                    | "completed"
+                )
+              }
+              disabled={!isEdit}
+              sx={labelStyle}
+              // ✅ force dropdown to render inside modal
+              SelectProps={{
+                MenuProps: {
+                  disablePortal: true,
+                  container: document.getElementById("root"),
+                },
+              }}
+            >
+              <MenuItem value="confirmed">Confirmed</MenuItem>
+              <MenuItem value="pending">Pending</MenuItem>
+              <MenuItem value="cancelled">Cancelled</MenuItem>
+            </TextField>
+          </Box>
         </Section>
 
         {/* PROPERTY */}
@@ -151,17 +177,21 @@ const BookingDetailModal = ({
           borderTop: "1px solid #e5e7eb",
         }}
       >
-        <Button variant="outlined" onClick={onClose}>
+        <Button
+          variant="outlined"
+          sx={{ borderColor: "#881f9b", color: "#881f9b" }}
+          onClick={onClose}
+        >
           Cancel
         </Button>
 
         {isEdit && (
           <Button
             variant="contained"
-            sx={{ background: "#881f9b" }}
+            sx={{ backgroundColor: "#881f9b", color: "#fff" }}
             onClick={() => onSubmit(booking)}
           >
-            Save Changes
+            Update
           </Button>
         )}
       </Box>
@@ -181,7 +211,7 @@ const Section = ({
   children: React.ReactNode;
 }) => (
   <Box mb={4}>
-    <Typography fontWeight={600} mb={1}>
+    <Typography fontWeight={600} mb={1} color="#881f9b">
       {title}
     </Typography>
     <Divider sx={{ mb: 2 }} />
@@ -190,7 +220,7 @@ const Section = ({
 );
 
 const ReadOnly = ({ label, value }: { label: string; value: any }) => (
-  <Grid item xs={12} md={4}>
+  <Box mb={2}>
     <TextField fullWidth label={label} value={value} disabled sx={labelStyle} />
-  </Grid>
+  </Box>
 );

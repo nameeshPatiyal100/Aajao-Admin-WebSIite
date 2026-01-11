@@ -42,6 +42,8 @@ const AdminLayout = () => {
           flexDirection: "column",
           minHeight: "100vh",
           bgcolor: "#f8f9fa",
+          transition: "all 0.3s ease",
+          width: `calc(100% - ${isCollapsed ? SIDEBAR_COLLAPSED : SIDEBAR_WIDTH}px)`, // ✅ shrink instead of shift
         }}
       >
         {/* NAVBAR */}
