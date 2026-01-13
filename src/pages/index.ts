@@ -1,18 +1,20 @@
 // export { default as UserPage } from "./admin/userPage/UserPage";
 export { default as UserManagementPage } from "./admin/userPage/UserManagementPage";
 export { default as HostManagementPage } from "./admin/host-management/HostManagementPage";
-export { default as AdminProperties } from "./admin/adminProperty/AdminProperties";
 export { default as StatusPage } from "./admin/statusPage/StatusPage";
 export { default as AdminLogin } from "./admin/adminLogin/AdminLogin";
 export { default as Dashboard } from "./admin/admindashboard/Dashboard";
 export { default as Transactions } from "./admin/transactions/Transactions";
 export { default as AdminBookings } from "./admin/adminBooking/AdminBooking";
+// export { default as AdminProperties } from "./admin/adminProperty/AdminProperties";
 // export { default as AdminCategory } from "./admin/adminProperty/AdminCategory";
 // export { default as AdminPropertyTags } from "./admin/adminProperty/AdminPropertyTags";
 // export { default as AdminAmmenities } from "./admin/adminProperty/AdminAmmenities";
 export { default as PropertyCategory } from "./admin/property-category/index";
 export { default as PropertyAmenity } from "./admin/property-amenity/index";
 export { default as PropertyTag } from "./admin/property-tags/index";
+export { default as Properties } from "./admin/properties/index";
+export { default as PropertiesForm } from "./admin/properties/form";
 export { default as AdminPropertyVerification } from "./admin/adminProperty/AdminPropertyVerification";
 
 //USER SECTION EXPORTS

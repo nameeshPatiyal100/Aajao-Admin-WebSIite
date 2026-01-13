@@ -17,8 +17,8 @@ import {
   // AdminAmmenities,
   // AdminCategory,
   // AdminPropertyTags,
+  // AdminProperties,
   AdminLogin,
-  AdminProperties,
   AdminPropertyVerification,
   Dashboard,
   StatusPage,
@@ -44,7 +44,9 @@ import {
   PrivacyPolicyPage,
   PropertyCategory,
   PropertyAmenity,
-  PropertyTag
+  PropertyTag,
+  Properties,
+  PropertiesForm
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -129,10 +131,13 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<UserManagementPage />} />
           <Route path="transactions" element={<Transactions />} />
-          <Route path="properties" element={<AdminProperties />} />
           <Route path="host" element={<HostManagementPage />} />
+          {/* <Route path="properties" element={<AdminProperties />} /> */}
           {/* <Route path="categories" element={<AdminCategory />} /> */}
           {/* <Route path="ammenities" element={<AdminAmmenities />} /> */}
+          <Route path="properties" element={<Properties />} />
+          <Route path="properties/form" element={<PropertiesForm />} />
+          <Route path="properties/form/:id" element={<PropertiesForm />} />
           <Route path="tags" element={<PropertyTag />} />
           <Route path="categories" element={<PropertyCategory />} />
           <Route path="amenities" element={<PropertyAmenity />} />
