@@ -4,9 +4,9 @@ import { faker } from "@faker-js/faker";
 import { ConfirmDeleteModal } from "../../../components";
 import { ThemeColors } from "../../../theme/themeColor";
 
-import Listing from "./Listing";
+import Listing from "../properties/Listing";
 import SearchBar from "./SearchBar";
-import type { PropertyRecord, FilterData } from "./types";
+import type { PropertyRecord, FilterData } from "../properties/types";
 
 const bool01 = (): "0" | "1" => faker.helpers.arrayElement(["0", "1"]);
 
@@ -18,7 +18,7 @@ let fakeData: PropertyRecord[] = Array.from({ length: 50 }).map(() => ({
   is_verified: bool01()
 }));  
 
-export default function Properties() {
+export default function PropertiesVerifications() {
   // State Management
   const [propertiesListing, setPropertiesListing] = useState<PropertyRecord[]>([]);
   const [totalRecords, setTotalRecords] = useState(fakeData.length);
@@ -32,6 +32,7 @@ export default function Properties() {
     limit: rowsPerPage,
     keyword: "",
     status: "",
+    is_verified: "",
   };
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
@@ -57,6 +58,11 @@ export default function Properties() {
     // Status filter
     if (filter.status !== "") {
       records = records.filter((item) => item.status === filter.status);
+    }
+
+    // Verified filter
+    if (filter.is_verified !== "") {
+      records = records.filter((item) => item.is_verified === filter.is_verified);
     }
 
     setTotalRecords(records.length);

@@ -18,6 +18,7 @@ export const setupTagSchema = Yup.object({
 export const setupPropertySchema = Yup.object({
   name: Yup.string().required("Property name is required"),
   host_name: Yup.string().required("Host name is required"),
+  user_id: Yup.number().required("User is required"),
   description: Yup.string().required("Description is required"),
   address: Yup.string().required("Address is required"),
   city: Yup.string().required("City is required"),

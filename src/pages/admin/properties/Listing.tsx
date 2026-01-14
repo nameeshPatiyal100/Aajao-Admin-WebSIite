@@ -29,6 +29,7 @@ export default function Listing({
   page,
   rowsPerPage,
   handleToggleActive,
+  handleVerifiedStatus,
   handleDeleteClick,
 }: ListingProps) {
   return (
@@ -44,7 +45,7 @@ export default function Listing({
         <Table>
           <TableHead sx={{ backgroundColor: "#f9fafb" }}>
             <TableRow>
-              {["SR. NO.", "NAME", "STATUS", "ACTIONS"].map((header) => (
+              {["SR. NO.", "NAME", "HOST NAME", "STATUS", "VERIFIED", "ACTIONS"].map((header) => (
                 <TableCell
                   key={header}
                   sx={{
@@ -91,12 +92,29 @@ export default function Listing({
                   <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
 
                   <TableCell sx={{ fontSize: "0.85rem" }}>{property.name}</TableCell>
+                  <TableCell sx={{ fontSize: "0.85rem" }}>{property.host_name}</TableCell>
 
                   <TableCell>
                     <Switch
                       size="small"
                       checked={property.status === "1"}
                       onChange={() => handleToggleActive(property.id)}
+                      sx={{
+                        "& .MuiSwitch-switchBase.Mui-checked": {
+                          color: PurpleThemeColor,
+                        },
+                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                          backgroundColor: PurpleThemeColor,
+                        },
+                        transition: "all 0.3s ease",
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Switch
+                      size="small"
+                      checked={property.is_verified === "1"}
+                      onChange={() => handleVerifiedStatus(property.id)}
                       sx={{
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: PurpleThemeColor,

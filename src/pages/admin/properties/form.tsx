@@ -1,52 +1,78 @@
 import { useParams } from "react-router-dom";
-import { PurpleThemeColor, ThemeColors } from "../../../theme/themeColor";
+import {
+  PurpleThemeColor,
+  ThemeColors,
+  FieldLabelColor,
+} from "../../../theme/themeColor";
 import { Box } from "@mui/system";
 import { useFormik } from "formik";
 import FormTopBar from "./FormTopBar";
 import { setupPropertySchema } from "../../../validations/admin-validations";
 import type { FormValues } from "./types";
 import { useEffect, useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
   Checkbox,
   FormControl,
+  IconButton,
   InputLabel,
   ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
 import { faker } from "@faker-js/faker";
+import MultiImageUpload from "../../../components/MultiImageUpload";
 
 const bool01 = (): "0" | "1" => faker.helpers.arrayElement(["0", "1"]);
 const categoriesList = [
-  "Luxury",
-  "Budget",
-  "Pet Friendly",
-  "Family",
-  "Romantic",
+  { id: 1, name: "Luxury" },
+  { id: 2, name: "Budget" },
+  { id: 3, name: "Pet Friendly" },
+  { id: 4, name: "Family" },
+  { id: 5, name: "Romantic" },
 ];
-const tagsList = ["Pool", "WiFi", "Parking", "Breakfast", "Air Conditioning"];
-const amenitiesList = [
-  "WiFi",
-  "Air Conditioning",
-  "Parking",
-  "Swimming Pool",
-  "Gym",
-  "Breakfast",
-  "Pets Allowed",
-  "TV",
-  "Kitchen",
-  "Washer/Dryer",
-  "Hot Tub",
-  "Fireplace",
+const tagsList = [
+  { id: 1, name: "Pool" },
+  { id: 2, name: "WiFi" },
+  { id: 3, name: "Parking" },
+  { id: 4, name: "Breakfast" },
+  { id: 5, name: "Air Conditioning" },
 ];
 
+const amenitiesList = [
+  { id: 1, name: "WiFi" },
+  { id: 2, name: "Air Conditioning" },
+  { id: 3, name: "Parking" },
+  { id: 4, name: "Swimming Pool" },
+  { id: 5, name: "Gym" },
+  { id: 6, name: "Breakfast" },
+  { id: 7, name: "Pets Allowed" },
+  { id: 8, name: "TV" },
+  { id: 9, name: "Kitchen" },
+  { id: 10, name: "Washer/Dryer" },
+  { id: 11, name: "Hot Tub" },
+  { id: 12, name: "Fireplace" },
+];
+
+const usersList = [
+  { id: 1, name: "John Doe" },
+  { id: 2, name: "Sarah Smith" },
+  { id: 3, name: "Michael Brown" },
+  { id: 4, name: "Luis Cook" },
+  { id: 5, name: "John Cook" },
+];
+const dummyImages = Array.from({ length: 5 }).map(() =>
+  faker.image.url({ width: 400, height: 300 })
+);
 let fakeData: FormValues = {
   id: faker.string.uuid(),
   name: faker.company.name(),
   host_name: faker.person.fullName(),
+  user_id: faker.helpers.arrayElement(usersList).id,
   description: faker.lorem.paragraph(),
   address: faker.location.streetAddress(),
   city: faker.location.city(),
@@ -75,17 +101,19 @@ let fakeData: FormValues = {
   is_pet_friendly: bool01(),
   is_smoking_free: bool01(),
   categories: faker.helpers.arrayElements(
-    categoriesList,
+    categoriesList.map((c) => c.id),
     faker.number.int({ min: 1, max: 3 })
   ),
   tags: faker.helpers.arrayElements(
-    tagsList,
+    tagsList.map((t) => t.id),
     faker.number.int({ min: 1, max: 3 })
   ),
   amenities: faker.helpers.arrayElements(
-    amenitiesList,
+    amenitiesList.map((a) => a.id),
     faker.number.int({ min: 1, max: 3 })
   ),
+  cover_image: null,
+  images: dummyImages,
 };
 
 export default function PropertiesForm() {
@@ -103,6 +131,7 @@ export default function PropertiesForm() {
       id: formData?.id || "",
       name: formData?.name || "",
       host_name: formData?.host_name || "",
+      user_id: formData?.user_id || "",
       description: formData?.description || "",
       address: formData?.address || "",
       city: formData?.city || "",
@@ -127,12 +156,21 @@ export default function PropertiesForm() {
       categories: formData?.categories || [],
       tags: formData?.tags || [],
       amenities: formData?.amenities || [],
+      cover_image: null,
+      images: formData?.images || [],
     },
     validationSchema: setupPropertySchema,
     onSubmit: (values) => {
       console.log(values);
     },
   });
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.currentTarget.files?.[0];
+    if (file) {
+      formik.setFieldValue("cover_image", file);
+    }
+  };
   return (
     <Box
       sx={{
@@ -147,6 +185,7 @@ export default function PropertiesForm() {
           <Box display="grid" gridTemplateColumns="1fr 1fr" gap={3}>
             {/* Name Field */}
             <TextField
+              fullWidth
               label="Name"
               name="name"
               value={formik.values.name}
@@ -159,11 +198,36 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                gridColumn: "1 / -1",
+                ...FieldLabelColor,
               }}
             />
+
+            <TextField
+              select
+              fullWidth
+              label="User"
+              name="user_id"
+              value={formik.values.user_id}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.user_id && !!formik.errors.user_id}
+              helperText={
+                formik.touched.user_id &&
+                typeof formik.errors.user_id === "string"
+                  ? formik.errors.user_id
+                  : ""
+              }
+              sx={{
+                ...FieldLabelColor,
+              }}
+            >
+              {usersList.map((user) => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.name}
+                </MenuItem>
+              ))}
+            </TextField>
 
             <TextField
               label="Host Name"
@@ -179,9 +243,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -203,9 +265,7 @@ export default function PropertiesForm() {
               }
               sx={{
                 gridColumn: "1 / -1",
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -223,9 +283,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -242,9 +300,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -262,9 +318,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -282,9 +336,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -301,9 +353,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -320,9 +370,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -339,9 +387,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -359,9 +405,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -382,9 +426,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -405,9 +447,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -424,9 +464,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -446,9 +484,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -469,9 +505,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -492,9 +526,7 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
@@ -515,83 +547,85 @@ export default function PropertiesForm() {
                   : ""
               }
               sx={{
-                "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                  borderColor: PurpleThemeColor,
-                },
+                ...FieldLabelColor,
               }}
             />
 
             <FormControl
               fullWidth
-              sx={{
-                gridColumn: "1 / -1",
-              }}
+              sx={{ gridColumn: "1 / -1", ...FieldLabelColor }}
             >
               <InputLabel>Categories</InputLabel>
               <Select
                 multiple
-                value={formik.values.categories}
                 name="categories"
+                value={formik.values.categories}
                 onChange={formik.handleChange}
                 input={<OutlinedInput label="Categories" />}
-                renderValue={(selected) => (selected as string[]).join(", ")}
+                renderValue={(selected) =>
+                  (selected as number[])
+                    .map((id) => categoriesList.find((c) => c.id === id)?.name)
+                    .join(", ")
+                }
               >
                 {categoriesList.map((cat) => (
-                  <MenuItem key={cat} value={cat}>
+                  <MenuItem key={cat.id} value={cat.id}>
                     <Checkbox
-                      checked={formik.values.categories.includes(cat)}
+                      checked={formik.values.categories.includes(cat.id)}
                     />
-                    <ListItemText primary={cat} />
+                    <ListItemText primary={cat.name} />
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-
             <FormControl
               fullWidth
-              sx={{
-                gridColumn: "1 / -1",
-              }}
+              sx={{ gridColumn: "1 / -1", ...FieldLabelColor }}
             >
               <InputLabel>Amenities</InputLabel>
               <Select
                 multiple
-                value={formik.values.amenities}
                 name="amenities"
+                value={formik.values.amenities}
                 onChange={formik.handleChange}
                 input={<OutlinedInput label="Amenities" />}
-                renderValue={(selected) => (selected as string[]).join(", ")}
+                renderValue={(selected) =>
+                  (selected as number[])
+                    .map((id) => amenitiesList.find((a) => a.id === id)?.name)
+                    .join(", ")
+                }
               >
                 {amenitiesList.map((amenity) => (
-                  <MenuItem key={amenity} value={amenity}>
+                  <MenuItem key={amenity.id} value={amenity.id}>
                     <Checkbox
-                      checked={formik.values.amenities.includes(amenity)}
+                      checked={formik.values.amenities.includes(amenity.id)}
                     />
-                    <ListItemText primary={amenity} />
+                    <ListItemText primary={amenity.name} />
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-
             <FormControl
               fullWidth
-              sx={{
-                gridColumn: "1 / -1",
-              }}
+              sx={{ gridColumn: "1 / -1", ...FieldLabelColor }}
             >
               <InputLabel>Tags</InputLabel>
               <Select
                 multiple
-                value={formik.values.tags}
                 name="tags"
+                value={formik.values.tags}
                 onChange={formik.handleChange}
                 input={<OutlinedInput label="Tags" />}
-                renderValue={(selected) => (selected as string[]).join(", ")}
+                renderValue={(selected) =>
+                  (selected as number[])
+                    .map((id) => tagsList.find((t) => t.id === id)?.name)
+                    .join(", ")
+                }
               >
                 {tagsList.map((tag) => (
-                  <MenuItem key={tag} value={tag}>
-                    <Checkbox checked={formik.values.tags.includes(tag)} />
-                    <ListItemText primary={tag} />
+                  <MenuItem key={tag.id} value={tag.id}>
+                    <Checkbox checked={formik.values.tags.includes(tag.id)} />
+                    <ListItemText primary={tag.name} />
                   </MenuItem>
                 ))}
               </Select>
@@ -611,6 +645,9 @@ export default function PropertiesForm() {
                   ? formik.errors.is_verified
                   : ""
               }
+              sx={{
+                ...FieldLabelColor,
+              }}
             >
               <MenuItem value="1">Verified</MenuItem>
               <MenuItem value="0">Unverified</MenuItem>
@@ -630,6 +667,9 @@ export default function PropertiesForm() {
                   ? formik.errors.is_luxury
                   : ""
               }
+              sx={{
+                ...FieldLabelColor,
+              }}
             >
               <MenuItem value="1">Yes</MenuItem>
               <MenuItem value="0">No</MenuItem>
@@ -652,6 +692,9 @@ export default function PropertiesForm() {
                   ? formik.errors.is_pet_friendly
                   : ""
               }
+              sx={{
+                ...FieldLabelColor,
+              }}
             >
               <MenuItem value="1">Yes</MenuItem>
               <MenuItem value="0">No</MenuItem>
@@ -674,6 +717,9 @@ export default function PropertiesForm() {
                   ? formik.errors.is_smoking_free
                   : ""
               }
+              sx={{
+                ...FieldLabelColor,
+              }}
             >
               <MenuItem value="1">Yes</MenuItem>
               <MenuItem value="0">No</MenuItem>
@@ -693,11 +739,76 @@ export default function PropertiesForm() {
                   ? formik.errors.status
                   : ""
               }
+              sx={{
+                ...FieldLabelColor,
+              }}
             >
               <MenuItem value="1">Active</MenuItem>
               <MenuItem value="0">Inactive</MenuItem>
             </TextField>
           </Box>
+
+          <Box sx={{ gridColumn: "1 / -1" }}>
+            <Typography variant="subtitle1" mb={1}>
+              Cover Image
+            </Typography>
+
+            {/* Upload Button */}
+            <Button variant="outlined" component="label">
+              Upload Image
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                onChange={handleImageChange}
+              />
+            </Button>
+
+            {/* Image Preview with top-right remove icon */}
+            {formik.values.cover_image && (
+              <Box
+                sx={{
+                  position: "relative",
+                  mt: 2,
+                  width: 200,
+                  height: 200,
+                  borderRadius: 2,
+                  border: "1px solid #ddd",
+                  overflow: "hidden",
+                }}
+              >
+                {/* Remove Icon */}
+                <IconButton
+                  size="small"
+                  sx={{
+                    position: "absolute",
+                    top: 4,
+                    right: 4,
+                    backgroundColor: "rgba(255,255,255,0.8)",
+                    "&:hover": { backgroundColor: "rgba(255,255,255,1)" },
+                  }}
+                  onClick={() => {
+                    formik.setFieldValue("cover_image", null);
+                  }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+
+                {/* Image */}
+                <Box
+                  component="img"
+                  src={URL.createObjectURL(formik.values.cover_image)}
+                  alt="Preview"
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              </Box>
+            )}
+          </Box>
+          <MultiImageUpload formik={formik} fieldName="images" label="Property Gallery" maxImages={8} />
 
           {/* Actions */}
           <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>

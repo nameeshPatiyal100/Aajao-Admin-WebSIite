@@ -9,3 +9,12 @@ export const ThemeColors = {
     secondary: "#6b7280",
   },
 };
+
+export const FieldLabelColor = {
+  "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+    borderColor: PurpleThemeColor,
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: PurpleThemeColor,
+  },
+};

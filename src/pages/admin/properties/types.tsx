@@ -2,29 +2,9 @@ export interface PropertyRecord {
   id: string;
   name: string;
   host_name: string;
-  description: string;
-  address: string;
-  city: string;
-  zip_code: string;
-  country: string;
-  state: string;
-  phone: string;
-  email: string;
-  website_url: string;
-  check_in_time: string;
-  check_out_time: string;
-  price: number;
-  minimum_price: number;
-  weekly_minimum_price: number;
-  weekly_maximum_price: number;
-  monthly_security: number;
   status: "0" | "1";
   is_verified: "0" | "1";
-  is_luxury: "0" | "1";
-  is_pet_friendly: "0" | "1";
-  is_smoking_free: "0" | "1";
 }
-
 
 export interface FilterData {
   status: string;
@@ -36,6 +16,7 @@ export interface FormValues {
   id: string;
   name: string;
   host_name: string;
+  user_id: number | "";
   description: string;
   address: string;
   city: string;
@@ -57,9 +38,11 @@ export interface FormValues {
   is_luxury: "0" | "1";
   is_pet_friendly: "0" | "1";
   is_smoking_free: "0" | "1";
-  categories: string[];
-  tags: string[];
-  amenities: string[];
+  categories: number[];
+  tags: number[];
+  amenities: number[];
+  cover_image: File | null;
+  images: (File | string)[];
 }
 
 export interface AddUpdateFormProps {
@@ -71,13 +54,20 @@ export interface AddUpdateFormProps {
 
 export interface ListingProps {
   ThemeColors: { text: { secondary: string }; secondary: string };
-  propertiesListing: { id: string; name: string; status: "0" | "1" }[];
+  propertiesListing: {
+    id: string;
+    name: string;
+    host_name: string;
+    status: "0" | "1";
+    is_verified: "0" | "1";
+  }[];
   totalRecords: number;
   loading: boolean;
   handlePaginate: (event: React.ChangeEvent<unknown>, page: number) => void;
   page: number;
   rowsPerPage: number;
   handleToggleActive: (id: string) => void;
+  handleVerifiedStatus: (id: string) => void;
   handleDeleteClick: (id: string) => void;
 }
 

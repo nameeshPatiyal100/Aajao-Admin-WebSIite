@@ -14,12 +14,7 @@ import { SidebarProvider } from "./context/AdminContext";
 import AdminBooking from "./pages/admin/adminBooking/AdminBooking";
 import { Toaster } from "react-hot-toast";
 import {
-  // AdminAmmenities,
-  // AdminCategory,
-  // AdminPropertyTags,
-  // AdminProperties,
   AdminLogin,
-  AdminPropertyVerification,
   Dashboard,
   StatusPage,
   Transactions,
@@ -46,7 +41,8 @@ import {
   PropertyAmenity,
   PropertyTag,
   Properties,
-  PropertiesForm
+  PropertiesForm,
+  PropertiesVerifications
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -136,15 +132,16 @@ function App() {
           {/* <Route path="categories" element={<AdminCategory />} /> */}
           {/* <Route path="ammenities" element={<AdminAmmenities />} /> */}
           <Route path="properties" element={<Properties />} />
+          <Route path="property-verification" element={<PropertiesVerifications />} />
           <Route path="properties/form" element={<PropertiesForm />} />
           <Route path="properties/form/:id" element={<PropertiesForm />} />
           <Route path="tags" element={<PropertyTag />} />
           <Route path="categories" element={<PropertyCategory />} />
           <Route path="amenities" element={<PropertyAmenity />} />
-          <Route
+          {/* <Route
             path="property-verification"
             element={<AdminPropertyVerification />}
-          />
+          /> */}
           <Route path="bookings" element={<AdminBooking />} />
           <Route path="status" element={<StatusPage />} />
           <Route path="settings" element={<h1>Settings</h1>} />
