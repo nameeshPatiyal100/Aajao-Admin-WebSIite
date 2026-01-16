@@ -279,20 +279,6 @@ export default function Transactions() {
             </MenuItem>
           </Menu>
 
-          {/* Add User Button */}
-          {/* <Button
-            variant="contained"
-            onClick={() => setIsAddModalOpen(true)}
-            sx={{
-              backgroundColor: COLORS.primary,
-              borderRadius: 2,
-              "&:hover": {
-                backgroundColor: "#3730a3", 
-              },
-            }}
-          >
-            Add User
-          </Button> */}
         </Box>  
       </Box>
 
@@ -401,7 +387,7 @@ export default function Transactions() {
         onClose={() => setIsAddModalOpen(false)}
         onAddUser={handleAddUser}
         mode={selectedUser ? "edit" : "add"}
-        user={selectedUser}
+        user={selectedUser || undefined}
       />
     </Box>
   );
