@@ -17,7 +17,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import WcIcon from "@mui/icons-material/Wc";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import EventIcon from "@mui/icons-material/Event";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const PRIMARY = "#c14365";
 const ERROR_COLOR = "#333";
@@ -60,7 +60,6 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
       value={value}
       error={!!error}
       onChange={(e) => onChange(name, e.target.value)}
-      
       helperText={error}
       FormHelperTextProps={{
         sx: { color: ERROR_COLOR, fontWeight: 600 },
@@ -146,11 +145,7 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
             showPassword ? "text" : "password",
             <InputAdornment position="end">
               <IconButton onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? (
-                  <VisibilityOffIcon />
-                ) : (
-                  <VisibilityIcon />
-                )}
+                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
             </InputAdornment>
           )}
@@ -165,11 +160,7 @@ const PersonalInfo = ({ data, errors, onChange }: any) => {
             showConfirm ? "text" : "password",
             <InputAdornment position="end">
               <IconButton onClick={() => setShowConfirm(!showConfirm)}>
-                {showConfirm ? (
-                  <VisibilityOffIcon />
-                ) : (
-                  <VisibilityIcon />
-                )}
+                {showConfirm ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
             </InputAdornment>
           )}
