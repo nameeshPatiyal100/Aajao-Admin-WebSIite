@@ -17,7 +17,7 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
 import { PurpleThemeColor } from "../../../theme/themeColor";
-import type { ListingProps } from './types';
+import type { ListingProps } from "./types";
 import { Link } from "react-router-dom";
 
 export default function Listing({
@@ -29,9 +29,24 @@ export default function Listing({
   page,
   rowsPerPage,
   handleToggleActive,
-  handleVerifiedStatus,
   handleDeleteClick,
+  showVerifiedColumn,
 }: ListingProps) {
+  const headers = [
+    "SR. NO.",
+    "NAME",
+    "HOST NAME",
+    "CATEGORIES",
+    ...(showVerifiedColumn ? ["VERIFIED"] : []),
+    "STATUS",
+    "ACTIONS",
+  ];
+  const verifiedStatusMap = {
+    0: { label: "Pending", color: "#ed6c02", bg: "#fff3e0" },
+    1: { label: "Approved", color: "#2e7d32", bg: "#e8f5e9" },
+    2: { label: "Rejected", color: "#d32f2f", bg: "#fdecea" },
+  };
+
   return (
     <Paper
       elevation={0}
@@ -45,7 +60,7 @@ export default function Listing({
         <Table>
           <TableHead sx={{ backgroundColor: "#f9fafb" }}>
             <TableRow>
-              {["SR. NO.", "NAME", "HOST NAME", "STATUS", "VERIFIED", "ACTIONS"].map((header) => (
+              {headers.map((header) => (
                 <TableCell
                   key={header}
                   sx={{
@@ -91,8 +106,34 @@ export default function Listing({
                 >
                   <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
 
-                  <TableCell sx={{ fontSize: "0.85rem" }}>{property.name}</TableCell>
-                  <TableCell sx={{ fontSize: "0.85rem" }}>{property.host_name}</TableCell>
+                  <TableCell sx={{ fontSize: "0.85rem" }}>
+                    {property.name}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "0.85rem" }}>
+                    {property.host_name}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "0.85rem" }}>
+                    {property.categories.join(", ")}
+                  </TableCell>
+                  {showVerifiedColumn && (
+                    <TableCell sx={{ fontSize: "0.85rem" }}>
+                      <Box
+                        sx={{
+                          display: "inline-block",
+                          px: 1.2,
+                          py: 0.4,
+                          borderRadius: "12px",
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          color: verifiedStatusMap[property.is_verified]?.color,
+                          backgroundColor:
+                            verifiedStatusMap[property.is_verified]?.bg,
+                        }}
+                      >
+                        {verifiedStatusMap[property.is_verified]?.label}
+                      </Box>
+                    </TableCell>
+                  )}
 
                   <TableCell>
                     <Switch
@@ -103,25 +144,10 @@ export default function Listing({
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: PurpleThemeColor,
                         },
-                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                          backgroundColor: PurpleThemeColor,
-                        },
-                        transition: "all 0.3s ease",
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Switch
-                      size="small"
-                      checked={property.is_verified === "1"}
-                      onChange={() => handleVerifiedStatus(property.id)}
-                      sx={{
-                        "& .MuiSwitch-switchBase.Mui-checked": {
-                          color: PurpleThemeColor,
-                        },
-                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                          backgroundColor: PurpleThemeColor,
-                        },
+                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                          {
+                            backgroundColor: PurpleThemeColor,
+                          },
                         transition: "all 0.3s ease",
                       }}
                     />

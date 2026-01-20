@@ -3,7 +3,8 @@ export interface PropertyRecord {
   name: string;
   host_name: string;
   status: "0" | "1";
-  is_verified: "0" | "1";
+  is_verified: "0" | "1" | "2";
+  categories: string[];
 }
 
 export interface FilterData {
@@ -34,7 +35,7 @@ export interface FormValues {
   weekly_maximum_price: number;
   monthly_security: number;
   status: "0" | "1";
-  is_verified: "0" | "1";
+  is_verified: "0" | "1" | "2";
   is_luxury: "0" | "1";
   is_pet_friendly: "0" | "1";
   is_smoking_free: "0" | "1";
@@ -59,7 +60,8 @@ export interface ListingProps {
     name: string;
     host_name: string;
     status: "0" | "1";
-    is_verified: "0" | "1";
+    is_verified: "0" | "1" | "2";
+    categories: string[];
   }[];
   totalRecords: number;
   loading: boolean;
@@ -67,8 +69,8 @@ export interface ListingProps {
   page: number;
   rowsPerPage: number;
   handleToggleActive: (id: string) => void;
-  handleVerifiedStatus: (id: string) => void;
   handleDeleteClick: (id: string) => void;
+  showVerifiedColumn: boolean;
 }
 
 export interface SearchBarProps {
@@ -88,4 +90,5 @@ export interface SearchBarProps {
   handleFilterUpdate: (key: string, value: any, apply: boolean) => void;
   handleFilter: () => void;
   handleClear: () => void;
+  categoriesList: { id: number; name: string }[];
 }

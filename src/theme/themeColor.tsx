@@ -18,3 +18,36 @@ export const FieldLabelColor = {
     color: PurpleThemeColor,
   },
 };
+
+export const FOCUS_COLOR = "#881f9b";
+
+export const commonFieldSx = {
+  minWidth: 180,
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderColor: FOCUS_COLOR,
+    },
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: FOCUS_COLOR,
+  },
+};
+
+export const menuProps = {
+  PaperProps: {
+    sx: {
+      borderRadius: 2,
+      mt: 1,
+      "& .MuiMenuItem-root": {
+        fontSize: "0.85rem",
+        "&.Mui-selected": {
+          backgroundColor: `${FOCUS_COLOR}15`,
+          color: FOCUS_COLOR,
+        },
+        "&:hover": {
+          backgroundColor: `${FOCUS_COLOR}10`,
+        },
+      },
+    },
+  },
+};

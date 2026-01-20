@@ -7,7 +7,7 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
-import { PurpleThemeColor } from "../../../theme/themeColor";
+import { commonFieldSx, menuProps, PurpleThemeColor } from "../../../theme/themeColor";
 import type { SearchBarProps } from "./types";
 import { Link } from "react-router-dom";
 
@@ -17,6 +17,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   handleFilterUpdate,
   handleFilter,
   handleClear,
+  categoriesList,
 }) => {
   const [searchItem, setSearchItem] = useState("");
 
@@ -101,19 +102,32 @@ const SearchBar: React.FC<SearchBarProps> = ({
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               handleFilterUpdate("status", e.target.value, true)
             }
-            sx={{
-              minWidth: 160,
-              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                borderColor: PurpleThemeColor,
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: PurpleThemeColor,
-              },
-            }}
+            sx={commonFieldSx}
+            SelectProps={{ MenuProps: menuProps }}
           >
             <MenuItem value="">Select</MenuItem>
             <MenuItem value="1">Active</MenuItem>
             <MenuItem value="0">Inactive</MenuItem>
+          </TextField>
+          {/* Category Select */}
+          <TextField
+            label="Category"
+            select
+            size="small"
+            name="categories"
+            value={filterData.categories}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleFilterUpdate("categories", e.target.value, true)
+            }
+            sx={commonFieldSx}
+            SelectProps={{ MenuProps: menuProps }}
+          >
+            <MenuItem value="">Select</MenuItem>
+            {categoriesList.map((cat) => (
+              <MenuItem key={cat.id} value={cat.name}>
+                {cat.name}
+              </MenuItem>
+            ))}
           </TextField>
 
           {/* Buttons */}

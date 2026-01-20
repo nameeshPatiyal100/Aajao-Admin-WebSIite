@@ -7,7 +7,7 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
-import { PurpleThemeColor } from "../../../theme/themeColor";
+import { PurpleThemeColor, menuProps, commonFieldSx } from "../../../theme/themeColor";
 import type { SearchBarProps } from "../properties/types";
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -16,6 +16,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   handleFilterUpdate,
   handleFilter,
   handleClear,
+  categoriesList,
 }) => {
   const [searchItem, setSearchItem] = useState("");
 
@@ -42,8 +43,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           Property Verifications
         </Typography>
         <Typography variant="body1" color="text.secondary">
-            Review and manage property verification requests from users.
-
+          Review and manage property verification requests from users.
         </Typography>
       </Box>
 
@@ -82,15 +82,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               handleFilterUpdate("status", e.target.value, true)
             }
-            sx={{
-              minWidth: 160,
-              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                borderColor: PurpleThemeColor,
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: PurpleThemeColor,
-              },
-            }}
+            sx={commonFieldSx}
+            SelectProps={{ MenuProps: menuProps }}
           >
             <MenuItem value="">Select</MenuItem>
             <MenuItem value="1">Active</MenuItem>
@@ -107,19 +100,33 @@ const SearchBar: React.FC<SearchBarProps> = ({
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               handleFilterUpdate("is_verified", e.target.value, true)
             }
-            sx={{
-              minWidth: 160,
-              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                borderColor: PurpleThemeColor,
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: PurpleThemeColor,
-              },
-            }}
+            sx={commonFieldSx}
+            SelectProps={{ MenuProps: menuProps }}
           >
             <MenuItem value="">Select</MenuItem>
-            <MenuItem value="1">Yes</MenuItem>
-            <MenuItem value="0">No</MenuItem>
+            <MenuItem value="0">Pending</MenuItem>
+            <MenuItem value="1">Approved</MenuItem>
+            <MenuItem value="2">Rejected</MenuItem>
+          </TextField>
+
+          <TextField
+            label="Category"
+            select
+            size="small"
+            name="categories"
+            value={filterData.categories}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleFilterUpdate("categories", e.target.value, true)
+            }
+            sx={commonFieldSx}
+            SelectProps={{ MenuProps: menuProps }}
+          >
+            <MenuItem value="">Select</MenuItem>
+            {categoriesList.map((cat) => (
+              <MenuItem key={cat.id} value={cat.name}>
+                {cat.name}
+              </MenuItem>
+            ))}
           </TextField>
 
           {/* Buttons */}
