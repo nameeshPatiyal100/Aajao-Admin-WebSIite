@@ -42,7 +42,7 @@ import {
   PropertyTag,
   Properties,
   PropertiesForm,
-  PropertiesVerifications
+  PropertiesVerifications,
 } from "./pages";
 
 // NEED TO SET ORDER

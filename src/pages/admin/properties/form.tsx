@@ -96,7 +96,7 @@ let fakeData: FormValues = {
   weekly_maximum_price: faker.number.int({ min: 1300, max: 3000 }),
   monthly_security: faker.number.int({ min: 500, max: 2000 }),
   status: bool01(),
-  is_verified: bool01(),
+  is_verified: faker.helpers.arrayElement(["0", "1", "2"]),
   is_luxury: bool01(),
   is_pet_friendly: bool01(),
   is_smoking_free: bool01(),
@@ -649,8 +649,9 @@ export default function PropertiesForm() {
                 ...FieldLabelColor,
               }}
             >
-              <MenuItem value="1">Verified</MenuItem>
-              <MenuItem value="0">Unverified</MenuItem>
+              <MenuItem value="0">Pending</MenuItem>
+              <MenuItem value="1">Approved</MenuItem>
+              <MenuItem value="2">Rejected</MenuItem>
             </TextField>
 
             <TextField

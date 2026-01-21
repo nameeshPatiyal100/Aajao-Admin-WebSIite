@@ -22,6 +22,7 @@ import {
   Octagon,
   TrafficCone,
   ThermometerSnowflake,
+  Activity
   // ContactRound,
 } from "lucide-react";
 import { useEffect, useState, MouseEvent } from "react";
@@ -83,6 +84,13 @@ const SUB_ITEMS: Record<string, NavItem[]> = {
       text: "Property Verification",
       path: "/admin/property-verification",
       icon: ThermometerSnowflake,
+    },
+  ],
+  Bookings: [
+    {
+      text: "Status",
+      path: "/admin/status",
+      icon: Activity,
     },
   ],
   Configuration: [
