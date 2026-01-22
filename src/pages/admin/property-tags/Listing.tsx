@@ -78,9 +78,9 @@ export default function Listing({
                 </TableCell>
               </TableRow>
             ) : (
-              tagsListing.map((user, index) => (
+              tagsListing.map((tag, index) => (
                 <TableRow
-                  key={user.id}
+                  key={tag.id}
                   hover
                   sx={{
                     transition: "all 0.3s ease",
@@ -90,13 +90,13 @@ export default function Listing({
                 >
                   <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
 
-                  <TableCell sx={{ fontSize: "0.85rem" }}>{user.name}</TableCell>
+                  <TableCell sx={{ fontSize: "0.85rem" }}>{tag.name}</TableCell>
 
                   <TableCell>
                     <Switch
                       size="small"
-                      checked={user.status === "1"}
-                      onChange={() => handleToggleActive(user.id)}
+                      checked={tag.status === "1"}
+                      onChange={() => handleToggleActive(tag.id)}
                       sx={{
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: PurpleThemeColor,
@@ -119,7 +119,7 @@ export default function Listing({
                           transition: "all 0.3s ease",
                           "&:hover": { transform: "scale(1.1)" },
                         }}
-                        onClick={() => handleFormShow(user.id)}
+                        onClick={() => handleFormShow(tag.id)}
                       >
                         <EditIcon fontSize="small" />
                       </IconButton>
@@ -133,7 +133,7 @@ export default function Listing({
                           transition: "all 0.3s ease",
                           "&:hover": { transform: "scale(1.1)" },
                         }}
-                        onClick={() => handleDeleteClick(user.id)}
+                        onClick={() => handleDeleteClick(tag.id)}
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>

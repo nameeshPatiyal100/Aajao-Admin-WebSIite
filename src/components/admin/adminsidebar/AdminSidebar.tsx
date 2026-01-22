@@ -85,6 +85,11 @@ const SUB_ITEMS: Record<string, NavItem[]> = {
       path: "/admin/property-verification",
       icon: ThermometerSnowflake,
     },
+    {
+      text: "Property Reviews",
+      path: "/admin/property-reviews",
+      icon: ThermometerSnowflake,
+    },
   ],
   Bookings: [
     {

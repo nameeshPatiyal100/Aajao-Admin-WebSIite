@@ -15,6 +15,10 @@ export const setupTagSchema = Yup.object({
   status: Yup.string().required("Status is required"),
 });
 
+export const reviewSchema = Yup.object({
+  status: Yup.string().required("Status is required"),
+});
+
 export const setupPropertySchema = Yup.object({
   name: Yup.string().required("Property name is required"),
   host_name: Yup.string().required("Host name is required"),

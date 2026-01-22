@@ -8,28 +8,30 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Switch,
   Tooltip,
   IconButton,
   CircularProgress,
+  Rating,
 } from "@mui/material";
 
-import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
-import { PurpleThemeColor } from "../../../theme/themeColor";
-import type { ListingProps } from './types';
+import type { ListingProps } from "./types";
 
+const reviewStatusMap = {
+  0: { label: "Pending", color: "#ed6c02", bg: "#fff3e0" },
+  1: { label: "Approved", color: "#2e7d32", bg: "#e8f5e9" },
+  2: { label: "Rejected", color: "#d32f2f", bg: "#fdecea" },
+};
 export default function Listing({
   ThemeColors,
-  categoryListing,
+  reviewsListing,
   totalRecords,
   loading,
   handleFormShow,
   handlePaginate,
   page,
   rowsPerPage,
-  handleToggleActive,
-  handleDeleteClick,
 }: ListingProps) {
   return (
     <Paper
@@ -44,7 +46,14 @@ export default function Listing({
         <Table>
           <TableHead sx={{ backgroundColor: "#f9fafb" }}>
             <TableRow>
-              {["SR. NO.", "NAME", "STATUS", "ACTIONS"].map((header) => (
+              {[
+                "SR. NO.",
+                "PROPERTY",
+                "USER NAME",
+                "RATING",
+                "STATUS",
+                "ACTIONS",
+              ].map((header) => (
                 <TableCell
                   key={header}
                   sx={{
@@ -66,7 +75,7 @@ export default function Listing({
                   <CircularProgress size={28} />
                 </TableCell>
               </TableRow>
-            ) : categoryListing.length === 0 ? (
+            ) : reviewsListing.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography
@@ -78,9 +87,9 @@ export default function Listing({
                 </TableCell>
               </TableRow>
             ) : (
-              categoryListing.map((cat, index) => (
+              reviewsListing.map((review, index) => (
                 <TableRow
-                  key={cat.id}
+                  key={review.id}
                   hover
                   sx={{
                     transition: "all 0.3s ease",
@@ -90,27 +99,41 @@ export default function Listing({
                 >
                   <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
 
-                  <TableCell sx={{ fontSize: "0.85rem" }}>{cat.name}</TableCell>
+                  <TableCell sx={{ fontSize: "0.85rem" }}>
+                    {review.property}
+                  </TableCell>
 
-                  <TableCell>
-                    <Switch
+                  <TableCell sx={{ fontSize: "0.85rem" }}>
+                    {review.user_name}
+                  </TableCell>
+
+                  <TableCell sx={{ fontSize: "0.85rem" }}>
+                    <Rating
+                      value={Number(review.rating)}
+                      readOnly
                       size="small"
-                      checked={cat.status === "1"}
-                      onChange={() => handleToggleActive(cat.id)}
-                      sx={{
-                        "& .MuiSwitch-switchBase.Mui-checked": {
-                          color: PurpleThemeColor,
-                        },
-                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                          backgroundColor: PurpleThemeColor,
-                        },
-                        transition: "all 0.3s ease",
-                      }}
                     />
                   </TableCell>
 
+                  <TableCell sx={{ fontSize: "0.85rem" }}>
+                    <Box
+                      sx={{
+                        display: "inline-block",
+                        px: 1.2,
+                        py: 0.4,
+                        borderRadius: "12px",
+                        fontSize: "0.75rem",
+                        fontWeight: 600,
+                        color: reviewStatusMap[review.status]?.color,
+                        backgroundColor: reviewStatusMap[review.status]?.bg,
+                      }}
+                    >
+                      {reviewStatusMap[review.status]?.label}
+                    </Box>
+                  </TableCell>
+
                   <TableCell>
-                    <Tooltip title="Edit Category">
+                    <Tooltip title="Edit Review">
                       <IconButton
                         size="small"
                         sx={{
@@ -119,23 +142,9 @@ export default function Listing({
                           transition: "all 0.3s ease",
                           "&:hover": { transform: "scale(1.1)" },
                         }}
-                        onClick={() => handleFormShow(cat.id)}
+                        onClick={() => handleFormShow(review.id)}
                       >
                         <EditIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title="Delete Category">
-                      <IconButton
-                        size="small"
-                        sx={{
-                          color: "error.main",
-                          transition: "all 0.3s ease",
-                          "&:hover": { transform: "scale(1.1)" },
-                        }}
-                        onClick={() => handleDeleteClick(cat.id)}
-                      >
-                        <DeleteIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
@@ -147,7 +156,7 @@ export default function Listing({
       </TableContainer>
 
       {/* Pagination */}
-      {categoryListing.length > 0 && (
+      {reviewsListing.length > 0 && (
         <Box display="flex" justifyContent="center" alignItems="center" p={2}>
           <Pagination
             count={Math.ceil(totalRecords / rowsPerPage)}

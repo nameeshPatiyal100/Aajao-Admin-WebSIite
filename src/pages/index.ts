@@ -18,6 +18,7 @@ export { default as Properties } from "./admin/properties/index";
 export { default as PropertiesForm } from "./admin/properties/form";
 export { default as PropertiesVerifications } from "./admin/property-verifications/index";
 export { default as StatusPage } from "./admin/status/index";
+export { default as PropertyReviews } from "./admin/property-reviews/index";
 
 //USER SECTION EXPORTS
 export { default as Home } from "./user/home"

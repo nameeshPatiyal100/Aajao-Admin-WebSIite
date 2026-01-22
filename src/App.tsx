@@ -43,6 +43,7 @@ import {
   Properties,
   PropertiesForm,
   PropertiesVerifications,
+  PropertyReviews
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -138,6 +139,7 @@ function App() {
           <Route path="tags" element={<PropertyTag />} />
           <Route path="categories" element={<PropertyCategory />} />
           <Route path="amenities" element={<PropertyAmenity />} />
+          <Route path="property-reviews" element={<PropertyReviews />} />
           {/* <Route
             path="property-verification"
             element={<AdminPropertyVerification />}
