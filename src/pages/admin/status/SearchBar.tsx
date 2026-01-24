@@ -1,23 +1,13 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import {
-  Box,
-  Button,
-  Stack,
-  Typography,
-  TextField,
-  MenuItem,
-} from "@mui/material";
-import { commonFieldSx, menuProps, PurpleThemeColor } from "../../../theme/themeColor";
-import type { SearchBarProps } from "./types";
-import { Link } from "react-router-dom";
+import { Box, Button, Stack, Typography, TextField } from "@mui/material";
+import { PurpleThemeColor } from "../../../theme/themeColor";
+import { SearchBarProps } from "./types";
 
 const SearchBar: React.FC<SearchBarProps> = ({
   ThemeColors,
-  filterData,
   handleFilterUpdate,
   handleFilter,
   handleClear,
-  categoriesList,
 }) => {
   const [searchItem, setSearchItem] = useState("");
 
@@ -48,23 +38,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
             fontWeight: 700,
           }}
         >
-          Properties
+          Status
         </Typography>
-
-        <Button
-          variant="contained"
-          component={Link}
-          to="/admin/properties/form"
-          sx={{
-            backgroundColor: ThemeColors.primary,
-            borderRadius: 2,
-            "&:hover": {
-              backgroundColor: "#3730a3",
-            },
-          }}
-        >
-          Add Property
-        </Button>
       </Box>
 
       <form
@@ -92,44 +67,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
             }}
           />
 
-          {/* Status Select */}
-          <TextField
-            label="Status"
-            select
-            size="small"
-            name="status"
-            value={filterData.status}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFilterUpdate("status", e.target.value, true)
-            }
-            sx={commonFieldSx}
-            SelectProps={{ MenuProps: menuProps }}
-          >
-            <MenuItem value="">Select</MenuItem>
-            <MenuItem value="1">Active</MenuItem>
-            <MenuItem value="0">Inactive</MenuItem>
-          </TextField>
-          {/* Category Select */}
-          <TextField
-            label="Category"
-            select
-            size="small"
-            name="categories"
-            value={filterData.categories}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFilterUpdate("categories", e.target.value, true)
-            }
-            sx={commonFieldSx}
-            SelectProps={{ MenuProps: menuProps }}
-          >
-            <MenuItem value="">Select</MenuItem>
-            {categoriesList.map((cat) => (
-              <MenuItem key={cat.id} value={cat.name}>
-                {cat.name}
-              </MenuItem>
-            ))}
-          </TextField>
-
           {/* Buttons */}
           <Stack direction="row" spacing={1}>
             <Button
@@ -140,7 +77,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
               Search
             </Button>
 
-            <Button variant="outlined" color="secondary" onClick={handleCancel}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleCancel}
+            >
               Clear
             </Button>
           </Stack>

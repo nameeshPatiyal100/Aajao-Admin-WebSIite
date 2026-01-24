@@ -15,6 +15,10 @@ export const setupTagSchema = Yup.object({
   status: Yup.string().required("Status is required"),
 });
 
+export const reviewSchema = Yup.object({
+  status: Yup.string().required("Status is required"),
+});
+
 export const setupPropertySchema = Yup.object({
   name: Yup.string().required("Property name is required"),
   host_name: Yup.string().required("Host name is required"),
@@ -69,4 +73,19 @@ export const validationSchemaAddUserHostModal = Yup.object({
   zipcode: Yup.string().required("Zipcode is required"),
   status: Yup.string().required("Status is required"),
   verified: Yup.string().required("Verification status is required"),
+});
+
+export const statusListingSchema = Yup.object({
+  id: Yup.number().required("ID is required"),
+  name: Yup.string().required("Name is required"),
+  text_color: Yup.string()
+    .matches(/^#([0-9A-F]{3}){1,2}$/i, "Must be a valid hex color")
+    .required("Text color is required"),
+  bg_color: Yup.string()
+    .matches(/^#([0-9A-F]{3}){1,2}$/i, "Must be a valid hex color")
+    .required("Background color is required"),
+});
+
+export const statusSchema = Yup.object({
+  rows: Yup.array().of(statusListingSchema),
 });

@@ -7,8 +7,8 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
-import { PurpleThemeColor, menuProps, commonFieldSx } from "../../../theme/themeColor";
-import type { SearchBarProps } from "../properties/types";
+import { PurpleThemeColor } from "../../../theme/themeColor";
+import { SearchBarProps } from "./types";
 
 const SearchBar: React.FC<SearchBarProps> = ({
   ThemeColors,
@@ -16,7 +16,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
   handleFilterUpdate,
   handleFilter,
   handleClear,
-  categoriesList,
 }) => {
   const [searchItem, setSearchItem] = useState("");
 
@@ -32,7 +31,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <Box display="flex" flexDirection="column" gap={3} mb={4}>
-      <Box>
+      <Box
+        display="flex"
+        alignItems="center"
+        gap={2}
+        flexWrap="wrap"
+        justifyContent="space-between"
+        width="100%"
+      >
         <Typography
           variant="h4"
           sx={{
@@ -40,10 +46,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             fontWeight: 700,
           }}
         >
-          Property Verifications
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Review and manage property verification requests from users.
+          Property Reviews
         </Typography>
       </Box>
 
@@ -82,26 +85,15 @@ const SearchBar: React.FC<SearchBarProps> = ({
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               handleFilterUpdate("status", e.target.value, true)
             }
-            sx={commonFieldSx}
-            SelectProps={{ MenuProps: menuProps }}
-          >
-            <MenuItem value="">Select</MenuItem>
-            <MenuItem value="1">Active</MenuItem>
-            <MenuItem value="0">Inactive</MenuItem>
-          </TextField>
-
-          {/* Verified Select */}
-          <TextField
-            label="Verified"
-            select
-            size="small"
-            name="is_verified"
-            value={filterData.is_verified}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFilterUpdate("is_verified", e.target.value, true)
-            }
-            sx={commonFieldSx}
-            SelectProps={{ MenuProps: menuProps }}
+            sx={{
+              minWidth: 160,
+              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                borderColor: PurpleThemeColor,
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: PurpleThemeColor,
+              },
+            }}
           >
             <MenuItem value="">Select</MenuItem>
             <MenuItem value="0">Pending</MenuItem>
@@ -109,24 +101,32 @@ const SearchBar: React.FC<SearchBarProps> = ({
             <MenuItem value="2">Rejected</MenuItem>
           </TextField>
 
+          {/* Rating Select */}
           <TextField
-            label="Category"
+            label="Rating"
             select
             size="small"
-            name="categories"
-            value={filterData.categories}
+            name="rating"
+            value={filterData.rating}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFilterUpdate("categories", e.target.value, true)
+              handleFilterUpdate("rating", e.target.value, true)
             }
-            sx={commonFieldSx}
-            SelectProps={{ MenuProps: menuProps }}
+            sx={{
+              minWidth: 120,
+              "& .MuiOutlinedInput-root.Mui-focused fieldset": {
+                borderColor: PurpleThemeColor,
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: PurpleThemeColor,
+              },
+            }}
           >
             <MenuItem value="">Select</MenuItem>
-            {categoriesList.map((cat) => (
-              <MenuItem key={cat.id} value={cat.name}>
-                {cat.name}
-              </MenuItem>
-            ))}
+            <MenuItem value="1">1 Star</MenuItem>
+            <MenuItem value="2">2 Stars</MenuItem>
+            <MenuItem value="3">3 Stars</MenuItem>
+            <MenuItem value="4">4 Stars</MenuItem>
+            <MenuItem value="5">5 Stars</MenuItem>
           </TextField>
 
           {/* Buttons */}

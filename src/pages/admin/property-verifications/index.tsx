@@ -10,17 +10,31 @@ import type { PropertyRecord, FilterData } from "../properties/types";
 
 const bool01 = (): "0" | "1" => faker.helpers.arrayElement(["0", "1"]);
 
+const categoriesList: { id: number; name: string }[] = [
+  { id: 1, name: "Luxury" },
+  { id: 2, name: "Budget" },
+  { id: 3, name: "Pet Friendly" },
+  { id: 4, name: "Family" },
+  { id: 5, name: "Romantic" },
+];
+
 let fakeData: PropertyRecord[] = Array.from({ length: 50 }).map(() => ({
   id: faker.string.uuid(),
   name: faker.company.name(),
   host_name: faker.person.fullName(),
   status: bool01(),
-  is_verified: bool01()
-}));  
+  is_verified: faker.helpers.arrayElement(["0", "1", "2"]),
+  categories: faker.helpers.arrayElements(
+    categoriesList.map((c) => c.name),
+    faker.number.int({ min: 1, max: 3 })
+  ),
+}));
 
 export default function PropertiesVerifications() {
   // State Management
-  const [propertiesListing, setPropertiesListing] = useState<PropertyRecord[]>([]);
+  const [propertiesListing, setPropertiesListing] = useState<PropertyRecord[]>(
+    []
+  );
   const [totalRecords, setTotalRecords] = useState(fakeData.length);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -33,6 +47,7 @@ export default function PropertiesVerifications() {
     keyword: "",
     status: "",
     is_verified: "",
+    categories: "",
   };
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
@@ -62,7 +77,15 @@ export default function PropertiesVerifications() {
 
     // Verified filter
     if (filter.is_verified !== "") {
-      records = records.filter((item) => item.is_verified === filter.is_verified);
+      records = records.filter(
+        (item) => item.is_verified === filter.is_verified
+      );
+    }
+
+    if (filter.categories) {
+      records = records.filter((item) =>
+        item.categories.includes(filter.categories)
+      );
     }
 
     setTotalRecords(records.length);
@@ -116,14 +139,9 @@ export default function PropertiesVerifications() {
 
   const handleToggleActive = (id: string) => {
     fakeData = fakeData.map((item) =>
-      item.id === id ? { ...item, status: item.status === "1" ? "0" : "1" } : item
-    );
-    handlePropertiesListing(filterData);
-  };
-
-  const handleVerifiedStatus = (id: string) => {
-    fakeData = fakeData.map((item) =>
-      item.id === id ? { ...item, is_verified: item.is_verified === "1" ? "0" : "1" } : item
+      item.id === id
+        ? { ...item, status: item.status === "1" ? "0" : "1" }
+        : item
     );
     handlePropertiesListing(filterData);
   };
@@ -168,6 +186,7 @@ export default function PropertiesVerifications() {
         handleFilterUpdate={handleFilterUpdate}
         handleFilter={handleFilter}
         handleClear={handleClear}
+        categoriesList={categoriesList}
       />
 
       {/* Property Table */}
@@ -180,8 +199,8 @@ export default function PropertiesVerifications() {
         handlePaginate={handlePaginate}
         rowsPerPage={rowsPerPage}
         handleToggleActive={handleToggleActive}
-        handleVerifiedStatus={handleVerifiedStatus}
         handleDeleteClick={handleDeleteClick}
+        showVerifiedColumn={true}
       />
 
       {/* Modals */}
