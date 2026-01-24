@@ -1,5 +1,3 @@
-// PropertyGrid.tsx
-// import React from "react";
 import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import { HomePropCard } from "../../components";
