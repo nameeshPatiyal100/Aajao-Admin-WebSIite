@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { getLast12Days } from "../../../utils/adminUtils";
+import { getLast12Days } from "../../../styles/utils/adminUtils";
 
 const uData = [25, 35, 64, 35, 64, 75, 94, 18, 23, 53, 64, 75];
 

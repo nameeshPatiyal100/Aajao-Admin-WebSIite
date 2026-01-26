@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import { faker } from "@faker-js/faker";
 import { ConfirmDeleteModal } from "../../../components";
 import { ThemeColors } from "../../../theme/themeColor";
+import AppSnackbarContainer from "../../../components/admin/common/AppSnackbarContainer";
 
 import Listing from "./Listing";
 import SearchBar from "./SearchBar";
@@ -223,6 +224,7 @@ export default function PropertyCategory() {
           handleAddOrUpdateCategory={handleAddOrUpdateCategory}
         />
       )}
+      <AppSnackbarContainer/>
     </Box>
   );
 }

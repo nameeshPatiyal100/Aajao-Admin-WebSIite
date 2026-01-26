@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Menu, MenuItem, Typography, Box } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import storage from '../../utils/storage';
+import storage from '../../styles/utils/storage';
 import { useNavigate } from 'react-router-dom';
 
 export const HostHeader = () => {

@@ -18,7 +18,7 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import "leaflet/dist/leaflet.css";
 import "../../styles/user/PropertyDetail.css";
 import Slider from "react-slick";
-import { Roomimages } from "../../utils/reusableData";
+import { Roomimages } from "../../styles/utils/reusableData";
 import {
   PropertyBookingBox,
   PropDetailMap,
@@ -28,7 +28,7 @@ import {
   PropertyGallery,
   HostDetailsModal,
 } from "../../components";
-import { reviews, sliderSettings } from "../../utils/reusableData";
+import { reviews, sliderSettings } from "../../styles/utils/reusableData";
 
 export const PropertyDetail: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

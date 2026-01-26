@@ -11,7 +11,7 @@ import {
   OngoingFloat,
 } from "../../components";
 import JoinusNow from "../../assets/UI/joinusNow.jpg";
-import { hotels, faqs } from "../../utils/reusableData";
+import { hotels, faqs } from "../../styles/utils/reusableData";
 
 const Home = () => {
   // 🔹 Hotels Array

@@ -12,13 +12,7 @@ import App from "./App.tsx";
 // import AppWrapper from "./appWrapper.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  // <StrictMode>
   <Provider store={store}>
-    {/* <AuthProvider> */}
-    {/* <AppWrapper> */}
     <App />
-    {/* </AppWrapper> */}
-    {/* </AuthProvider> */}
   </Provider>
-  // </StrictMode>
 );

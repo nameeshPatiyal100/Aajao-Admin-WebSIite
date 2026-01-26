@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../styles/utils/axiosInstance";
 import { API_BASE_URL, adminLoginApi } from "../configs/apis";
 import type { AlertColor } from "@mui/material";
 

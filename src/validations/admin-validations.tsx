@@ -37,8 +37,12 @@ export const setupPropertySchema = Yup.object({
   check_out_time: Yup.string().required("Check out time is required"),
   price: Yup.number().required("Price is required"),
   minimum_price: Yup.number().required("Minimum Price is required"),
-  weekly_minimum_price: Yup.number().required("Weekly Minimum Price is required"),
-  weekly_maximum_price: Yup.number().required("Weekly Maximum Price is required"),
+  weekly_minimum_price: Yup.number().required(
+    "Weekly Minimum Price is required"
+  ),
+  weekly_maximum_price: Yup.number().required(
+    "Weekly Maximum Price is required"
+  ),
   monthly_security: Yup.number().required("Monthly Security is required"),
   status: Yup.string().required("Status is required"),
   is_verified: Yup.string().required("Verified Option is required"),
@@ -59,14 +63,17 @@ export const setupPropertySchema = Yup.object({
     .required("Tag is required"),
 });
 
-
-
 export const validationSchemaAddUserHostModal = Yup.object({
   fullName: Yup.string().required("Full Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   phone: Yup.string()
     .matches(/^[0-9]{10}$/, "Enter valid 10-digit number")
     .required("Phone is required"),
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+  documentType: Yup.string().required("Document type is required"),
+  documentNumber: Yup.string().required("Document number is required"),
   dob: Yup.date().nullable().required("Date of Birth is required"),
   address: Yup.string().required("Address is required"),
   city: Yup.string().required("City is required"),

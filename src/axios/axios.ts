@@ -1,5 +1,5 @@
 import Axios, { InternalAxiosRequestConfig } from "axios";
-import storage from "../utils/storage";
+import storage from "../styles/utils/storage";
 // import { API_BASE_URL } from "../configs/apis";
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Modal,
-  Box,
-  Typography,
-  Button,
-  IconButton,
-} from "@mui/material";
+import { Modal, Box, Typography, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Formik, Form } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,12 +21,15 @@ export const initialValues = {
   fullName: "",
   email: "",
   phone: "",
+  password: "",
   dob: "",
   address: "",
   city: "",
   zipcode: "",
   status: "",
   verified: "",
+  documentType: "",
+  documentNumber: "",
   user: true,
   host: false,
   profileImage: "",

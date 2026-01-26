@@ -6,7 +6,7 @@ import {
   AdminLineChart,
   AdminTable,
 } from "../../../components";
-import { userRows } from "../../../utils/adminUtils";
+import { userRows } from "../../../styles/utils/adminUtils";
 
 import DashboardHeading from "./DashboardHeading";
 

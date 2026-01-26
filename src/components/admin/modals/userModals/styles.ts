@@ -1,10 +1,51 @@
 import { PurpleThemeColor } from "../../../../theme/themeColor";
 
 export const fieldStyle = {
-  "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-    borderColor: PurpleThemeColor,
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#881f9b",
+    },
+    "&:hover fieldset": {
+      borderColor: "#881f9b",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#881f9b",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "#881f9b",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#881f9b",
   },
 };
+// styles.ts
+export const personalInfoFieldStyle = {
+  "& .MuiOutlinedInput-root": {
+    color: "#881f9b", // ✅ input text color
+    "& fieldset": {
+      borderColor: "#881f9b",
+    },
+    "&:hover fieldset": {
+      borderColor: "#881f9b",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#881f9b",
+    },
+  },
+
+  "& .MuiInputLabel-root": {
+    color: "#881f9b",
+  },
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#881f9b",
+  },
+
+  "& .MuiFormHelperText-root": {
+    color: "#881f9b", // optional: helper text color
+  },
+};
+
 
 export const sectionBox = {
   gridColumn: "1 / -1",

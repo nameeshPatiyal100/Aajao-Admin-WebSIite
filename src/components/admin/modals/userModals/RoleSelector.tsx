@@ -2,6 +2,8 @@ import { Box, Checkbox, FormControlLabel, Typography } from "@mui/material";
 import { useFormikContext } from "formik";
 import { sectionBox } from "./styles";
 
+const PURPLE = "#881f9b";
+
 const RoleSelector = ({ disabled }: { disabled: boolean }) => {
   const { values, setFieldValue } = useFormikContext<any>();
 
@@ -15,11 +17,13 @@ const RoleSelector = ({ disabled }: { disabled: boolean }) => {
         control={
           <Checkbox
             checked={values.user}
-            onChange={(e) => {
-              setFieldValue("user", e.target.checked);
-              if (e.target.checked) setFieldValue("host", false);
-            }}
+            onChange={(e) => setFieldValue("user", e.target.checked)}
             disabled={disabled}
+            sx={{
+              color: PURPLE,
+              "&.Mui-checked": { color: PURPLE },
+              "&.Mui-disabled": { color: `${PURPLE}80` },
+            }}
           />
         }
         label="User"
@@ -29,11 +33,13 @@ const RoleSelector = ({ disabled }: { disabled: boolean }) => {
         control={
           <Checkbox
             checked={values.host}
-            onChange={(e) => {
-              setFieldValue("host", e.target.checked);
-              if (e.target.checked) setFieldValue("user", false);
-            }}
+            onChange={(e) => setFieldValue("host", e.target.checked)}
             disabled={disabled}
+            sx={{
+              color: PURPLE,
+              "&.Mui-checked": { color: PURPLE },
+              "&.Mui-disabled": { color: `${PURPLE}80` },
+            }}
           />
         }
         label="Host"
