@@ -3,14 +3,12 @@ import {
   Routes,
   Route,
   Navigate,
-  // Outlet,
 } from "react-router-dom";
 import "./App.css";
 import notFound from "./assets/UI/404.jpg";
 import { AdminLayout } from "./components";
-
+import AdminProtectedRoute from "./components/authGaurd";
 import { SidebarProvider } from "./context/AdminContext";
-
 import AdminBooking from "./pages/admin/adminBooking/AdminBooking";
 import { Toaster } from "react-hot-toast";
 import {
@@ -18,7 +16,6 @@ import {
   Dashboard,
   StatusPage,
   Transactions,
-  // UserPage,
   UserManagementPage,
   AboutUs,
   ContactUs,
@@ -43,7 +40,7 @@ import {
   Properties,
   PropertiesForm,
   PropertiesVerifications,
-  PropertyReviews
+  PropertyReviews,
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -62,6 +59,7 @@ function App() {
     <Router>
       <Toaster position="top-center" />
       <Routes>
+        
         <Route path="/" element={<CommonLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<AboutUs />} />
@@ -106,48 +104,38 @@ function App() {
             <Route path="reset-password" element={<ResetPassword />} />
           </Route>
         </Route>
-
-        {/* <Route path="/host/*" element={<ProtectedRoute />}>
-          <Route path="dashboard" element={<HostDashboard />} />
-
-        </Route> */}
-
-        {/* <Route path="/user/*" element={<ProtectedRoute />}>
-          <Route path="dashboard" element={<UserDashboard />} />
-        </Route> */}
-
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin/*"
-          element={
-            <SidebarProvider>
-              <AdminLayout />
-            </SidebarProvider>
-          }
-        >
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="users" element={<UserManagementPage />} />
-          <Route path="transactions" element={<Transactions />} />
-          <Route path="host" element={<HostManagementPage />} />
-          {/* <Route path="properties" element={<AdminProperties />} /> */}
-          {/* <Route path="categories" element={<AdminCategory />} /> */}
-          {/* <Route path="ammenities" element={<AdminAmmenities />} /> */}
-          <Route path="properties" element={<Properties />} />
-          <Route path="property-verification" element={<PropertiesVerifications />} />
-          <Route path="properties/form" element={<PropertiesForm />} />
-          <Route path="properties/form/:id" element={<PropertiesForm />} />
-          <Route path="tags" element={<PropertyTag />} />
-          <Route path="categories" element={<PropertyCategory />} />
-          <Route path="amenities" element={<PropertyAmenity />} />
-          <Route path="property-reviews" element={<PropertyReviews />} />
-          {/* <Route
-            path="property-verification"
-            element={<AdminPropertyVerification />}
-          /> */}
-          <Route path="bookings" element={<AdminBooking />} />
-          <Route path="status" element={<StatusPage />} />
-          <Route path="settings" element={<h1>Settings</h1>} />
-          <Route path="*" element={<Navigate to="/admin/dashboard" />} />
+
+
+        <Route element={<AdminProtectedRoute />}>
+          <Route
+            path="/admin/*"
+            element={
+              <SidebarProvider>
+                <AdminLayout />
+              </SidebarProvider>
+            }
+          >
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="users" element={<UserManagementPage />} />
+            <Route path="transactions" element={<Transactions />} />
+            <Route path="host" element={<HostManagementPage />} />
+            <Route path="properties" element={<Properties />} />
+            <Route
+              path="property-verification"
+              element={<PropertiesVerifications />}
+            />
+            <Route path="properties/form" element={<PropertiesForm />} />
+            <Route path="properties/form/:id" element={<PropertiesForm />} />
+            <Route path="tags" element={<PropertyTag />} />
+            <Route path="categories" element={<PropertyCategory />} />
+            <Route path="amenities" element={<PropertyAmenity />} />
+            <Route path="property-reviews" element={<PropertyReviews />} />
+            <Route path="bookings" element={<AdminBooking />} />
+            <Route path="status" element={<StatusPage />} />
+            <Route path="settings" element={<h1>Settings</h1>} />
+            <Route path="*" element={<Navigate to="/admin/dashboard" />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

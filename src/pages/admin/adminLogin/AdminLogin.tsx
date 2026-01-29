@@ -9,28 +9,38 @@ import {
   IconButton,
   Alert,
 } from "@mui/material";
+import login_illustration from "../../../assets/admin/login_illustration.png";
+import * as Yup from "yup";
 import { Lock, Eye, EyeOff, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { CustomSnackbar } from "../../../components";
-import login_illustration from "../../../assets/admin/login_illustration.png";
+// import { CustomSnackbar } from "../../../components";
 import { motion } from "framer-motion";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { adminLogin } from "../../../features/admin/adminAuth/adminAuth.thunk";
 
 const MotionBox = motion(Box);
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
-  const [submitError, setSubmitError] = useState("");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const dispatch = useAppDispatch();
 
-  const handleSignIn = () => {
-    // Your login logic here
-    // For demo, we just show snackbar
-    setSnackbarOpen(true);
-  };
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { loading, isAuthenticated } = useAppSelector(
+    (state) => state.adminAuth
+  );
+
+  const { message, severity } = useAppSelector((state) => state.ui);
+
+  /* 🔁 Redirect after successful login */
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
   const validationSchema = Yup.object({
     email: Yup.string()
       .email("Please enter a valid email address")
@@ -48,14 +58,12 @@ const AdminLogin = () => {
     },
     validationSchema,
     onSubmit: (values) => {
-      setSubmitError("");
-
-      if (values.email !== "admin@example.com") {
-        setSubmitError("Invalid email or password");
-        return;
-      }
-
-      navigate("/admin/dashboard");
+      dispatch(
+        adminLogin({
+          username: values.email,
+          password: values.password,
+        })
+      );
     },
   });
 
@@ -112,7 +120,6 @@ const AdminLogin = () => {
           display: "flex",
           alignItems: "stretch",
           backgroundColor: "#F9FAFB",
-          // border: "1px solid red",
         }}
       >
         <MotionBox
@@ -128,7 +135,6 @@ const AdminLogin = () => {
             flexDirection: "column",
             justifyContent: "center",
             boxShadow: "-20px 0 40px rgba(0,0,0,0.05)",
-            // border: "1px solid red",
           }}
         >
           {/* Header */}
@@ -151,9 +157,10 @@ const AdminLogin = () => {
             </Typography>
           </Box>
 
-          {submitError && (
+          {/* API ERROR */}
+          {severity === "error" && message && (
             <Alert severity="error" sx={{ mb: 3 }}>
-              {submitError}
+              {message}
             </Alert>
           )}
 
@@ -162,30 +169,10 @@ const AdminLogin = () => {
             <TextField
               fullWidth
               label="Email address"
-              name="email"
               margin="normal"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              {...formik.getFieldProps("email")}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#D1D5DB",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: PURPLE,
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: PURPLE,
-                    borderWidth: 2,
-                  },
-                },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: PURPLE,
-                },
-              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -198,31 +185,11 @@ const AdminLogin = () => {
             <TextField
               fullWidth
               label="Password"
-              name="password"
               type={showPassword ? "text" : "password"}
               margin="normal"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              {...formik.getFieldProps("password")}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#D1D5DB",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: PURPLE,
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: PURPLE,
-                    borderWidth: 2,
-                  },
-                },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: PURPLE,
-                },
-              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -232,7 +199,11 @@ const AdminLogin = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton onClick={() => setShowPassword((p) => !p)}>
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showPassword ? (
+                        <EyeOff size={18} />
+                      ) : (
+                        <Eye size={18} />
+                      )}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -251,12 +222,6 @@ const AdminLogin = () => {
                     name="rememberMe"
                     checked={formik.values.rememberMe}
                     onChange={formik.handleChange}
-                    sx={{
-                      color: "#9CA3AF",
-                      "&.Mui-checked": {
-                        color: PURPLE,
-                      },
-                    }}
                   />
                 }
                 label="Remember me"
@@ -265,12 +230,7 @@ const AdminLogin = () => {
               <Typography
                 component="a"
                 href="/forgot-password"
-                sx={{
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: "#7C3AED",
-                  textDecoration: "none",
-                }}
+                sx={{ fontSize: 14, fontWeight: 500, color: PURPLE }}
               >
                 Forgot password?
               </Typography>
@@ -280,6 +240,7 @@ const AdminLogin = () => {
               type="submit"
               fullWidth
               size="large"
+              disabled={loading}
               sx={{
                 mt: 4,
                 py: 1.8,
@@ -289,38 +250,17 @@ const AdminLogin = () => {
                 borderRadius: 3,
                 textTransform: "none",
                 fontSize: "1rem",
-                "&:hover": { opacity: 0.95 },
               }}
-              onClick={handleSignIn}
             >
-              Sign In
+              {loading ? "Signing In..." : "Sign In"}
             </Button>
-            <CustomSnackbar
-              open={snackbarOpen}
-              message="Login Successful!"
-              severity="success"
-              onClose={() => setSnackbarOpen(false)}
-            />
 
-            <Typography
-              textAlign="center"
-              mt={4}
-              fontSize={14}
-              color="text.secondary"
-            >
-              Don’t have access?{" "}
-              <Typography
-                component="a"
-                href="/register"
-                sx={{
-                  color: "#7C3AED",
-                  fontWeight: 600,
-                  textDecoration: "none",
-                }}
-              >
-                Contact Admin
-              </Typography>
-            </Typography>
+            {/* SUCCESS SNACKBAR */}
+            {/* <CustomSnackbar
+              open={severity === "success" && !!message}
+              message={message || ""}
+              severity="success"
+            /> */}
           </Box>
         </MotionBox>
       </Box>

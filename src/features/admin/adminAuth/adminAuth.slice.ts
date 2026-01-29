@@ -2,47 +2,48 @@ import { createSlice } from "@reduxjs/toolkit";
 import { adminLogin } from "./adminAuth.thunk";
 
 interface AdminAuthState {
-  admin: any;
-  token: string | null;
   loading: boolean;
-  error: string | null;
+  admin: any | null;
+  token: string | null;
+  isAuthenticated: boolean;   // ✅ ADD THIS
 }
 
 const initialState: AdminAuthState = {
-  admin: null,
-  token: null,
   loading: false,
-  error: null,
+  admin: null,
+  token: localStorage.getItem("adminToken"),
+  isAuthenticated: !!localStorage.getItem("adminToken"), // ✅
 };
 
 const adminAuthSlice = createSlice({
   name: "adminAuth",
   initialState,
   reducers: {
-    adminLogout(state) {
+    logout(state) {
       state.admin = null;
       state.token = null;
-      localStorage.removeItem("token");
+      state.isAuthenticated = false;
+      localStorage.removeItem("adminToken");
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(adminLogin.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.loading = false;
         state.admin = action.payload.admin;
         state.token = action.payload.token;
-        localStorage.setItem("token", action.payload.token);
+        state.isAuthenticated = true; // ✅
+        localStorage.setItem("adminToken", action.payload.token);
       })
-      .addCase(adminLogin.rejected, (state, action) => {
+      .addCase(adminLogin.rejected, (state) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.isAuthenticated = false;
       });
   },
 });
 
-export const { adminLogout } = adminAuthSlice.actions;
+export const { logout } = adminAuthSlice.actions;
 export default adminAuthSlice.reducer;

@@ -1,28 +1,47 @@
-// import { Navigate, Outlet } from "react-router-dom";
-import {   Outlet } from "react-router-dom";
-// import useAuthentication from "../hooks/useAuthetication";
-// import { CircularProgress } from "@mui/material";
-// import Header from "./layout/Header";
+import { Navigate, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const GuestRoute = () => {
-  // const { isAuthenticated, role } = useAuthentication();
-  // const { isAuthenticated, isLoading, role } = useAuthentication();
+const AdminProtectedRoute = () => {
+  const [isAuth, setIsAuth] = useState<boolean | null>(null);
 
-  // if (isLoading) {
-  //   return <CircularProgress />;
-  // }
-  // <Header/>
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
 
-  // // If logged in, redirect to appropriate dashboard
-  // if (isAuthenticated) {
-  //   return role === "host" ? (
-  //     <Navigate to="/host/dashboard" />
-  //   ) : (
-  //     <Navigate to="/user/dashboard" />
-  //   ); // or "/host/dashboard" if you detect role
-  // }
+    if (!token) {
+      setIsAuth(false);
+      return;
+    }
 
-  return <Outlet />;
+    // OPTIONAL BUT STRONGLY RECOMMENDED
+    // Verify token with backend
+    const verifyToken = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/admin/verify-token`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error("Unauthorized");
+
+        setIsAuth(true);
+      } catch (error) {
+        localStorage.removeItem("adminToken");
+        setIsAuth(false);
+      }
+    };
+
+    verifyToken();
+  }, []);
+
+  // Loader while verifying
+  if (isAuth === null) return null;
+
+  return isAuth ? <Outlet /> : <Navigate to="/admin/login" replace />;
 };
 
-export default GuestRoute;
+export default AdminProtectedRoute;
