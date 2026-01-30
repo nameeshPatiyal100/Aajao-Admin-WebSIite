@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../services/api";
 import { ADMINENDPOINTS } from "../../../services/endpoints";
-import { setMessage, showLoader, hideLoader } from "../../ui/ui.slice";
+import { setMessage, showLoader } from "../../ui/ui.slice";
 
 interface LoginPayload {
   username: string;
@@ -13,7 +13,6 @@ export const adminLogin = createAsyncThunk(
   async (payload: LoginPayload, { dispatch, rejectWithValue }) => {
     try {
       dispatch(showLoader());
-      console.log(payload, "payload");
 
       const res = await api.post(ADMINENDPOINTS.ADMIN_LOGIN, payload);
       console.log(res.data, "admin login response");
@@ -25,7 +24,13 @@ export const adminLogin = createAsyncThunk(
         })
       );
 
-      return res.data.data;
+      // return res.data.data;
+      return {
+        admin: res.data.data.admin,
+        token: res.data.data.token,
+        message: res.data.message,
+      };
+      
     } catch (err: any) {
       const message = err.response?.data?.message || "Login failed";
 
@@ -37,8 +42,9 @@ export const adminLogin = createAsyncThunk(
       );
 
       return rejectWithValue(message);
-    } finally {
-      dispatch(hideLoader());
-    }
+    } 
+    // finally {
+    //   dispatch(hideLoader());
+    // }
   }
 );

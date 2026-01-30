@@ -57,9 +57,8 @@ import { ResetPassword } from "./auth/ResetPassword";
 function App() {
   return (
     <Router>
-      <Toaster position="top-center" />
+      {/* <Toaster position="top-left" reverseOrder={false} /> */}
       <Routes>
-        
         <Route path="/" element={<CommonLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<AboutUs />} />
@@ -105,7 +104,6 @@ function App() {
           </Route>
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
-
 
         <Route element={<AdminProtectedRoute />}>
           <Route

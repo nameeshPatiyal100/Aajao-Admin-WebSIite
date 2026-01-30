@@ -1,75 +1,57 @@
-import { nanoid } from "nanoid";
 import { create } from "zustand";
 import toast, { ToastOptions } from "react-hot-toast";
 
-// Define the Notification type
-export type Notification = {
-  id: string;
-  type: "info" | "warning" | "success" | "error";
-  title: string;
-  message?: string;
-};
+type NotificationType = "info" | "warning" | "success" | "error";
 
 type NotificationsStore = {
-  notifications: Notification[];
-  addNotification: (notification: Omit<Notification, "id">) => void;
-  dismissNotification: (id: string) => void;
+  addNotification: (args: {
+    type: NotificationType;
+    title: string;
+    message?: string;
+  }) => void;
 };
 
-// Create the Zustand store
-export const useNotificationStore = create<NotificationsStore>((set) => ({
-  notifications: [],
-
-  addNotification: (notification) => {
-    // Close existing toasts before showing a new one
+export const useNotificationStore = create<NotificationsStore>(() => ({
+  addNotification: ({ type, title, message }) => {
     toast.dismiss();
 
-    const id = nanoid();
-    const toastType = notification.type as keyof typeof toast;
-
-    // Define custom styles per toast type
     const options: ToastOptions = {
       duration: 4000,
       icon:
-        notification.type === "success"
+        type === "success"
           ? "✅"
-          : notification.type === "error"
+          : type === "error"
           ? "❌"
-          : notification.type === "warning"
+          : type === "warning"
           ? "⚠️"
           : "ℹ️",
       style: {
         background:
-          notification.type === "success"
-            ? "#f3c6c6" // Light maroon for success
-            : notification.type === "error"
+          type === "success"
+            ? "#f3c6c6"
+            : type === "error"
             ? "#d32f2f"
-            : notification.type === "warning"
+            : type === "warning"
             ? "#f57c00"
             : "#607d8b",
-        color:
-          notification.type === "success"
-            ? "#800000" // Maroon text
-            : "white",
-        fontWeight: "bold",
-        borderRadius: "8px",
+        color: type === "success" ? "#800000" : "#fff",
+        fontWeight: 600,
+        borderRadius: "10px",
         padding: "12px 16px",
       },
     };
 
-    const message = notification.message || notification.title || "";
+    const text = message || title;
 
-    toast[toastType](message as any, options as any);
-
-    set(() => ({
-      notifications: [{ id, ...notification }], // Keep only one
-    }));
-  },
-
-  dismissNotification: (id) => {
-    set((state) => ({
-      notifications: state.notifications.filter((n) => n.id !== id),
-    }));
-    toast.dismiss(id);
+    switch (type) {
+      case "success":
+        toast.success(text, options);
+        break;
+      case "error":
+        toast.error(text, options);
+        break;
+      default:
+        toast(text, options);
+    }
   },
 }));

@@ -9,35 +9,46 @@ import {
   IconButton,
   Alert,
 } from "@mui/material";
+import { Toaster } from "react-hot-toast";
 import login_illustration from "../../../assets/admin/login_illustration.png";
 import * as Yup from "yup";
 import { Lock, Eye, EyeOff, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
-// import { CustomSnackbar } from "../../../components";
+import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { adminLogin } from "../../../features/admin/adminAuth/adminAuth.thunk";
+import { hideLoader } from "../../../features/ui/ui.slice";
+// import AppSnackbar from "../../../components/AppSnackbar";
+import { useNotificationStore } from "../../../components/toast";
+import { closeSnackbar } from "../../../features/admin/adminAuth/adminAuth.slice";
+
 
 const MotionBox = motion(Box);
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
+  const { addNotification } = useNotificationStore();
   const [showPassword, setShowPassword] = useState(false);
 
-  const { loading, isAuthenticated } = useAppSelector(
-    (state) => state.adminAuth
-  );
+  const {
+    snackbarOpen,
+    snackbarMessage,
+    snackbarSeverity,
+    isAuthenticated,
+    loading,
+  } = useAppSelector((state) => state.adminAuth);
 
   const { message, severity } = useAppSelector((state) => state.ui);
 
-  /* 🔁 Redirect after successful login */
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/admin/dashboard");
+      setTimeout(() => {
+        navigate("/admin/dashboard");
+      }, 1000); // ⏱ 1 sec delay
     }
   }, [isAuthenticated, navigate]);
 
@@ -112,7 +123,6 @@ const AdminLogin = () => {
           />
         </MotionBox>
       </Box>
-
       {/* RIGHT FORM SECTION */}
       <Box
         sx={{
@@ -173,6 +183,23 @@ const AdminLogin = () => {
               {...formik.getFieldProps("email")}
               error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#D1D5DB",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#881f9b",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#881f9b",
+                    borderWidth: 2,
+                  },
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#881f9b",
+                },
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -190,6 +217,23 @@ const AdminLogin = () => {
               {...formik.getFieldProps("password")}
               error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#D1D5DB",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#881f9b",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#881f9b",
+                    borderWidth: 2,
+                  },
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#881f9b",
+                },
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -199,11 +243,7 @@ const AdminLogin = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton onClick={() => setShowPassword((p) => !p)}>
-                      {showPassword ? (
-                        <EyeOff size={18} />
-                      ) : (
-                        <Eye size={18} />
-                      )}
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -217,20 +257,53 @@ const AdminLogin = () => {
               mt={2}
             >
               <FormControlLabel
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: "#555",
+                  },
+                }}
                 control={
                   <Checkbox
                     name="rememberMe"
                     checked={formik.values.rememberMe}
                     onChange={formik.handleChange}
+                    sx={{
+                      color: PURPLE,
+                      "&.Mui-checked": {
+                        color: PURPLE,
+                      },
+                    }}
                   />
                 }
                 label="Remember me"
               />
 
               <Typography
-                component="a"
-                href="/forgot-password"
-                sx={{ fontSize: 14, fontWeight: 500, color: PURPLE }}
+                component="button"
+                type="button"
+                sx={{
+                  fontSize: 14,
+                  fontWeight: 500,
+                  color: PURPLE,
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  textAlign: "left",
+
+                  "&:hover": {
+                    textDecoration: "underline", // optional, remove if not needed
+                  },
+                }}
+                onClick={() =>
+                  addNotification({
+                    type: "warning",
+                    title: "Wait",
+                    message: "Please contact admin for access",
+                  })
+                }
               >
                 Forgot password?
               </Typography>
@@ -254,16 +327,17 @@ const AdminLogin = () => {
             >
               {loading ? "Signing In..." : "Sign In"}
             </Button>
-
-            {/* SUCCESS SNACKBAR */}
-            {/* <CustomSnackbar
-              open={severity === "success" && !!message}
-              message={message || ""}
-              severity="success"
-            /> */}
           </Box>
         </MotionBox>
       </Box>
+      <Toaster />
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={() => dispatch(closeSnackbar())}
+      />
+      ;
     </Box>
   );
 };
