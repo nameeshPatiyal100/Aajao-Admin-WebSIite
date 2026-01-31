@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import uiReducer from "../features/ui/ui.slice";
 import adminAuthReducer from "../features/admin/adminAuth/adminAuth.slice";
 import propertyCategoryReducer from "../features/admin/propertyCategory/propertyCategory.slice";
+import userReducer from "../features/admin/userManagement/user.slice";
 
 export const store = configureStore({
   reducer: {
@@ -9,6 +10,7 @@ export const store = configureStore({
     // ADMINREDUCERS
     adminAuth: adminAuthReducer,
     propertyCategory: propertyCategoryReducer,
+    users: userReducer,
   },
 });
 

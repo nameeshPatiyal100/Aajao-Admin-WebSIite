@@ -36,17 +36,13 @@ import {
         flexWrap="wrap"
         gap={2}
       >
-        {/* Title */}
         <Typography
           variant="h4"
           sx={{ color: COLORS.primary, fontWeight: 700 }}
         >
           User Management
         </Typography>
-  
-        {/* Actions */}
         <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
-          {/* Search */}
           <Box display="flex" gap={1} alignItems="center">
             <TextField
               label="Search name or E-mail"
@@ -71,8 +67,7 @@ import {
               Search
             </Button>
           </Box>
-  
-          {/* Filters */}
+
           <Stack direction="row" spacing={2}>
             <Button
               variant="outlined"

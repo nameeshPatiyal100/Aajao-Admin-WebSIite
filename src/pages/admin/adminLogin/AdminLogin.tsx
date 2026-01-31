@@ -20,8 +20,6 @@ import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { adminLogin } from "../../../features/admin/adminAuth/adminAuth.thunk";
-import { hideLoader } from "../../../features/ui/ui.slice";
-// import AppSnackbar from "../../../components/AppSnackbar";
 import { useNotificationStore } from "../../../components/toast";
 import { closeSnackbar } from "../../../features/admin/adminAuth/adminAuth.slice";
 
@@ -48,7 +46,7 @@ const AdminLogin = () => {
     if (isAuthenticated) {
       setTimeout(() => {
         navigate("/admin/dashboard");
-      }, 1000); // ⏱ 1 sec delay
+      }, 1000);
     }
   }, [isAuthenticated, navigate]);
 

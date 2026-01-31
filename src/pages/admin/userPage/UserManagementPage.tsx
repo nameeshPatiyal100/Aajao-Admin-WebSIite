@@ -1,14 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { AddUserModal, ConfirmDeleteModal } from "../../../components";
-import { Attendant, ModalMode } from "./types";
 import { UserTable } from "./UserTable";
 import { UserHeader } from "./UserHeader";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { fetchUsers } from "../../../features/admin/userManagement/user.slice";
+import { Attendant, ModalMode } from "./types";
+import { ApiUser } from "../../../types/api.types";
 
 export default function UserManagementPage() {
-  const [data, setData] = useState<Attendant[]>([]);
-  const [filteredData, setFilteredData] = useState<Attendant[]>([]);
+  const dispatch = useAppDispatch();
+
+  const { users, loading, error, pagination } = useAppSelector(
+    (state) => state.users
+  ) as {
+    users: ApiUser[];
+    loading: boolean;
+    error: string | null;
+    pagination: { totalRecords: number } | null;
+  };
+
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalMode, setModalMode] = useState<ModalMode>("add");
@@ -18,35 +29,40 @@ export default function UserManagementPage() {
 
   const rowsPerPage = 10;
 
+  /* =======================
+     API CALL (SERVER SIDE)
+  ======================= */
   useEffect(() => {
-    const fakeData = Array.from({ length: 50 }).map(() => ({
-      id: faker.string.uuid(),
-      name: faker.person.fullName(),
-      age: faker.number.int({ min: 18, max: 65 }),
-      email: faker.internet.email(),
-      date: faker.date.past().toLocaleDateString(),
-      status: faker.helpers.arrayElement(["Active", "Inactive"]),
-    }));
-    setData(fakeData);
-    setFilteredData(fakeData);
-  }, []);
-
-  useEffect(() => {
-    setFilteredData(
-      data.filter(
-        (u) =>
-          u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          u.email.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    dispatch(
+      fetchUsers({
+        page: page + 1, // backend pages start from 1
+        search: searchTerm,
+      })
     );
-    setPage(0);
-  }, [searchTerm, data]);
+  }, [dispatch, page, searchTerm]);
+
+  console.log(users, "users  ");
+  /* =======================
+     MAP BACKEND → UI TYPE
+  ======================= */
+  const mappedUsers: Attendant[] = useMemo(() => {
+    return users.map((u) => ({
+      user_id: u.user_id,
+      name: u.user_fullName,
+      email: u.userCred?.cred_user_email ?? "-",
+      createdAt: new Date(u.added_at).toLocaleDateString(),
+      isActive: u.user_isActive === 1,
+    }));
+  }, [users]);
 
   return (
     <Box p={3} minHeight="100vh">
       <UserHeader
         searchTerm={searchTerm}
-        onSearch={setSearchTerm}
+        onSearch={(value) => {
+          setPage(0); // reset page on search
+          setSearchTerm(value);
+        }}
         onAdd={() => {
           setSelectedUser(null);
           setModalMode("add");
@@ -55,9 +71,11 @@ export default function UserManagementPage() {
       />
 
       <UserTable
-        users={filteredData}
+        users={mappedUsers}
         page={page}
         rowsPerPage={rowsPerPage}
+        loading={loading}
+        totalCount={pagination?.totalRecords || 0}
         onPageChange={setPage}
         onAction={(user, mode) => {
           setSelectedUser(user);
@@ -73,9 +91,10 @@ export default function UserManagementPage() {
       <ConfirmDeleteModal
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={() =>
-          setData((prev) => prev.filter((u) => u.id !== selectedUser?.id))
-        }
+        onConfirm={() => {
+          // later: dispatch(deleteUser(selectedUser!.id))
+          setIsDeleteModalOpen(false);
+        }}
         title="Delete User"
         description="Are you sure you want to permanently remove this user?"
       />
@@ -83,10 +102,19 @@ export default function UserManagementPage() {
       <AddUserModal
         open={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAddUser={(u: Attendant) => setData((prev) => [u, ...prev])}
+        onAddUser={() => {
+          // later: dispatch(addUser(payload))
+          setIsAddModalOpen(false);
+        }}
         mode={modalMode}
         user={selectedUser || undefined}
       />
+
+      {error && (
+        <Box mt={2} color="error.main">
+          {error}
+        </Box>
+      )}
     </Box>
   );
 }
