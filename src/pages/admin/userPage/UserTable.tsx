@@ -8,25 +8,21 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  CircularProgress,
 } from "@mui/material";
 import { Pagination } from "../../../components";
-import { Attendant } from "./types";
+import { UserTableRow } from "./UserManagementPage";
 import { UserActions } from "./UserActions";
-
-const COLORS = {
-  text: { secondary: "#6b7280" },
-};
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 interface Props {
-  users: Attendant[];
+  users: UserTableRow[];
   page: number;
   rowsPerPage: number;
   totalCount: number;
   loading: boolean;
   onPageChange: (page: number) => void;
-  onAction: (user: Attendant, mode: "view" | "edit") => void;
-  onDelete: (user: Attendant) => void;
+  onEdit: (userId: number) => void;
+  onDelete: (userId: number) => void;
 }
 
 export const UserTable = ({
@@ -36,7 +32,7 @@ export const UserTable = ({
   totalCount,
   loading,
   onPageChange,
-  onAction,
+  onEdit,
   onDelete,
 }: Props) => {
   return (
@@ -45,11 +41,16 @@ export const UserTable = ({
         <Table>
           <TableHead sx={{ backgroundColor: "#f9fafb" }}>
             <TableRow>
-              {["#", "NAME", "EMAIL", "CREATED", "STATUS", "ACTIONS"].map((h) => (
-                <TableCell
-                  key={h}
-                  sx={{ fontWeight: 600, color: COLORS.text.secondary }}
-                >
+              {[
+                "#",
+                "NAME",
+                "EMAIL",
+                "CREATED",
+                "STATUS",
+                "VERIFIED",
+                "ACTIONS",
+              ].map((h) => (
+                <TableCell key={h} sx={{ fontWeight: 600 }}>
                   {h}
                 </TableCell>
               ))}
@@ -57,16 +58,14 @@ export const UserTable = ({
           </TableHead>
 
           <TableBody>
-            {/* 🔄 LOADING */}
             {loading && (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
-                  <CircularProgress size={28} />
+                <TableCell colSpan={6}>
+                  <TableLoader text="Fetching users..." />
                 </TableCell>
               </TableRow>
             )}
 
-            {/* 📭 EMPTY */}
             {!loading && users.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
@@ -75,31 +74,33 @@ export const UserTable = ({
               </TableRow>
             )}
 
-            {/* ✅ DATA */}
             {!loading &&
               users.map((user, index) => (
-                <TableRow key={user.user_id} hover>
-                  <TableCell>
-                    {page * rowsPerPage + index + 1}
-                  </TableCell>
+                <TableRow key={user.user_id}>
+                  <TableCell>{page * rowsPerPage + index + 1}</TableCell>
 
                   <TableCell>{user.user_fullName}</TableCell>
-
                   <TableCell>{user.email}</TableCell>
-
                   <TableCell>{user.added_at}</TableCell>
 
                   <TableCell>
                     <Chip
-                      label={user.user_isActive ? "Active" : "Inactive"}
-                      size="small"
+                      label={user.isActive ? "Active" : "Inactive"}
                       sx={{
-                        backgroundColor: user.user_isActive
+                        backgroundColor: user.isActive ? "#D1FAE5" : "#FEE2E2",
+                        color: user.isActive ? "#065F46" : "#DC2626",
+                        fontWeight: 600,
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={user.isVerified ? "YES" : "NO"}
+                      sx={{
+                        backgroundColor: user.isVerified
                           ? "#D1FAE5"
                           : "#FEE2E2",
-                        color: user.user_isActive
-                          ? "#065F46"
-                          : "#DC2626",
+                        color: user.isVerified ? "#065F46" : "#DC2626",
                         fontWeight: 600,
                       }}
                     />
@@ -107,8 +108,8 @@ export const UserTable = ({
 
                   <TableCell>
                     <UserActions
-                      user={user}
-                      onAction={onAction}
+                      userId={user.user_id}
+                      onEdit={onEdit}
                       onDelete={onDelete}
                     />
                   </TableCell>
@@ -118,15 +119,13 @@ export const UserTable = ({
         </Table>
       </TableContainer>
 
-      {/* 📄 PAGINATION */}
       <Box display="flex" justifyContent="center" p={2}>
         <Pagination
           count={Math.ceil(totalCount / rowsPerPage)}
           page={page + 1}
-          onChange={(_, v) => onPageChange(v - 1)}
+          onChange={(_, value) => onPageChange(value - 1)}
         />
       </Box>
     </Paper>
   );
 };
-

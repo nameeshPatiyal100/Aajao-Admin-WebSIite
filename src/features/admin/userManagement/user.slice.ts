@@ -13,18 +13,18 @@ export interface User {
   status: "Active" | "Inactive";
   createdAt: string;
 }
-interface FetchUsersPayload {
-  page?: number;
-  search?: string;
-  status?: string | null;
-}
+// interface FetchUsersPayload {
+//   page?: number;
+//   search?: string;
+//   status?: string | null;
+// }
 
-interface Pagination {
-  currentPage: number;
-  totalPages: number;
-  totalRecords: number;
-  limit: number;
-}
+// interface Pagination {
+//   currentPage: number;
+//   totalPages: number;
+//   totalRecords: number;
+//   limit: number;
+// }
 
 interface UserState {
   users: ApiUser[];
@@ -54,16 +54,34 @@ export const fetchUsers = createAsyncThunk(
   async (payload: { page: number; search: string }, { rejectWithValue }) => {
     try {
       const res = await api.post(ADMINENDPOINTS.USER_LIST, payload);
-      console.log(res, "resresres");
+      //   console.log(res, "resresres");
 
       return {
         users: res.data.data.data, // ✅ ARRAY
-        totalRecords: res.data.data.count,
+        totalRecords: res.data.data.totalRecords,
+        count: res.data.data.count,
         page: payload.page,
       };
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "Failed to fetch users"
+      );
+    }
+  }
+);
+
+export const getUserById = createAsyncThunk(
+  "users/getById",
+  async (userId: number, { rejectWithValue }) => {
+    try {
+      const res = await api.post(ADMINENDPOINTS.USER_BY_ID, {
+        user_id: userId,
+      });
+
+      return res.data.data; // 👈 single user object
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch user details"
       );
     }
   }
@@ -91,7 +109,6 @@ const userSlice = createSlice({
 
       /* ---------- SUCCESS ---------- */
       .addCase(fetchUsers.fulfilled, (state, action) => {
-        console.log(action, "action");
         state.loading = false;
         state.users = action.payload.users; // ✅ array
         if (state.pagination) {
@@ -106,6 +123,8 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       });
   },
+
+
 });
 
 /* ---------------- EXPORTS ---------------- */

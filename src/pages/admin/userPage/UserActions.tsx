@@ -1,53 +1,34 @@
 import { IconButton, Tooltip } from "@mui/material";
-import {
-  Visibility as VisibilityIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-} from "@mui/icons-material";
-import { Attendant } from "./types";
-
-const COLORS = {
-  primary: "#881f9b",
-  secondary: "#10b981",
-};
+import { Edit, Delete } from "@mui/icons-material";
 
 interface Props {
-  user: Attendant;
-  onAction: (user: Attendant, mode: "view" | "edit") => void;
-  onDelete: (user: Attendant) => void;
+  userId: number;
+  onEdit: (userId: number) => void;
+  onDelete: (userId: number) => void;
 }
 
+export const UserActions = ({ userId, onEdit, onDelete }: Props) => {
+  return (
+    <>
+      <Tooltip title="Edit User">
+        <IconButton
+          size="small"
+          sx={{ color: "#10b981", mr: 1 }}
+          onClick={() => onEdit(userId)}
+        >
+          <Edit fontSize="small" />
+        </IconButton>
+      </Tooltip>
 
-export const UserActions = ({ user, onAction, onDelete }: Props) => (
-  <>
-    <Tooltip title="View Details">
-      <IconButton
-        size="small"
-        sx={{ color: COLORS.primary, mr: 1 }}
-        onClick={() => onAction(user, "view")}
-      >
-        <VisibilityIcon fontSize="small" />
-      </IconButton>
-    </Tooltip>
-
-    <Tooltip title="Edit User">
-      <IconButton
-        size="small"
-        sx={{ color: COLORS.secondary, mr: 1 }}
-        onClick={() => onAction(user, "edit")}
-      >
-        <EditIcon fontSize="small" />
-      </IconButton>
-    </Tooltip>
-
-    <Tooltip title="Delete User">
-      <IconButton
-        size="small"
-        sx={{ color: "error.main" }}
-        onClick={() => onDelete(user)}
-      >
-        <DeleteIcon fontSize="small" />
-      </IconButton>
-    </Tooltip>
-  </>
-);
+      <Tooltip title="Delete User">
+        <IconButton
+          size="small"
+          sx={{ color: "error.main" }}
+          onClick={() => onDelete(userId)}
+        >
+          <Delete fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    </>
+  );
+};

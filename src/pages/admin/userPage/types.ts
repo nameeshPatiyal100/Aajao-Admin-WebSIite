@@ -13,6 +13,7 @@ export interface Attendant {
   email: string;
   createdAt: string;
   isActive: boolean;
+  isVerified?: boolean; // Added isVerified property
 }
 // api.types.ts
 export interface User {

@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal, Box, Typography, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Formik, Form } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { validationSchemaAddUserHostModal } from "../../../../validations/admin-validations";
 import { PurpleThemeColor } from "../../../../theme/themeColor";
-
+import { getUserById } from "../../../../features/admin/userManagement/userDetails.slice";
 import PersonalInfo from "./PersonalInfo";
 import AddressInfo from "./AddressInfo";
 import AccountStatus from "./AccountStatus";
@@ -39,12 +39,19 @@ export const initialValues = {
 /* ------------------------------------------------------------------ */
 /* Props */
 /* ------------------------------------------------------------------ */
+// interface AddUserModalProps {
+//   open: boolean;
+//   onClose: () => void;
+//   onAddUser: (data: any) => void;
+//   mode: "add" | "edit" | "view";
+//   user?: Partial<typeof initialValues>;
+// }
 interface AddUserModalProps {
   open: boolean;
   onClose: () => void;
   onAddUser: (data: any) => void;
   mode: "add" | "edit" | "view";
-  user?: Partial<typeof initialValues>;
+  userId?: number; // 👈 ONLY ID
 }
 
 /* ------------------------------------------------------------------ */
@@ -55,16 +62,50 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   onClose,
   onAddUser,
   mode,
-  user,
+  // user,
+  userId,
 }) => {
-  const isViewMode = mode === "view";
+  const mapApiToFormValues = (data: any) => {
+    if (!data) return initialValues;
 
+    return {
+      fullName: data.user_fullName ?? "",
+      email: data.userCred?.cred_user_email ?? "",
+      phone: data.user_pnumber ?? "",
+      dob: data.user_dob ?? "",
+      address: data.user_address ?? "",
+      city: data.user_city ?? "",
+      zipcode: data.user_zipcode ?? "",
+      status: data.user_isActive ? "active" : "inactive",
+      verified: data.user_isVerified ? "yes" : "no",
+      documentType: data.userKycDocs?.ud_acc_doc_id ?? "",
+      documentNumber: data.userKycDocs?.ud_number ?? "",
+      user: data.user_isUser === 1,
+      host: data.user_isHost === 1,
+      profileImage: data.profileImage?.url ?? "",
+      idImage: data.kycDocumentImage?.url ?? "",
+      password: "", // never prefill
+    };
+  };
+
+  const isViewMode = mode === "view";
+  console.log(userId, "user in AddUserModal");
   const getModalTitle = (values: any) => {
     const entity = values.host ? "Host" : "User";
     if (mode === "add") return `Add New ${entity}`;
     if (mode === "edit") return `Edit ${entity}`;
     return `${entity} Details`;
   };
+
+  const dispatch = useAppDispatch();
+  // useAppSelector((state) => state.userDetails);
+  const { data, loading } = useAppSelector((state) => state.userDetails);
+
+  useEffect(() => {
+    if ((mode === "edit" || mode === "view") && userId && open) {
+      dispatch(getUserById(userId));
+    }
+  }, [dispatch, mode, userId, open]);
 
   return (
     <AnimatePresence>
@@ -78,7 +119,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
             style={styles.motionWrapper}
           >
             <Box sx={styles.container}>
-              <Formik
+              {/* <Formik
                 initialValues={{
                   ...initialValues,
                   ...user,
@@ -88,6 +129,23 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 onSubmit={(values) => {
                   if (isViewMode) return;
                   onAddUser(values);
+                  onClose();
+                }}
+              > */}
+              <Formik
+                initialValues={
+                  mode === "add" ? initialValues : mapApiToFormValues(data)
+                }
+                validationSchema={validationSchemaAddUserHostModal}
+                enableReinitialize
+                onSubmit={(values) => {
+                  if (isViewMode) return;
+
+                  onAddUser({
+                    userId, // 👈 include id for update
+                    ...values,
+                  });
+
                   onClose();
                 }}
               >

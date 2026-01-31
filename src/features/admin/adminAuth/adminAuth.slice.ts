@@ -47,11 +47,13 @@ const adminAuthSlice = createSlice({
       })
 
       .addCase(adminLogin.fulfilled, (state, action) => {
+        console.log(action, "action");
         state.loading = false;
         state.admin = action.payload.admin;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-        localStorage.setItem("adminToken", action.payload.token);
+        console.log(action.payload.admin.token, "action.payload.admin.token");
+        state.token = action.payload.admin.token;
+        state.isAuthenticated = true; 
+        localStorage.setItem("adminToken", action.payload.admin.token);
 
         // ✅ SHOW SUCCESS SNACKBAR
         state.snackbarOpen = true;
@@ -65,8 +67,7 @@ const adminAuthSlice = createSlice({
 
         // ❌ SHOW ERROR SNACKBAR
         state.snackbarOpen = true;
-        state.snackbarMessage =
-          action.payload || "Invalid email or password";
+        state.snackbarMessage = action.payload || "Invalid email or password";
         state.snackbarSeverity = "error";
       });
   },

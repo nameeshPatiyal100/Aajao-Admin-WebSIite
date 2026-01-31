@@ -3,6 +3,7 @@ import uiReducer from "../features/ui/ui.slice";
 import adminAuthReducer from "../features/admin/adminAuth/adminAuth.slice";
 import propertyCategoryReducer from "../features/admin/propertyCategory/propertyCategory.slice";
 import userReducer from "../features/admin/userManagement/user.slice";
+import userDetailsReducer from "../features/admin/userManagement/userDetails.slice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     adminAuth: adminAuthReducer,
     propertyCategory: propertyCategoryReducer,
     users: userReducer,
+    userDetails: userDetailsReducer,
   },
 });
 

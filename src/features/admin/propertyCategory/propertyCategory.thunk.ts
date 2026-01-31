@@ -37,8 +37,7 @@ export const fetchPropertyCategories = createAsyncThunk<
   async (_, thunkAPI) => {
     const { dispatch } = thunkAPI;
     try {
-      const response = await api.post<ApiResponse>(ADMINENDPOINTS.PROPERTY_CATEGORIES);
-      console.log(response,"responseresponse")
+      const response = await api.post<ApiResponse>(ADMINENDPOINTS.PROPERTY_CATEGORIES); 
       const resData = response.data;
 
       // show snackbar on success
