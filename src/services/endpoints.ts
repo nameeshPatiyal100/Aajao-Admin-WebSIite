@@ -5,6 +5,7 @@ export const ADMINENDPOINTS = {
     USER_LIST: "/admin/user/search",
     USER_BY_ID: "/admin/user/single",
     USER_ADD_UPDATE: "/admin/user/create",
+    USER_IMAGE_DELETE: "/admin/user/delete/image",
     // PROPERTY-CATEGORY
     PROPERTY_CATEGORIES:"admin/categories",
 

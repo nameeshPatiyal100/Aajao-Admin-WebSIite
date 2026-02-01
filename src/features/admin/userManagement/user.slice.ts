@@ -51,7 +51,10 @@ const initialState: UserState = {
 
 export const fetchUsers = createAsyncThunk(
   "users/fetch",
-  async (payload: { page: number; search: string }, { rejectWithValue }) => {
+  async (
+    payload: { page: number; search: string; status?: 1 | 0 | null },
+    { rejectWithValue }
+  ) => {
     try {
       const res = await api.post(ADMINENDPOINTS.USER_LIST, payload);
       //   console.log(res, "resresres");
@@ -123,8 +126,6 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       });
   },
-
-
 });
 
 /* ---------------- EXPORTS ---------------- */

@@ -5,9 +5,11 @@ import { Formik, Form } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 import { TableLoader } from "../../common/TableLoader";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+// import { useAppDispatch } from "../../../../app/hooks";
 import { validationSchemaAddUserHostModal } from "../../../../validations/admin-validations";
 import { PurpleThemeColor } from "../../../../theme/themeColor";
 import { getUserById } from "../../../../features/admin/userManagement/userDetails.slice";
+import { fetchUsers } from "../../../../features/admin/userManagement/user.slice";
 import { addOrUpdateUser } from "../../../../features/admin/userManagement/userAddUpdate.slice";
 import CustomSnackbar from "../../snackbar/CustomSnackbar";
 
@@ -18,9 +20,6 @@ import RoleSelector from "./RoleSelector";
 import ProfileUpload from "./ProfileUpload";
 import IdUpload from "./IdUpload";
 
-/* ------------------------------------------------------------------ */
-/* Initial Values */
-/* ------------------------------------------------------------------ */
 export const initialValues = {
   fullName: "",
   email: "",
@@ -37,12 +36,11 @@ export const initialValues = {
   user: true,
   host: false,
   profileImage: "",
+  profileImageFileId: null,
   idImage: "",
+  idImageFileId: null,
 };
 
-/* ------------------------------------------------------------------ */
-/* Props */
-/* ------------------------------------------------------------------ */
 interface AddUserModalProps {
   open: boolean;
   onClose: () => void;
@@ -51,9 +49,6 @@ interface AddUserModalProps {
   userId?: number;
 }
 
-/* ------------------------------------------------------------------ */
-/* Component */
-/* ------------------------------------------------------------------ */
 const AddUserModal: React.FC<AddUserModalProps> = ({
   open,
   onClose,
@@ -63,8 +58,15 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   // const { data } = useAppSelector((state) => state.userDetails);
+  const { loading: submitLoading } = useAppSelector(
+    (state) => state.userAddUpdate
+  );
   const { data, loading } = useAppSelector((state) => state.userDetails);
+  const { loading: imgDeleteLoading } = useAppSelector(
+    (state) => state.userImageDelete
+  );
 
+  console.log(imgDeleteLoading, "imgDeleteLoading");
   const [snackbar, setSnackbar] = React.useState<{
     open: boolean;
     message: string;
@@ -89,7 +91,9 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     user: data?.user_isUser === 1,
     host: data?.user_isHost === 1,
     profileImage: data?.profileImage?.url ?? "",
+    profileImageFileId: data?.profileImage?.afile_id ?? null,
     idImage: data?.kycDocumentImage?.url ?? "",
+    idImageFileId: data?.idImage?.afile_id ?? null,
     password: "",
   });
 
@@ -174,6 +178,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     dispatch(addOrUpdateUser(formData))
       .unwrap()
       .then(() => {
+        dispatch(fetchUsers({ page: 1, search: "" }));
         setSnackbar({
           open: true,
           message: "User updated successfully!",
@@ -192,115 +197,116 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
 
   /* ------------------------------------------------------------------ */
   return (
-    <AnimatePresence>
-      {open && (
-        <Modal open={open} onClose={onClose}>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.25 }}
-            style={styles.motionWrapper}
-          >
-            <Box sx={styles.container}>
-              <Box sx={{ position: "relative" }}>
-                {/* Loader overlay */}
-                {loading && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      inset: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: "rgba(255,255,255,0.7)",
-                      zIndex: 10,
-                    }}
-                  >
-                    <TableLoader />
-                  </Box>
-                )}
-
-                {/* Form */}
-                <Formik
-                  initialValues={formInitialValues}
-                  validationSchema={validationSchemaAddUserHostModal}
-                  enableReinitialize
-                  onSubmit={handleSubmit}
-                >
-                  <Form>
-                    {/* HEADER */}
-                    <Box sx={styles.header}>
-                      <Typography sx={styles.title}>{modalTitle}</Typography>
-                      <IconButton onClick={onClose} sx={styles.closeBtn}>
-                        <CloseIcon />
-                      </IconButton>
-                    </Box>
-
-                    {/* FORM SECTIONS */}
-                    <Box sx={styles.formGrid}>
-                      <PersonalInfo disabled={isViewMode} />
-                      <AddressInfo disabled={isViewMode} />
-                      <AccountStatus disabled={isViewMode} />
-                      <RoleSelector disabled={isViewMode} />
-                    </Box>
-
-                    <ProfileUpload disabled={isViewMode} />
-                    <IdUpload disabled={isViewMode} />
-
-                    {/* ACTIONS */}
-                    {!isViewMode && (
-                      <Box sx={styles.actions}>
-                        <Button
-                          onClick={onClose}
-                          variant="outlined"
-                          sx={{
-                            borderColor: "#881f9b",
-                            color: "#881f9b",
-                            "&:hover": {
-                              borderColor: "#881f9b",
-                              backgroundColor: "#f3e8ff",
-                            },
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          sx={{
-                            backgroundColor: "#881f9b",
-                            "&:hover": {
-                              backgroundColor: "#6e167d",
-                            },
-                          }}
-                        >
-                          Update
-                        </Button>
+    <>
+      <AnimatePresence>
+        {open && (
+          <Modal open={open} onClose={onClose}>
+            <motion.div
+              key="add-user-modal"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.25 }}
+              style={styles.motionWrapper}
+            >
+              <Box sx={styles.container}>
+                <Box sx={{ position: "relative" }}>
+                  {/* Loader overlay */}
+                  {loading ||
+                    submitLoading ||
+                    (imgDeleteLoading && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          inset: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backgroundColor: "rgba(255,255,255,0.7)",
+                          zIndex: 10,
+                        }}
+                      >
+                        <TableLoader />
                       </Box>
-                    )}
-                  </Form>
-                </Formik>
+                    ))}
+
+                  {/* Form */}
+                  <Formik
+                    initialValues={formInitialValues}
+                    validationSchema={validationSchemaAddUserHostModal}
+                    enableReinitialize
+                    onSubmit={handleSubmit}
+                  >
+                    <Form>
+                      {/* HEADER */}
+                      <Box sx={styles.header}>
+                        <Typography sx={styles.title}>{modalTitle}</Typography>
+                        <IconButton onClick={onClose} sx={styles.closeBtn}>
+                          <CloseIcon />
+                        </IconButton>
+                      </Box>
+
+                      {/* FORM SECTIONS */}
+                      <Box sx={styles.formGrid}>
+                        <PersonalInfo disabled={isViewMode} />
+                        <AddressInfo disabled={isViewMode} />
+                        <AccountStatus disabled={isViewMode} />
+                        <RoleSelector disabled={isViewMode} />
+                      </Box>
+
+                      <ProfileUpload disabled={isViewMode} userId={userId} />
+                      <IdUpload disabled={isViewMode} userId={userId} />
+
+                      {/* ACTIONS */}
+                      {!isViewMode && (
+                        <Box sx={styles.actions}>
+                          <Button
+                            onClick={onClose}
+                            variant="outlined"
+                            sx={{
+                              borderColor: "#881f9b",
+                              color: "#881f9b",
+                              "&:hover": {
+                                borderColor: "#881f9b",
+                                backgroundColor: "#f3e8ff",
+                              },
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{
+                              backgroundColor: "#881f9b",
+                              "&:hover": {
+                                backgroundColor: "#6e167d",
+                              },
+                            }}
+                          >
+                            {loading ? "Updating..." : "Update"}
+                          </Button>
+                        </Box>
+                      )}
+                    </Form>
+                  </Formik>
+                </Box>
               </Box>
-            </Box>
-          </motion.div>
-        </Modal>
-      )}
+            </motion.div>
+          </Modal>
+        )}
+      </AnimatePresence>
       <CustomSnackbar
         open={snackbar.open}
         message={snackbar.message}
         severity={snackbar.severity}
         onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
       />
-    </AnimatePresence>
+    </>
   );
 };
 
 export default AddUserModal;
-
-/* ------------------------------------------------------------------ */
-/* Styles */
-/* ------------------------------------------------------------------ */
 const styles = {
   motionWrapper: {
     display: "flex",

@@ -5,6 +5,7 @@ import propertyCategoryReducer from "../features/admin/propertyCategory/property
 import userReducer from "../features/admin/userManagement/user.slice";
 import userDetailsReducer from "../features/admin/userManagement/userDetails.slice";
 import userAddUpdateReducer from "../features/admin/userManagement/userAddUpdate.slice";
+import userImageDeleteReducer from "../features/admin/userManagement/UserImageDelete.slice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     users: userReducer,
     userDetails: userDetailsReducer,
     userAddUpdate: userAddUpdateReducer,
+    userImageDelete: userImageDeleteReducer,
   },
 });
 
