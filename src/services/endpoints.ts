@@ -7,6 +7,7 @@ export const ADMINENDPOINTS = {
     USER_ADD_UPDATE: "/admin/user/create",
     // PROPERTY-CATEGORY
     PROPERTY_CATEGORIES:"admin/categories",
+    PROPERTY_CATEGORY_BY_ID:"admin/category",
 
   };
   

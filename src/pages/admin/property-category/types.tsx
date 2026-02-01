@@ -6,7 +6,7 @@ export interface CategoryRecord {
 
 export interface FilterData {
   status: string;
-  keyword: string;
+  search: string;
   [key: string]: any;
 }
 
@@ -25,7 +25,7 @@ export interface AddUpdateFormProps {
 
 export interface ListingProps {
   ThemeColors: { text: { secondary: string }; secondary: string };
-  categoryListing: { id: string; name: string; status: "0" | "1" }[];
+  categories: any;
   totalRecords: number;
   loading: boolean;
   handleFormShow: (id: string) => void;

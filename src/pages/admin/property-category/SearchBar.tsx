@@ -15,7 +15,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchItem(event.target.value);
-    handleFilterUpdate("keyword", event.target.value, false);
+    handleFilterUpdate("search", event.target.value, false);
   };
 
   const handleCancel = () => {

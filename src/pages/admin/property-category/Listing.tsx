@@ -1,5 +1,3 @@
-// src/components/admin/PropertyCategory/Listing.tsx
-import { useEffect } from "react";
 import {
   Box,
   Paper,
@@ -21,13 +19,13 @@ import { Pagination } from "../../../components";
 import { PurpleThemeColor } from "../../../theme/themeColor";
 import AppSnackbarContainer from "../../../components/admin/common/AppSnackbarContainer";
 
-import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { fetchPropertyCategories } from "../../../features/admin/propertyCategory/propertyCategory.thunk";
-
 import type { ListingProps } from './types';
 
 export default function Listing({
   ThemeColors,
+  categories,
+  loading,
+  totalRecords,
   handleFormShow,
   handlePaginate,
   page,
@@ -35,16 +33,6 @@ export default function Listing({
   handleToggleActive,
   handleDeleteClick,
 }: ListingProps) {
-  const dispatch = useAppDispatch();
-
-  // Redux state
-  const { categories, loading } = useAppSelector((state) => state.propertyCategory);
-  const totalRecords = categories.length;
-
-  // Fetch categories on mount
-  useEffect(() => {
-    dispatch(fetchPropertyCategories());
-  }, [dispatch]);
 
   return (
     <>

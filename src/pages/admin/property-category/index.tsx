@@ -9,6 +9,8 @@ import Listing from "./Listing";
 import SearchBar from "./SearchBar";
 import AddUpdateForm from "./AddUpdateForm";
 import type { CategoryRecord, FilterData } from "./types";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { fetchPropertyCategories } from "../../../features/admin/propertyCategory/propertyCategory.thunk";
 
 let fakeData: CategoryRecord[] = Array.from({ length: 50 }).map(() => ({
   id: faker.string.uuid(),
@@ -19,38 +21,44 @@ let fakeData: CategoryRecord[] = Array.from({ length: 50 }).map(() => ({
 export default function PropertyCategory() {
   // State Management
   const [categoryListing, setCategoryListing] = useState<CategoryRecord[]>([]);
-  const [totalRecords, setTotalRecords] = useState(fakeData.length);
+  // const [totalRecords, setTotalRecords] = useState(fakeData.length);
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState<CategoryRecord | null>(null);
   const [formshow, setFormShow] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
+  const dispatch = useAppDispatch();
+  const { categories, loading } = useAppSelector(
+    (state) => state.propertyCategory,
+  );
+  const totalRecords = categories.length;
+
+  // Fetch categories on mount
+  
   const rowsPerPage = 10;
 
   const requestBody: FilterData = {
     page: page,
     limit: rowsPerPage,
-    keyword: "",
+    search: "",
     status: "",
   };
 
+  useEffect(() => {
+    dispatch(fetchPropertyCategories(requestBody));
+  }, [dispatch]);
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
   const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  useEffect(() => {
-    CandlecategoryListing(requestBody);
-  }, []);
-
-  const CandlecategoryListing = (filter: FilterData) => {
-    setLoading(true);
+  const handlecategoryListing = (filter: FilterData) => {
 
     let records = [...fakeData];
 
     // Search filter
-    if (filter.keyword) {
+    if (filter.search) {
       records = records.filter((item) =>
-        item.name.toLowerCase().includes(filter.keyword.toLowerCase())
+        item.name.toLowerCase().includes(filter.search.toLowerCase()),
       );
     }
 
@@ -59,15 +67,12 @@ export default function PropertyCategory() {
       records = records.filter((item) => item.status === filter.status);
     }
 
-    setTotalRecords(records.length);
-
     // Pagination
     const startIndex = (filter.page - 1) * filter.limit;
     const endIndex = startIndex + filter.limit;
     const paginatedRecords = records.slice(startIndex, endIndex);
 
     setCategoryListing(paginatedRecords);
-    setLoading(false);
   };
 
   const handlePaginate = (_event: unknown, value: number) => {
@@ -78,13 +83,13 @@ export default function PropertyCategory() {
 
     setPage(value);
     setFilterData(updatedFilterData);
-    CandlecategoryListing(updatedFilterData);
+    dispatch(fetchPropertyCategories(updatedFilterData))
   };
 
   const handleFilterUpdate = (
     name: keyof FilterData,
     value: string,
-    apply: boolean = false
+    apply: boolean = false,
   ) => {
     const updatedFilterData: FilterData = {
       ...filterData,
@@ -92,27 +97,29 @@ export default function PropertyCategory() {
     };
     setFilterData(updatedFilterData);
     if (apply) {
-      CandlecategoryListing(updatedFilterData);
+      dispatch(fetchPropertyCategories(updatedFilterData))
     }
   };
 
   const handleFilter = () => {
     const updatedFilterData: FilterData = { ...filterData, page: 1 };
     setPage(1);
-    CandlecategoryListing(updatedFilterData);
+    dispatch(fetchPropertyCategories(updatedFilterData))
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
     setPage(1);
-    CandlecategoryListing(requestBody);
+    dispatch(fetchPropertyCategories(requestBody))
   };
 
   const handleToggleActive = (id: string) => {
     fakeData = fakeData.map((item) =>
-      item.id === id ? { ...item, status: item.status === "1" ? "0" : "1" } : item
+      item.id === id
+        ? { ...item, status: item.status === "1" ? "0" : "1" }
+        : item,
     );
-    CandlecategoryListing(filterData);
+    handlecategoryListing(filterData);
   };
 
   const handleFormClose = () => {
@@ -139,16 +146,16 @@ export default function PropertyCategory() {
     fakeData = fakeData.filter((item) => item.id !== deleteCategoryId);
 
     const remainingItems = fakeData.filter((item) =>
-      filterData.keyword
-        ? item.name.toLowerCase().includes(filterData.keyword.toLowerCase())
-        : true
+      filterData.search
+        ? item.name.toLowerCase().includes(filterData.search.toLowerCase())
+        : true,
     ).length;
 
     const totalPages = Math.ceil(remainingItems / rowsPerPage);
     const newPage = page > totalPages ? totalPages : page;
 
     setPage(newPage || 1);
-    CandlecategoryListing({ ...filterData, page: newPage || 1 });
+    handlecategoryListing({ ...filterData, page: newPage || 1 });
     setIsDeleteModalOpen(false);
     setDeleteCategoryId(null);
   };
@@ -159,7 +166,7 @@ export default function PropertyCategory() {
       fakeData = fakeData.map((item) =>
         item.id === values.id
           ? { ...item, name: values.name, status: values.status }
-          : item
+          : item,
       );
     } else {
       // Add
@@ -171,7 +178,7 @@ export default function PropertyCategory() {
       fakeData.unshift(newRecord);
     }
 
-    CandlecategoryListing(filterData);
+    handlecategoryListing(filterData);
   };
 
   return (
@@ -195,7 +202,7 @@ export default function PropertyCategory() {
       {/* Category Table */}
       <Listing
         ThemeColors={ThemeColors}
-        categoryListing={categoryListing}
+        categories={categories}
         totalRecords={totalRecords}
         loading={loading}
         page={page}
@@ -224,7 +231,7 @@ export default function PropertyCategory() {
           handleAddOrUpdateCategory={handleAddOrUpdateCategory}
         />
       )}
-      <AppSnackbarContainer/>
+      <AppSnackbarContainer />
     </Box>
   );
 }
