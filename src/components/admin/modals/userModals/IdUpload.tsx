@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { Box, Button, Typography, IconButton } from "@mui/material";
 import { useFormikContext } from "formik";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -8,25 +9,45 @@ const PURPLE = "#881f9b";
 
 const IdUpload = ({ disabled }: { disabled: boolean }) => {
   const { setFieldValue, values } = useFormikContext<any>();
+  const [preview, setPreview] = useState<string>("");
+
+  /* -------------------------------------------------- */
+  /* Sync preview with formik value (API image / reset) */
+  /* -------------------------------------------------- */
+  useEffect(() => {
+    if (!values.idImage) {
+      setPreview("");
+      return;
+    }
+
+    // Existing image from backend (string URL)
+    if (typeof values.idImage === "string") {
+      setPreview(values.idImage);
+    }
+
+    // New file selected
+    if (values.idImage instanceof File) {
+      const blobUrl = URL.createObjectURL(values.idImage);
+      setPreview(blobUrl);
+
+      // cleanup to avoid memory leak
+      return () => URL.revokeObjectURL(blobUrl);
+    }
+  }, [values.idImage]);
 
   return (
     <Box>
-      {/* ⬇ Slight gap below heading */}
       <Typography fontSize={14} fontWeight={600} mb={1.5}>
         ID Document Image
       </Typography>
 
       <Box sx={uploadBox}>
-        {values.idImage && (
+        {preview && (
           <Box sx={{ position: "relative", mb: 1.5 }}>
-            {/* 🔍 Clickable image → open in new tab */}
-            <a
-              href={values.idImage}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            {/* clickable preview */}
+            <a href={preview} target="_blank" rel="noopener noreferrer">
               <img
-                src={values.idImage}
+                src={preview}
                 alt="id-document"
                 style={{
                   ...(uploadPreview as any),
@@ -39,9 +60,9 @@ const IdUpload = ({ disabled }: { disabled: boolean }) => {
               <IconButton
                 size="small"
                 onClick={(e) => {
-                  e.stopPropagation(); // ⛔ prevent opening image
                   e.preventDefault();
-                  setFieldValue("idImage", "");
+                  e.stopPropagation();
+                  setFieldValue("idImage", ""); // remove image
                 }}
                 sx={{
                   position: "absolute",
@@ -50,9 +71,7 @@ const IdUpload = ({ disabled }: { disabled: boolean }) => {
                   bgcolor: "#fff",
                   color: PURPLE,
                   boxShadow: 1,
-                  "&:hover": {
-                    bgcolor: "#f3e8ff",
-                  },
+                  "&:hover": { bgcolor: "#f3e8ff" },
                 }}
               >
                 <CloseIcon fontSize="small" />
@@ -61,7 +80,6 @@ const IdUpload = ({ disabled }: { disabled: boolean }) => {
           </Box>
         )}
 
-        {/* ⬇ Upload button spacing */}
         {!disabled && (
           <Button
             startIcon={<UploadFileIcon sx={{ color: PURPLE }} />}
@@ -84,9 +102,10 @@ const IdUpload = ({ disabled }: { disabled: boolean }) => {
               accept="image/*"
               onChange={(e) => {
                 const file = e.target.files?.[0];
-                if (file) {
-                  setFieldValue("idImage", URL.createObjectURL(file));
-                }
+                if (!file) return;
+
+                // ✅ store REAL FILE in formik
+                setFieldValue("idImage", file);
               }}
             />
           </Button>
@@ -96,4 +115,4 @@ const IdUpload = ({ disabled }: { disabled: boolean }) => {
   );
 };
 
-export default IdUpload;
+export default React.memo(IdUpload);

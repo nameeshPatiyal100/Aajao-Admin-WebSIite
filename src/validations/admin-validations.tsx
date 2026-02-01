@@ -69,9 +69,9 @@ export const validationSchemaAddUserHostModal = Yup.object({
   phone: Yup.string()
     .matches(/^[0-9]{10}$/, "Enter valid 10-digit number")
     .required("Phone is required"),
-  password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
+  // password: Yup.string()
+  //   .min(8, "Password must be at least 8 characters")
+  //   .required("Password is required"),
   documentType: Yup.string().required("Document type is required"),
   documentNumber: Yup.string().required("Document number is required"),
   dob: Yup.date().nullable().required("Date of Birth is required"),

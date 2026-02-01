@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Checkbox, FormControlLabel, Typography } from "@mui/material";
 import { useFormikContext } from "formik";
 import { sectionBox } from "./styles";
@@ -48,4 +49,6 @@ const RoleSelector = ({ disabled }: { disabled: boolean }) => {
   );
 };
 
-export default RoleSelector;
+// export default RoleSelector;
+export default React.memo(RoleSelector);
+

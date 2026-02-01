@@ -11,11 +11,27 @@ export const fieldStyle = {
     "&.Mui-focused fieldset": {
       borderColor: "#881f9b",
     },
+    "& input": {
+      color: "#881f9b",
+    },
+    /* SELECTED VALUE (dropdown text) */
+    "& .MuiSelect-select": {
+      color: "#881f9b",
+    },
   },
   "& .MuiInputLabel-root": {
     color: "#881f9b",
   },
   "& .MuiInputLabel-root.Mui-focused": {
+    color: "#881f9b",
+  },
+  /* SELECTED VALUE (dropdown text) */
+  "& .MuiSelect-select": {
+    color: "#881f9b",
+  },
+
+  /* DROPDOWN ARROW ICON */
+  "& .MuiSvgIcon-root": {
     color: "#881f9b",
   },
 };
@@ -45,7 +61,6 @@ export const personalInfoFieldStyle = {
     color: "#881f9b", // optional: helper text color
   },
 };
-
 
 export const sectionBox = {
   gridColumn: "1 / -1",

@@ -1,3 +1,4 @@
+import React from "react";
 import { TextField } from "@mui/material";
 import { useFormikContext } from "formik";
 import { personalInfoFieldStyle } from "./styles";
@@ -55,4 +56,7 @@ const AddressInfo = ({ disabled }: { disabled: boolean }) => {
   );
 };
 
-export default AddressInfo;
+// export default ;
+export default React.memo(AddressInfo);
+
+

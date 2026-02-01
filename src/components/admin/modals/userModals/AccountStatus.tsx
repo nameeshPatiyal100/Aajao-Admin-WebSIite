@@ -1,3 +1,4 @@
+import React from "react";
 import { TextField, MenuItem } from "@mui/material";
 import { useFormikContext } from "formik";
 import { fieldStyle } from "./styles";
@@ -23,8 +24,8 @@ const AccountStatus = ({ disabled }: { disabled: boolean }) => {
         disabled={disabled}
         sx={fieldStyle}
       >
-        <MenuItem value="Active">Active</MenuItem>
-        <MenuItem value="Inactive">Inactive</MenuItem>
+        <MenuItem value={1}>Active</MenuItem>
+        <MenuItem value={0}>Inactive</MenuItem>
       </TextField>
 
       {/* Verification */}
@@ -43,8 +44,8 @@ const AccountStatus = ({ disabled }: { disabled: boolean }) => {
         disabled={disabled}
         sx={fieldStyle}
       >
-        <MenuItem value="Verified">Verified</MenuItem>
-        <MenuItem value="Unverified">Unverified</MenuItem>
+        <MenuItem value={1}>Verified</MenuItem>
+        <MenuItem value={0}>Unverified</MenuItem>
       </TextField>
 
       {/* Document Type */}
@@ -63,9 +64,9 @@ const AccountStatus = ({ disabled }: { disabled: boolean }) => {
         disabled={disabled}
         sx={fieldStyle}
       >
-        <MenuItem value="Aadhaar Card">Aadhaar Card</MenuItem>
-        <MenuItem value="Driving Licence">Driving Licence</MenuItem>
-        <MenuItem value="Passport">Passport</MenuItem>
+        <MenuItem value={1}>Aadhaar Card</MenuItem>
+        <MenuItem value={2}>Driving Licence</MenuItem>
+        <MenuItem value={3}>Passport</MenuItem>
       </TextField>
 
       {/* Document Number */}
@@ -87,4 +88,6 @@ const AccountStatus = ({ disabled }: { disabled: boolean }) => {
   );
 };
 
-export default AccountStatus;
+export default React.memo(AccountStatus);
+
+// export default AccountStatus;

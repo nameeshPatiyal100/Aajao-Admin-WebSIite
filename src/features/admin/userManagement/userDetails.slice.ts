@@ -7,7 +7,7 @@ import { ADMINENDPOINTS } from "../../../services/endpoints";
 /* ================= TYPES ================= */
 
 interface UserDetailsState {
-  data: any | null;     // single user detail
+  data: any | null; // single user detail
   loading: boolean;
   error: string | null;
 }
@@ -29,7 +29,7 @@ export const getUserById = createAsyncThunk(
       const res = await api.post(ADMINENDPOINTS.USER_BY_ID, {
         userId: userId,
       });
-
+      console.log(res, "response from getUserById thunk");
       return res.data.data; // 👈 single user object
     } catch (err: any) {
       return rejectWithValue(

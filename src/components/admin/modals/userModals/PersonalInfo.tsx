@@ -1,3 +1,4 @@
+import React from "react";
 import { TextField, IconButton, InputAdornment } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -117,4 +118,6 @@ const PersonalInfo = ({ disabled }: { disabled: boolean }) => {
   );
 };
 
-export default PersonalInfo;
+// export default ;
+export default React.memo(PersonalInfo);
+

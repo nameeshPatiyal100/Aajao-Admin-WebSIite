@@ -1,12 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Modal, Box, Typography, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Formik, Form } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
+import { TableLoader } from "../../common/TableLoader";
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { validationSchemaAddUserHostModal } from "../../../../validations/admin-validations";
 import { PurpleThemeColor } from "../../../../theme/themeColor";
 import { getUserById } from "../../../../features/admin/userManagement/userDetails.slice";
+import { addOrUpdateUser } from "../../../../features/admin/userManagement/userAddUpdate.slice";
+import CustomSnackbar from "../../snackbar/CustomSnackbar";
+
 import PersonalInfo from "./PersonalInfo";
 import AddressInfo from "./AddressInfo";
 import AccountStatus from "./AccountStatus";
@@ -15,7 +19,7 @@ import ProfileUpload from "./ProfileUpload";
 import IdUpload from "./IdUpload";
 
 /* ------------------------------------------------------------------ */
-/* Initial Values (Formik source of truth) */
+/* Initial Values */
 /* ------------------------------------------------------------------ */
 export const initialValues = {
   fullName: "",
@@ -26,8 +30,8 @@ export const initialValues = {
   address: "",
   city: "",
   zipcode: "",
-  status: "",
-  verified: "",
+  status: 1,
+  verified: 1,
   documentType: "",
   documentNumber: "",
   user: true,
@@ -39,19 +43,12 @@ export const initialValues = {
 /* ------------------------------------------------------------------ */
 /* Props */
 /* ------------------------------------------------------------------ */
-// interface AddUserModalProps {
-//   open: boolean;
-//   onClose: () => void;
-//   onAddUser: (data: any) => void;
-//   mode: "add" | "edit" | "view";
-//   user?: Partial<typeof initialValues>;
-// }
 interface AddUserModalProps {
   open: boolean;
   onClose: () => void;
   onAddUser: (data: any) => void;
   mode: "add" | "edit" | "view";
-  userId?: number; // 👈 ONLY ID
+  userId?: number;
 }
 
 /* ------------------------------------------------------------------ */
@@ -60,114 +57,187 @@ interface AddUserModalProps {
 const AddUserModal: React.FC<AddUserModalProps> = ({
   open,
   onClose,
-  onAddUser,
+  // onAddUser,
   mode,
-  // user,
   userId,
 }) => {
-  const mapApiToFormValues = (data: any) => {
-    if (!data) return initialValues;
-
-    return {
-      fullName: data.user_fullName ?? "",
-      email: data.userCred?.cred_user_email ?? "",
-      phone: data.user_pnumber ?? "",
-      dob: data.user_dob ?? "",
-      address: data.user_address ?? "",
-      city: data.user_city ?? "",
-      zipcode: data.user_zipcode ?? "",
-      status: data.user_isActive ? "active" : "inactive",
-      verified: data.user_isVerified ? "yes" : "no",
-      documentType: data.userKycDocs?.ud_acc_doc_id ?? "",
-      documentNumber: data.userKycDocs?.ud_number ?? "",
-      user: data.user_isUser === 1,
-      host: data.user_isHost === 1,
-      profileImage: data.profileImage?.url ?? "",
-      idImage: data.kycDocumentImage?.url ?? "",
-      password: "", // never prefill
-    };
-  };
-
-  const isViewMode = mode === "view";
-  console.log(userId, "user in AddUserModal");
-  const getModalTitle = (values: any) => {
-    const entity = values.host ? "Host" : "User";
-    if (mode === "add") return `Add New ${entity}`;
-    if (mode === "edit") return `Edit ${entity}`;
-    return `${entity} Details`;
-  };
-
   const dispatch = useAppDispatch();
-  // useAppSelector((state) => state.userDetails);
+  // const { data } = useAppSelector((state) => state.userDetails);
   const { data, loading } = useAppSelector((state) => state.userDetails);
 
+  const [snackbar, setSnackbar] = React.useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({ open: false, message: "", severity: "success" });
+
+  const isViewMode = mode === "view";
+
+  /* ---------------- API → Form mapping ---------------- */
+  const mapApiToFormValues = (data: any) => ({
+    fullName: data?.user_fullName ?? "",
+    email: data?.userCred?.cred_user_email ?? "",
+    phone: data?.user_pnumber ?? "",
+    dob: data?.user_dob ?? "",
+    address: data?.user_address ?? "",
+    city: data?.user_city ?? "",
+    zipcode: data?.user_zipcode ?? "",
+    status: data?.user_isActive ?? 1,
+    verified: data?.user_isVerified ?? 1,
+    documentType: data?.userKycDocs?.ud_acc_doc_id ?? "",
+    documentNumber: data?.userKycDocs?.ud_number ?? "",
+    user: data?.user_isUser === 1,
+    host: data?.user_isHost === 1,
+    profileImage: data?.profileImage?.url ?? "",
+    idImage: data?.kycDocumentImage?.url ?? "",
+    password: "",
+  });
+
+  /* ---------------- Fetch user ---------------- */
   useEffect(() => {
     if ((mode === "edit" || mode === "view") && userId && open) {
       dispatch(getUserById(userId));
     }
   }, [dispatch, mode, userId, open]);
 
+  /* ---------------- Initial values ---------------- */
+  const formInitialValues = useMemo(() => {
+    if (mode === "add") return initialValues;
+    return data ? mapApiToFormValues(data) : initialValues;
+  }, [mode, data]);
+
+  /* ---------------- Store original values ---------------- */
+  const initialRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (data) {
+      initialRef.current = mapApiToFormValues(data);
+    }
+  }, [data]);
+
+  /* ---------------- Modal title (NO Formik dependency) ---------------- */
+  const modalTitle = useMemo(() => {
+    if (mode === "add") return "Add New User";
+    if (mode === "edit") return "Edit User";
+    return "User Details";
+  }, [mode]);
+
+  /* ---------------- Submit handler ---------------- */
+  const handleSubmit = (values: any) => {
+    if (isViewMode) return;
+
+    const formData = new FormData();
+    if (userId) formData.append("userId", String(userId));
+
+    const payloadMap: Record<string, string> = {
+      fullName: "user_fullName",
+      phone: "user_pnumber",
+      dob: "user_dob",
+      address: "user_address",
+      city: "user_city",
+      zipcode: "user_zipcode",
+      host: "user_isHost",
+      user: "user_isUser",
+      status: "user_isActive",
+      verified: "user_isVerified",
+      password: "cred_user_password",
+      email: "cred_user_email",
+      documentType: "cred_user_doc_type",
+      documentNumber: "cred_user_doc_number",
+    };
+
+    Object.keys(values).forEach((key) => {
+      const value = values[key];
+
+      // images
+      if (key === "profileImage" && value instanceof File) {
+        formData.append("user_profile", value);
+        return;
+      }
+      if (key === "idImage" && value instanceof File) {
+        formData.append("user_id_image", value);
+        return;
+      }
+
+      // booleans → 1/0
+      if (typeof value === "boolean") {
+        formData.append(payloadMap[key]!, value ? "1" : "0");
+        return;
+      }
+
+      // normal fields
+      if (value !== undefined && value !== null && payloadMap[key]) {
+        formData.append(payloadMap[key]!, String(value));
+      }
+    });
+
+    dispatch(addOrUpdateUser(formData))
+      .unwrap()
+      .then(() => {
+        setSnackbar({
+          open: true,
+          message: "User updated successfully!",
+          severity: "success",
+        });
+        onClose(); // close modal after success
+      })
+      .catch((err: any) => {
+        setSnackbar({
+          open: true,
+          message: err?.message || "Failed to update user",
+          severity: "error",
+        });
+      });
+  };
+
+  /* ------------------------------------------------------------------ */
   return (
     <AnimatePresence>
       {open && (
         <Modal open={open} onClose={onClose}>
           <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.92 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.25 }}
             style={styles.motionWrapper}
           >
             <Box sx={styles.container}>
-              {/* <Formik
-                initialValues={{
-                  ...initialValues,
-                  ...user,
-                }}
-                validationSchema={validationSchemaAddUserHostModal}
-                enableReinitialize
-                onSubmit={(values) => {
-                  if (isViewMode) return;
-                  onAddUser(values);
-                  onClose();
-                }}
-              > */}
-              <Formik
-                initialValues={
-                  mode === "add" ? initialValues : mapApiToFormValues(data)
-                }
-                validationSchema={validationSchemaAddUserHostModal}
-                enableReinitialize
-                onSubmit={(values) => {
-                  if (isViewMode) return;
+              <Box sx={{ position: "relative" }}>
+                {/* Loader overlay */}
+                {loading && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(255,255,255,0.7)",
+                      zIndex: 10,
+                    }}
+                  >
+                    <TableLoader />
+                  </Box>
+                )}
 
-                  onAddUser({
-                    userId, // 👈 include id for update
-                    ...values,
-                  });
-
-                  onClose();
-                }}
-              >
-                {({ values }) => (
+                {/* Form */}
+                <Formik
+                  initialValues={formInitialValues}
+                  validationSchema={validationSchemaAddUserHostModal}
+                  enableReinitialize
+                  onSubmit={handleSubmit}
+                >
                   <Form>
-                    {/* ---------------- HEADER ---------------- */}
+                    {/* HEADER */}
                     <Box sx={styles.header}>
-                      <Box>
-                        <Typography sx={styles.title}>
-                          {getModalTitle(values)}
-                        </Typography>
-                        <Typography sx={styles.subtitle}>
-                          Manage account information & verification
-                        </Typography>
-                      </Box>
-
+                      <Typography sx={styles.title}>{modalTitle}</Typography>
                       <IconButton onClick={onClose} sx={styles.closeBtn}>
                         <CloseIcon />
                       </IconButton>
                     </Box>
 
-                    {/* ---------------- FORM SECTIONS ---------------- */}
+                    {/* FORM SECTIONS */}
                     <Box sx={styles.formGrid}>
                       <PersonalInfo disabled={isViewMode} />
                       <AddressInfo disabled={isViewMode} />
@@ -178,33 +248,50 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                     <ProfileUpload disabled={isViewMode} />
                     <IdUpload disabled={isViewMode} />
 
-                    {/* ---------------- ACTIONS ---------------- */}
-                    <Box sx={styles.actions}>
-                      <Button
-                        onClick={onClose}
-                        variant="outlined"
-                        sx={styles.cancelBtn}
-                      >
-                        Cancel
-                      </Button>
-
-                      {!isViewMode && (
+                    {/* ACTIONS */}
+                    {!isViewMode && (
+                      <Box sx={styles.actions}>
+                        <Button
+                          onClick={onClose}
+                          variant="outlined"
+                          sx={{
+                            borderColor: "#881f9b",
+                            color: "#881f9b",
+                            "&:hover": {
+                              borderColor: "#881f9b",
+                              backgroundColor: "#f3e8ff",
+                            },
+                          }}
+                        >
+                          Cancel
+                        </Button>
                         <Button
                           type="submit"
                           variant="contained"
-                          sx={styles.submitBtn}
+                          sx={{
+                            backgroundColor: "#881f9b",
+                            "&:hover": {
+                              backgroundColor: "#6e167d",
+                            },
+                          }}
                         >
-                          {mode === "edit" ? "Update" : "Add"}
+                          Update
                         </Button>
-                      )}
-                    </Box>
+                      </Box>
+                    )}
                   </Form>
-                )}
-              </Formik>
+                </Formik>
+              </Box>
             </Box>
           </motion.div>
         </Modal>
       )}
+      <CustomSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+      />
     </AnimatePresence>
   );
 };
@@ -221,7 +308,6 @@ const styles = {
     justifyContent: "center",
     height: "100%",
   },
-
   container: {
     width: { xs: "92%", md: "80%" },
     maxWidth: 900,
@@ -231,7 +317,6 @@ const styles = {
     p: 4,
     overflowY: "auto",
   },
-
   header: {
     display: "flex",
     justifyContent: "space-between",
@@ -242,44 +327,23 @@ const styles = {
     background: `linear-gradient(135deg, ${PurpleThemeColor}, #a855f7)`,
     color: "#fff",
   },
-
   title: {
     fontWeight: 700,
     fontSize: "1.25rem",
   },
-
-  subtitle: {
-    fontSize: "0.8rem",
-    opacity: 0.9,
-  },
-
   closeBtn: {
     color: "#fff",
-    bgcolor: "rgba(255,255,255,0.15)",
-    "&:hover": { bgcolor: "rgba(255,255,255,0.25)" },
   },
-
   formGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: 3,
     mb: 3,
   },
-
   actions: {
-    mt: 4,
     display: "flex",
     justifyContent: "flex-end",
     gap: 2,
-  },
-
-  cancelBtn: {
-    borderColor: PurpleThemeColor,
-    color: PurpleThemeColor,
-  },
-
-  submitBtn: {
-    bgcolor: PurpleThemeColor,
-    "&:hover": { bgcolor: "#6e167d" },
+    mt: 3,
   },
 };
