@@ -39,7 +39,7 @@ export const getPropertyCategoryById = createAsyncThunk(
 
 /* ================= SLICE ================= */
 
-const categoryDetailsSlice = createSlice({
+const propertyCategoryDetailsSlice = createSlice({
   name: "categoryDetails",
   initialState,
   reducers: {
@@ -74,5 +74,5 @@ const categoryDetailsSlice = createSlice({
 
 /* ================= EXPORTS ================= */
 
-export const { resetCategoryDetails } = categoryDetailsSlice.actions;
-export default categoryDetailsSlice.reducer;
+export const { resetCategoryDetails } = propertyCategoryDetailsSlice.actions;
+export default propertyCategoryDetailsSlice.reducer;

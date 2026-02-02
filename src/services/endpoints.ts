@@ -8,6 +8,9 @@ export const ADMINENDPOINTS = {
     // PROPERTY-CATEGORY
     PROPERTY_CATEGORIES:"admin/categories",
     PROPERTY_CATEGORY_BY_ID:"admin/category",
+    PROPERTY_CATEGORY_ADD_UPDATE: "/admin/category/create",
+    PROPERTY_CATEGORY_STATUS: "/admin/category/update-status",
+    PROPERTY_CATEGORY_DELETE: "/admin/categories/delete",
 
   };
   

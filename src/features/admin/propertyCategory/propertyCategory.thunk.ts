@@ -2,8 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../services/api";
 import { ADMINENDPOINTS } from "../../../services/endpoints";
 
-import { setMessage, setError } from "../../ui/ui.slice.ts";
-
 export interface PropertyCategory {
   cat_id: number;
   cat_title: string;

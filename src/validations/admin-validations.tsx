@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
 export const setupCategorySchema = Yup.object({
-  name: Yup.string().required("Full name is required"),
-  status: Yup.string().required("Status is required"),
+  cat_title: Yup.string().required("Title is required"),
+  cat_isActive: Yup.string().required("Status is required"),
 });
 
 export const setupAmenitySchema = Yup.object({

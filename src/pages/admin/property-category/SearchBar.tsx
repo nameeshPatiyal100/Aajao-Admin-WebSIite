@@ -45,7 +45,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
         <Button
           variant="contained"
-          onClick={() => handleFormShow()} // <-- no id needed for Add
+          onClick={() => handleFormShow()}
           sx={{
             backgroundColor: ThemeColors.primary,
             borderRadius: 2,

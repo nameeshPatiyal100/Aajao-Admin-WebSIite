@@ -19,7 +19,7 @@ import { Pagination } from "../../../components";
 import { PurpleThemeColor } from "../../../theme/themeColor";
 import AppSnackbarContainer from "../../../components/admin/common/AppSnackbarContainer";
 
-import type { ListingProps } from './types';
+import type { CategoryRecord, ListingProps } from './types';
 
 export default function Listing({
   ThemeColors,
@@ -85,7 +85,7 @@ export default function Listing({
                   </TableCell>
                 </TableRow>
               ) : (
-                categories.map((cat, index) => (
+                categories.map((cat:CategoryRecord, index:number) => (
                   <TableRow
                     key={cat.cat_id}
                     hover
@@ -101,7 +101,7 @@ export default function Listing({
                       <Switch
                         size="small"
                         checked={cat.cat_isActive === "1"}
-                        onChange={() => handleToggleActive(cat.cat_id.toString())}
+                        onChange={() => handleToggleActive(Number(cat.cat_id))}
                         sx={{
                           "& .MuiSwitch-switchBase.Mui-checked": {
                             color: PurpleThemeColor,

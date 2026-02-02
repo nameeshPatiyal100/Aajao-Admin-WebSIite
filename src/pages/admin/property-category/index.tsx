@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { ConfirmDeleteModal } from "../../../components";
 import { ThemeColors } from "../../../theme/themeColor";
 import AppSnackbarContainer from "../../../components/admin/common/AppSnackbarContainer";
@@ -8,23 +7,18 @@ import AppSnackbarContainer from "../../../components/admin/common/AppSnackbarCo
 import Listing from "./Listing";
 import SearchBar from "./SearchBar";
 import AddUpdateForm from "./AddUpdateForm";
-import type { CategoryRecord, FilterData } from "./types";
+import type { FilterData } from "./types";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchPropertyCategories } from "../../../features/admin/propertyCategory/propertyCategory.thunk";
-
-let fakeData: CategoryRecord[] = Array.from({ length: 50 }).map(() => ({
-  id: faker.string.uuid(),
-  name: faker.company.name(),
-  status: faker.helpers.arrayElement(["1", "0"]) as "1" | "0",
-}));
+import { changePropertyCategoryStatus } from "../../../features/admin/propertyCategory/productCategoryStatus.slice";
+import { deletePropertyCategory } from "../../../features/admin/propertyCategory/productCategoryDelete.slice";
 
 export default function PropertyCategory() {
   // State Management
-  const [categoryListing, setCategoryListing] = useState<CategoryRecord[]>([]);
   // const [totalRecords, setTotalRecords] = useState(fakeData.length);
   const [page, setPage] = useState(1);
-  const [formData, setFormData] = useState<CategoryRecord | null>(null);
   const [formshow, setFormShow] = useState(false);
+  const [categoryId, setCategoryId] = useState<string | null>(null);
   // const [loading, setLoading] = useState(true);
 
   const dispatch = useAppDispatch();
@@ -34,7 +28,7 @@ export default function PropertyCategory() {
   const totalRecords = categories.length;
 
   // Fetch categories on mount
-  
+
   const rowsPerPage = 10;
 
   const requestBody: FilterData = {
@@ -51,30 +45,6 @@ export default function PropertyCategory() {
   const [deleteCategoryId, setDeleteCategoryId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const handlecategoryListing = (filter: FilterData) => {
-
-    let records = [...fakeData];
-
-    // Search filter
-    if (filter.search) {
-      records = records.filter((item) =>
-        item.name.toLowerCase().includes(filter.search.toLowerCase()),
-      );
-    }
-
-    // Status filter
-    if (filter.status !== "") {
-      records = records.filter((item) => item.status === filter.status);
-    }
-
-    // Pagination
-    const startIndex = (filter.page - 1) * filter.limit;
-    const endIndex = startIndex + filter.limit;
-    const paginatedRecords = records.slice(startIndex, endIndex);
-
-    setCategoryListing(paginatedRecords);
-  };
-
   const handlePaginate = (_event: unknown, value: number) => {
     const updatedFilterData: FilterData = {
       ...filterData,
@@ -83,7 +53,7 @@ export default function PropertyCategory() {
 
     setPage(value);
     setFilterData(updatedFilterData);
-    dispatch(fetchPropertyCategories(updatedFilterData))
+    dispatch(fetchPropertyCategories(updatedFilterData));
   };
 
   const handleFilterUpdate = (
@@ -97,40 +67,47 @@ export default function PropertyCategory() {
     };
     setFilterData(updatedFilterData);
     if (apply) {
-      dispatch(fetchPropertyCategories(updatedFilterData))
+      dispatch(fetchPropertyCategories(updatedFilterData));
     }
   };
 
   const handleFilter = () => {
     const updatedFilterData: FilterData = { ...filterData, page: 1 };
     setPage(1);
-    dispatch(fetchPropertyCategories(updatedFilterData))
+    dispatch(fetchPropertyCategories(updatedFilterData));
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
     setPage(1);
-    dispatch(fetchPropertyCategories(requestBody))
+    dispatch(fetchPropertyCategories(requestBody));
   };
 
-  const handleToggleActive = (id: string) => {
-    fakeData = fakeData.map((item) =>
-      item.id === id
-        ? { ...item, status: item.status === "1" ? "0" : "1" }
-        : item,
-    );
-    handlecategoryListing(filterData);
+  const handleToggleActive = async (id: number) => {
+    const cat = categories.find((c) => c.cat_id === id);
+    if (!cat) return;
+
+    const newStatus: "1" | "0" = cat.cat_isActive === "1" ? "0" : "1";
+
+    try {
+      await dispatch(
+        changePropertyCategoryStatus({ categoryId: id, status: newStatus }),
+      ).unwrap();
+
+      dispatch(fetchPropertyCategories(filterData));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleFormClose = () => {
     setFormShow(false);
-    setFormData(null);
+    setCategoryId(null);
   };
 
   const handleFormShow = (id?: string) => {
     if (id) {
-      const result = categoryListing.find((item) => item.id === id) || null;
-      setFormData(result);
+      setCategoryId(id);
     }
     setFormShow(true);
   };
@@ -140,45 +117,18 @@ export default function PropertyCategory() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteCategory = () => {
+  const handleDeleteCategory = async () => {
     if (!deleteCategoryId) return;
-
-    fakeData = fakeData.filter((item) => item.id !== deleteCategoryId);
-
-    const remainingItems = fakeData.filter((item) =>
-      filterData.search
-        ? item.name.toLowerCase().includes(filterData.search.toLowerCase())
-        : true,
-    ).length;
-
-    const totalPages = Math.ceil(remainingItems / rowsPerPage);
-    const newPage = page > totalPages ? totalPages : page;
-
-    setPage(newPage || 1);
-    handlecategoryListing({ ...filterData, page: newPage || 1 });
-    setIsDeleteModalOpen(false);
-    setDeleteCategoryId(null);
-  };
-
-  const handleAddOrUpdateCategory = (values: CategoryRecord) => {
-    if (values.id) {
-      // Update
-      fakeData = fakeData.map((item) =>
-        item.id === values.id
-          ? { ...item, name: values.name, status: values.status }
-          : item,
-      );
-    } else {
-      // Add
-      const newRecord: CategoryRecord = {
-        id: faker.string.uuid(),
-        name: values.name,
-        status: values.status,
-      };
-      fakeData.unshift(newRecord);
+    try {
+      await dispatch(
+        deletePropertyCategory({ categoryId: deleteCategoryId }),
+      ).unwrap();
+      dispatch(fetchPropertyCategories(filterData));
+      setIsDeleteModalOpen(false);
+      setDeleteCategoryId(null);
+    } catch (err) {
+      console.error("Failed to delete category:", err);
     }
-
-    handlecategoryListing(filterData);
   };
 
   return (
@@ -225,10 +175,10 @@ export default function PropertyCategory() {
 
       {formshow && (
         <AddUpdateForm
-          formData={formData}
+          categoryId={categoryId}
           formshow={formshow}
           handleFormClose={handleFormClose}
-          handleAddOrUpdateCategory={handleAddOrUpdateCategory}
+          filterData={filterData}
         />
       )}
       <AppSnackbarContainer />

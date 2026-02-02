@@ -1,14 +1,16 @@
 export interface CategoryRecord {
-  id: string;
-  name: string;
-  status: "1" | "0";
+  cat_id: string;
+  cat_title: string;
+  cat_isActive: "1" | "0";
 }
 
 export interface FilterData {
-  status: string;
+  page: number;
+  limit: number;
   search: string;
-  [key: string]: any;
+  status: string;
 }
+
 
 export interface FormValues {
   id: string;
@@ -17,10 +19,11 @@ export interface FormValues {
 }
 
 export interface AddUpdateFormProps {
-  formData: FormValues | null;
+  categoryId?: string | null;
   formshow: boolean;
+  // handleFormShow: (id?: string) => void;
+  filterData: any;
   handleFormClose: () => void;
-  handleAddOrUpdateCategory: (values: FormValues) => void;
 }
 
 export interface ListingProps {
@@ -32,7 +35,7 @@ export interface ListingProps {
   handlePaginate: (event: React.ChangeEvent<unknown>, page: number) => void;
   page: number;
   rowsPerPage: number;
-  handleToggleActive: (id: string) => void;
+  handleToggleActive: (id: number) => void;
   handleDeleteClick: (id: string) => void;
 }
 
@@ -50,7 +53,7 @@ export interface SearchBarProps {
     status: string;
     [key: string]: any;
   };
-  handleFilterUpdate: (key: string, value: any, apply: boolean) => void;
+  handleFilterUpdate: (name: keyof FilterData, value: string, apply?: boolean) => void;
   handleFilter: () => void;
   handleClear: () => void;
   handleFormShow: (id?: string) => void;
