@@ -36,11 +36,6 @@ export default function UserManagementPage() {
   const [selectedUser, setSelectedUser] = useState<Attendant | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  // const [open, setOpen] = useState(false);
-  // const [mode, setMode] = useState<"add" | "edit" | "view">("add");
-  // const [userId, setUserId] = useState<number | null>(null);
-
   const debouncedSearch = useDebounce(searchTerm, 500);
   const rowsPerPage = 10;
   

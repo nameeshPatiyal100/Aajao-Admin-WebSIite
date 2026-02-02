@@ -9,6 +9,7 @@ import propertyCategoryDeleteReducer from "../features/admin/propertyCategory/pr
 import userReducer from "../features/admin/userManagement/user.slice";
 import userDetailsReducer from "../features/admin/userManagement/userDetails.slice";
 import userAddUpdateReducer from "../features/admin/userManagement/userAddUpdate.slice";
+import userImageDeleteReducer from "../features/admin/userManagement/UserImageDelete.slice";
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const store = configureStore({
     propertyCategoryAddUpdate: propertyCategoryAddUpdateReducer,
     propertyCategoryStatus: propertyCategoryStatusReducer,
     propertyCategoryDelete: propertyCategoryDeleteReducer,
+    userImageDelete: userImageDeleteReducer,
   },
 });
 
