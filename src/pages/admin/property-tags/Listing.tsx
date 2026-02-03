@@ -11,17 +11,17 @@ import {
   Switch,
   Tooltip,
   IconButton,
-  CircularProgress,
 } from "@mui/material";
 
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
 import { PurpleThemeColor } from "../../../theme/themeColor";
-import type { ListingProps } from './types';
+import type { ListingProps, TagRecord } from "./types";
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 export default function Listing({
   ThemeColors,
-  tagsListing,
+  tags,
   totalRecords,
   loading,
   handleFormShow,
@@ -63,10 +63,10 @@ export default function Listing({
             {loading ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
-                  <CircularProgress size={28} />
+                  <TableLoader text="Fetching tags..." />
                 </TableCell>
               </TableRow>
-            ) : tagsListing.length === 0 ? (
+            ) : tags.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography
@@ -78,9 +78,9 @@ export default function Listing({
                 </TableCell>
               </TableRow>
             ) : (
-              tagsListing.map((tag, index) => (
+              tags.map((tag: TagRecord, index: number) => (
                 <TableRow
-                  key={tag.id}
+                  key={tag.tag_id}
                   hover
                   sx={{
                     transition: "all 0.3s ease",
@@ -90,20 +90,23 @@ export default function Listing({
                 >
                   <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
 
-                  <TableCell sx={{ fontSize: "0.85rem" }}>{tag.name}</TableCell>
+                  <TableCell sx={{ fontSize: "0.85rem" }}>
+                    {tag.tag_name}
+                  </TableCell>
 
                   <TableCell>
                     <Switch
                       size="small"
-                      checked={tag.status === "1"}
-                      onChange={() => handleToggleActive(tag.id)}
+                      checked={tag.tag_isActive === 1}
+                      onChange={() => handleToggleActive(Number(tag.tag_id))}
                       sx={{
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: PurpleThemeColor,
                         },
-                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                          backgroundColor: PurpleThemeColor,
-                        },
+                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                          {
+                            backgroundColor: PurpleThemeColor,
+                          },
                         transition: "all 0.3s ease",
                       }}
                     />
@@ -119,7 +122,7 @@ export default function Listing({
                           transition: "all 0.3s ease",
                           "&:hover": { transform: "scale(1.1)" },
                         }}
-                        onClick={() => handleFormShow(tag.id)}
+                        onClick={() => handleFormShow(tag.tag_id)}
                       >
                         <EditIcon fontSize="small" />
                       </IconButton>
@@ -133,7 +136,7 @@ export default function Listing({
                           transition: "all 0.3s ease",
                           "&:hover": { transform: "scale(1.1)" },
                         }}
-                        onClick={() => handleDeleteClick(tag.id)}
+                        onClick={() => handleDeleteClick(tag.tag_id)}
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
@@ -147,7 +150,7 @@ export default function Listing({
       </TableContainer>
 
       {/* Pagination */}
-      {tagsListing.length > 0 && (
+      {tags.length > 0 && (
         <Box display="flex" justifyContent="center" alignItems="center" p={2}>
           <Pagination
             count={Math.ceil(totalRecords / rowsPerPage)}

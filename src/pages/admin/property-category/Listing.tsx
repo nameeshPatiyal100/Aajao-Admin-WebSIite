@@ -11,7 +11,6 @@ import {
   Switch,
   Tooltip,
   IconButton,
-  CircularProgress,
 } from "@mui/material";
 
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
@@ -20,6 +19,7 @@ import { PurpleThemeColor } from "../../../theme/themeColor";
 import AppSnackbarContainer from "../../../components/admin/common/AppSnackbarContainer";
 
 import type { CategoryRecord, ListingProps } from './types';
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 export default function Listing({
   ThemeColors,
@@ -70,7 +70,7 @@ export default function Listing({
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={4} align="center">
-                    <CircularProgress size={28} />
+                    <TableLoader text="Fetching categories..." />
                   </TableCell>
                 </TableRow>
               ) : categories.length === 0 ? (

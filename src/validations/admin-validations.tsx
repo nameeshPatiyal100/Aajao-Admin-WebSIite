@@ -6,13 +6,13 @@ export const setupCategorySchema = Yup.object({
 });
 
 export const setupAmenitySchema = Yup.object({
-  name: Yup.string().required("Full name is required"),
-  status: Yup.string().required("Status is required"),
+  amn_title: Yup.string().required("Full name is required"),
+  amn_isActive: Yup.string().required("Status is required"),
 });
 
 export const setupTagSchema = Yup.object({
-  name: Yup.string().required("Full name is required"),
-  status: Yup.string().required("Status is required"),
+  tag_name: Yup.string().required("Full name is required"),
+  tag_isActive: Yup.string().required("Status is required"),
 });
 
 export const reviewSchema = Yup.object({

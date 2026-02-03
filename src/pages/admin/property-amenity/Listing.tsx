@@ -11,17 +11,17 @@ import {
   Switch,
   Tooltip,
   IconButton,
-  CircularProgress,
 } from "@mui/material";
 
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
 import { PurpleThemeColor } from "../../../theme/themeColor";
-import type { ListingProps } from './types';
+import type { ListingProps, AmenityRecord } from "./types";
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 export default function Listing({
   ThemeColors,
-  amenitiesListing,
+  amenities,
   totalRecords,
   loading,
   handleFormShow,
@@ -63,10 +63,10 @@ export default function Listing({
             {loading ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
-                  <CircularProgress size={28} />
+                  <TableLoader text="Fetching amenities..." />
                 </TableCell>
               </TableRow>
-            ) : amenitiesListing.length === 0 ? (
+            ) : amenities.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography
@@ -78,9 +78,9 @@ export default function Listing({
                 </TableCell>
               </TableRow>
             ) : (
-              amenitiesListing.map((elem, index) => (
+              amenities.map((amenity: AmenityRecord, index: number) => (
                 <TableRow
-                  key={elem.id}
+                  key={amenity.amn_id}
                   hover
                   sx={{
                     transition: "all 0.3s ease",
@@ -90,27 +90,30 @@ export default function Listing({
                 >
                   <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
 
-                  <TableCell sx={{ fontSize: "0.85rem" }}>{elem.name}</TableCell>
+                  <TableCell sx={{ fontSize: "0.85rem" }}>
+                    {amenity.amn_title}
+                  </TableCell>
 
                   <TableCell>
                     <Switch
                       size="small"
-                      checked={elem.status === "1"}
-                      onChange={() => handleToggleActive(elem.id)}
+                      checked={amenity.amn_isActive === 1}
+                      onChange={() => handleToggleActive(Number(amenity.amn_id))}
                       sx={{
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: PurpleThemeColor,
                         },
-                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                          backgroundColor: PurpleThemeColor,
-                        },
+                        "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                          {
+                            backgroundColor: PurpleThemeColor,
+                          },
                         transition: "all 0.3s ease",
                       }}
                     />
                   </TableCell>
 
                   <TableCell>
-                    <Tooltip title="Edit Amenity">
+                    <Tooltip title="Edit amenity">
                       <IconButton
                         size="small"
                         sx={{
@@ -119,13 +122,13 @@ export default function Listing({
                           transition: "all 0.3s ease",
                           "&:hover": { transform: "scale(1.1)" },
                         }}
-                        onClick={() => handleFormShow(elem.id)}
+                        onClick={() => handleFormShow(amenity.amn_id)}
                       >
                         <EditIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
 
-                    <Tooltip title="Delete Amenity">
+                    <Tooltip title="Delete amenity">
                       <IconButton
                         size="small"
                         sx={{
@@ -133,7 +136,7 @@ export default function Listing({
                           transition: "all 0.3s ease",
                           "&:hover": { transform: "scale(1.1)" },
                         }}
-                        onClick={() => handleDeleteClick(elem.id)}
+                        onClick={() => handleDeleteClick(amenity.amn_id)}
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
@@ -147,7 +150,7 @@ export default function Listing({
       </TableContainer>
 
       {/* Pagination */}
-      {amenitiesListing.length > 0 && (
+      {amenities.length > 0 && (
         <Box display="flex" justifyContent="center" alignItems="center" p={2}>
           <Pagination
             count={Math.ceil(totalRecords / rowsPerPage)}

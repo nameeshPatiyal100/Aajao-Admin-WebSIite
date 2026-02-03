@@ -10,8 +10,8 @@ import AddUpdateForm from "./AddUpdateForm";
 import type { FilterData } from "./types";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchPropertyCategories } from "../../../features/admin/propertyCategory/propertyCategory.thunk";
-import { changePropertyCategoryStatus } from "../../../features/admin/propertyCategory/productCategoryStatus.slice";
-import { deletePropertyCategory } from "../../../features/admin/propertyCategory/productCategoryDelete.slice";
+import { changePropertyCategoryStatus } from "../../../features/admin/propertyCategory/propertyCategoryStatus.slice";
+import { deletePropertyCategory } from "../../../features/admin/propertyCategory/propertyCategoryDelete.slice";
 
 export default function PropertyCategory() {
   // State Management

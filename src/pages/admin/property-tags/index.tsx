@@ -1,73 +1,43 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { ConfirmDeleteModal } from "../../../components";
 import { ThemeColors } from "../../../theme/themeColor";
 
 import Listing from "./Listing";
 import SearchBar from "./SearchBar";
 import AddUpdateForm from "./AddUpdateForm";
-import type { TagRecord, FilterData } from "./types";
-
-let fakeData: TagRecord[] = Array.from({ length: 50 }).map(() => ({
-  id: faker.string.uuid(),
-  name: faker.company.name(),
-  status: faker.helpers.arrayElement(["1", "0"]) as "1" | "0",
-}));  
+import type { FilterData } from "./types";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { fetchPropertyTags } from "../../../features/admin/propertyTag/propertyTag.thunk";
+import { changePropertyTagStatus } from "../../../features/admin/propertyTag/propertyTagStatus.slice";
+import { deletePropertyTag } from "../../../features/admin/propertyTag/propertyTagDelete.slice";
 
 export default function PropertyTag() {
   // State Management
-  const [tagsListing, setTagsListing] = useState<TagRecord[]>([]);
-  const [totalRecords, setTotalRecords] = useState(fakeData.length);
   const [page, setPage] = useState(1);
-  const [formData, setFormData] = useState<TagRecord | null>(null);
   const [formshow, setFormShow] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [tagId, setTagId] = useState<string | null>(null);
+
+  const dispatch = useAppDispatch();
+  const { tags, loading } = useAppSelector((state) => state.propertyTag);
+  const totalRecords = tags.length;
 
   const rowsPerPage = 10;
 
   const requestBody: FilterData = {
     page: page,
     limit: rowsPerPage,
-    keyword: "",
+    search: "",
     status: "",
   };
+
+  useEffect(() => {
+    dispatch(fetchPropertyTags(requestBody));
+  }, [dispatch]);
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
   const [deleteTagId, setDeleteTagId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  useEffect(() => {
-    handleTagsListing(requestBody);
-  }, []);
-
-  const handleTagsListing = (filter: FilterData) => {
-    setLoading(true);
-
-    let records = [...fakeData];
-
-    // Search filter
-    if (filter.keyword) {
-      records = records.filter((item) =>
-        item.name.toLowerCase().includes(filter.keyword.toLowerCase())
-      );
-    }
-
-    // Status filter
-    if (filter.status !== "") {
-      records = records.filter((item) => item.status === filter.status);
-    }
-
-    setTotalRecords(records.length);
-
-    // Pagination
-    const startIndex = (filter.page - 1) * filter.limit;
-    const endIndex = startIndex + filter.limit;
-    const paginatedRecords = records.slice(startIndex, endIndex);
-
-    setTagsListing(paginatedRecords);
-    setLoading(false);
-  };
 
   const handlePaginate = (_event: unknown, value: number) => {
     const updatedFilterData: FilterData = {
@@ -77,13 +47,13 @@ export default function PropertyTag() {
 
     setPage(value);
     setFilterData(updatedFilterData);
-    handleTagsListing(updatedFilterData);
+    dispatch(fetchPropertyTags(updatedFilterData));
   };
 
   const handleFilterUpdate = (
     name: keyof FilterData,
     value: string,
-    apply: boolean = false
+    apply: boolean = false,
   ) => {
     const updatedFilterData: FilterData = {
       ...filterData,
@@ -91,38 +61,49 @@ export default function PropertyTag() {
     };
     setFilterData(updatedFilterData);
     if (apply) {
-      handleTagsListing(updatedFilterData);
+      dispatch(fetchPropertyTags(updatedFilterData));
     }
   };
 
   const handleFilter = () => {
     const updatedFilterData: FilterData = { ...filterData, page: 1 };
     setPage(1);
-    handleTagsListing(updatedFilterData);
+    dispatch(fetchPropertyTags(updatedFilterData));
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
     setPage(1);
-    handleTagsListing(requestBody);
+    dispatch(fetchPropertyTags(requestBody));
   };
 
-  const handleToggleActive = (id: string) => {
-    fakeData = fakeData.map((item) =>
-      item.id === id ? { ...item, status: item.status === "1" ? "0" : "1" } : item
-    );
-    handleTagsListing(filterData);
+  const handleToggleActive = async (id: number) => {
+    const tag = tags.find((t) => t.tag_id === id);
+    if (!tag) return;
+
+    const newStatus: "1" | "0" = String(tag.tag_isActive) === "1" ? "0" : "1";
+    console.log(tag);
+    console.log(newStatus);
+
+    try {
+      await dispatch(
+        changePropertyTagStatus({ tagId: id, tag_isActive: newStatus }),
+      ).unwrap();
+
+      dispatch(fetchPropertyTags(filterData));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleFormClose = () => {
     setFormShow(false);
-    setFormData(null);
+    setTagId(null);
   };
 
   const handleFormShow = (id?: string) => {
     if (id) {
-      const result = tagsListing.find((item) => item.id === id) || null;
-      setFormData(result);
+      setTagId(id);
     }
     setFormShow(true);
   };
@@ -132,45 +113,16 @@ export default function PropertyTag() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteTag = () => {
+  const handleDeleteTag = async () => {
     if (!deleteTagId) return;
-
-    fakeData = fakeData.filter((item) => item.id !== deleteTagId);
-
-    const remainingItems = fakeData.filter((item) =>
-      filterData.keyword
-        ? item.name.toLowerCase().includes(filterData.keyword.toLowerCase())
-        : true
-    ).length;
-
-    const totalPages = Math.ceil(remainingItems / rowsPerPage);
-    const newPage = page > totalPages ? totalPages : page;
-
-    setPage(newPage || 1);
-    handleTagsListing({ ...filterData, page: newPage || 1 });
-    setIsDeleteModalOpen(false);
-    setDeleteTagId(null);
-  };
-
-  const handleAddOrUpdateTag = (values: TagRecord) => {
-    if (values.id) {
-      // Update
-      fakeData = fakeData.map((item) =>
-        item.id === values.id
-          ? { ...item, name: values.name, status: values.status }
-          : item
-      );
-    } else {
-      // Add
-      const newRecord: TagRecord = {
-        id: faker.string.uuid(),
-        name: values.name,
-        status: values.status,
-      };
-      fakeData.unshift(newRecord);
+    try {
+      await dispatch(deletePropertyTag({ tagId: deleteTagId })).unwrap();
+      dispatch(fetchPropertyTags(filterData));
+      setIsDeleteModalOpen(false);
+      setDeleteTagId(null);
+    } catch (err) {
+      console.error("Failed to delete tag:", err);
     }
-
-    handleTagsListing(filterData);
   };
 
   return (
@@ -194,7 +146,7 @@ export default function PropertyTag() {
       {/* Tag Table */}
       <Listing
         ThemeColors={ThemeColors}
-        tagsListing={tagsListing}
+        tags={tags}
         totalRecords={totalRecords}
         loading={loading}
         page={page}
@@ -217,10 +169,10 @@ export default function PropertyTag() {
 
       {formshow && (
         <AddUpdateForm
-          formData={formData}
+          tagId={tagId}
           formshow={formshow}
           handleFormClose={handleFormClose}
-          handleAddOrUpdateTag={handleAddOrUpdateTag}
+          filterData={filterData}
         />
       )}
     </Box>

@@ -1,73 +1,43 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { ConfirmDeleteModal } from "../../../components";
 import { ThemeColors } from "../../../theme/themeColor";
 
 import Listing from "./Listing";
 import SearchBar from "./SearchBar";
 import AddUpdateForm from "./AddUpdateForm";
-import type { AmenityRecord, FilterData } from "./types";
-
-let fakeData: AmenityRecord[] = Array.from({ length: 50 }).map(() => ({
-  id: faker.string.uuid(),
-  name: faker.company.name(),
-  status: faker.helpers.arrayElement(["1", "0"]) as "1" | "0",
-}));
+import type { FilterData } from "./types";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { changePropertyAmenityStatus } from "../../../features/admin/propertyAmenity/propertyAmenityStatus.slice";
+import { deletePropertyAmenity } from "../../../features/admin/propertyAmenity/propertyAmenityDelete.slice";
+import { fetchPropertyAmenities } from "../../../features/admin/propertyAmenity/propertyAmenity.thunk";
 
 export default function PropertyAmenity() {
   // State Management
-  const [amenitiesListing, setAmentiesListing] = useState<AmenityRecord[]>([]);
-  const [totalRecords, setTotalRecords] = useState(fakeData.length);
   const [page, setPage] = useState(1);
-  const [formData, setFormData] = useState<AmenityRecord | null>(null);
   const [formshow, setFormShow] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [amenetiesId, setAmenetiesId] = useState<string | null>(null);
+
+  const dispatch = useAppDispatch();
+  const { amenities, loading } = useAppSelector((state) => state.propertyAmenity);
+  const totalRecords = amenities.length;
 
   const rowsPerPage = 10;
 
   const requestBody: FilterData = {
     page: page,
     limit: rowsPerPage,
-    keyword: "",
+    search: "",
     status: "",
   };
+
+  useEffect(() => {
+    dispatch(fetchPropertyAmenities(requestBody));
+  }, [dispatch]);
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
   const [deleteAmenityId, setDeleteAmenityId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  useEffect(() => {
-    handleAmenitiesListing(requestBody);
-  }, []);
-
-  const handleAmenitiesListing = (filter: FilterData) => {
-    setLoading(true);
-
-    let records = [...fakeData];
-
-    // Search filter
-    if (filter.keyword) {
-      records = records.filter((item) =>
-        item.name.toLowerCase().includes(filter.keyword.toLowerCase())
-      );
-    }
-
-    // Status filter
-    if (filter.status !== "") {
-      records = records.filter((item) => item.status === filter.status);
-    }
-
-    setTotalRecords(records.length);
-
-    // Pagination
-    const startIndex = (filter.page - 1) * filter.limit;
-    const endIndex = startIndex + filter.limit;
-    const paginatedRecords = records.slice(startIndex, endIndex);
-
-    setAmentiesListing(paginatedRecords);
-    setLoading(false);
-  };
 
   const handlePaginate = (_event: unknown, value: number) => {
     const updatedFilterData: FilterData = {
@@ -77,13 +47,13 @@ export default function PropertyAmenity() {
 
     setPage(value);
     setFilterData(updatedFilterData);
-    handleAmenitiesListing(updatedFilterData);
+    dispatch(fetchPropertyAmenities(updatedFilterData));
   };
 
   const handleFilterUpdate = (
     name: keyof FilterData,
     value: string,
-    apply: boolean = false
+    apply: boolean = false,
   ) => {
     const updatedFilterData: FilterData = {
       ...filterData,
@@ -91,38 +61,47 @@ export default function PropertyAmenity() {
     };
     setFilterData(updatedFilterData);
     if (apply) {
-      handleAmenitiesListing(updatedFilterData);
+      dispatch(fetchPropertyAmenities(updatedFilterData));
     }
   };
 
   const handleFilter = () => {
     const updatedFilterData: FilterData = { ...filterData, page: 1 };
     setPage(1);
-    handleAmenitiesListing(updatedFilterData);
+    dispatch(fetchPropertyAmenities(updatedFilterData));
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
     setPage(1);
-    handleAmenitiesListing(requestBody);
+    dispatch(fetchPropertyAmenities(requestBody));
   };
 
-  const handleToggleActive = (id: string) => {
-    fakeData = fakeData.map((item) =>
-      item.id === id ? { ...item, status: item.status === "1" ? "0" : "1" } : item
-    );
-    handleAmenitiesListing(filterData);
+  const handleToggleActive = async (id: number) => {
+    const amenity = amenities.find((amn) => amn.amn_id === id);
+    if (!amenity) return;
+
+    const newStatus: "1" | "0" = String(amenity.amn_isActive) === "1" ? "0" : "1";
+
+    try {
+      await dispatch(
+        changePropertyAmenityStatus({ amenetiesId: id, amn_isActive: newStatus }),
+      ).unwrap();
+
+      dispatch(fetchPropertyAmenities(filterData));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleFormClose = () => {
     setFormShow(false);
-    setFormData(null);
+    setAmenetiesId(null);
   };
 
   const handleFormShow = (id?: string) => {
     if (id) {
-      const result = amenitiesListing.find((item) => item.id === id) || null;
-      setFormData(result);
+      setAmenetiesId(id);
     }
     setFormShow(true);
   };
@@ -132,45 +111,16 @@ export default function PropertyAmenity() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteAmenity = () => {
+  const handleDeleteAmenity = async () => {
     if (!deleteAmenityId) return;
-
-    fakeData = fakeData.filter((item) => item.id !== deleteAmenityId);
-
-    const remainingItems = fakeData.filter((item) =>
-      filterData.keyword
-        ? item.name.toLowerCase().includes(filterData.keyword.toLowerCase())
-        : true
-    ).length;
-
-    const totalPages = Math.ceil(remainingItems / rowsPerPage);
-    const newPage = page > totalPages ? totalPages : page;
-
-    setPage(newPage || 1);
-    handleAmenitiesListing({ ...filterData, page: newPage || 1 });
-    setIsDeleteModalOpen(false);
-    setDeleteAmenityId(null);
-  };
-
-  const handleAddOrUpdateAmenity = (values: AmenityRecord) => {
-    if (values.id) {
-      // Update
-      fakeData = fakeData.map((item) =>
-        item.id === values.id
-          ? { ...item, name: values.name, status: values.status }
-          : item
-      );
-    } else {
-      // Add
-      const newRecord: AmenityRecord = {
-        id: faker.string.uuid(),
-        name: values.name,
-        status: values.status,
-      };
-      fakeData.unshift(newRecord);
+    try {
+      await dispatch(deletePropertyAmenity({ amenetiesId: deleteAmenityId })).unwrap();
+      dispatch(fetchPropertyAmenities(filterData));
+      setIsDeleteModalOpen(false);
+      setDeleteAmenityId(null);
+    } catch (err) {
+      console.error("Failed to delete Amenity:", err);
     }
-
-    handleAmenitiesListing(filterData);
   };
 
   return (
@@ -194,7 +144,7 @@ export default function PropertyAmenity() {
       {/* Amenity Table */}
       <Listing
         ThemeColors={ThemeColors}
-        amenitiesListing={amenitiesListing}
+        amenities={amenities}
         totalRecords={totalRecords}
         loading={loading}
         page={page}
@@ -217,10 +167,10 @@ export default function PropertyAmenity() {
 
       {formshow && (
         <AddUpdateForm
-          formData={formData}
+          amenetiesId={amenetiesId}
           formshow={formshow}
           handleFormClose={handleFormClose}
-          handleAddOrUpdateAmenity={handleAddOrUpdateAmenity}
+          filterData={filterData}
         />
       )}
     </Box>
