@@ -32,12 +32,6 @@ const ProfileUpload = ({
       setPreview("");
       return;
     }
-    console.log(values.profileImage, "values.profileImage instanceof File);");
-    console.log(
-      values.profileImageFileId,
-      "values.values.profileImageFileId);"
-    );
-    // Backend image URL
     if (typeof values.profileImage === "string") {
       setPreview(values.profileImage);
       return;

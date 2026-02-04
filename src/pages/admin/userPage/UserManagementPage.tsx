@@ -5,9 +5,11 @@ import { UserTable } from "./UserTable";
 import { UserHeader } from "./UserHeader";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchUsers } from "../../../features/admin/userManagement/user.slice";
+import { deleteUser } from "../../../features/admin/userManagement/userDelete.slice";
 import { useDebounce } from "../../../hooks/useDebounce";
 import { Attendant, ModalMode } from "./types";
 import { ApiUser } from "../../../types/api.types";
+import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
 
 export interface UserTableRow {
   user_id: number;
@@ -38,7 +40,17 @@ export default function UserManagementPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const debouncedSearch = useDebounce(searchTerm, 500);
   const rowsPerPage = 10;
-  
+
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
   const handleEdit = (userId: number) => {
     const user = tableUsers.find((u) => u.user_id === userId);
     if (!user) return;
@@ -69,6 +81,40 @@ export default function UserManagementPage() {
     });
 
     setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedUser) {
+      console.log(selectedUser.user_id, "delete user");
+    }
+    if (!selectedUser?.user_id) return;
+
+    try {
+      await dispatch(deleteUser(selectedUser.user_id)).unwrap();
+
+      // setSnackbar({
+      //   open: true,
+      //   message: "User deleted successfully!",
+      //   severity: "success",
+      // });
+
+      // refresh list
+      dispatch(
+        fetchUsers({
+          page: page + 1,
+          search: debouncedSearch,
+        })
+      );
+
+      setIsDeleteModalOpen(false);
+      setSelectedUser(null);
+    } catch (err: any) {
+      setSnackbar({
+        open: true,
+        message: err?.message || "Failed to delete user",
+        severity: "error",
+      });
+    }
   };
 
   useEffect(() => {
@@ -121,10 +167,7 @@ export default function UserManagementPage() {
       <ConfirmDeleteModal
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={() => {
-          // later: dispatch(deleteUser(selectedUser!.id))
-          setIsDeleteModalOpen(false);
-        }}
+        onConfirm={handleConfirmDelete}
         title="Delete User"
         description="Are you sure you want to permanently remove this user?"
       />
@@ -139,6 +182,13 @@ export default function UserManagementPage() {
         mode={modalMode}
         // user={selectedUser || undefined}
         userId={selectedUser?.user_id}
+      />
+
+      <CustomSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
       />
 
       {error && (

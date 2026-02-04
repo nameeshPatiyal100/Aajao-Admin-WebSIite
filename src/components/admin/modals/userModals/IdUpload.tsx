@@ -56,6 +56,7 @@ const IdUpload = ({
   /* ================= DELETE HANDLER ================= */
   const handleDeleteImage = async () => {
     if (typeof values.idImage === "string" && values.idImageFileId) {
+      console.log(values.idImageFileId, "values.idImageFileId");
       try {
         await dispatch(deleteUserImage(values.idImageFileId))
           .unwrap()
@@ -95,17 +96,12 @@ const IdUpload = ({
         <Box sx={uploadBox}>
           {preview && (
             <Box sx={{ position: "relative", mb: 1.5 }}>
-              <a href={preview} target="_blank" rel="noopener noreferrer">
-                <img
-                  src={preview}
-                  alt="id-document"
-                  style={{
-                    ...(uploadPreview as any),
-                    cursor: "pointer",
-                  }}
-                />
-              </a>
-
+              <img
+                src={preview}
+                alt="id-document"
+                onClick={() => window.open(preview, "_blank")}
+                style={{ cursor: "pointer", ...(uploadPreview as any) }}
+              />
               {!disabled && (
                 <IconButton
                   size="small"

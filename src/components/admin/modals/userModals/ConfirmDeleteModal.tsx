@@ -161,13 +161,6 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
           </motion.div>
         </Box>
       </Modal>
-
-      {/* <DeleteSnackbar
-        open={snackbarOpen}
-        onClose={handleSnackbarClose}
-        message="Item deleted successfully test"
-      /> */}
-
       <DeleteSnackbar
         open={snackbarOpen}
         message="Item deleted successfully"

@@ -4,7 +4,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import { Host } from "./types";
+import { HostTableRow } from "./HostTable"; // ✅ use table row type
 
 const COLORS = {
   primary: "#881f9b",
@@ -12,9 +12,9 @@ const COLORS = {
 };
 
 interface Props {
-  host: Host;
-  onAction: (host: Host, mode: "view" | "edit") => void;
-  onDelete: (host: Host) => void;
+  host: HostTableRow;
+  onAction: (host: HostTableRow, mode: "view" | "edit") => void;
+  onDelete: (host: HostTableRow) => void;
 }
 
 export const HostActions = ({ host, onAction, onDelete }: Props) => (

@@ -25,7 +25,7 @@ export const deleteUserImage = createAsyncThunk(
       const res = await api.post(ADMINENDPOINTS.USER_IMAGE_DELETE, {
         afileId: afileId,
       });
-
+      console.log(res, "res from delete image");
       return res.data;
     } catch (err: any) {
       return rejectWithValue(

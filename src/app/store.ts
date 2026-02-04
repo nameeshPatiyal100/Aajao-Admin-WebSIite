@@ -18,8 +18,10 @@ import propertyAmenityStatusReducer from "../features/admin/propertyAmenity/prop
 import propertyAmenityDeleteReducer from "../features/admin/propertyAmenity/propertyAmenityDelete.slice";
 import userReducer from "../features/admin/userManagement/user.slice";
 import userDetailsReducer from "../features/admin/userManagement/userDetails.slice";
+import userDeleteReducer from "../features/admin/userManagement/userDelete.slice";
 import userAddUpdateReducer from "../features/admin/userManagement/userAddUpdate.slice";
 import userImageDeleteReducer from "../features/admin/userManagement/UserImageDelete.slice";
+import hostReducer from "../features/admin/userManagement/host.slice";
 
 export const store = configureStore({
   reducer: {
@@ -27,9 +29,11 @@ export const store = configureStore({
     // ADMINREDUCERS
     adminAuth: adminAuthReducer,
     users: userReducer,
+    hosts: hostReducer,
     userDetails: userDetailsReducer,
     userAddUpdate: userAddUpdateReducer,
     userImageDelete: userImageDeleteReducer,
+    userDelete: userDeleteReducer,
     propertyCategory: propertyCategoryReducer,
     propertyCategoryDetails: propertyCategoryDetailsReducer,
     propertyCategoryAddUpdate: propertyCategoryAddUpdateReducer,

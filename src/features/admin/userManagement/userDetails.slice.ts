@@ -29,7 +29,7 @@ export const getUserById = createAsyncThunk(
       const res = await api.post(ADMINENDPOINTS.USER_BY_ID, {
         userId: userId,
       });
-      console.log(res, "response from getUserById thunk");
+      // console.log(res, "response from getUserById thunk");
       return res.data.data; // 👈 single user object
     } catch (err: any) {
       return rejectWithValue(
