@@ -5,11 +5,9 @@ import { ADMINENDPOINTS } from "../../../services/endpoints";
 export interface Property {
   property_id: number;
   property_name: string;
-  property_slug?: string | null;
-  property_isActive: string;
-  property_isDelete: string;
-  created_at: string;
-  updated_at: string;
+  is_active: string;
+  categories: string[];
+  ["HostDetails.user_fullName"]: string;
 }
 
 interface ApiResponse {
@@ -22,7 +20,7 @@ interface ApiResponse {
     totalCount: number;
     totalPages: number;
     search: string;
-    data: Property[];
+    properties: Property[];
   };
 }
 
@@ -39,7 +37,7 @@ export const fetchProperties = createAsyncThunk(
       //   dispatch(setMessage({ message: resData.message, severity: "success" }));
       // }
 
-      return resData.data.data; // return the actual Properties array
+      return resData.data.properties; // return the actual Properties array
     } catch (error: any) {
       const errMsg = error.response?.data?.message || "Failed to fetch Properties";
       // dispatch(setError(errMsg));

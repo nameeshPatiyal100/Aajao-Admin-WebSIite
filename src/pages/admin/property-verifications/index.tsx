@@ -79,7 +79,7 @@ export default function PropertiesVerifications() {
     if (!property) return;
 
     const newStatus: "1" | "0" =
-      String(property.property_isActive) === "1" ? "0" : "1";
+      String(property.is_active) === "true" ? "0" : "1";
 
     try {
       await dispatch(

@@ -3,7 +3,7 @@ export interface PropertyRecord {
   property_name: string;
   ["HostDetails.user_fullName"]: string;
   host_name: string;
-  is_active: "0" | "1";
+  is_active: boolean;
   categories: string[];
 }
 

@@ -11,7 +11,6 @@ import {
   Switch,
   Tooltip,
   IconButton,
-  CircularProgress,
 } from "@mui/material";
 
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
@@ -19,6 +18,7 @@ import { Pagination } from "../../../components";
 import { PurpleThemeColor } from "../../../theme/themeColor";
 import type { ListingProps, PropertyRecord } from "./types";
 import { Link } from "react-router-dom";
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 export default function Listing({
   ThemeColors,
@@ -71,13 +71,13 @@ export default function Listing({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={4} align="center">
-                  <CircularProgress size={28} />
+                <TableCell colSpan={6} align="center">
+                  <TableLoader text="Fetching properties..." />
                 </TableCell>
               </TableRow>
             ) : properties?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} align="center">
+                <TableCell colSpan={6} align="center">
                   <Typography
                     variant="body2"
                     sx={{ color: ThemeColors.text.secondary }}
@@ -112,7 +112,7 @@ export default function Listing({
                   <TableCell>
                     <Switch
                       size="small"
-                      checked={property.is_active === "1"}
+                      checked={property.is_active === true}
                       onChange={() => handleToggleActive(Number(property.property_id))}
                       sx={{
                         "& .MuiSwitch-switchBase.Mui-checked": {
