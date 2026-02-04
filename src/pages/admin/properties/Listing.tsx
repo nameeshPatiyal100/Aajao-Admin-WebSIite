@@ -17,12 +17,12 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
 import { PurpleThemeColor } from "../../../theme/themeColor";
-import type { ListingProps } from "./types";
+import type { ListingProps, PropertyRecord } from "./types";
 import { Link } from "react-router-dom";
 
 export default function Listing({
   ThemeColors,
-  propertiesListing,
+  properties,
   totalRecords,
   loading,
   handlePaginate,
@@ -30,22 +30,15 @@ export default function Listing({
   rowsPerPage,
   handleToggleActive,
   handleDeleteClick,
-  showVerifiedColumn,
 }: ListingProps) {
   const headers = [
     "SR. NO.",
     "NAME",
     "HOST NAME",
     "CATEGORIES",
-    ...(showVerifiedColumn ? ["VERIFIED"] : []),
     "STATUS",
     "ACTIONS",
   ];
-  const verifiedStatusMap = {
-    0: { label: "Pending", color: "#ed6c02", bg: "#fff3e0" },
-    1: { label: "Approved", color: "#2e7d32", bg: "#e8f5e9" },
-    2: { label: "Rejected", color: "#d32f2f", bg: "#fdecea" },
-  };
 
   return (
     <Paper
@@ -82,7 +75,7 @@ export default function Listing({
                   <CircularProgress size={28} />
                 </TableCell>
               </TableRow>
-            ) : propertiesListing.length === 0 ? (
+            ) : properties?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">
                   <Typography
@@ -94,9 +87,9 @@ export default function Listing({
                 </TableCell>
               </TableRow>
             ) : (
-              propertiesListing.map((property, index) => (
+              properties && properties.length > 0 && properties.map((property: PropertyRecord, index: number) => (
                 <TableRow
-                  key={property.id}
+                  key={property.property_id}
                   hover
                   sx={{
                     transition: "all 0.3s ease",
@@ -107,39 +100,20 @@ export default function Listing({
                   <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
 
                   <TableCell sx={{ fontSize: "0.85rem" }}>
-                    {property.name}
+                    {property.property_name}
                   </TableCell>
                   <TableCell sx={{ fontSize: "0.85rem" }}>
-                    {property.host_name}
+                    {property["HostDetails.user_fullName"]}
                   </TableCell>
                   <TableCell sx={{ fontSize: "0.85rem" }}>
                     {property.categories.join(", ")}
                   </TableCell>
-                  {showVerifiedColumn && (
-                    <TableCell sx={{ fontSize: "0.85rem" }}>
-                      <Box
-                        sx={{
-                          display: "inline-block",
-                          px: 1.2,
-                          py: 0.4,
-                          borderRadius: "12px",
-                          fontSize: "0.75rem",
-                          fontWeight: 600,
-                          color: verifiedStatusMap[property.is_verified]?.color,
-                          backgroundColor:
-                            verifiedStatusMap[property.is_verified]?.bg,
-                        }}
-                      >
-                        {verifiedStatusMap[property.is_verified]?.label}
-                      </Box>
-                    </TableCell>
-                  )}
 
                   <TableCell>
                     <Switch
                       size="small"
-                      checked={property.status === "1"}
-                      onChange={() => handleToggleActive(property.id)}
+                      checked={property.is_active === "1"}
+                      onChange={() => handleToggleActive(Number(property.property_id))}
                       sx={{
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: PurpleThemeColor,
@@ -157,7 +131,7 @@ export default function Listing({
                     <Tooltip title="Edit Property">
                       <IconButton
                         component={Link}
-                        to={`/admin/properties/form/${property.id}`}
+                        to={`/admin/properties/form/${property.property_id}`}
                         size="small"
                         sx={{
                           color: ThemeColors.secondary,
@@ -178,7 +152,7 @@ export default function Listing({
                           transition: "all 0.3s ease",
                           "&:hover": { transform: "scale(1.1)" },
                         }}
-                        onClick={() => handleDeleteClick(property.id)}
+                        onClick={() => handleDeleteClick(property.property_id)}
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
@@ -192,7 +166,7 @@ export default function Listing({
       </TableContainer>
 
       {/* Pagination */}
-      {propertiesListing.length > 0 && (
+      {properties?.length > 0 && (
         <Box display="flex" justifyContent="center" alignItems="center" p={2}>
           <Pagination
             count={Math.ceil(totalRecords / rowsPerPage)}

@@ -22,6 +22,11 @@ export const ADMINENDPOINTS = {
     PROPERTY_AMENITY_ADD_UPDATE: "/admin/amenity/create",
     PROPERTY_AMENITY_STATUS: "/admin/amenity/update-status",
     PROPERTY_AMENITY_DELETE: "/admin/amenity/delete",
+    PROPERTIES_LIST:"admin/properties/search",
+    PROPERTY_BY_ID:"admin/property/single",
+    PROPERTY_ADD_UPDATE: "/admin/property/create",
+    PROPERTY_STATUS: "/admin/properties/update-status",
+    PROPERTY_DELETE: "/admin/property/delete",
 
   };
   

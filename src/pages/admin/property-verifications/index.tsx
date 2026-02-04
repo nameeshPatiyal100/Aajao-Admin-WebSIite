@@ -1,53 +1,31 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { ConfirmDeleteModal } from "../../../components";
 import { ThemeColors } from "../../../theme/themeColor";
 
 import Listing from "../properties/Listing";
 import SearchBar from "./SearchBar";
-import type { PropertyRecord, FilterData } from "../properties/types";
-
-const bool01 = (): "0" | "1" => faker.helpers.arrayElement(["0", "1"]);
-
-const categoriesList: { id: number; name: string }[] = [
-  { id: 1, name: "Luxury" },
-  { id: 2, name: "Budget" },
-  { id: 3, name: "Pet Friendly" },
-  { id: 4, name: "Family" },
-  { id: 5, name: "Romantic" },
-];
-
-let fakeData: PropertyRecord[] = Array.from({ length: 50 }).map(() => ({
-  id: faker.string.uuid(),
-  name: faker.company.name(),
-  host_name: faker.person.fullName(),
-  status: bool01(),
-  is_verified: faker.helpers.arrayElement(["0", "1", "2"]),
-  categories: faker.helpers.arrayElements(
-    categoriesList.map((c) => c.name),
-    faker.number.int({ min: 1, max: 3 })
-  ),
-}));
+import type { FilterData } from "../properties/types";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { fetchProperties } from "../../../features/admin/properties/property.thunk";
+import { changePropertyStatus } from "../../../features/admin/properties/propertyStatus.slice";
+import { deleteProperty } from "../../../features/admin/properties/propertyDelete.slice";
 
 export default function PropertiesVerifications() {
   // State Management
-  const [propertiesListing, setPropertiesListing] = useState<PropertyRecord[]>(
-    []
-  );
-  const [totalRecords, setTotalRecords] = useState(fakeData.length);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+
+  const dispatch = useAppDispatch();
+  const { properties, loading } = useAppSelector((state) => state.properties);
+  const totalRecords = properties?.length;
 
   const rowsPerPage = 10;
 
   const requestBody: FilterData = {
     page: page,
     limit: rowsPerPage,
-    keyword: "",
+    search: "",
     status: "",
-    is_verified: "",
-    categories: "",
   };
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
@@ -55,49 +33,8 @@ export default function PropertiesVerifications() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
-    handlePropertiesListing(requestBody);
-  }, []);
-
-  const handlePropertiesListing = (filter: FilterData) => {
-    setLoading(true);
-
-    let records = [...fakeData];
-
-    // Search filter
-    if (filter.keyword) {
-      records = records.filter((item) =>
-        item.name.toLowerCase().includes(filter.keyword.toLowerCase())
-      );
-    }
-
-    // Status filter
-    if (filter.status !== "") {
-      records = records.filter((item) => item.status === filter.status);
-    }
-
-    // Verified filter
-    if (filter.is_verified !== "") {
-      records = records.filter(
-        (item) => item.is_verified === filter.is_verified
-      );
-    }
-
-    if (filter.categories) {
-      records = records.filter((item) =>
-        item.categories.includes(filter.categories)
-      );
-    }
-
-    setTotalRecords(records.length);
-
-    // Pagination
-    const startIndex = (filter.page - 1) * filter.limit;
-    const endIndex = startIndex + filter.limit;
-    const paginatedRecords = records.slice(startIndex, endIndex);
-
-    setPropertiesListing(paginatedRecords);
-    setLoading(false);
-  };
+    dispatch(fetchProperties(requestBody));
+  }, [dispatch]);
 
   const handlePaginate = (_event: unknown, value: number) => {
     const updatedFilterData: FilterData = {
@@ -107,13 +44,13 @@ export default function PropertiesVerifications() {
 
     setPage(value);
     setFilterData(updatedFilterData);
-    handlePropertiesListing(updatedFilterData);
+    dispatch(fetchProperties(updatedFilterData));
   };
 
   const handleFilterUpdate = (
     name: keyof FilterData,
     value: string,
-    apply: boolean = false
+    apply: boolean = false,
   ) => {
     const updatedFilterData: FilterData = {
       ...filterData,
@@ -121,29 +58,38 @@ export default function PropertiesVerifications() {
     };
     setFilterData(updatedFilterData);
     if (apply) {
-      handlePropertiesListing(updatedFilterData);
+      dispatch(fetchProperties(updatedFilterData));
     }
   };
 
   const handleFilter = () => {
     const updatedFilterData: FilterData = { ...filterData, page: 1 };
     setPage(1);
-    handlePropertiesListing(updatedFilterData);
+    dispatch(fetchProperties(updatedFilterData));
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
     setPage(1);
-    handlePropertiesListing(requestBody);
+    dispatch(fetchProperties(requestBody));
   };
 
-  const handleToggleActive = (id: string) => {
-    fakeData = fakeData.map((item) =>
-      item.id === id
-        ? { ...item, status: item.status === "1" ? "0" : "1" }
-        : item
-    );
-    handlePropertiesListing(filterData);
+  const handleToggleActive = async (id: number) => {
+    const property = properties.find((t) => t.property_id === id);
+    if (!property) return;
+
+    const newStatus: "1" | "0" =
+      String(property.property_isActive) === "1" ? "0" : "1";
+
+    try {
+      await dispatch(
+        changePropertyStatus({ propertyId: id, status: newStatus }),
+      ).unwrap();
+
+      dispatch(fetchProperties(filterData));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleDeleteClick = (id: string) => {
@@ -151,24 +97,16 @@ export default function PropertiesVerifications() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteProperty = () => {
+  const handleDeleteProperty = async () => {
     if (!deletePropertyId) return;
-
-    fakeData = fakeData.filter((item) => item.id !== deletePropertyId);
-
-    const remainingItems = fakeData.filter((item) =>
-      filterData.keyword
-        ? item.name.toLowerCase().includes(filterData.keyword.toLowerCase())
-        : true
-    ).length;
-
-    const totalPages = Math.ceil(remainingItems / rowsPerPage);
-    const newPage = page > totalPages ? totalPages : page;
-
-    setPage(newPage || 1);
-    handlePropertiesListing({ ...filterData, page: newPage || 1 });
-    setIsDeleteModalOpen(false);
-    setDeletePropertyId(null);
+    try {
+      await dispatch(deleteProperty({ propertyId: deletePropertyId })).unwrap();
+      dispatch(fetchProperties(filterData));
+      setIsDeleteModalOpen(false);
+      setDeletePropertyId(null);
+    } catch (err) {
+      console.error("Failed to delete tag:", err);
+    }
   };
 
   return (
@@ -186,13 +124,12 @@ export default function PropertiesVerifications() {
         handleFilterUpdate={handleFilterUpdate}
         handleFilter={handleFilter}
         handleClear={handleClear}
-        categoriesList={categoriesList}
       />
 
       {/* Property Table */}
       <Listing
         ThemeColors={ThemeColors}
-        propertiesListing={propertiesListing}
+        properties={properties}
         totalRecords={totalRecords}
         loading={loading}
         page={page}
@@ -200,7 +137,6 @@ export default function PropertiesVerifications() {
         rowsPerPage={rowsPerPage}
         handleToggleActive={handleToggleActive}
         handleDeleteClick={handleDeleteClick}
-        showVerifiedColumn={true}
       />
 
       {/* Modals */}

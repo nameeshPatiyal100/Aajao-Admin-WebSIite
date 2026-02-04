@@ -17,13 +17,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   handleFilterUpdate,
   handleFilter,
   handleClear,
-  categoriesList,
 }) => {
   const [searchItem, setSearchItem] = useState("");
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchItem(event.target.value);
-    handleFilterUpdate("keyword", event.target.value, false);
+    handleFilterUpdate("search", event.target.value, false);
   };
 
   const handleCancel = () => {
@@ -108,26 +107,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
             <MenuItem value="">Select</MenuItem>
             <MenuItem value="1">Active</MenuItem>
             <MenuItem value="0">Inactive</MenuItem>
-          </TextField>
-          {/* Category Select */}
-          <TextField
-            label="Category"
-            select
-            size="small"
-            name="categories"
-            value={filterData.categories}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              handleFilterUpdate("categories", e.target.value, true)
-            }
-            sx={commonFieldSx}
-            SelectProps={{ MenuProps: menuProps }}
-          >
-            <MenuItem value="">Select</MenuItem>
-            {categoriesList.map((cat) => (
-              <MenuItem key={cat.id} value={cat.name}>
-                {cat.name}
-              </MenuItem>
-            ))}
           </TextField>
 
           {/* Buttons */}

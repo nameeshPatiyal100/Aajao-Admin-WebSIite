@@ -1,15 +1,17 @@
 export interface PropertyRecord {
-  id: string;
-  name: string;
+  property_id: string;
+  property_name: string;
+  ["HostDetails.user_fullName"]: string;
   host_name: string;
-  status: "0" | "1";
-  is_verified: "0" | "1" | "2";
+  is_active: "0" | "1";
   categories: string[];
 }
 
 export interface FilterData {
+  page: number;
+  limit: number;
+  search: string;
   status: string;
-  keyword: string;
   [key: string]: any;
 }
 
@@ -46,31 +48,16 @@ export interface FormValues {
   images: (File | string)[];
 }
 
-export interface AddUpdateFormProps {
-  formData: FormValues | null;
-  formshow: boolean;
-  handleFormClose: () => void;
-  handleAddOrUpdateProperty: (values: FormValues) => void;
-}
-
 export interface ListingProps {
   ThemeColors: { text: { secondary: string }; secondary: string };
-  propertiesListing: {
-    id: string;
-    name: string;
-    host_name: string;
-    status: "0" | "1";
-    is_verified: "0" | "1" | "2";
-    categories: string[];
-  }[];
+  properties: any;
   totalRecords: number;
   loading: boolean;
   handlePaginate: (event: React.ChangeEvent<unknown>, page: number) => void;
   page: number;
   rowsPerPage: number;
-  handleToggleActive: (id: string) => void;
+  handleToggleActive: (id: number) => void;
   handleDeleteClick: (id: string) => void;
-  showVerifiedColumn: boolean;
 }
 
 export interface SearchBarProps {
@@ -87,8 +74,8 @@ export interface SearchBarProps {
     status: string;
     [key: string]: any;
   };
-  handleFilterUpdate: (key: string, value: any, apply: boolean) => void;
+  handleFilterUpdate: (name: keyof FilterData, value: string, apply?: boolean) => void;
   handleFilter: () => void;
   handleClear: () => void;
-  categoriesList: { id: number; name: string }[];
+  [key: string]: any;
 }
