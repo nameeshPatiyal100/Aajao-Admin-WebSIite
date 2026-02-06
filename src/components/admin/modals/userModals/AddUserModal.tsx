@@ -93,7 +93,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     profileImage: data?.profileImage?.url ?? "",
     profileImageFileId: data?.profileImage?.afile_id ?? null,
     idImage: data?.kycDocumentImage?.url ?? "",
-    idImageFileId: data?.idImage?.afile_id ?? null,
+    idImageFileId: data?.kycDocumentImage?.afile_id ?? null,
     password: "",
   });
 

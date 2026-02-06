@@ -7,10 +7,16 @@ interface PropertyState {
   properties: Property[];
   loading: boolean;
   error: string | null;
+  pagination: {
+    totalRecords: number;
+  };
 }
 
 const initialState: PropertyState = {
   properties: [],
+  pagination: {
+    totalRecords: 0,
+  },
   loading: false,
   error: null,
 };
@@ -27,7 +33,8 @@ const propertySlice = createSlice({
       })
       .addCase(fetchProperties.fulfilled, (state, action) => {
         state.loading = false;
-        state.properties = action.payload;
+        state.properties = action.payload.properties;
+        state.pagination.totalRecords = action.payload.totalRecords;
       })
       .addCase(fetchProperties.rejected, (state, action) => {
         state.loading = false;

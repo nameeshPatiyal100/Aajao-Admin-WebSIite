@@ -7,12 +7,18 @@ interface PropertyAmenityState {
   amenities: PropertyAmenity[];
   loading: boolean;
   error: string | null;
+  pagination: {
+    totalRecords: number;
+  };
 }
 
 const initialState: PropertyAmenityState = {
   amenities: [],
   loading: false,
   error: null,
+  pagination: {
+    totalRecords: 0,
+  },
 };
 
 const propertyAmenitySlice = createSlice({
@@ -27,7 +33,8 @@ const propertyAmenitySlice = createSlice({
       })
       .addCase(fetchPropertyAmenities.fulfilled, (state, action) => {
         state.loading = false;
-        state.amenities = action.payload;
+        state.amenities = action.payload.amenities;
+        state.pagination.totalRecords = action.payload.totalRecords;
       })
       .addCase(fetchPropertyAmenities.rejected, (state, action) => {
         state.loading = false;

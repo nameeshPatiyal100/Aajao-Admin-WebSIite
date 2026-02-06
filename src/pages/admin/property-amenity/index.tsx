@@ -19,8 +19,8 @@ export default function PropertyAmenity() {
   const [amenetiesId, setAmenetiesId] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
-  const { amenities, loading } = useAppSelector((state) => state.propertyAmenity);
-  const totalRecords = amenities.length;
+  const { amenities, loading, pagination } = useAppSelector((state) => state.propertyAmenity);
+  const totalRecords = pagination?.totalRecords;
 
   const rowsPerPage = 10;
 

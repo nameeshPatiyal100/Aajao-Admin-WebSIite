@@ -16,8 +16,8 @@ export default function PropertiesVerifications() {
   const [page, setPage] = useState(1);
 
   const dispatch = useAppDispatch();
-  const { properties, loading } = useAppSelector((state) => state.properties);
-  const totalRecords = properties?.length;
+  const { properties, loading, pagination } = useAppSelector((state) => state.properties);
+  const totalRecords = pagination?.totalRecords;
 
   const rowsPerPage = 10;
 
@@ -105,7 +105,7 @@ export default function PropertiesVerifications() {
       setIsDeleteModalOpen(false);
       setDeletePropertyId(null);
     } catch (err) {
-      console.error("Failed to delete tag:", err);
+      console.error("Failed to delete property:", err);
     }
   };
 

@@ -19,8 +19,8 @@ export default function PropertyTag() {
   const [tagId, setTagId] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
-  const { tags, loading } = useAppSelector((state) => state.propertyTag);
-  const totalRecords = tags.length;
+  const { tags, loading, pagination } = useAppSelector((state) => state.propertyTag);
+  const totalRecords = pagination?.totalRecords;
 
   const rowsPerPage = 10;
 

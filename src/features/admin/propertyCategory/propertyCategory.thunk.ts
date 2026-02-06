@@ -29,20 +29,16 @@ interface ApiResponse {
 export const fetchPropertyCategories = createAsyncThunk(
   "propertyCategory/fetchAll",
   async (payload: { page: number; search: string; limit:number; status: string; }, { rejectWithValue }) => {
-    // const { dispatch } = thunkAPI;
     try {
       const response = await api.post<ApiResponse>(ADMINENDPOINTS.PROPERTY_CATEGORIES, payload); 
       const resData = response.data;
-
-      // show snackbar on success
-      // if (resData.success) {
-      //   dispatch(setMessage({ message: resData.message, severity: "success" }));
-      // }
-
-      return resData.data.data; // return the actual category array
+      return {
+        categories: resData.data.data,
+        totalRecords: resData.data.totalCount,
+        page: payload.page,
+      };
     } catch (error: any) {
       const errMsg = error.response?.data?.message || "Failed to fetch categories";
-      // dispatch(setError(errMsg));
       return  rejectWithValue(errMsg);
     }
   }

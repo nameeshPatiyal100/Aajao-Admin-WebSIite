@@ -7,12 +7,18 @@ interface PropertyTagState {
   tags: PropertyTag[];
   loading: boolean;
   error: string | null;
+  pagination: {
+    totalRecords: number;
+  };
 }
 
 const initialState: PropertyTagState = {
   tags: [],
   loading: false,
   error: null,
+  pagination: {
+    totalRecords: 0,
+  },
 };
 
 const propertyTagSlice = createSlice({
@@ -27,7 +33,8 @@ const propertyTagSlice = createSlice({
       })
       .addCase(fetchPropertyTags.fulfilled, (state, action) => {
         state.loading = false;
-        state.tags = action.payload;
+        state.tags = action.payload.tags;
+        state.pagination.totalRecords = action.payload.totalRecords;
       })
       .addCase(fetchPropertyTags.rejected, (state, action) => {
         state.loading = false;
