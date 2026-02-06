@@ -16,6 +16,11 @@ import propertyAmenityDetailsReducer from "../features/admin/propertyAmenity/pro
 import propertyAmenityAddUpdateReducer from "../features/admin/propertyAmenity/propertyAmenityAddUpdate.slice";
 import propertyAmenityStatusReducer from "../features/admin/propertyAmenity/propertyAmenityStatus.slice";
 import propertyAmenityDeleteReducer from "../features/admin/propertyAmenity/propertyAmenityDelete.slice";
+import propertyReducer from "../features/admin/properties/property.slice";
+import propertyDetailsReducer from "../features/admin/properties/propertyDetails.slice";
+import propertyAddUpdateReducer from "../features/admin/properties/propertyAddUpdate.slice";
+import propertyStatusReducer from "../features/admin/properties/propertyStatus.slice";
+import propertyDeleteReducer from "../features/admin/properties/propertyDelete.slice";
 import userReducer from "../features/admin/userManagement/user.slice";
 import userDetailsReducer from "../features/admin/userManagement/userDetails.slice";
 import userDeleteReducer from "../features/admin/userManagement/userDelete.slice";
@@ -49,6 +54,11 @@ export const store = configureStore({
     propertyAmenityAddUpdate: propertyAmenityAddUpdateReducer,
     propertyAmenityStatus: propertyAmenityStatusReducer,
     propertyAmenityDelete: propertyAmenityDeleteReducer,
+    properties: propertyReducer,
+    propertyDetails: propertyDetailsReducer,
+    propertyAddUpdate: propertyAddUpdateReducer,
+    propertyStatus: propertyStatusReducer,
+    propertyDelete: propertyDeleteReducer,
   },
 });
 

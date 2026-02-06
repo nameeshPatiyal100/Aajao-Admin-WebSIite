@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchPropertyTags, PropertyTag } from "./propertyTag.thunk";
+import { fetchProperties, Property } from "./property.thunk";
 
 
 
-interface PropertyTagState {
-  tags: PropertyTag[];
+interface PropertyState {
+  properties: Property[];
   loading: boolean;
   error: string | null;
   pagination: {
@@ -12,35 +12,35 @@ interface PropertyTagState {
   };
 }
 
-const initialState: PropertyTagState = {
-  tags: [],
-  loading: false,
-  error: null,
+const initialState: PropertyState = {
+  properties: [],
   pagination: {
     totalRecords: 0,
   },
+  loading: false,
+  error: null,
 };
 
-const propertyTagSlice = createSlice({
-  name: "propertyTag",
+const propertySlice = createSlice({
+  name: "property",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPropertyTags.pending, (state) => {
+      .addCase(fetchProperties.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchPropertyTags.fulfilled, (state, action) => {
+      .addCase(fetchProperties.fulfilled, (state, action) => {
         state.loading = false;
-        state.tags = action.payload.tags;
+        state.properties = action.payload.properties;
         state.pagination.totalRecords = action.payload.totalRecords;
       })
-      .addCase(fetchPropertyTags.rejected, (state, action) => {
+      .addCase(fetchProperties.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
   },
 });
 
-export default propertyTagSlice.reducer;
+export default propertySlice.reducer;

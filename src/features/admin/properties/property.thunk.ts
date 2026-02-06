@@ -2,14 +2,12 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../services/api";
 import { ADMINENDPOINTS } from "../../../services/endpoints";
 
-export interface PropertyTag {
-  tag_id: number;
-  tag_name: string;
-  tag_slug?: string | null;
-  tag_isActive: string;
-  tag_isDelete: string;
-  created_at: string;
-  updated_at: string;
+export interface Property {
+  property_id: number;
+  property_name: string;
+  is_active: string;
+  categories: string[];
+  ["HostDetails.user_fullName"]: string;
 }
 
 interface ApiResponse {
@@ -19,26 +17,26 @@ interface ApiResponse {
     page: number;
     limit: number;
     offset: number;
-    totalCount: number;
+    totalRecords: number;
     totalPages: number;
     search: string;
-    data: PropertyTag[];
+    properties: Property[];
   };
 }
 
-export const fetchPropertyTags = createAsyncThunk(
-  "propertyTag/fetchAll",
+export const fetchProperties = createAsyncThunk(
+  "property/fetchAll",
   async (payload: { page: number; search: string; limit:number; status: string; }, { rejectWithValue }) => {
     try {
-      const response = await api.post<ApiResponse>(ADMINENDPOINTS.PROPERTY_TAGS, payload); 
+      const response = await api.post<ApiResponse>(ADMINENDPOINTS.PROPERTIES_LIST, payload); 
       const resData = response.data;
       return {
-        tags: resData.data.data,
-        totalRecords: resData.data.totalCount,
+        properties: resData.data.properties,
+        totalRecords: resData.data.totalRecords,
         page: payload.page,
       };
     } catch (error: any) {
-      const errMsg = error.response?.data?.message || "Failed to fetch Tags";
+      const errMsg = error.response?.data?.message || "Failed to fetch Properties";
       return  rejectWithValue(errMsg);
     }
   }

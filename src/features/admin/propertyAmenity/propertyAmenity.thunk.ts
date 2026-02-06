@@ -19,7 +19,7 @@ interface ApiResponse {
     page: number;
     limit: number;
     offset: number;
-    totalCount: number;
+    totalRecords: number;
     totalPages: number;
     search: string;
     data: PropertyAmenity[];
@@ -29,20 +29,16 @@ interface ApiResponse {
 export const fetchPropertyAmenities = createAsyncThunk(
   "propertyAmenity/fetchAll",
   async (payload: { page: number; search: string; limit:number; status: string; }, { rejectWithValue }) => {
-    // const { dispatch } = thunkAPI;
     try {
       const response = await api.post<ApiResponse>(ADMINENDPOINTS.PROPERTY_AMENITIES, payload); 
       const resData = response.data;
-
-      // show snackbar on success
-      // if (resData.success) {
-      //   dispatch(setMessage({ message: resData.message, severity: "success" }));
-      // }
-
-      return resData.data.data; // return the actual amenities array
+      return {
+        amenities: resData.data.data,
+        totalRecords: resData.data.totalRecords,
+        page: payload.page,
+      };
     } catch (error: any) {
       const errMsg = error.response?.data?.message || "Failed to fetch amenities";
-      // dispatch(setError(errMsg));
       return  rejectWithValue(errMsg);
     }
   }

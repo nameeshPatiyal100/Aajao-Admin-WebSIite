@@ -7,12 +7,18 @@ interface PropertyCategoryState {
   categories: PropertyCategory[];
   loading: boolean;
   error: string | null;
+  pagination: {
+    totalRecords: number;
+  };
 }
 
 const initialState: PropertyCategoryState = {
   categories: [],
   loading: false,
   error: null,
+  pagination: {
+    totalRecords: 0,
+  },
 };
 
 const propertyCategorySlice = createSlice({
@@ -27,7 +33,8 @@ const propertyCategorySlice = createSlice({
       })
       .addCase(fetchPropertyCategories.fulfilled, (state, action) => {
         state.loading = false;
-        state.categories = action.payload;
+        state.categories = action.payload.categories;
+        state.pagination.totalRecords = action.payload.totalRecords;
       })
       .addCase(fetchPropertyCategories.rejected, (state, action) => {
         state.loading = false;

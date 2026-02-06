@@ -22,10 +22,10 @@ export default function PropertyCategory() {
   // const [loading, setLoading] = useState(true);
 
   const dispatch = useAppDispatch();
-  const { categories, loading } = useAppSelector(
+  const { categories, loading, pagination } = useAppSelector(
     (state) => state.propertyCategory,
   );
-  const totalRecords = categories.length;
+  const totalRecords = pagination?.totalRecords;
 
   // Fetch categories on mount
 
