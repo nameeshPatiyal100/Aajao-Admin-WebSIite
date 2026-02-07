@@ -18,7 +18,7 @@ export interface UserTableRow {
   added_at: string;
   isActive: number;
   isVerified: number;
-}
+};
 
 export default function UserManagementPage() {
   const dispatch = useAppDispatch();
@@ -91,14 +91,6 @@ export default function UserManagementPage() {
 
     try {
       await dispatch(deleteUser(selectedUser.user_id)).unwrap();
-
-      // setSnackbar({
-      //   open: true,
-      //   message: "User deleted successfully!",
-      //   severity: "success",
-      // });
-
-      // refresh list
       dispatch(
         fetchUsers({
           page: page + 1,
@@ -175,13 +167,8 @@ export default function UserManagementPage() {
       <AddUserModal
         open={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        // onAddUser={() => {
-        //   // later: dispatch(addUser(payload))
-        //   setIsAddModalOpen(false);
-        // }}
         mode={modalMode}
         context="user"
-        // user={selectedUser || undefined}
         userId={selectedUser?.user_id}
       />
 

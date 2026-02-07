@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { AddUserModal, ConfirmDeleteModal } from "../../../components";
 import { fetchHosts } from "../../../features/admin/userManagement/host.slice";
+import { deleteUser } from "../../../features/admin/userManagement/userDelete.slice";
 import { HostHeader } from "./HostHeader";
 import { HostTable, HostTableRow } from "./HostTable";
 import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
@@ -15,6 +16,9 @@ export default function HostManagementPage() {
   const [openAddHost, setOpenAddHost] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [deleteUserId, setDeleteUserId] = useState<number | null>(null);
+
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<1 | 0 | null>(null);
@@ -51,6 +55,20 @@ export default function HostManagementPage() {
 
   /* ================= HANDLERS ================= */
 
+  const handleConfirmDelete = () => {
+    if (!deleteUserId) return;
+
+    dispatch(deleteUser(deleteUserId))
+      .unwrap()
+      .then(() => {
+        loadHosts();  
+      })
+      .finally(() => {
+        setOpenDeleteModal(false);
+        setDeleteUserId(null);
+      });
+  };
+
   const handleAddHost = () => {
     setSelectedUserId(null); // 👈 empty modal
     setModalMode("add");
@@ -73,6 +91,10 @@ export default function HostManagementPage() {
     setPage(0); // reset pagination
     setSearch(searchValue);
     setStatus(statusValue);
+  };
+  const handleDeleteHost = (host: HostTableRow) => {
+    setDeleteUserId(host.id);
+    setOpenDeleteModal(true);
   };
 
   /* ================= TABLE DATA ================= */
@@ -99,11 +121,7 @@ export default function HostManagementPage() {
         <HostHeader
           searchTerm={search}
           status={status}
-          onSearch={(search, status) => {
-            setPage(0);
-            setSearch(search);
-            setStatus(status);
-          }}
+          onSearch={handleSearch} 
           onAdd={handleAddHost}
         />
 
@@ -115,16 +133,13 @@ export default function HostManagementPage() {
           loading={loading}
           onPageChange={setPage}
           onAction={handleHostAction}
-          onDelete={(host) => {}}
+          onDelete={handleDeleteHost}
           onRefresh={loadHosts}
         />
       </Box>
       <AddUserModal
         open={openAddHost}
-        onClose={() => {
-          setOpenAddHost(false);
-          setSelectedUserId(null);
-        }}
+        onClose={handleCloseAddHost}
         mode={modalMode}
         userId={selectedUserId ?? undefined}
         context="host"
@@ -135,6 +150,16 @@ export default function HostManagementPage() {
         message={snackbar.message}
         severity={snackbar.severity}
         onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+      />
+      <ConfirmDeleteModal
+        open={openDeleteModal}
+        onClose={() => {
+          setOpenDeleteModal(false);
+          setDeleteUserId(null);
+        }}
+        onConfirm={handleConfirmDelete} // 👈 HERE
+        title="Delete Host"
+        description="Are you sure you want to delete this host?"
       />
     </>
   );

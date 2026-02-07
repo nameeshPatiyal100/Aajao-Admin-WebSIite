@@ -88,7 +88,6 @@ export const HostTable = ({
   /* ================= HANDLERS ================= */
 
   const handleStatusToggle = (hostId: number, checked: boolean) => {
-    // ✅ move toggle instantly
     setOptimisticStatus((prev) => ({
       ...prev,
       [hostId]: checked,
@@ -110,10 +109,9 @@ export const HostTable = ({
           severity: "success",
         });
 
-        onRefresh(); // 🔁 sync with DB
+        onRefresh();
       })
       .catch((error) => {
-        // ❌ rollback toggle
         setOptimisticStatus((prev) => ({
           ...prev,
           [hostId]: !checked,
@@ -161,7 +159,6 @@ export const HostTable = ({
           </TableHead>
 
           <TableBody>
-            {/* Global loading */}
             {loading && (
               <TableRow>
                 <TableCell colSpan={8} align="center">
@@ -169,8 +166,6 @@ export const HostTable = ({
                 </TableCell>
               </TableRow>
             )}
-
-            {/* Status update overlay */}
             {statusUpdating && (
               <Box
                 sx={{
@@ -186,8 +181,6 @@ export const HostTable = ({
                 <TableLoader />
               </Box>
             )}
-
-            {/* Empty */}
             {!loading && hosts.length === 0 && (
               <TableRow>
                 <TableCell colSpan={8} align="center">
@@ -195,8 +188,6 @@ export const HostTable = ({
                 </TableCell>
               </TableRow>
             )}
-
-            {/* Rows */}
             {!loading &&
               hosts.map((host, index) => {
                 const checked =
@@ -292,8 +283,6 @@ export const HostTable = ({
           onChange={(_, v) => onPageChange(v - 1)}
         />
       </Box>
-
-      {/* Snackbar */}
       <CustomSnackbar
         open={snackbar.open}
         message={snackbar.message}

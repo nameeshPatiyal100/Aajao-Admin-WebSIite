@@ -3,7 +3,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import { HostTableRow } from "./HostTable"; // ✅ use table row type
+import { HostTableRow } from "./HostTable";
 
 const COLORS = {
   primary: "#881f9b",
