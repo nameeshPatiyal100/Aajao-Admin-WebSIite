@@ -175,11 +175,12 @@ export default function UserManagementPage() {
       <AddUserModal
         open={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAddUser={() => {
-          // later: dispatch(addUser(payload))
-          setIsAddModalOpen(false);
-        }}
+        // onAddUser={() => {
+        //   // later: dispatch(addUser(payload))
+        //   setIsAddModalOpen(false);
+        // }}
         mode={modalMode}
+        context="user"
         // user={selectedUser || undefined}
         userId={selectedUser?.user_id}
       />

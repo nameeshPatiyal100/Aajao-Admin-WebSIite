@@ -42,12 +42,13 @@ const initialState: HostState = {
 
 export const fetchHosts = createAsyncThunk<
   HostListResponse,
-  { page: number; search?: string }
+  { page: number; search?: string; status?: 1 | 0 | null }
 >("hosts/fetchHosts", async (payload, { rejectWithValue }) => {
   try {
     const res = await api.post(ADMINENDPOINTS.HOST_LIST, {
       page: payload.page,
       search: payload.search ?? "",
+      status: payload.status,
     });
 
     return res.data;

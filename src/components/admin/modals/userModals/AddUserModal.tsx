@@ -44,9 +44,10 @@ export const initialValues = {
 interface AddUserModalProps {
   open: boolean;
   onClose: () => void;
-  onAddUser: (data: any) => void;
+  // onAddUser: (data: any) => void;
   mode: "add" | "edit" | "view";
   userId?: number;
+  context: "user" | "host"; // ✅ NEW
 }
 
 const AddUserModal: React.FC<AddUserModalProps> = ({
@@ -54,6 +55,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   onClose,
   // onAddUser,
   mode,
+  context,
   userId,
 }) => {
   const dispatch = useAppDispatch();
@@ -61,12 +63,14 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   const { loading: submitLoading } = useAppSelector(
     (state) => state.userAddUpdate
   );
+  // console.log(submitLoading,"submitLoading")
   const { data, loading } = useAppSelector((state) => state.userDetails);
+  // console.log(loading,"loading")
   const { loading: imgDeleteLoading } = useAppSelector(
     (state) => state.userImageDelete
   );
 
-  console.log(imgDeleteLoading, "imgDeleteLoading");
+  // console.log(imgDeleteLoading, "imgDeleteLoading");
   const [snackbar, setSnackbar] = React.useState<{
     open: boolean;
     message: string;
@@ -106,9 +110,16 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
 
   /* ---------------- Initial values ---------------- */
   const formInitialValues = useMemo(() => {
-    if (mode === "add") return initialValues;
+    if (mode === "add") {
+      return {
+        ...initialValues,
+        host: context === "host",
+        user: true,
+      };
+    }
+  
     return data ? mapApiToFormValues(data) : initialValues;
-  }, [mode, data]);
+  }, [mode, data, context]);
 
   /* ---------------- Store original values ---------------- */
   const initialRef = useRef<any>(null);
@@ -212,23 +223,21 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
               <Box sx={styles.container}>
                 <Box sx={{ position: "relative" }}>
                   {/* Loader overlay */}
-                  {loading ||
-                    submitLoading ||
-                    (imgDeleteLoading && (
-                      <Box
-                        sx={{
-                          position: "absolute",
-                          inset: 0,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          backgroundColor: "rgba(255,255,255,0.7)",
-                          zIndex: 10,
-                        }}
-                      >
-                        <TableLoader />
-                      </Box>
-                    ))}
+                  {(loading || submitLoading || imgDeleteLoading) && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        inset: 0,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "rgba(255,255,255,0.7)",
+                        zIndex: 10,
+                      }}
+                    >
+                      <TableLoader />
+                    </Box>
+                  )}
 
                   {/* Form */}
                   <Formik

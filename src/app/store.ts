@@ -27,6 +27,7 @@ import userDeleteReducer from "../features/admin/userManagement/userDelete.slice
 import userAddUpdateReducer from "../features/admin/userManagement/userAddUpdate.slice";
 import userImageDeleteReducer from "../features/admin/userManagement/UserImageDelete.slice";
 import hostReducer from "../features/admin/userManagement/host.slice";
+import userStatusUpdateReducer from "../features/admin/userManagement/userStatusUpdate.slice";
 
 export const store = configureStore({
   reducer: {
@@ -39,6 +40,7 @@ export const store = configureStore({
     userAddUpdate: userAddUpdateReducer,
     userImageDelete: userImageDeleteReducer,
     userDelete: userDeleteReducer,
+    userStatusUpdate: userStatusUpdateReducer,
     propertyCategory: propertyCategoryReducer,
     propertyCategoryDetails: propertyCategoryDetailsReducer,
     propertyCategoryAddUpdate: propertyCategoryAddUpdateReducer,
