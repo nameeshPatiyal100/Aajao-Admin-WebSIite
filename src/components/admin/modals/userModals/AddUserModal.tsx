@@ -10,6 +10,7 @@ import { validationSchemaAddUserHostModal } from "../../../../validations/admin-
 import { PurpleThemeColor } from "../../../../theme/themeColor";
 import { getUserById } from "../../../../features/admin/userManagement/userDetails.slice";
 import { fetchUsers } from "../../../../features/admin/userManagement/user.slice";
+import { fetchHosts } from "../../../../features/admin/userManagement/host.slice";
 import { addOrUpdateUser } from "../../../../features/admin/userManagement/userAddUpdate.slice";
 import CustomSnackbar from "../../snackbar/CustomSnackbar";
 
@@ -59,18 +60,13 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   userId,
 }) => {
   const dispatch = useAppDispatch();
-  // const { data } = useAppSelector((state) => state.userDetails);
   const { loading: submitLoading } = useAppSelector(
     (state) => state.userAddUpdate
   );
-  // console.log(submitLoading,"submitLoading")
   const { data, loading } = useAppSelector((state) => state.userDetails);
-  // console.log(loading,"loading")
   const { loading: imgDeleteLoading } = useAppSelector(
     (state) => state.userImageDelete
   );
-
-  // console.log(imgDeleteLoading, "imgDeleteLoading");
   const [snackbar, setSnackbar] = React.useState<{
     open: boolean;
     message: string;
@@ -117,7 +113,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
         user: true,
       };
     }
-  
+
     return data ? mapApiToFormValues(data) : initialValues;
   }, [mode, data, context]);
 
@@ -189,12 +185,22 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     dispatch(addOrUpdateUser(formData))
       .unwrap()
       .then(() => {
-        dispatch(fetchUsers({ page: 1, search: "" }));
-        setSnackbar({
-          open: true,
-          message: "User updated successfully!",
-          severity: "success",
-        });
+        if (context === "host") {
+          dispatch(
+            fetchHosts({
+              page: 1,
+              search: "",
+              status: null,
+            })
+          );
+        } else {
+          dispatch(fetchUsers({ page: 1, search: "" }));
+          setSnackbar({
+            open: true,
+            message: "User updated successfully!",
+            severity: "success",
+          });
+        }
         onClose(); // close modal after success
       })
       .catch((err: any) => {

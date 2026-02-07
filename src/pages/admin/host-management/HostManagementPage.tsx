@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { Box } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { AddUserModal, ConfirmDeleteModal } from "../../../components";
 import { fetchHosts } from "../../../features/admin/userManagement/host.slice";
 import { HostHeader } from "./HostHeader";
 import { HostTable, HostTableRow } from "./HostTable";
@@ -12,6 +13,8 @@ export default function HostManagementPage() {
 
   /* ================= STATE ================= */
   const [openAddHost, setOpenAddHost] = useState(false);
+  const [modalMode, setModalMode] = useState<"add" | "edit">("add");
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<1 | 0 | null>(null);
@@ -49,11 +52,21 @@ export default function HostManagementPage() {
   /* ================= HANDLERS ================= */
 
   const handleAddHost = () => {
+    setSelectedUserId(null); // 👈 empty modal
+    setModalMode("add");
     setOpenAddHost(true);
   };
 
   const handleCloseAddHost = () => {
     setOpenAddHost(false);
+  };
+
+  const handleHostAction = (host: HostTableRow, mode: "view" | "edit") => {
+    if (mode === "edit") {
+      setSelectedUserId(host.id); // 👈 user_id
+      setModalMode("edit");
+      setOpenAddHost(true);
+    }
   };
 
   const handleSearch = (searchValue: string, statusValue: 1 | 0 | null) => {
@@ -101,11 +114,21 @@ export default function HostManagementPage() {
           totalPages={pagination?.totalPages || 0}
           loading={loading}
           onPageChange={setPage}
-          onAction={(host, mode) => {}}
+          onAction={handleHostAction}
           onDelete={(host) => {}}
           onRefresh={loadHosts}
         />
       </Box>
+      <AddUserModal
+        open={openAddHost}
+        onClose={() => {
+          setOpenAddHost(false);
+          setSelectedUserId(null);
+        }}
+        mode={modalMode}
+        userId={selectedUserId ?? undefined}
+        context="host"
+      />
 
       <CustomSnackbar
         open={snackbar.open}
