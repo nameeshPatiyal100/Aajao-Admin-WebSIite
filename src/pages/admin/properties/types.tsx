@@ -46,6 +46,12 @@ export interface FormValues {
   amenities: number[];
   cover_image: File | null;
   images: (File | string)[];
+  latitude: string;
+  longitude: string;
+  description_points: string[];
+  documents: File[];
+  hostId: string | number;
+  hostName: string;
 }
 
 export interface ListingProps {

@@ -1,4 +1,7 @@
 import { useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import HostAssignField from "./HostAssignField";
+// import { fetchPropertyAmenities } from "../../../features/admin/propertyAmenity/propertyAmenity.thunk";
 import {
   PurpleThemeColor,
   ThemeColors,
@@ -6,6 +9,8 @@ import {
 } from "../../../theme/themeColor";
 import { Box } from "@mui/system";
 import { useFormik } from "formik";
+import { fetchPropertyTags } from "../../../features/admin/propertyTag/propertyTag.thunk";
+// import { Autocomplete, CircularProgress } from "@mui/material";
 import FormTopBar from "./FormTopBar";
 import { setupPropertySchema } from "../../../validations/admin-validations";
 import type { FormValues } from "./types";
@@ -114,11 +119,26 @@ let fakeData: FormValues = {
   ),
   cover_image: null,
   images: dummyImages,
+  hostId: "",
+  hostName: "",
 };
 
 export default function PropertiesForm() {
+  const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const [formData, setFormData] = useState<FormValues | null>(null);
+  const [descInput, setDescInput] = useState("");
+  // const { users, loading } = useAppSelector((state) => state.users);
+
+  const { tags, loading: tagsLoading } = useAppSelector(
+    (state) => state.propertyTag
+  );
+
+  useEffect(() => {
+    dispatch(fetchPropertyTags({ page: 1 }));
+  }, [dispatch]);
+
+  const isViewMode = false;
   useEffect(() => {
     if (id) {
       setFormData(fakeData);
@@ -158,6 +178,12 @@ export default function PropertiesForm() {
       amenities: formData?.amenities || [],
       cover_image: null,
       images: formData?.images || [],
+      latitude: "",
+      longitude: "",
+      description_points: [],
+      documents: [],
+      hostId: "",
+      hostName: "",
     },
     validationSchema: setupPropertySchema,
     onSubmit: (values) => {
@@ -203,7 +229,7 @@ export default function PropertiesForm() {
               }}
             />
 
-            <TextField
+            {/* <TextField
               select
               fullWidth
               label="User"
@@ -227,7 +253,20 @@ export default function PropertiesForm() {
                   {user.name}
                 </MenuItem>
               ))}
-            </TextField>
+            </TextField> */}
+
+            <HostAssignField
+              value={formik.values.hostName}
+              onSelect={(host) => {
+                formik.setFieldValue("hostId", host.user_id);
+                formik.setFieldValue("hostName", host.user_fullName);
+              }}
+              onClear={() => {
+                formik.setFieldValue("hostId", "");
+                formik.setFieldValue("hostName", "");
+              }}
+              disabled={isViewMode}
+            />
 
             <TextField
               label="Host Name"
@@ -302,6 +341,21 @@ export default function PropertiesForm() {
               sx={{
                 ...FieldLabelColor,
               }}
+            />
+            <TextField
+              label="Latitude"
+              name="latitude"
+              value={formik.values.latitude}
+              onChange={formik.handleChange}
+              sx={{ ...FieldLabelColor }}
+            />
+
+            <TextField
+              label="Longitude"
+              name="longitude"
+              value={formik.values.longitude}
+              onChange={formik.handleChange}
+              sx={{ ...FieldLabelColor }}
             />
 
             <TextField
@@ -617,15 +671,24 @@ export default function PropertiesForm() {
                 onChange={formik.handleChange}
                 input={<OutlinedInput label="Tags" />}
                 renderValue={(selected) =>
-                  (selected as number[])
-                    .map((id) => tagsList.find((t) => t.id === id)?.name)
+                  tags
+                    .filter((t) => selected.includes(t.tag_id))
+                    .map((t) => t.tag_name)
                     .join(", ")
                 }
               >
-                {tagsList.map((tag) => (
-                  <MenuItem key={tag.id} value={tag.id}>
-                    <Checkbox checked={formik.values.tags.includes(tag.id)} />
-                    <ListItemText primary={tag.name} />
+                {tags.map((tag) => (
+                  <MenuItem key={tag.tag_id} value={tag.tag_id}>
+                    <Checkbox
+                      checked={formik.values.tags.includes(tag.tag_id)}
+                      sx={{
+                        color: "#881f9b",
+                        "&.Mui-checked": {
+                          color: "#881f9b",
+                        },
+                      }}
+                    />
+                    <ListItemText primary={tag.tag_name} />
                   </MenuItem>
                 ))}
               </Select>
@@ -747,6 +810,61 @@ export default function PropertiesForm() {
               <MenuItem value="1">Active</MenuItem>
               <MenuItem value="0">Inactive</MenuItem>
             </TextField>
+            <Box sx={{ gridColumn: "1 / -1" }}>
+              <Typography variant="subtitle1" mb={1}>
+                Description Points
+              </Typography>
+
+              <TextField
+                fullWidth
+                placeholder="Type a point and press Enter"
+                value={descInput}
+                onChange={(e) => setDescInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && descInput.trim()) {
+                    e.preventDefault();
+                    formik.setFieldValue("description_points", [
+                      ...formik.values.description_points,
+                      descInput.trim(),
+                    ]);
+                    setDescInput("");
+                  }
+                }}
+                sx={{
+                  ...FieldLabelColor,
+                }}
+              />
+
+              {/* Show points */}
+              <Box mt={2}>
+                {formik.values.description_points.map((point, index) => (
+                  <Box
+                    key={index}
+                    display="flex"
+                    alignItems="center"
+                    gap={1}
+                    mb={1}
+                  >
+                    <Typography>
+                      {index + 1}. {point}
+                    </Typography>
+                    <IconButton
+                      size="small"
+                      onClick={() =>
+                        formik.setFieldValue(
+                          "description_points",
+                          formik.values.description_points.filter(
+                            (_, i) => i !== index
+                          )
+                        )
+                      }
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
           </Box>
 
           <Box sx={{ gridColumn: "1 / -1" }}>
@@ -755,7 +873,27 @@ export default function PropertiesForm() {
             </Typography>
 
             {/* Upload Button */}
-            <Button variant="outlined" component="label">
+            {/* <Button variant="outlined" component="label">
+              Upload Image
+              <input
+                hidden
+                accept="image/*"
+                type="file"
+                onChange={handleImageChange}
+              />
+            </Button> */}
+            <Button
+              variant="outlined"
+              component="label"
+              sx={{
+                color: PurpleThemeColor,
+                borderColor: PurpleThemeColor,
+                "&:hover": {
+                  borderColor: "#6f137f",
+                  backgroundColor: "rgba(111,19,127,0.05)",
+                },
+              }}
+            >
               Upload Image
               <input
                 hidden
@@ -809,7 +947,51 @@ export default function PropertiesForm() {
               </Box>
             )}
           </Box>
-          <MultiImageUpload formik={formik} fieldName="images" label="Property Gallery" maxImages={8} />
+
+          <MultiImageUpload
+            formik={formik}
+            fieldName="images"
+            label="Property Gallery"
+            maxImages={8}
+          />
+
+          <Box sx={{ gridColumn: "1 / -1", mt: 4 }}>
+            <Typography variant="subtitle1" mb={1}>
+              Property Documents (Max 5)
+            </Typography>
+
+            <Button
+              variant="outlined"
+              component="label"
+              sx={{
+                color: PurpleThemeColor,
+                borderColor: PurpleThemeColor,
+              }}
+            >
+              Upload Documents
+              <input
+                hidden
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx,.jpg,.png"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
+                  if (files.length > 5) {
+                    alert("Maximum 5 documents allowed");
+                    return;
+                  }
+                  formik.setFieldValue("documents", files);
+                }}
+              />
+            </Button>
+
+            {/* Show selected docs */}
+            <Box mt={2}>
+              {formik.values.documents.map((file, i) => (
+                <Typography key={i}>{file.name}</Typography>
+              ))}
+            </Box>
+          </Box>
 
           {/* Actions */}
           <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>

@@ -16,9 +16,11 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
   label = "Upload Images",
   maxImages = 10,
 }) => {
-  const [previews, setPreviews] = useState<{ id: string; src: string; file?: File }[]>([]);
+  const [previews, setPreviews] = useState<
+    { id: string; src: string; file?: File }[]
+  >([]);
 
-  // Initialize previews
+  /* ================= INIT PREVIEWS ================= */
   useEffect(() => {
     const images: (File | string)[] = formik.values[fieldName] || [];
     const urls = images.map((img, idx) => ({
@@ -35,39 +37,37 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
     };
   }, [formik.values[fieldName]]);
 
-  // Remove image
+  /* ================= HANDLERS ================= */
   const handleRemove = (id: string) => {
-    console.log(id);
     const index = previews.findIndex((p) => p.id === id);
     if (index === -1) return;
 
     const updatedImages = [...formik.values[fieldName]];
     updatedImages.splice(index, 1);
     formik.setFieldValue(fieldName, updatedImages);
-
     setPreviews((prev) => prev.filter((p) => p.id !== id));
   };
 
-  // Add images
   const handleAdd = (files: FileList | null) => {
     if (!files) return;
     const newFiles = Array.from(files);
     const currentImages: (File | string)[] = formik.values[fieldName] || [];
+
     if (currentImages.length + newFiles.length > maxImages) {
       alert(`You can only upload up to ${maxImages} images.`);
       return;
     }
+
     formik.setFieldValue(fieldName, [...currentImages, ...newFiles]);
   };
 
-  // Handle sort update
   const handleSort = (newPreviews: typeof previews) => {
     setPreviews(newPreviews);
     const newImages = newPreviews.map((p) => (p.file ? p.file : p.src));
     formik.setFieldValue(fieldName, newImages);
   };
 
-
+  /* ================= RENDER ================= */
   return (
     <Box sx={{ gridColumn: "1 / -1" }}>
       {label && (
@@ -76,7 +76,21 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
         </Typography>
       )}
 
-      <Button variant="outlined" component="label">
+      {/* 🔴 PURPLE UPLOAD BUTTON */}
+      <Button
+        variant="outlined"
+        component="label"
+        sx={{
+          color: "#7b1fa2",
+          borderColor: "#7b1fa2",
+          fontWeight: 600,
+          textTransform: "capitalize",
+          "&:hover": {
+            borderColor: "#6a1b9a",
+            backgroundColor: "rgba(123,31,162,0.08)",
+          },
+        }}
+      >
         Upload Images
         <input
           hidden
@@ -87,12 +101,17 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
         />
       </Button>
 
-      {/* Sortable Images */}
+      {/* SORTABLE IMAGES */}
       <ReactSortable
         list={previews}
         setList={handleSort}
         animation={150}
-        style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "16px" }}
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          marginTop: "16px",
+        }}
       >
         {previews.map((item) => (
           <Box
@@ -125,7 +144,11 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
               component="img"
               src={item.src}
               alt="Property"
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
             />
           </Box>
         ))}

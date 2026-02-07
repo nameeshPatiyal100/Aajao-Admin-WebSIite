@@ -9,6 +9,7 @@ export const ADMINENDPOINTS = {
     DELETE_USER:"/admin/user/delete",  
     HOST_LIST:"/admin/host/search",  
     HOST_STATUS_UPDATE:"/admin/user/update/status",  
+    HOST_SEARCH_ASSIGN_PROPERTY:"/admin/host/search/assign-property",  
     // PROPERTY-CATEGORY
     PROPERTY_CATEGORIES:"admin/categories",
     PROPERTY_CATEGORY_BY_ID:"admin/category",
