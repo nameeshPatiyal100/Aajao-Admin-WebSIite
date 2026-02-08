@@ -3,6 +3,18 @@ import { Box, Button, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { ReactSortable } from "react-sortablejs";
 
+interface ApiImage {
+  afile_id: number;
+  url: string;
+}
+
+interface PreviewItem {
+  id: string;
+  src: string;
+  file?: File;
+  afile_id?: number;
+}
+
 interface MultiImageUploadProps {
   formik: any;
   fieldName: string;
@@ -16,79 +28,94 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
   label = "Upload Images",
   maxImages = 10,
 }) => {
-  const [previews, setPreviews] = useState<
-    { id: string; src: string; file?: File }[]
-  >([]);
+  const [previews, setPreviews] = useState<PreviewItem[]>([]);
 
   /* ================= INIT PREVIEWS ================= */
   useEffect(() => {
-    const images: (File | string)[] = formik.values[fieldName] || [];
-    const urls = images.map((img, idx) => ({
-      id: idx + "-" + (img instanceof File ? img.name : img),
-      src: typeof img === "string" ? img : URL.createObjectURL(img),
-      file: img instanceof File ? img : undefined,
-    }));
-    setPreviews(urls);
+    const images = formik.values[fieldName] as
+      | (File | ApiImage)[]
+      | undefined;
 
-    return () => {
-      urls.forEach((url) => {
-        if (url.src.startsWith("blob:")) URL.revokeObjectURL(url.src);
-      });
-    };
+    if (!images?.length) {
+      setPreviews([]);
+      return;
+    }
+
+    const mapped: PreviewItem[] = images.map((img) => {
+      // ✅ API IMAGE
+      if (!(img instanceof File)) {
+        return {
+          id: `api-${img.afile_id}`,
+          src: img.url,           // ✅ THIS WAS THE BUG
+          afile_id: img.afile_id,
+        };
+      }
+
+      // ✅ NEW UPLOAD
+      return {
+        id: `file-${img.name}-${img.lastModified}`,
+        src: URL.createObjectURL(img),
+        file: img,
+      };
+    });
+
+    setPreviews(mapped);
   }, [formik.values[fieldName]]);
 
   /* ================= HANDLERS ================= */
-  const handleRemove = (id: string) => {
-    const index = previews.findIndex((p) => p.id === id);
-    if (index === -1) return;
+  const handleRemove = (item: PreviewItem) => {
+    // 🔥 API delete
+    if (item.afile_id) {
+      console.log("Delete image afile_id:", item.afile_id);
+      // dispatch(deletePropertyImage(item.afile_id))
+    }
 
-    const updatedImages = [...formik.values[fieldName]];
-    updatedImages.splice(index, 1);
-    formik.setFieldValue(fieldName, updatedImages);
-    setPreviews((prev) => prev.filter((p) => p.id !== id));
+    const updated = [...formik.values[fieldName]];
+    const index = previews.findIndex((p) => p.id === item.id);
+    updated.splice(index, 1);
+
+    formik.setFieldValue(fieldName, updated);
   };
 
   const handleAdd = (files: FileList | null) => {
     if (!files) return;
-    const newFiles = Array.from(files);
-    const currentImages: (File | string)[] = formik.values[fieldName] || [];
 
-    if (currentImages.length + newFiles.length > maxImages) {
-      alert(`You can only upload up to ${maxImages} images.`);
+    const newFiles = Array.from(files);
+    const current = formik.values[fieldName] || [];
+
+    if (current.length + newFiles.length > maxImages) {
+      alert(`Max ${maxImages} images allowed`);
       return;
     }
 
-    formik.setFieldValue(fieldName, [...currentImages, ...newFiles]);
+    formik.setFieldValue(fieldName, [...current, ...newFiles]);
   };
 
-  const handleSort = (newPreviews: typeof previews) => {
-    setPreviews(newPreviews);
-    const newImages = newPreviews.map((p) => (p.file ? p.file : p.src));
-    formik.setFieldValue(fieldName, newImages);
+  const handleSort = (sorted: PreviewItem[]) => {
+    setPreviews(sorted);
+
+    const reordered = sorted.map((p) =>
+      p.file ? p.file : { afile_id: p.afile_id!, url: p.src }
+    );
+
+    formik.setFieldValue(fieldName, reordered);
   };
 
   /* ================= RENDER ================= */
   return (
     <Box sx={{ gridColumn: "1 / -1" }}>
-      {label && (
-        <Typography variant="subtitle1" mb={1}>
-          {label}
-        </Typography>
-      )}
+      <Typography variant="subtitle1" mb={1}>
+        {label}
+      </Typography>
 
-      {/* 🔴 PURPLE UPLOAD BUTTON */}
       <Button
         variant="outlined"
         component="label"
         sx={{
+          // color AIM: "#7b1fa2",
           color: "#7b1fa2",
           borderColor: "#7b1fa2",
           fontWeight: 600,
-          textTransform: "capitalize",
-          "&:hover": {
-            borderColor: "#6a1b9a",
-            backgroundColor: "rgba(123,31,162,0.08)",
-          },
         }}
       >
         Upload Images
@@ -101,27 +128,21 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
         />
       </Button>
 
-      {/* SORTABLE IMAGES */}
       <ReactSortable
         list={previews}
         setList={handleSort}
         animation={150}
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "8px",
-          marginTop: "16px",
-        }}
+        style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }}
       >
         {previews.map((item) => (
           <Box
             key={item.id}
             sx={{
-              position: "relative",
               width: 120,
               height: 120,
               borderRadius: 2,
               border: "1px solid #ddd",
+              position: "relative",
               overflow: "hidden",
             }}
           >
@@ -131,23 +152,24 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
                 position: "absolute",
                 top: 4,
                 right: 4,
-                backgroundColor: "rgba(255,255,255,0.8)",
-                "&:hover": { backgroundColor: "rgba(255,255,255,1)" },
-                zIndex: 10,
+                backgroundColor: "#fff",
+                zIndex: 2,
               }}
-              onClick={() => handleRemove(item.id)}
+              onClick={() => handleRemove(item)}
             >
               <CloseIcon fontSize="small" />
             </IconButton>
 
             <Box
               component="img"
-              src={item.src}
+              src={item.src}     // ✅ ALWAYS A STRING URL
               alt="Property"
+              draggable={false}
               sx={{
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
+                pointerEvents: "none",
               }}
             />
           </Box>

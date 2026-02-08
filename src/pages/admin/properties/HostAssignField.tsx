@@ -38,31 +38,33 @@ export default function HostAssignField({
 
   const debouncedSearch = useDebounce(inputValue, 400);
 
-  /* 🔁 keep input in sync with Formik */
   useEffect(() => {
     setInputValue(value);
+    if (value) setHasSelected(true);
   }, [value]);
 
   useEffect(() => {
-    if (!debouncedSearch || disabled || hasSelected) {
+    if (
+      !debouncedSearch.trim() ||
+      disabled ||
+      hasSelected ||
+      debouncedSearch === value // 🔒 prevents API on refresh
+    ) {
       setOpen(false);
       return;
     }
-
+  
     dispatch(fetchHostsForProperty({ search: debouncedSearch }));
     setOpen(true);
-  }, [debouncedSearch, dispatch, disabled, hasSelected]);
+  }, [debouncedSearch, disabled, hasSelected, value, dispatch]);
+  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     setHasSelected(false); // user started typing again
   };
 
-  useEffect(() => {
-    if (hosts.length > 0 && !disabled) {
-      setOpen(true);
-    }
-  }, [hosts, disabled]);
+
 
   const handleSelect = (host: any) => {
     onSelect(host);
