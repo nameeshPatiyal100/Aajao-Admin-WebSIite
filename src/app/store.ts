@@ -29,6 +29,10 @@ import userImageDeleteReducer from "../features/admin/userManagement/UserImageDe
 import hostReducer from "../features/admin/userManagement/host.slice";
 import userStatusUpdateReducer from "../features/admin/userManagement/userStatusUpdate.slice";
 import hostForPropertyReducer from "../features/admin/userManagement/hostForProperty.slice";
+import tagsDropdownReducer from "../features/admin/propertyTag/tagsDropdown.slice";
+import amenitiesDropdownReducer from "../features/admin/propertyAmenity/amenitiesDropdown.slice";
+import categoryDropdownReducer from "../features/admin/propertyCategory/categoryDropdown.slice";
+import propertyByIdReducer from "../features/admin/properties/propertyById.slice";
 
 export const store = configureStore({
   reducer: {
@@ -49,6 +53,10 @@ export const store = configureStore({
     propertyCategoryStatus: propertyCategoryStatusReducer,
     propertyCategoryDelete: propertyCategoryDeleteReducer,
     propertyTag: propertyTagReducer,
+    tagsDropdown: tagsDropdownReducer,
+    amenitiesDropdown: amenitiesDropdownReducer,
+    categoryDropdown: categoryDropdownReducer,
+    propertyById: propertyByIdReducer,
     propertyTagDetails: propertyTagDetailsReducer,
     propertyTagAddUpdate: propertyTagAddUpdateReducer,
     propertyTagStatus: propertyTagStatusReducer,
