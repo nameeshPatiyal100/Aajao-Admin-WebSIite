@@ -219,19 +219,35 @@ const Dashboard = () => {
       {[<AdminLineChart />, <AdminBarChart />].map((_, _i) => null)}
 
       <Paper sx={sectionCard}>
-        <AdminLineChart />
-        <AdminBarChart />
-      </Paper>
+  <Box sx={{ flex: 1, minWidth: 0 }}>
+    <AdminLineChart />
+  </Box>
 
-      <Paper
-        sx={{
-          ...sectionCard,
-          gap: 20,
-        }}
-      >
-        <AdmindPieChart title="Total Users" />
-        <AdmindPieChart title="Total Host" />
-      </Paper>
+  <Box sx={{ flex: 1, minWidth: 0 }}>
+    <AdminBarChart />
+  </Box>
+</Paper>
+
+<Paper
+  sx={{
+    ...sectionCard,
+    display: "flex",
+    flexDirection: "row",
+    gap: 20,
+
+    width: "100%",
+    overflow: "hidden",
+  }}
+>
+  <Box sx={{ flex: 1, minWidth: 0 }}>
+    <AdmindPieChart title="Total Users" />
+  </Box>
+
+  <Box sx={{ flex: 1, minWidth: 0 }}>
+    <AdmindPieChart title="Total Host" />
+  </Box>
+</Paper>
+
 
       <DashboardHeading heading="Latest Users" buttonText="View All" />
       <Paper sx={sectionCard}>
@@ -261,6 +277,9 @@ const sectionCard = {
   boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
   borderTop: "4px solid",
   borderColor: "#9333ea",
+  width: "100%",
+  overflow: "hidden",
+  flexWrap: "wrap",
 };
 
 export default Dashboard;

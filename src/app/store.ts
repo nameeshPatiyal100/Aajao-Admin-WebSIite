@@ -33,6 +33,7 @@ import tagsDropdownReducer from "../features/admin/propertyTag/tagsDropdown.slic
 import amenitiesDropdownReducer from "../features/admin/propertyAmenity/amenitiesDropdown.slice";
 import categoryDropdownReducer from "../features/admin/propertyCategory/categoryDropdown.slice";
 import propertyByIdReducer from "../features/admin/properties/propertyById.slice";
+import bookingListReducer from "../features/admin/Bookings/fetchBooking.slice";
 
 export const store = configureStore({
   reducer: {
@@ -71,6 +72,7 @@ export const store = configureStore({
     propertyAddUpdate: propertyAddUpdateReducer,
     propertyStatus: propertyStatusReducer,
     propertyDelete: propertyDeleteReducer,
+    bookingList: bookingListReducer,
   },
 });
 

@@ -1,46 +1,17 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Paper, Pagination } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { fetchBookingList } from "../../../features/admin/Bookings/fetchBooking.slice";
+
 import AdminBookingHeader from "./AdminBookingHeader";
 import BookingListTable from "./BookingListTable";
-// import ConfirmDeleteModal from "../common/ConfirmDeleteModal";
-import "./index.css"
+import "./index.css";
 import { ConfirmDeleteModal } from "../../../components";
 import { BookingRow } from "./types";
 import BookingDetailModal from "./BookingDetailModal";
 
-/* MOCK DATA (replace with API later) */
-const MOCK_BOOKINGS: BookingRow[] = [
-  {
-    id: "BK-1001",
-    userName: "Rahul Sharma",
-    propertyName: "Palm Residency",
-    checkIn: "2025-05-10",
-    checkOut: "2025-05-15",
-    amount: 12500,
-    bookingStatus: "confirmed",
-    paymentStatus: "paid",
-    createdAt: "2025-05-01",
-  },
-  {
-    id: "BK-1002",
-    userName: "Ananya Singh",
-    propertyName: "Sea View Villa",
-    checkIn: "2025-05-12",
-    checkOut: "2025-05-14",
-    amount: 8400,
-    bookingStatus: "pending",
-    paymentStatus: "unpaid",
-    createdAt: "2025-05-03",
-  },
-];
-
 const AdminBooking = () => {
-  /* PAGINATION */
-  const [page, setPage] = useState(0);
-  const [detailOpen, setDetailOpen] = useState(false);
-  // const [selectedBooking, setSelectedBooking] =
-  useState<BookingRow | null>(null);
-  const [isEdit, setIsEdit] = useState(false);
+  const dispatch = useAppDispatch();
 
   /* FILTER STATE */
   const [filters, setFilters] = useState({
@@ -53,48 +24,60 @@ const AdminBooking = () => {
     limit: 10,
   });
 
-  /* DATA STATE */
-  const [rows, setRows] = useState<BookingRow[]>(MOCK_BOOKINGS);
+  /* REDUX STATE */
+  const {
+    data,
+    loading,
+    totalPages,
+    currentPage,
+  } = useAppSelector((state) => state.bookingList);
 
-  /* DELETE MODAL */
+  /* FETCH LIST */
+  useEffect(() => {
+    dispatch(
+      fetchBookingList({
+        page: currentPage,
+        limit: filters.limit,
+      })
+    );
+  }, [dispatch, currentPage, filters.limit]);
+
+  /* MAP API → TABLE ROWS */
+  const rows: BookingRow[] = useMemo(() => {
+    return data.map((b) => ({
+      id: b.book_id,
+      userName: b["userDetails.user_fullName"],
+      propertyName: b["bookingProperty.property_name"],
+      checkIn: b["bookDetails.bt_book_checkIn"] || "-",
+      checkOut: b["bookDetails.bt_book_checkout"] || "-",
+      amount: Number(b.book_total_amt),
+      bookingStatus: b["bookingStatus.bs_title"],
+      statusColor: b["bookingStatus.bs_code"],
+      paymentStatus: b.book_is_paid === 1 ? "paid" : "unpaid",
+      createdAt: new Date(b.book_added_at).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
+    }));
+  }, [data]);
+
+  /* MODALS */
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState<BookingRow | null>(
-    null
-  );
+  const [selectedBooking, setSelectedBooking] =
+    useState<BookingRow | null>(null);
 
-  /* FILTER UPDATE */
-  const handleFilterUpdate = (key: string, value: any, autoApply = false) => {
-    const updated = { ...filters, [key]: value };
-    setFilters(updated);
-    if (autoApply) applyFilters(updated);
+  /* FILTER HANDLERS */
+  const handleFilterUpdate = (key: string, value: any) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  /* APPLY FILTERS */
-  const applyFilters = (data = filters) => {
-    let filtered = [...MOCK_BOOKINGS];
-
-    if (data.keyword) {
-      filtered = filtered.filter(
-        (b) =>
-          b.id.toLowerCase().includes(data.keyword.toLowerCase()) ||
-          b.userName.toLowerCase().includes(data.keyword.toLowerCase()) ||
-          b.propertyName.toLowerCase().includes(data.keyword.toLowerCase())
-      );
-    }
-
-    if (data.bookingStatus) {
-      filtered = filtered.filter((b) => b.bookingStatus === data.bookingStatus);
-    }
-
-    if (data.paymentStatus) {
-      filtered = filtered.filter((b) => b.paymentStatus === data.paymentStatus);
-    }
-
-    setPage(0);
-    setRows(filtered);
+  const applyFilters = () => {
+    dispatch(fetchBookingList({ page: 1, limit: filters.limit }));
   };
 
-  /* CLEAR FILTERS */
   const handleClear = () => {
     setFilters({
       keyword: "",
@@ -105,15 +88,8 @@ const AdminBooking = () => {
       toDate: null,
       limit: 10,
     });
-    setRows(MOCK_BOOKINGS);
-    setPage(0);
+    dispatch(fetchBookingList({ page: 1, limit: 10 }));
   };
-
-  /* PAGINATED DATA */
-  const paginatedRows = useMemo(() => {
-    const start = page * filters.limit;
-    return rows.slice(start, start + filters.limit);
-  }, [rows, page, filters.limit]);
 
   /* ACTION HANDLERS */
   const handleView = (row: BookingRow) => {
@@ -149,46 +125,52 @@ const AdminBooking = () => {
         handleFormShow={() => console.log("Export bookings")}
       />
 
-      {/* LISTING */}
+      {/* LIST */}
       <Paper sx={{ p: 3, borderRadius: "1rem" }}>
-        <BookingListTable
-          rows={paginatedRows}
-          onView={handleView}
-          onEdit={handleEdit}
-          onCancel={handleCancel}
-          onDelete={handleDelete}
-        />
+        {loading ? (
+          <Box textAlign="center" py={4}>
+            Loading bookings...
+          </Box>
+        ) : (
+          <BookingListTable
+            rows={rows}
+            onView={handleView}
+            onEdit={handleEdit}
+            onCancel={handleCancel}
+            onDelete={handleDelete}
+          />
+        )}
 
         {/* PAGINATION */}
-        <Box display="flex" justifyContent="center" pt={3}>
-          <Pagination
-            count={Math.ceil(rows.length / filters.limit)}
-            page={page + 1}
-            onChange={(_, v) => setPage(v - 1)}
-          />
-        </Box>
+        {totalPages > 1 && (
+          <Box display="flex" justifyContent="center" pt={3}>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(_, v) =>
+                dispatch(fetchBookingList({ page: v, limit: filters.limit }))
+              }
+            />
+          </Box>
+        )}
       </Paper>
 
       {/* DELETE MODAL */}
       <ConfirmDeleteModal
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
-        onConfirm={() => {
-          setRows((prev) => prev.filter((b) => b.id !== selectedBooking?.id));
-          setDeleteOpen(false);
-        }}
+        onConfirm={() => setDeleteOpen(false)}
         title="Delete Booking"
         description="Are you sure you want to permanently remove this booking?"
       />
+
+      {/* DETAIL MODAL */}
       <BookingDetailModal
         open={detailOpen}
         booking={selectedBooking}
         isEdit={isEdit}
         onClose={() => setDetailOpen(false)}
-        onSubmit={(data) => {
-          console.log("Updated booking", data);
-          setDetailOpen(false);
-        }}
+        onSubmit={() => setDetailOpen(false)}
       />
     </Box>
   );

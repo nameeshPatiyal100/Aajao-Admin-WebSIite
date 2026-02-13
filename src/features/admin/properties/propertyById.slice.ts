@@ -75,10 +75,15 @@ export const fetchPropertyById = createAsyncThunk<
         ? {
             afile_id: p.coverImage.afile_id,
             url: p.coverImage.url,
-          }
+          } 
         : null,
 
-      images: p.images?.map((img: any) => img.url) || [],
+      // images: p.images?.map((img: any) => img.url) || [],
+      images:
+        p.images?.map((img: any) => ({
+          afile_id: img.afile_id,
+          url: img.url,
+        })) || [],
 
       documents:
         p.documents?.map((doc: any) => ({

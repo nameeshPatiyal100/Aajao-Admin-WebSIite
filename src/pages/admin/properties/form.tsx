@@ -37,15 +37,12 @@ import {
 export default function PropertiesForm() {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
-  // const [formData, setFormData] = useState<FormValues | null>(null);
   const [descInput, setDescInput] = useState("");
 
   const { data: propertyData, loading } = useAppSelector(
     (state) => state.propertyById
   );
-  console.log(propertyData, "propertyData");
   const { tagsList } = useAppSelector((state) => state.tagsDropdown);
-  // const dispatch = useAppDispatch();
   const { amenitiesList } = useAppSelector((state) => state.amenitiesDropdown);
   const { categoriesList } = useAppSelector((state) => state.categoryDropdown);
   useEffect(() => {
