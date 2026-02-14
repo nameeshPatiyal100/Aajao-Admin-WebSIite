@@ -75,10 +75,42 @@ const bookingListSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
+      // .addCase(fetchBookingList.fulfilled, (state, action) => {
+      //   state.loading = false;
+
+      //   state.data = action.payload.bookings;
+      //   state.totalRecords = action.payload.totalRecords;
+      //   state.currentPage = action.payload.currentPage;
+      //   state.totalPages = action.payload.totalPages;
+      // })
       .addCase(fetchBookingList.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.data = action.payload.bookings;
+        state.data = action.payload.bookings.map((b: any) => ({
+          book_id: b.book_id,
+          book_total_amt: b.book_total_amt,
+          book_is_paid: b.book_is_paid,
+          book_added_at: b.book_added_at,
+
+          userDetails: {
+            user_fullName: b["userDetails.user_fullName"] ?? "",
+          },
+
+          bookingProperty: {
+            property_name: b["bookingProperty.property_name"] ?? "",
+          },
+
+          bookDetails: {
+            bt_book_checkIn: b["bookDetails.bt_book_checkIn"] ?? "",
+            bt_book_checkout: b["bookDetails.bt_book_checkout"] ?? "",
+          },
+
+          bookingStatus: {
+            bs_title: b["bookingStatus.bs_title"],
+            bs_code: b["bookingStatus.bs_code"],
+          },
+        }));
+
         state.totalRecords = action.payload.totalRecords;
         state.currentPage = action.payload.currentPage;
         state.totalPages = action.payload.totalPages;

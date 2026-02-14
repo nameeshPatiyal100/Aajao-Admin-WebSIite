@@ -6,6 +6,7 @@ import { store } from "./app/store.ts";
 import "leaflet/dist/leaflet.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import AppSnackbarContainer from "./components/admin/common/AppSnackbarContainer.tsx";
 
 import App from "./App.tsx";
 // import { AuthProvider } from "./context/AuthContext.tsx";
@@ -14,5 +15,6 @@ import App from "./App.tsx";
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <App />
+    <AppSnackbarContainer />
   </Provider>
 );

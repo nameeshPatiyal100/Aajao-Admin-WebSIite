@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Box, Paper, Pagination } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchBookingList } from "../../../features/admin/Bookings/fetchBooking.slice";
+import { fetchBookingDetail } from "../../../features/admin/Bookings/bookingDetail.slice";
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 import AdminBookingHeader from "./AdminBookingHeader";
 import BookingListTable from "./BookingListTable";
@@ -24,15 +26,10 @@ const AdminBooking = () => {
     limit: 10,
   });
 
-  /* REDUX STATE */
-  const {
-    data,
-    loading,
-    totalPages,
-    currentPage,
-  } = useAppSelector((state) => state.bookingList);
+  const { data, loading, totalPages, currentPage } = useAppSelector(
+    (state) => state.bookingList
+  );
 
-  /* FETCH LIST */
   useEffect(() => {
     dispatch(
       fetchBookingList({
@@ -42,18 +39,23 @@ const AdminBooking = () => {
     );
   }, [dispatch, currentPage, filters.limit]);
 
-  /* MAP API → TABLE ROWS */
   const rows: BookingRow[] = useMemo(() => {
     return data.map((b) => ({
       id: b.book_id,
-      userName: b["userDetails.user_fullName"],
-      propertyName: b["bookingProperty.property_name"],
-      checkIn: b["bookDetails.bt_book_checkIn"] || "-",
-      checkOut: b["bookDetails.bt_book_checkout"] || "-",
+
+      userName: b.userDetails.user_fullName,
+      propertyName: b.bookingProperty.property_name,
+
+      checkIn: b.bookDetails.bt_book_checkIn ?? "-",
+      checkOut: b.bookDetails.bt_book_checkout ?? "-",
+
       amount: Number(b.book_total_amt),
-      bookingStatus: b["bookingStatus.bs_title"],
-      statusColor: b["bookingStatus.bs_code"],
+
+      bookingStatus: b.bookingStatus.bs_title,
+      statusColor: b.bookingStatus.bs_code,
+
       paymentStatus: b.book_is_paid === 1 ? "paid" : "unpaid",
+
       createdAt: new Date(b.book_added_at).toLocaleDateString("en-IN", {
         day: "2-digit",
         month: "short",
@@ -62,17 +64,35 @@ const AdminBooking = () => {
     }));
   }, [data]);
 
-  /* MODALS */
   const [detailOpen, setDetailOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [selectedBooking, setSelectedBooking] =
-    useState<BookingRow | null>(null);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
+    null
+  );
 
   /* FILTER HANDLERS */
   const handleFilterUpdate = (key: string, value: any) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
+
+  const { data: bookingDetail, loading: detailLoading } = useAppSelector(
+    (state) => state.bookingDetail
+  );
+  const handleCloseDetail = () => {
+    setDetailOpen(false);
+    setSelectedBookingId(null);
+    setIsEdit(false);
+  };
+
+  useEffect(() => {
+    if (detailOpen && selectedBookingId) {
+      dispatch(fetchBookingDetail(selectedBookingId));
+    }
+  }, [detailOpen, selectedBookingId, dispatch]);
+
+  console.log("Booking Detail:", bookingDetail);
+  console.log("selectedBookingId:", selectedBookingId);
 
   const applyFilters = () => {
     dispatch(fetchBookingList({ page: 1, limit: filters.limit }));
@@ -91,26 +111,28 @@ const AdminBooking = () => {
     dispatch(fetchBookingList({ page: 1, limit: 10 }));
   };
 
-  /* ACTION HANDLERS */
+  // /* ACTION HANDLERS */
+
   const handleView = (row: BookingRow) => {
-    setSelectedBooking(row);
+    setSelectedBookingId(row.id);
     setIsEdit(false);
     setDetailOpen(true);
   };
 
   const handleEdit = (row: BookingRow) => {
-    setSelectedBooking(row);
+    setSelectedBookingId(row.id); // ✅ REQUIRED
     setIsEdit(true);
     setDetailOpen(true);
   };
 
+  useEffect(() => {
+    if (detailOpen && selectedBookingId) {
+      dispatch(fetchBookingDetail(selectedBookingId));
+    }
+  }, [detailOpen, selectedBookingId, dispatch]);
+
   const handleCancel = (row: BookingRow) => {
     console.log("Cancel booking", row);
-  };
-
-  const handleDelete = (row: BookingRow) => {
-    setSelectedBooking(row);
-    setDeleteOpen(true);
   };
 
   return (
@@ -128,16 +150,17 @@ const AdminBooking = () => {
       {/* LIST */}
       <Paper sx={{ p: 3, borderRadius: "1rem" }}>
         {loading ? (
-          <Box textAlign="center" py={4}>
-            Loading bookings...
-          </Box>
+          <TableLoader
+            text="Loading bookings..."
+            minHeight={260} // keeps table height stable
+          />
         ) : (
           <BookingListTable
             rows={rows}
             onView={handleView}
             onEdit={handleEdit}
             onCancel={handleCancel}
-            onDelete={handleDelete}
+            // onDelete={handleDelete}
           />
         )}
 
@@ -164,13 +187,16 @@ const AdminBooking = () => {
         description="Are you sure you want to permanently remove this booking?"
       />
 
-      {/* DETAIL MODAL */}
       <BookingDetailModal
         open={detailOpen}
-        booking={selectedBooking}
+        booking={bookingDetail}
+        loading={detailLoading}
         isEdit={isEdit}
-        onClose={() => setDetailOpen(false)}
-        onSubmit={() => setDetailOpen(false)}
+        onClose={handleCloseDetail}
+        onSubmit={(status) => {
+          // dispatch update booking status
+          handleCloseDetail();
+        }}
       />
     </Box>
   );

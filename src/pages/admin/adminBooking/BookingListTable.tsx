@@ -145,12 +145,6 @@ const BookingListTable: React.FC<BookingListTableProps> = ({
                 {/* ACTIONS */}
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center" gap={0.5}>
-                    <Tooltip title="View">
-                      <IconButton onClick={() => onView(row)}>
-                        <Visibility fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-
                     {onEdit && (
                       <Tooltip title="Edit">
                         <IconButton onClick={() => onEdit(row)}>
@@ -159,7 +153,7 @@ const BookingListTable: React.FC<BookingListTableProps> = ({
                       </Tooltip>
                     )}
 
-                    {onCancel && (
+                    {/* {onCancel && (
                       <Tooltip title="Cancel">
                         <IconButton
                           color="error"
@@ -168,18 +162,7 @@ const BookingListTable: React.FC<BookingListTableProps> = ({
                           <Cancel fontSize="small" />
                         </IconButton>
                       </Tooltip>
-                    )}
-
-                    {onDelete && (
-                      <Tooltip title="Delete">
-                        <IconButton
-                          sx={{ color: THEME_COLOR }}
-                          onClick={() => onDelete(row)}
-                        >
-                          <Delete fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
+                    )} */}
                   </Box>
                 </TableCell>
               </TableRow>
