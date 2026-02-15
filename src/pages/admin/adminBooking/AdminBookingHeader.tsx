@@ -19,6 +19,13 @@ interface Props {
   handleFilter: () => void;
   handleClear: () => void;
   handleFormShow: () => void;
+
+  statusList: {
+    bs_id: number;
+    bs_title: string;
+    bs_code: string | null;
+  }[];
+  statusLoading: boolean;
 }
 
 const commonFieldSx = {
@@ -58,7 +65,8 @@ const AdminBookingHeader = ({
   handleFilterUpdate,
   handleFilter,
   handleClear,
-  handleFormShow,
+  statusList,
+  statusLoading,
 }: Props) => {
   return (
     <Box mb={4}>
@@ -67,14 +75,6 @@ const AdminBookingHeader = ({
         <Typography variant="h4" fontWeight={700} color={ThemeColors.primary}>
           Bookings Management
         </Typography>
-
-        <Button
-          variant="contained"
-          sx={{ backgroundColor: ThemeColors.primary }}
-          onClick={handleFormShow}
-        >
-          Export
-        </Button>
       </Box>
 
       {/* FILTERS */}
@@ -100,11 +100,27 @@ const AdminBookingHeader = ({
             }
             sx={commonFieldSx}
             SelectProps={{ MenuProps: menuProps }}
+            disabled={statusLoading}
           >
             <MenuItem value="">All</MenuItem>
-            <MenuItem value="confirmed">Confirmed</MenuItem>
-            <MenuItem value="pending">Pending</MenuItem>
-            <MenuItem value="cancelled">Cancelled</MenuItem>
+
+            {statusList.map((status) => (
+              <MenuItem key={status.bs_id} value={status.bs_id}>
+                <Box display="flex" alignItems="center" gap={1}>
+                  {status.bs_code && (
+                    <Box
+                      sx={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        bgcolor: status.bs_code,
+                      }}
+                    />
+                  )}
+                  {status.bs_title}
+                </Box>
+              </MenuItem>
+            ))}
           </TextField>
 
           {/* PAYMENT STATUS */}
@@ -122,25 +138,6 @@ const AdminBookingHeader = ({
             <MenuItem value="">All</MenuItem>
             <MenuItem value="paid">Paid</MenuItem>
             <MenuItem value="unpaid">Unpaid</MenuItem>
-            <MenuItem value="refunded">Refunded</MenuItem>
-          </TextField>
-
-          {/* CATEGORY */}
-          <TextField
-            label="Category"
-            select
-            size="small"
-            value={filterData.category}
-            onChange={(e) =>
-              handleFilterUpdate("category", e.target.value, true)
-            }
-            sx={commonFieldSx}
-            SelectProps={{ MenuProps: menuProps }}
-          >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="room">Room</MenuItem>
-            <MenuItem value="villa">Villa</MenuItem>
-            <MenuItem value="apartment">Apartment</MenuItem>
           </TextField>
 
           {/* FROM DATE */}
@@ -169,31 +166,6 @@ const AdminBookingHeader = ({
             }}
           />
 
-          <TextField
-            label="Records"
-            select
-            size="small"
-            value={filterData.limit}
-            onChange={(e) => handleFilterUpdate("limit", e.target.value, true)}
-            sx={{
-              minWidth: 130,
-              "& .MuiOutlinedInput-root": {
-                "&.Mui-focused fieldset": {
-                  borderColor: "#881f9b",
-                },
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#881f9b",
-              },
-            }}
-            SelectProps={{ MenuProps: menuProps }}
-          >
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={25}>25</MenuItem>
-            <MenuItem value={50}>50</MenuItem>
-            <MenuItem value={100}>100</MenuItem>
-          </TextField>
-
           {/* ACTION BUTTONS */}
           <Stack direction="row" spacing={1}>
             <Button
@@ -208,11 +180,11 @@ const AdminBookingHeader = ({
               variant="outlined"
               onClick={handleClear}
               sx={{
-                borderColor: "#881f9b",
-                color: "#881f9b",
+                borderColor: FOCUS_COLOR,
+                color: FOCUS_COLOR,
                 "&:hover": {
-                  borderColor: "#881f9b",
-                  backgroundColor: "#881f9b10",
+                  borderColor: FOCUS_COLOR,
+                  backgroundColor: `${FOCUS_COLOR}10`,
                 },
               }}
             >

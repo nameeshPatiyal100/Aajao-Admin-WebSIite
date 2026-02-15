@@ -97,7 +97,7 @@ const BookingDetailModal = ({
 
   const dispatch = useAppDispatch();
 
-  const { data: statusList, loading: statusLoading } = useAppSelector(
+  const { data: statusList } = useAppSelector(
     (state) => state.bookingStatus
   );
 

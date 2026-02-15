@@ -40,3 +40,41 @@ export const deletePropertyImage = createAsyncThunk<
     }
   }
 );
+
+const deleteImageSlice = createSlice({
+  name: "deletePropertyImage",
+  initialState,
+  reducers: {
+    resetDeleteImageState: (state) => {
+      state.loading = false;
+      state.error = null;
+      state.success = false;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      /* ---------- PENDING ---------- */
+      .addCase(deletePropertyImage.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+
+      /* ---------- FULFILLED ---------- */
+      .addCase(deletePropertyImage.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+
+      /* ---------- REJECTED ---------- */
+      .addCase(deletePropertyImage.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.payload || "Failed to delete image";
+      });
+  },
+});
+
+export const { resetDeleteImageState } = deleteImageSlice.actions;
+export default deleteImageSlice.reducer;
+

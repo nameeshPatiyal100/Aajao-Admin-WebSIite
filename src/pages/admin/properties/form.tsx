@@ -1,13 +1,23 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchTagsDropdown } from "../../../features/admin/propertyTag/tagsDropdown.slice";
 import { fetchAmenetiesDropdown } from "../../../features/admin/propertyAmenity/amenitiesDropdown.slice";
 import { fetchCateDropdown } from "../../../features/admin/propertyCategory/categoryDropdown.slice";
 import { fetchPropertyById } from "../../../features/admin/properties/propertyById.slice";
+import { deletePropertyImage } from "../../../features/admin/properties/deletePropertyImage.slice";
+import { addOrUpdateProperty } from "../../../features/admin/properties/propertyAddUpdate.slice";
 import HostAssignField from "./HostAssignField";
-import MultiImageUpload from "../../../components/MultiImageUpload";
+// import MultiImageUpload from "../../../components/MultiImageUpload";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
+import AppSnackbarContainer from "../../../components/admin/common/AppSnackbarContainer";
+import AppSnackbar from "../../../components/AppSnackbar";
+import {
+  showLoader,
+  hideLoader,
+  setMessage,
+  setError,
+} from "../../../features/ui/ui.slice";
 import {
   PurpleThemeColor,
   ThemeColors,
@@ -34,9 +44,26 @@ import {
   Typography,
 } from "@mui/material";
 
+type ApiFile = { afile_id: number; url: string };
+type ImageValue = File | ApiFile;
+type ImageField = "images" | "documents";
+
 export default function PropertiesForm() {
+  const coverInputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const { loading: propertyAddUpdateLoading } = useAppSelector(
+    (state) => state.propertyAddUpdate
+  );
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "warning" | "info"
+  >("success");
+
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
+  let propertyId = id ? Number(id) : null;
   const [descInput, setDescInput] = useState("");
 
   const { data: propertyData, loading } = useAppSelector(
@@ -45,15 +72,14 @@ export default function PropertiesForm() {
   const { tagsList } = useAppSelector((state) => state.tagsDropdown);
   const { amenitiesList } = useAppSelector((state) => state.amenitiesDropdown);
   const { categoriesList } = useAppSelector((state) => state.categoryDropdown);
+  const { loading: imgDeleteLoading } = useAppSelector(
+    (state) => state.deletePropertyImage
+  );
   useEffect(() => {
     dispatch(fetchTagsDropdown());
     dispatch(fetchAmenetiesDropdown());
     dispatch(fetchCateDropdown());
   }, [dispatch]);
-
-  const isImage = (url: string) => /\.(jpg|jpeg|png|webp|gif)$/i.test(url);
-
-  const getFileName = (url: string) => url.split("/").pop() || "Document";
 
   const isViewMode = false;
   useEffect(() => {
@@ -62,55 +88,236 @@ export default function PropertiesForm() {
     }
   }, [id, dispatch]);
 
-  const formik = useFormik<FormValues>({
-    enableReinitialize: true,
-    initialValues: propertyData ?? DEFAULT_FORM_VALUES,
-    validationSchema: setupPropertySchema,
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
-  // console.log("Formik images:", formik.values.images);
+  const handleDeleteDocument = async (file: ImageValue) => {
+    const current = formik.values.documents;
 
-  const handleDeleteDocument = (
-    file: File | { afile_id: number; url: string } | null,
-    fieldName: "cover_image" | "documents",
-    index?: number
-  ) => {
-    if (!file) return;
+    if (!Array.isArray(current)) return;
+    if (file instanceof File) {
+      const updated = current.filter((item) => item !== file);
 
-    // ✅ If file came from API → delete on backend
-    if (!(file instanceof File)) {
-      const afileId = file.afile_id;
+      formik.setFieldValue("documents", updated);
 
-      console.log("Deleting afile_id:", afileId);
-      console.log("Property ID:", formik.values.id);
-
-      // 🔥 API call
-      // dispatch(deletePropertyFile({ afile_id: afileId, property_id: formik.values.id }));
+      dispatch(
+        setMessage({
+          message: "Document removed",
+          severity: "success",
+        })
+      );
+      return;
     }
+    try {
+      dispatch(showLoader());
 
-    // ✅ Clear from formik
-    if (fieldName === "cover_image") {
-      formik.setFieldValue("cover_image", null);
-    }
+      const res: any = await dispatch(
+        deletePropertyImage({
+          afile_id: file.afile_id,
+          property_id: Number(formik.values.id),
+        })
+      );
 
-    if (fieldName === "documents" && typeof index === "number") {
-      const updatedDocs = [...formik.values.documents];
-      updatedDocs.splice(index, 1);
-      formik.setFieldValue("documents", updatedDocs);
+      if (res.meta.requestStatus === "fulfilled") {
+        const updated = current.filter(
+          (item) => !(item instanceof File) && item.afile_id !== file.afile_id
+        );
+
+        formik.setFieldValue("documents", updated);
+
+        dispatch(
+          setMessage({
+            message: "Document deleted successfully",
+            severity: "success",
+          })
+        );
+      } else {
+        throw new Error("Delete failed");
+      }
+    } catch {
+      dispatch(setError("Failed to delete document"));
+    } finally {
+      dispatch(hideLoader());
     }
   };
+  const handleDeleteFromField = async (field: ImageField, file: ImageValue) => {
+    const current = formik.values[field];
+    if (!Array.isArray(current)) return;
+    if (file instanceof File) {
+      formik.setFieldValue(
+        field,
+        current.filter((item) => item !== file)
+      );
+      return;
+    }
+    try {
+      dispatch(showLoader());
+
+      const res: any = await dispatch(
+        deletePropertyImage({
+          afile_id: file.afile_id,
+          property_id: Number(formik.values.id),
+        })
+      );
+
+      if (res.meta.requestStatus === "fulfilled") {
+        formik.setFieldValue(
+          field,
+          current.filter(
+            (item) => item instanceof File || item.afile_id !== file.afile_id
+          )
+        );
+
+        dispatch(
+          setMessage({
+            message: "Image deleted successfully",
+            severity: "success",
+          })
+        );
+      }
+    } catch {
+      dispatch(setError("Failed to delete image"));
+    } finally {
+      dispatch(hideLoader());
+    }
+  };
+
+  const onlyFiles = (arr?: (File | any)[]) =>
+    (arr || []).filter((item): item is File => item instanceof File);
 
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     formik.setFieldValue("cover_image", file);
   };
 
+  const handleDeleteCoverImage = async () => {
+    const file = formik.values.cover_image;
+    if (!file) return;
+    if (file instanceof File) {
+      formik.setFieldValue("cover_image", null);
+      if (coverInputRef.current) {
+        coverInputRef.current.value = "";
+      }
+      return;
+    }
+    try {
+      dispatch(showLoader());
+
+      const res: any = await dispatch(
+        deletePropertyImage({
+          afile_id: file.afile_id,
+          property_id: Number(formik.values.id),
+        })
+      );
+
+      if (res.meta.requestStatus === "fulfilled") {
+        formik.setFieldValue("cover_image", null);
+        dispatch(
+          setMessage({
+            message: "Cover image deleted successfully",
+            severity: "success",
+          })
+        );
+      }
+    } catch {
+      dispatch(setError("Failed to delete cover image"));
+    } finally {
+      dispatch(hideLoader());
+    }
+  };
+
+  const handleSubmit = (values: FormValues) => {
+    const formData = new FormData();
+    formData.append("propertyId", propertyId ? String(propertyId) : "");
+    formData.append("propHostId", String(values.hostId));
+    formData.append("propLang", String(values.longitude));
+    formData.append("propLat", String(values.latitude));
+    formData.append("isActive", String(values.status));
+    formData.append("isVerify", String(values.is_verified));
+    formData.append("isLuxury", String(values.is_luxury));
+    /* ================= TEXT FIELDS ================= */
+    formData.append("propertyName", values.name);
+    formData.append("propDesc", values.description);
+    formData.append("propAddress", values.address);
+    formData.append("propCity", values.city);
+    formData.append("propState", values.state);
+    formData.append("propCountry", values.country);
+    formData.append("propZip", values.zip_code);
+    formData.append("propEmail", values.email);
+    formData.append("propContact", values.phone);
+    formData.append("propPrice", String(values.price));
+    formData.append("propMiniPrice", String(values.minimum_price));
+    formData.append("weeklyMiniPrice", String(values.weekly_minimum_price));
+    formData.append("weeklyMaxPrice", String(values.weekly_maximum_price));
+    formData.append("monthlySecurity", String(values.monthly_security));
+    formData.append("inTime", values.check_in_time);
+    formData.append("outTime", values.check_out_time);
+
+    /* ✅ PROPERTY ID (OUTSIDE FORMIK) */
+
+    /* ================= ARRAYS ================= */
+    values.categories.forEach((id) =>
+      formData.append("categories[]", String(id))
+    );
+
+    values.amenities.forEach((id) =>
+      formData.append("ameneties[]", String(id))
+    );
+
+    values.tags.forEach((id) => formData.append("tags[]", String(id)));
+
+    /* ================= FILES ================= */
+
+    if (values.cover_image instanceof File) {
+      formData.append("propertyCover", values.cover_image);
+    }
+
+    values.images
+      .filter((img): img is File => img instanceof File)
+      .forEach((file) => {
+        formData.append("propertyImage", file);
+      });
+
+    values.documents
+      .filter((doc): doc is File => doc instanceof File)
+      .forEach((file) => {
+        formData.append("propertyDoc", file);
+      });
+
+    /* ================= DEBUG ================= */
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+    // const [openSnackbar, setOpenSnackbar] = useState(false);
+    dispatch(addOrUpdateProperty(formData)).then((res: any) => {
+      if (res.meta.requestStatus === "fulfilled") {
+        setSnackbarMessage(
+          propertyId
+            ? "Property updated successfully"
+            : "Property added successfully"
+        );
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+      }
+
+      if (res.meta.requestStatus === "rejected") {
+        setSnackbarMessage(res.payload || "Something went wrong");
+        setSnackbarSeverity("error");
+        setSnackbarOpen(true);
+      }
+    });
+  };
+
+  const formik = useFormik<FormValues>({
+    enableReinitialize: true,
+    initialValues: propertyData ?? DEFAULT_FORM_VALUES,
+    validationSchema: setupPropertySchema,
+    onSubmit: handleSubmit,
+  });
+
+  console.log("Formik errors:", formik?.errors);
   return (
     <>
-      {loading ? (
+      {loading || imgDeleteLoading || propertyAddUpdateLoading ? (
         <TableLoader />
       ) : (
         <Box
@@ -810,6 +1017,7 @@ export default function PropertiesForm() {
                 <Typography variant="subtitle1" mb={1}>
                   Cover Image
                 </Typography>
+
                 <Button
                   variant="outlined"
                   component="label"
@@ -824,6 +1032,7 @@ export default function PropertiesForm() {
                 >
                   Upload Image
                   <input
+                    ref={coverInputRef}
                     hidden
                     accept="image/*"
                     type="file"
@@ -851,12 +1060,7 @@ export default function PropertiesForm() {
                         right: 4,
                         backgroundColor: "rgba(255,255,255,0.8)",
                       }}
-                      onClick={() =>
-                        handleDeleteDocument(
-                          formik.values.cover_image,
-                          "cover_image"
-                        )
-                      }
+                      onClick={handleDeleteCoverImage}
                     >
                       <CloseIcon fontSize="small" />
                     </IconButton>
@@ -879,12 +1083,64 @@ export default function PropertiesForm() {
                 )}
               </Box>
 
-              <MultiImageUpload
-                formik={formik}
-                fieldName="images"
-                label="Property Gallery"
-                maxImages={8}
-              />
+              <Box sx={{ gridColumn: "1 / -1", mt: 4 }}>
+                <Typography variant="subtitle1" mb={1}>
+                  Property Images (Images only, Max 10)
+                </Typography>
+
+                <Button
+                  variant="outlined"
+                  component="label"
+                  sx={{
+                    color: PurpleThemeColor,
+                    borderColor: PurpleThemeColor,
+                  }}
+                >
+                  Upload Images
+                  <input
+                    hidden
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files || []);
+                      const existing = formik.values.images || [];
+
+                      if (existing.length + files.length > 10) {
+                        alert("Maximum 10 images allowed");
+                        return;
+                      }
+
+                      formik.setFieldValue("images", [...existing, ...files]);
+                    }}
+                  />
+                </Button>
+
+                {/* 🖼 Preview */}
+                <Box mt={2} display="flex" gap={2} flexWrap="wrap">
+                  {formik.values.images.map((img, index) => (
+                    <Box key={index} sx={{ position: "relative", width: 120 }}>
+                      <IconButton
+                        size="small"
+                        sx={{ position: "absolute", top: 4, right: 4 }}
+                        onClick={() => handleDeleteFromField("images", img)}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+
+                      <Box
+                        component="img"
+                        src={
+                          img instanceof File
+                            ? URL.createObjectURL(img)
+                            : img.url
+                        }
+                        sx={{ width: "100%", height: 120, objectFit: "cover" }}
+                      />
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
 
               <Box sx={{ gridColumn: "1 / -1", mt: 4 }}>
                 <Typography variant="subtitle1" mb={1}>
@@ -929,9 +1185,7 @@ export default function PropertiesForm() {
                       <IconButton
                         size="small"
                         sx={{ position: "absolute", top: 4, right: 4 }}
-                        onClick={() =>
-                          handleDeleteDocument(doc, "documents", index)
-                        }
+                        onClick={() => handleDeleteFromField("documents", doc)}
                       >
                         <CloseIcon fontSize="small" />
                       </IconButton>
@@ -963,14 +1217,21 @@ export default function PropertiesForm() {
                       transform: "scale(1.05)",
                     },
                   }}
+                  // onClick={() => handleSubmit(formik.values)}
                 >
-                  Submit
+                  {propertyAddUpdateLoading ? "Saving..." : "Submit"}
                 </Button>
               </Box>
             </form>
           </Box>
         </Box>
       )}
+      <AppSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={() => setSnackbarOpen(false)}
+      />
     </>
   );
 }

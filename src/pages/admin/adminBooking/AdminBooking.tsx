@@ -1,26 +1,25 @@
+// AdminBooking.tsx
+
 import { useEffect, useMemo, useState } from "react";
 import { Box, Paper, Pagination } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchBookingList } from "../../../features/admin/Bookings/fetchBooking.slice";
 import { fetchBookingDetail } from "../../../features/admin/Bookings/bookingDetail.slice";
+import { fetchBookingStatus } from "../../../features/admin/Bookings/bookingStatus.slice";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 import AdminBookingHeader from "./AdminBookingHeader";
 import BookingListTable from "./BookingListTable";
-import "./index.css";
-import { ConfirmDeleteModal } from "../../../components";
-import { BookingRow } from "./types";
 import BookingDetailModal from "./BookingDetailModal";
+import { BookingRow } from "./types";
 
 const AdminBooking = () => {
   const dispatch = useAppDispatch();
 
-  /* FILTER STATE */
   const [filters, setFilters] = useState({
     keyword: "",
     bookingStatus: "",
     paymentStatus: "",
-    category: "",
     fromDate: null as Date | null,
     toDate: null as Date | null,
     limit: 10,
@@ -30,72 +29,37 @@ const AdminBooking = () => {
     (state) => state.bookingList
   );
 
+  /* 🔁 Load status list once */
   useEffect(() => {
-    dispatch(
-      fetchBookingList({
-        page: currentPage,
-        limit: filters.limit,
-      })
-    );
-  }, [dispatch, currentPage, filters.limit]);
+    dispatch(fetchBookingStatus());
+    dispatch(fetchBookingList({ page: 1, limit: 10 }));
+  }, [dispatch]);
 
-  const rows: BookingRow[] = useMemo(() => {
-    return data.map((b) => ({
-      id: b.book_id,
-
-      userName: b.userDetails.user_fullName,
-      propertyName: b.bookingProperty.property_name,
-
-      checkIn: b.bookDetails.bt_book_checkIn ?? "-",
-      checkOut: b.bookDetails.bt_book_checkout ?? "-",
-
-      amount: Number(b.book_total_amt),
-
-      bookingStatus: b.bookingStatus.bs_title,
-      statusColor: b.bookingStatus.bs_code,
-
-      paymentStatus: b.book_is_paid === 1 ? "paid" : "unpaid",
-
-      createdAt: new Date(b.book_added_at).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
-    }));
-  }, [data]);
-
-  const [detailOpen, setDetailOpen] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
-    null
+  const { data: statusList, loading: statusLoading } = useAppSelector(
+    (state) => state.bookingStatus
   );
 
-  /* FILTER HANDLERS */
+  /* 🧠 SINGLE SOURCE OF TRUTH */
+  const buildPayload = (page = 1) => ({
+    page,
+    limit: filters.limit,
+    ...(filters.keyword && { search: filters.keyword }),
+    ...(filters.bookingStatus && {
+      status: Number(filters.bookingStatus),
+    }),
+    ...(filters.paymentStatus && {
+      paymentStatus: filters.paymentStatus === "paid" ? 1 : 0,
+    }),
+    ...(filters.fromDate && { fromDate: filters.fromDate }),
+    ...(filters.toDate && { toDate: filters.toDate }),
+  });
+
   const handleFilterUpdate = (key: string, value: any) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const { data: bookingDetail, loading: detailLoading } = useAppSelector(
-    (state) => state.bookingDetail
-  );
-  const handleCloseDetail = () => {
-    setDetailOpen(false);
-    setSelectedBookingId(null);
-    setIsEdit(false);
-  };
-
-  useEffect(() => {
-    if (detailOpen && selectedBookingId) {
-      dispatch(fetchBookingDetail(selectedBookingId));
-    }
-  }, [detailOpen, selectedBookingId, dispatch]);
-
-  console.log("Booking Detail:", bookingDetail);
-  console.log("selectedBookingId:", selectedBookingId);
-
-  const applyFilters = () => {
-    dispatch(fetchBookingList({ page: 1, limit: filters.limit }));
+  const handleSearch = () => {
+    dispatch(fetchBookingList(buildPayload(1)));
   };
 
   const handleClear = () => {
@@ -103,7 +67,6 @@ const AdminBooking = () => {
       keyword: "",
       bookingStatus: "",
       paymentStatus: "",
-      category: "",
       fromDate: null,
       toDate: null,
       limit: 10,
@@ -111,19 +74,30 @@ const AdminBooking = () => {
     dispatch(fetchBookingList({ page: 1, limit: 10 }));
   };
 
-  // /* ACTION HANDLERS */
+  const rows: BookingRow[] = useMemo(
+    () =>
+      data.map((b) => ({
+        id: b.book_id,
+        userName: b.userDetails.user_fullName,
+        propertyName: b.bookingProperty.property_name,
+        checkIn: b.bookDetails.bt_book_checkIn ?? "-",
+        checkOut: b.bookDetails.bt_book_checkout ?? "-",
+        amount: Number(b.book_total_amt),
+        bookingStatus: b.bookingStatus.bs_title,
+        statusColor: b.bookingStatus.bs_code,
+        paymentStatus: b.book_is_paid === 1 ? "paid" : "unpaid",
+        createdAt: new Date(b.book_added_at).toLocaleDateString("en-IN"),
+      })),
+    [data]
+  );
 
-  const handleView = (row: BookingRow) => {
-    setSelectedBookingId(row.id);
-    setIsEdit(false);
-    setDetailOpen(true);
-  };
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
 
-  const handleEdit = (row: BookingRow) => {
-    setSelectedBookingId(row.id); // ✅ REQUIRED
-    setIsEdit(true);
-    setDetailOpen(true);
-  };
+  const { data: bookingDetail, loading: detailLoading } = useAppSelector(
+    (state) => state.bookingDetail
+  );
 
   useEffect(() => {
     if (detailOpen && selectedBookingId) {
@@ -131,72 +105,59 @@ const AdminBooking = () => {
     }
   }, [detailOpen, selectedBookingId, dispatch]);
 
-  const handleCancel = (row: BookingRow) => {
-    console.log("Cancel booking", row);
-  };
-
   return (
     <Box>
-      {/* HEADER */}
       <AdminBookingHeader
         ThemeColors={{ primary: "#881f9b" }}
         filterData={filters}
         handleFilterUpdate={handleFilterUpdate}
-        handleFilter={applyFilters}
+        handleFilter={handleSearch}
         handleClear={handleClear}
-        handleFormShow={() => console.log("Export bookings")}
+        handleFormShow={() => {}}
+        statusList={statusList}
+        statusLoading={statusLoading}
       />
 
-      {/* LIST */}
       <Paper sx={{ p: 3, borderRadius: "1rem" }}>
         {loading ? (
-          <TableLoader
-            text="Loading bookings..."
-            minHeight={260} // keeps table height stable
-          />
+          <TableLoader text="Loading bookings..." minHeight={260} />
         ) : (
           <BookingListTable
             rows={rows}
-            onView={handleView}
-            onEdit={handleEdit}
-            onCancel={handleCancel}
-            // onDelete={handleDelete}
+            onView={(row) => {
+              setSelectedBookingId(row.id);
+              setIsEdit(false);
+              setDetailOpen(true);
+            }}
+            onEdit={(row) => {
+              setSelectedBookingId(row.id);
+              setIsEdit(true);
+              setDetailOpen(true);
+            }}
+            onCancel={(row) => console.log("Cancel", row)}
           />
         )}
 
-        {/* PAGINATION */}
         {totalPages > 1 && (
           <Box display="flex" justifyContent="center" pt={3}>
             <Pagination
               count={totalPages}
               page={currentPage}
-              onChange={(_, v) =>
-                dispatch(fetchBookingList({ page: v, limit: filters.limit }))
+              onChange={(_, page) =>
+                dispatch(fetchBookingList(buildPayload(page)))
               }
             />
           </Box>
         )}
       </Paper>
 
-      {/* DELETE MODAL */}
-      <ConfirmDeleteModal
-        open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
-        onConfirm={() => setDeleteOpen(false)}
-        title="Delete Booking"
-        description="Are you sure you want to permanently remove this booking?"
-      />
-
       <BookingDetailModal
         open={detailOpen}
         booking={bookingDetail}
         loading={detailLoading}
         isEdit={isEdit}
-        onClose={handleCloseDetail}
-        onSubmit={(status) => {
-          // dispatch update booking status
-          handleCloseDetail();
-        }}
+        onClose={() => setDetailOpen(false)}
+        onSubmit={() => setDetailOpen(false)}
       />
     </Box>
   );
