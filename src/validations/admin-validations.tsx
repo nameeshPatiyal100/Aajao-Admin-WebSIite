@@ -26,8 +26,9 @@ export const setupPropertySchema = Yup.object({
   name: Yup.string().required("Property name is required"),
 
   hostId: Yup.number()
-    .typeError("Host is required")
-    .required("Host is required"),
+    .typeError("Host is required") // catches NaN
+    .required("Host is required")
+    .nullable(true), // allows null for unselected state
 
   description: Yup.string().required("Description is required"),
 
@@ -42,9 +43,7 @@ export const setupPropertySchema = Yup.object({
   longitude: Yup.string().required("Longitude is required"),
 
   /* ---------- CONTACT ---------- */
-  email: Yup.string()
-    .email("Invalid email")
-    .required("Email is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
 
   phone: Yup.string()
     .matches(/^[0-9]{10}$/, "Enter valid 10-digit number")
@@ -98,7 +97,6 @@ export const setupPropertySchema = Yup.object({
     .min(1, "Select at least one tag")
     .required("Tag is required"),
 });
-
 
 export const validationSchemaAddUserHostModal = Yup.object({
   fullName: Yup.string().required("Full Name is required"),

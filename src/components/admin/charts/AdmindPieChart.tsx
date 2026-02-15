@@ -38,9 +38,9 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
 
   const defaultData: Omit<ChartData, "color">[] = [
     { id: 0, value: 35, label: "Active Users" },
-    { id: 1, value: 25, label: "New Users" },
-    { id: 2, value: 20, label: "Premium Users" },
-    { id: 3, value: 20, label: "Inactive Users" },
+    { id: 1, value: 25, label: "Inactive Users" },
+    { id: 2, value: 20, label: "Verified Users" },
+    // { id: 3, value: 20, label: "Inactive Users" },
   ];
 
   const baseData = data || defaultData;

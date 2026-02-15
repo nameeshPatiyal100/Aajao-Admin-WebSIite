@@ -8,10 +8,9 @@ import { fetchPropertyById } from "../../../features/admin/properties/propertyBy
 import { deletePropertyImage } from "../../../features/admin/properties/deletePropertyImage.slice";
 import { addOrUpdateProperty } from "../../../features/admin/properties/propertyAddUpdate.slice";
 import HostAssignField from "./HostAssignField";
-// import MultiImageUpload from "../../../components/MultiImageUpload";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
-import AppSnackbarContainer from "../../../components/admin/common/AppSnackbarContainer";
-import AppSnackbar from "../../../components/AppSnackbar";
+
+import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
 import {
   showLoader,
   hideLoader,
@@ -54,12 +53,16 @@ export default function PropertiesForm() {
   const { loading: propertyAddUpdateLoading } = useAppSelector(
     (state) => state.propertyAddUpdate
   );
+  const [initialValues, setInitialValues] =
+    useState<FormValues>(DEFAULT_FORM_VALUES);
+
+  const [hostNameDisplay, setHostNameDisplay] = useState("");
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<
-    "success" | "error" | "warning" | "info"
-  >("success");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
 
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
@@ -226,9 +229,10 @@ export default function PropertiesForm() {
   };
 
   const handleSubmit = (values: FormValues) => {
+    console.log(values.hostId, "host id");
     const formData = new FormData();
     formData.append("propertyId", propertyId ? String(propertyId) : "");
-    formData.append("propHostId", String(values.hostId));
+    formData.append("propHostId", values.hostId!.toString());
     formData.append("propLang", String(values.longitude));
     formData.append("propLat", String(values.latitude));
     formData.append("isActive", String(values.status));
@@ -299,6 +303,10 @@ export default function PropertiesForm() {
         setSnackbarOpen(true);
       }
 
+      const idToFetch = propertyId ?? res.payload?.property_id;
+      if (idToFetch) {
+        dispatch(fetchPropertyById(idToFetch));
+      }
       if (res.meta.requestStatus === "rejected") {
         setSnackbarMessage(res.payload || "Something went wrong");
         setSnackbarSeverity("error");
@@ -309,10 +317,17 @@ export default function PropertiesForm() {
 
   const formik = useFormik<FormValues>({
     enableReinitialize: true,
-    initialValues: propertyData ?? DEFAULT_FORM_VALUES,
+    initialValues,
     validationSchema: setupPropertySchema,
     onSubmit: handleSubmit,
   });
+  useEffect(() => {
+    if (propertyData) {
+      setInitialValues(propertyData);
+      setHostNameDisplay(propertyData.hostName || "");
+    }
+  }, [propertyData]);
+  
 
   console.log("Formik errors:", formik?.errors);
   return (
@@ -352,17 +367,25 @@ export default function PropertiesForm() {
                   }}
                 />
                 <HostAssignField
-                  value={formik.values.hostName}
+                  value={hostNameDisplay} // only for display
                   onSelect={(host) => {
-                    formik.setFieldValue("hostId", host.host_id);
-                    formik.setFieldValue("hostName", host.user_fullName);
+                    const id = Number(host.user_id);
+                    if (isNaN(id)) {
+                      formik.setFieldError("hostId", "Invalid host selected");
+                      return;
+                    }
+                    formik.setFieldValue("hostId", id); // backend value
+                    formik.setFieldTouched("hostId", true);
+                    setHostNameDisplay(host.user_fullName); // frontend display
                   }}
                   onClear={() => {
-                    formik.setFieldValue("hostId", "");
-                    formik.setFieldValue("hostName", "");
+                    formik.setFieldValue("hostId", null);
+                    formik.setFieldError("hostId", undefined);
+                    setHostNameDisplay(""); // clear frontend display
                   }}
                   disabled={isViewMode}
                 />
+
                 <TextField
                   fullWidth
                   multiline
@@ -1226,7 +1249,7 @@ export default function PropertiesForm() {
           </Box>
         </Box>
       )}
-      <AppSnackbar
+      <CustomSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
         severity={snackbarSeverity}

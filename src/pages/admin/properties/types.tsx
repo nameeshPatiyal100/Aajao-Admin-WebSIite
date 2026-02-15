@@ -44,7 +44,7 @@ export interface FormValues {
   id: string;
   name: string;
 
-  hostId: number | "";
+  hostId: number | null;
   hostName: string;
 
   description: string;
@@ -90,8 +90,8 @@ export interface FormValues {
 export const DEFAULT_FORM_VALUES: FormValues = {
   id: "",
   name: "",
-  hostId: "",
-  hostName: "",
+  hostId: null, // ok
+  hostName :"",
   description: "",
   address: "",
   city: "",
@@ -123,6 +123,7 @@ export const DEFAULT_FORM_VALUES: FormValues = {
   images: [],
   documents: [],
 };
+
 
 export interface ListingProps {
   ThemeColors: { text: { secondary: string }; secondary: string };
