@@ -15,7 +15,27 @@ import {
 import { PurpleThemeColor } from "../../../theme/themeColor";
 import { Pagination } from "../../../components";
 import type { ListingProps } from "./types";
-import { statusSchema } from "../../../validations/admin-validations";
+import { bookingStatusRowSchema } from "../../../validations/admin-validations";
+
+const purpleTextFieldSx = {
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: PurpleThemeColor,
+    },
+    "&:hover fieldset": {
+      borderColor: PurpleThemeColor,
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: PurpleThemeColor,
+    },
+    "&.Mui-error fieldset": {
+      borderColor: PurpleThemeColor,
+    },
+  },
+  "& .MuiFormHelperText-root": {
+    color: PurpleThemeColor,
+  },
+};
 
 export default function Listing({
   statusListing,
@@ -29,7 +49,7 @@ export default function Listing({
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: { rows: statusListing },
-    validationSchema: statusSchema,
+    validationSchema: bookingStatusRowSchema,
     onSubmit: () => {},
   });
 
@@ -48,13 +68,7 @@ export default function Listing({
           <Table>
             <TableHead sx={{ backgroundColor: "#f9fafb" }}>
               <TableRow>
-                {[
-                  "SR. NO.",
-                  "NAME",
-                  "TEXT COLOR",
-                  "BACKGROUND COLOR",
-                  "ACTIONS",
-                ].map((header) => (
+                {["SR. NO.", "TITLE", "CODE", "ACTIONS"].map((header) => (
                   <TableCell key={header} sx={{ fontWeight: 600 }}>
                     {header}
                   </TableCell>
@@ -65,13 +79,13 @@ export default function Listing({
             <TableBody>
               {formik.values.rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center">
+                  <TableCell colSpan={4} align="center">
                     No records found
                   </TableCell>
                 </TableRow>
               ) : (
                 formik.values.rows.map((row, index) => (
-                  <TableRow key={row.id} hover>
+                  <TableRow key={row.bs_id} hover>
                     <TableCell>
                       {(page - 1) * rowsPerPage + index + 1}
                     </TableCell>
@@ -79,67 +93,69 @@ export default function Listing({
                     <TableCell>
                       <TextField
                         size="small"
-                        name={`rows.${index}.name`}
-                        value={row.name}
+                        name={`rows.${index}.bs_title`}
+                        value={row.bs_title}
                         onChange={formik.handleChange}
-                        error={!!(formik.errors.rows?.[index] as any)?.name}
-                        helperText={(formik.errors.rows?.[index] as any)?.name}
-                        sx={{
-                          "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                            borderColor: PurpleThemeColor,
-                          },
-                        }}
+                        error={Boolean(
+                          (formik.errors.rows?.[index] as any)?.bs_title
+                        )}
+                        helperText={
+                          (formik.errors.rows?.[index] as any)?.bs_title
+                        }
+                        sx={purpleTextFieldSx}
                       />
                     </TableCell>
 
                     <TableCell>
                       <TextField
                         size="small"
-                        name={`rows.${index}.text_color`}
-                        value={row.text_color}
+                        name={`rows.${index}.bs_code`}
+                        value={row.bs_code ?? ""}
                         onChange={formik.handleChange}
-                        error={
-                          !!(formik.errors.rows?.[index] as any)?.text_color
-                        }
+                        error={Boolean(
+                          (formik.errors.rows?.[index] as any)?.bs_code
+                        )}
                         helperText={
-                          (formik.errors.rows?.[index] as any)?.text_color
+                          (formik.errors.rows?.[index] as any)?.bs_code
                         }
-                        sx={{
-                          "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                            borderColor: PurpleThemeColor,
-                          },
-                        }}
-                      />
-                    </TableCell>
-
-                    <TableCell>
-                      <TextField
-                        size="small"
-                        name={`rows.${index}.bg_color`}
-                        value={row.bg_color}
-                        onChange={formik.handleChange}
-                        error={!!(formik.errors.rows?.[index] as any)?.bg_color}
-                        helperText={
-                          (formik.errors.rows?.[index] as any)?.bg_color
-                        }
-                        sx={{
-                          "& .MuiOutlinedInput-root.Mui-focused fieldset": {
-                            borderColor: PurpleThemeColor,
-                          },
-                        }}
+                        sx={purpleTextFieldSx}
                       />
                     </TableCell>
 
                     <TableCell>
                       <Button
                         size="small"
+                        sx={{
+                          backgroundColor: PurpleThemeColor,
+                          "&:hover": {
+                            backgroundColor: PurpleThemeColor,
+                          },
+                        }}
                         variant="contained"
-                        sx={{ backgroundColor: PurpleThemeColor }}
-                        onClick={() => {
-                          statusSchema
-                            .validate(row)
-                            .then(() => onSave(row))
-                            .catch((err) => alert(err.message));
+                        onClick={async () => {
+                          try {
+                            await bookingStatusRowSchema.validate(row, {
+                              abortEarly: false,
+                            });
+                            onSave(row); // API call
+                          } catch (err: any) {
+                            if (!err.inner) return;
+
+                            const rowErrors: Record<string, string> = {};
+
+                            err.inner.forEach((e: any) => {
+                              if (e.path) {
+                                rowErrors[e.path] = e.message;
+                              }
+                            });
+
+                            const errorsArray = [...(formik.errors.rows || [])];
+                            errorsArray[index] = rowErrors;
+
+                            formik.setErrors({
+                              rows: errorsArray,
+                            });
+                          }
                         }}
                       >
                         Save
@@ -153,7 +169,7 @@ export default function Listing({
         </TableContainer>
 
         {formik.values.rows.length > 0 && (
-          <Box display="flex" justifyContent="center" alignItems="center" p={2}>
+          <Box display="flex" justifyContent="center" p={2}>
             <Pagination
               count={Math.ceil(totalRecords / rowsPerPage)}
               page={page}

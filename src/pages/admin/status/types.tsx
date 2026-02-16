@@ -5,9 +5,16 @@ export interface ListingRecord {
   text_color: string;
 }
 
+export interface BookingStatusRow {
+  bs_id: number;
+  bs_title: string;
+  bs_code: string | null;
+}
+
 export interface FilterData {
+  page: number;
+  limit: number;
   keyword: string;
-  [key: string]: any;
 }
 
 export interface FormValues {
@@ -18,13 +25,13 @@ export interface FormValues {
 }
 
 export interface ListingProps {
-  statusListing: { id: number; name: string; bg_color: string; text_color: string; }[];
+  statusListing: BookingStatusRow[];
   totalRecords: number;
   loading: boolean;
-  handlePaginate: (event: React.ChangeEvent<unknown>, page: number) => void;
   page: number;
   rowsPerPage: number;
-  onSave: (row: ListingRecord) => void;
+  handlePaginate: (_: unknown, value: number) => void;
+  onSave: (row: BookingStatusRow) => void;
 }
 
 export interface SearchBarProps {

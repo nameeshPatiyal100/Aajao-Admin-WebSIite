@@ -131,3 +131,16 @@ export const statusListingSchema = Yup.object({
 export const statusSchema = Yup.object({
   rows: Yup.array().of(statusListingSchema),
 });
+
+
+export const bookingStatusRowSchema = Yup.object({
+  bs_id: Yup.number().required("Status ID is required"),
+  bs_title: Yup.string().required("Title is required"),
+  bs_code: Yup.string().required("Color code is required"),
+});
+
+// export const bookingStatusSchema = Yup.object({
+//   rows: Yup.array()
+//     .of(bookingStatusRowSchema)
+//     .required(),
+// });

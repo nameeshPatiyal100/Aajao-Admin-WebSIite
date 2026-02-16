@@ -38,6 +38,8 @@ import bookingDetailReducer from "../features/admin/Bookings/bookingDetail.slice
 import bookingStatusReducer from "../features/admin/Bookings/bookingStatus.slice";
 import updateBookingStatusReducer from "../features/admin/Bookings/updateBookingStatus.slice";
 import deletePropertyImageReducer from "../features/admin/properties/deletePropertyImage.slice";
+import bookingStatusListingForAdminPageReducer from "../features/admin/BookingStatus/bookingStatusListingForAdminPage.slice";
+import updateBookingStatusAdminPageReducer from "../features/admin/BookingStatus/bookingStatusUpdateSlice";
 
 export const store = configureStore({
   reducer: {
@@ -81,6 +83,8 @@ export const store = configureStore({
     bookingStatus: bookingStatusReducer,
     updateBookingStatus: updateBookingStatusReducer,
     deletePropertyImage: deletePropertyImageReducer,
+    bookingStatusListingForAdminPage: bookingStatusListingForAdminPageReducer,
+    updateBookingStatusAdminPage: updateBookingStatusAdminPageReducer,
   },
 });
 

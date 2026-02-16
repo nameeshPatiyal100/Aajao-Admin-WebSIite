@@ -42,4 +42,9 @@ export const ADMINENDPOINTS = {
   BOOKING_DETAIL: "/admin/booking/detail",
   BOOKING_STATUS_LIST:"/admin/booking/status/list",
   UPDATE_BOOKING_STATUS:"/admin/booking/update",
+  
+  //STATUS LISTING
+  BOOKING_STATUS_LIST_FOR_ADMIN:"/admin/booking/status/listing/admin-page",
+  UPDATE_BOOKING_STATUS_FROM_STATUS_LISTING_FOR_ADMIN_PAGE:"/admin/booking/status/update",
+
 };
