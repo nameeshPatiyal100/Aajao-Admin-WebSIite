@@ -10,41 +10,71 @@ import {
   Typography,
 } from "@mui/material";
 
-export type Column<T> = {
+/* ===== API ROW TYPE ===== */
+export interface UserRow {
+  user_fullName: string;
+  user_isVerified: 0 | 1;
+  user_isActive: 0 | 1;
+  "userCred.cred_user_email": string;
+}
+
+/* ===== COLUMN TYPE ===== */
+type Column<T> = {
   key: keyof T;
   header: string;
-  render?: (value: any, row: T) => React.ReactNode;
+  render?: (value: T[keyof T], row: T) => React.ReactNode;
 };
 
-type AdminTableProps<T> = {
-  columns: Column<T>[];
-  rows: T[];
+/* ===== COLUMNS ===== */
+const columns: Column<UserRow>[] = [
+  {
+    key: "user_fullName",
+    header: "Name",
+  },
+  {
+    key: "userCred.cred_user_email",
+    header: "Email",
+  },
+  {
+    key: "user_isVerified",
+    header: "Verified",
+    render: (value) => (
+      <Chip
+        label={value === 1 ? "Verified" : "Not Verified"}
+        color={value === 1 ? "success" : "default"}
+        size="small"
+        sx={{ fontWeight: 500 }}
+      />
+    ),
+  },
+  {
+    key: "user_isActive",
+    header: "Status",
+    render: (value) => (
+      <Chip
+        label={value === 1 ? "Active" : "Inactive"}
+        color={value === 1 ? "success" : "error"}
+        size="small"
+        sx={{ fontWeight: 500 }}
+      />
+    ),
+  },
+];
+
+/* ===== PROPS ===== */
+type AdminUserTableProps = {
+  rows: UserRow[];
 };
 
-const statusColorMap: Record<
-  string,
-  "success" | "warning" | "error" | "default"
-> = {
-  Confirmed: "success",
-  Pending: "warning",
-  Cancelled: "error",
-  "Checked Out": "default",
-};
-
-export default function AdminTable<T>({
-  columns,
-  rows,
-}: AdminTableProps<T>) {
+export default function AdminUserTable({ rows }: AdminUserTableProps) {
   return (
     <Box sx={{ width: "100%" }}>
-      <TableContainer sx={{ width: "100%" }}>
+      <TableContainer>
         <Table
           stickyHeader
           sx={{
-            width: "100%",
             borderCollapse: "separate",
             borderSpacing: "0 8px",
-            fontFamily: "Poppins, sans-serif",
           }}
         >
           {/* ===== HEADER ===== */}
@@ -55,7 +85,6 @@ export default function AdminTable<T>({
                   key={String(col.key)}
                   sx={{
                     fontWeight: 600,
-                    color: "#374151",
                     backgroundColor: "#f9fafb",
                     borderBottom: "none",
                   }}
@@ -72,12 +101,10 @@ export default function AdminTable<T>({
               <TableRow
                 key={rowIndex}
                 sx={{
-                  backgroundColor: "#ffffff",
+                  backgroundColor: "#fff",
                   boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-                  transition: "all 0.2s ease",
                   "&:hover": {
                     backgroundColor: "#f9fafb",
-                    transform: "translateY(-2px)",
                   },
                 }}
               >
@@ -88,14 +115,6 @@ export default function AdminTable<T>({
                     <TableCell key={String(col.key)}>
                       {col.render ? (
                         col.render(value, row)
-                      ) : typeof value === "string" &&
-                        statusColorMap[value] ? (
-                        <Chip
-                          label={value}
-                          color={statusColorMap[value]}
-                          size="small"
-                          sx={{ fontWeight: 500 }}
-                        />
                       ) : (
                         <Typography fontWeight={500}>
                           {String(value)}

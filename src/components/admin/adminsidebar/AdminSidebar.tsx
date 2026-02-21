@@ -13,17 +13,18 @@ import {
 import {
   LayoutDashboard,
   Users,
-  // Settings,
   ChevronDown,
   ChevronUp,
-  // Bell,
   AlignVerticalJustifyCenter,
   BookOpen,
   Octagon,
   TrafficCone,
-  ThermometerSnowflake,
-  Activity
-  // ContactRound,
+  Activity,
+  CircleDot,
+  Bath,
+  Tag,
+  ShieldCheck,
+  Star,
 } from "lucide-react";
 import { useEffect, useState, MouseEvent } from "react";
 
@@ -42,53 +43,36 @@ const NAV_ITEMS: NavItem[] = [
     path: "/admin/properties",
     icon: AlignVerticalJustifyCenter,
   },
-  // { text: "Transactions", path: "/admin/transactions", icon: Bell },
-  // { text: "Blog", path: "/admin/blog", icon: Bell },
-  // { text: "Notifications", path: "/admin/notifications", icon: Bell },
-  // { text: "CMS", path: "/admin/cms", icon: Bell },
-  // { text: "Configuration", path: "/admin/settings", icon: Settings },
   { text: "Bookings", path: "/admin/bookings", icon: BookOpen },
   // { text: "Support", path: "/admin/support", icon: Octagon },
 ];
 
 const SUB_ITEMS: Record<string, NavItem[]> = {
-  // Users: [
-  //   {
-  //     text: "Confirmation Pending",
-  //     path: "/admin/users/pending",
-  //     icon: ContactRound,
-  //   },
-  //   {
-  //     text: "Manage Users",
-  //     path: "/admin/users/manage",
-  //     icon: Bell,
-  //   },
-  // ],
   Properties: [
     {
       text: "Property Categories",
       path: "/admin/categories",
-      icon: ThermometerSnowflake,
+      icon: CircleDot,
     },
     {
       text: "Property Tags",
       path: "/admin/tags",
-      icon: ThermometerSnowflake,
+      icon: Tag,
     },
     {
       text: "Amenities",
       path: "/admin/amenities",
-      icon: ThermometerSnowflake,
+      icon: Bath,
     },
     {
       text: "Property Verification",
       path: "/admin/property-verification",
-      icon: ThermometerSnowflake,
+      icon: ShieldCheck,
     },
     {
       text: "Property Reviews",
       path: "/admin/property-reviews",
-      icon: ThermometerSnowflake,
+      icon: Star,
     },
   ],
   Bookings: [
@@ -227,7 +211,9 @@ const AdminSidebar = () => {
                               },
                             }}
                           >
-                            <ListItemIcon sx={{ minWidth: 30, color: "inherit" }}>
+                            <ListItemIcon
+                              sx={{ minWidth: 30, color: "inherit" }}
+                            >
                               <SubIcon size={16} />
                             </ListItemIcon>
                             <ListItemText

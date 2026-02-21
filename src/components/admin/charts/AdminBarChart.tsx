@@ -1,12 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { getLast12Days } from "../../../styles/utils/adminUtils";
 
-const uData = [25, 35, 64, 35, 64, 75, 94, 18, 23, 53, 64, 75];
+interface AdminBarChartProps {
+  dates: string[];
+  users: number[];
+}
 
-const AdminBarChart = () => {
-  const dates = getLast12Days();
-
+const AdminBarChart = ({ dates, users }: AdminBarChartProps) => {
   const axisLabelStyle = {
     fontFamily: "Poppins, sans-serif",
     color: "#547792",
@@ -15,12 +15,7 @@ const AdminBarChart = () => {
   };
 
   return (
-    <Box
-      sx={{
-        mt: "5rem",
-        px: "1rem",
-      }}
-    >
+    <Box sx={{ mt: "5rem", px: "1rem" }}>
       {/* ===== Heading ===== */}
       <Typography
         sx={{
@@ -39,8 +34,7 @@ const AdminBarChart = () => {
           height={350}
           series={[
             {
-              data: uData,
-              // label: "Daily Users",
+              data: users, // 🔥 from API
               color: "#881f9b",
               valueFormatter: (value) => `${value} users`,
             },
@@ -48,7 +42,7 @@ const AdminBarChart = () => {
           xAxis={[
             {
               scaleType: "band",
-              data: dates,
+              data: dates, // 🔥 from API
               tickLabelStyle: {
                 fill: "#547792",
                 fontFamily: "Poppins, sans-serif",
@@ -81,15 +75,6 @@ const AdminBarChart = () => {
             },
           ]}
           margin={{ top: 30, bottom: 60, left: 60, right: 30 }}
-          sx={{
-            "& .MuiChartsAxis-tickLabel": {
-              fontFamily: "Poppins, sans-serif",
-            },
-            "& .MuiChartsAxis-label": {
-              fontFamily: "Poppins, sans-serif",
-              fontWeight: 500,
-            },
-          }}
         />
       </Box>
     </Box>

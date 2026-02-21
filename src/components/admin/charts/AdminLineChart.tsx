@@ -1,12 +1,16 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 
-const AdminLineChart = () => {
-  const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-  ];
-
+interface AdminLineChartProps {
+  months: string[];
+  successfulData: number[];
+  cancelledData: number[];
+}
+const AdminLineChart = ({
+  months,
+  successfulData,
+  cancelledData,
+}: AdminLineChartProps) => {
   return (
     <Box
       sx={{
@@ -28,7 +32,7 @@ const AdminLineChart = () => {
         Monthly Bookings
       </Typography>
 
-      {/* ===== Legend / Notation ===== */}
+      {/* ===== Legend ===== */}
       <Stack direction="row" spacing={3} sx={{ mb: 2 }}>
         <Stack direction="row" spacing={1} alignItems="center">
           <Box
@@ -88,13 +92,13 @@ const AdminLineChart = () => {
           ]}
           series={[
             {
-              data: [25, 35, 64, 35, 64, 75, 94, 18, 23, 53, 64, 75],
+              data: successfulData,
               color: "#AA60C8",
               showMark: false,
               curve: "monotoneX",
             },
             {
-              data: [24, 53, 56, 64, 73, 52, 23, 62, 92, 87, 77, 60],
+              data: cancelledData,
               color: "#A294F9",
               showMark: false,
               curve: "monotoneX",

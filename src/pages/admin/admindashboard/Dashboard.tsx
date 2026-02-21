@@ -1,52 +1,109 @@
-import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useNavigate } from "react-router-dom";
+import { getAdminDashboardData } from "../../../features/admin/Dashboard/dashboard.slice";
+import { Box, Paper, Stack, Typography } from "@mui/material";
+
+import AdminUserTable from "../../../components/admin/adminTable/AdminUserTable";
+import AdminBookingTable from "../../../components/admin/adminTable/AdminBookingTable";
+import AdminPropertyTable from "../../../components/admin/adminTable/AdminPropertyTable";
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 import {
   AdmindPieChart,
   AdminBarChart,
   AdminLineChart,
-  AdminTable,
 } from "../../../components";
-import { userRows } from "../../../styles/utils/adminUtils";
 
 import DashboardHeading from "./DashboardHeading";
 
+import type {
+  DashboardApiResponse,
+  DashboardPayload,
+  LatestUser,
+  LatestBooking,
+  LatestProperty,
+} from "../../../features/admin/Dashboard/types";
+
+/* ============================
+   DASHBOARD COMPONENT
+============================ */
 const Dashboard = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
+  const {
+    data: dashboardResponse,
+    loading,
+    error,
+  } = useAppSelector((state) => state.adminDashboardSlice);
 
+  useEffect(() => {
+    dispatch(getAdminDashboardData());
+  }, [dispatch]);
 
-  
-  type Column<T> = {
-    key: keyof T;
-    header: string;
-    render?: (value: T[keyof T], row: T) => React.ReactNode;
-  };
-  type UserRow = {
-    name: string;
-    email: string;
-    role: string;
-    status: string;
-  };
+  /* ============================
+     SAFELY EXTRACT PAYLOAD
+  ============================ */
+  const dashboardData: DashboardPayload | null =
+    dashboardResponse?.data ?? null;
 
-  const userColumns: Column<UserRow>[] = [
-    { key: "name", header: "Name" },
-    { key: "email", header: "Email" },
-    { key: "role", header: "Role" },
+  /* ============================
+     LOADING STATE
+  ============================ */
+  if (loading) {
+    return <TableLoader text="Loading dashboard data..." minHeight={400} />;
+  }
+
+  /* ============================
+     STATS
+  ============================ */
+  const stats = [
     {
-      key: "status",
-      header: "Status",
-      render: (value) => (
-        <Chip
-          label={String(value)}
-          color={value === "Active" ? "success" : "error"}
-          size="small"
-        />
-      ),
+      label: "Total Number of User",
+      value: dashboardData?.userCount ?? 0,
+    },
+    {
+      label: "Total Number of Host",
+      value: dashboardData?.hostCount ?? 0,
+    },
+    {
+      label: "Total Number of Properties",
+      value: dashboardData?.propCount ?? 0,
+    },
+    {
+      label: "Total Bookings",
+      value: dashboardData?.BookingCount ?? 0,
     },
   ];
 
+  /* ============================
+     CHART DATA
+  ============================ */
+  const months = dashboardData?.getMonthlyBookingsData?.months ?? [];
+  const successfulBookings =
+    dashboardData?.getMonthlyBookingsData?.successful ?? [];
+  const cancelledBookings =
+    dashboardData?.getMonthlyBookingsData?.cancelled ?? [];
+
+  const dates = dashboardData?.getDailyUsersData?.dates ?? [];
+  const users = dashboardData?.getDailyUsersData?.users ?? [];
+
+  /* ============================
+     TABLE DATA
+  ============================ */
+  const latestUsers: LatestUser[] = dashboardData?.getLatestUser ?? [];
+  const latestBookings: LatestBooking[] =
+    dashboardData?.getLatestBooking ?? [];
+  const latestProperties: LatestProperty[] =
+    dashboardData?.getLatestProperties ?? [];
+
+  /* ============================
+     RENDER
+  ============================ */
   return (
     <>
-      {/* ================= HERO / STATS SECTION ================= */}
+      {/* ================= HERO ================= */}
       <Paper
         sx={{
           background:
@@ -54,73 +111,23 @@ const Dashboard = () => {
           height: "25rem",
           borderRadius: "1rem",
           p: 4,
-          position: "relative",
-          overflow: "hidden",
-          boxShadow: "0 8px 32px rgba(136,31,155,0.3)",
           mb: 4,
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: "-50%",
-            right: "-20%",
-            width: "100%",
-            height: "100%",
-            background:
-              "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
-            borderRadius: "50%",
-            animation: "float 6s ease-in-out infinite",
-          },
-          "@keyframes float": {
-            "0%,100%": { transform: "translateY(0) rotate(0)" },
-            "50%": { transform: "translateY(-20px) rotate(180deg)" },
-          },
+          color: "#fff",
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{
-            color: "#fff",
-            textShadow: "0 2px 4px rgba(0,0,0,0.2)",
-            mb: 1,
-            animation: "slide 0.8s ease-out forwards",
-            opacity: 0,
-            "@keyframes slide": {
-              to: { opacity: 1, transform: "translateX(0)" },
-              from: { opacity: 0, transform: "translateX(-30px)" },
-            },
-          }}
-        >
-          Welcome Back 🤟🏻
-        </Typography>
-
-        <Typography
-          variant="h4"
-          sx={{
-            color: "#fff",
-            fontWeight: 700,
-            mb: 4,
-            textShadow: "0 2px 4px rgba(0,0,0,0.2)",
-            animation: "slide 0.8s ease-out 0.2s forwards",
-            opacity: 0,
-          }}
-        >
+        <Typography variant="h6">Welcome Back 🤟🏻</Typography>
+        <Typography variant="h4" fontWeight={700} mb={4}>
           Glad to see you
         </Typography>
+
         <Box
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
             gap: "1.5rem",
-            position: "relative",
-            zIndex: 2,
           }}
         >
-          {[
-            "Total Number of User",
-            "Total Number of Host",
-            "Total Number of Properties",
-            "Total Bookings",
-          ].map((label) => (
+          {stats.map(({ label, value }) => (
             <Paper
               key={label}
               sx={{
@@ -130,36 +137,10 @@ const Dashboard = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: "1rem",
-                background: "rgba(255,255,255,0.95)",
-                backdropFilter: "blur(10px)",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                position: "relative",
-                overflow: "hidden",
-                "&::before": {
-                  content: '""',
-                  position: "absolute",
-                  left: "-100%",
-                  top: 0,
-                  width: "100%",
-                  height: "100%",
-                  background:
-                    "linear-gradient(90deg, transparent, rgba(136,31,155,0.1), transparent)",
-                  transition: "left 0.5s ease",
-                },
-                "&:hover::before": { left: "100%" },
-                "&:hover": {
-                  transform: "translateY(-5px) scale(1.02)",
-                  boxShadow: "0 8px 30px rgba(136,31,155,0.2)",
-                },
               }}
             >
-              <Typography
-                variant="h4"
-                sx={{ color: "#881f9b", fontWeight: 700 }}
-              >
-                125,666
+              <Typography variant="h4" color="#881f9b" fontWeight={700}>
+                {value.toLocaleString()}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {label}
@@ -170,16 +151,7 @@ const Dashboard = () => {
       </Paper>
 
       {/* ================= MOTIVATION ================= */}
-      <Paper
-        sx={{
-          p: 5,
-          mb: 4,
-          borderRadius: "1.5rem",
-          background:
-            "linear-gradient(135deg, #f7f0fa 0%, #faf5ff 50%, #f3e8ff 100%)",
-          boxShadow: "0 10px 40px rgba(136,31,155,0.1)",
-        }}
-      >
+      <Paper sx={sectionCard}>
         <Stack
           direction={{ xs: "column-reverse", md: "row" }}
           spacing={4}
@@ -195,76 +167,108 @@ const Dashboard = () => {
             </Typography>
           </Stack>
 
-          <Paper
-            sx={{
-              p: 3,
-              textAlign: "center",
-              width: 160,
-              borderRadius: "1rem",
-              boxShadow: "0 4px 20px rgba(136,31,155,0.1)",
-              "&:hover": {
-                transform: "translateY(-8px) scale(1.05)",
-                boxShadow: "0 12px 35px rgba(136,31,155,0.2)",
-              },
-              transition: "all 0.3s ease",
-            }}
-          >
+          <Paper sx={{ p: 3, textAlign: "center" }}>
             <Typography variant="caption" fontWeight={600}>
               Pending Properties
             </Typography>
             <Typography variant="h4" color="#9333ea">
-              8
+              {dashboardData?.pendingPropCount ?? 0}
             </Typography>
           </Paper>
         </Stack>
       </Paper>
 
       {/* ================= CHARTS ================= */}
-      {[<AdminLineChart />, <AdminBarChart />].map((_, _i) => null)}
-
       <Paper sx={sectionCard}>
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <AdminLineChart />
+          {months.length > 0 && (
+            <AdminLineChart
+              months={months}
+              successfulData={successfulBookings}
+              cancelledData={cancelledBookings}
+            />
+          )}
         </Box>
 
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <AdminBarChart />
+          {dates.length > 0 && <AdminBarChart dates={dates} users={users} />}
         </Box>
       </Paper>
 
-      <Paper
-        sx={{
-          ...sectionCard,
-          display: "flex",
-          flexDirection: "row",
-          gap: 20,
-
-          width: "100%",
-          overflow: "hidden",
-        }}
-      >
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <AdmindPieChart title="Total Users" />
+      {/* ================= PIE CHARTS ================= */}
+      <Paper sx={{ ...sectionCard, gap: 4 }}>
+        <Box sx={{ flex: 1 }}>
+          <AdmindPieChart
+            title="User Overview"
+            data={[
+              {
+                id: 0,
+                label: "Active Users",
+                value: dashboardData?.getUserStatsData?.active ?? 0,
+              },
+              {
+                id: 1,
+                label: "Inactive Users",
+                value: dashboardData?.getUserStatsData?.inactive ?? 0,
+              },
+              {
+                id: 2,
+                label: "Verified Users",
+                value: dashboardData?.getUserStatsData?.verified ?? 0,
+              },
+            ]}
+          />
         </Box>
 
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <AdmindPieChart title="Total Host" />
+        <Box sx={{ flex: 1 }}>
+          <AdmindPieChart
+            title="Host Overview"
+            data={[
+              {
+                id: 0,
+                label: "Active Hosts",
+                value: dashboardData?.getHostStatsData?.active ?? 0,
+              },
+              {
+                id: 1,
+                label: "Inactive Hosts",
+                value: dashboardData?.getHostStatsData?.inactive ?? 0,
+              },
+              {
+                id: 2,
+                label: "Verified Hosts",
+                value: dashboardData?.getHostStatsData?.verified ?? 0,
+              },
+            ]}
+          />
         </Box>
       </Paper>
 
-      <DashboardHeading heading="Latest Users" buttonText="View All" />
+      <DashboardHeading
+        heading="Latest Users"
+        buttonText="View All"
+        onButtonClick={() => navigate("/admin/users")}
+      />
       <Paper sx={sectionCard}>
-        <AdminTable<UserRow> columns={userColumns} rows={userRows} />
+        <AdminUserTable rows={latestUsers} />
       </Paper>
 
-      <DashboardHeading heading="Latest Bookings" buttonText="View All" />
+      <DashboardHeading
+        heading="Latest Bookings"
+        buttonText="View All"
+        onButtonClick={() => navigate("/admin/bookings")}
+      />
       <Paper sx={sectionCard}>
-        <AdminTable<UserRow> columns={userColumns} rows={userRows} />
+        <AdminBookingTable rows={latestBookings} />
       </Paper>
 
-      <DashboardHeading heading="Latest Transaction" buttonText="View All" />
+      <DashboardHeading
+        heading="Latest Properties"
+        buttonText="View All"
+        onButtonClick={() => navigate("/admin/properties")}
+      />
       <Paper sx={sectionCard}>
-        <AdminTable<UserRow> columns={userColumns} rows={userRows} />
+        <AdminPropertyTable rows={latestProperties} />
       </Paper>
     </>
   );
@@ -278,10 +282,6 @@ const sectionCard = {
   borderRadius: "1.5rem",
   background: "linear-gradient(145deg, #ffffff, #f9fafb)",
   boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
-  borderTop: "4px solid",
-  borderColor: "#9333ea",
-  width: "100%",
-  overflow: "hidden",
   flexWrap: "wrap",
 };
 

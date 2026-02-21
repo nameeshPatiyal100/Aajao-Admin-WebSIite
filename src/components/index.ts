@@ -60,7 +60,7 @@ export { default as AdminNavbar} from "./admin/adminnavbar/AdminNavbar"
 export { default as AdminSidebar} from "./admin/adminsidebar/AdminSidebar"
 export { default as AdminBarChart} from "./admin/charts/AdminBarChart"
 export { default as AdminLineChart} from "./admin/charts/AdminLineChart"
-export { default as AdminTable} from "./admin/adminTable/AdminTable"
+export { default as AdminUserTable} from "./admin/adminTable/AdminUserTable.tsx"
 
 
 // ------------------ADMIN COMMON COMPONENT---------------------->

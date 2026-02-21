@@ -1,6 +1,7 @@
 export const ADMINENDPOINTS = {
   // ADMIN
   ADMIN_LOGIN: "/admin/login",
+  GET_ADMIN_DASHBOARD_DATA: "/admin/dashboard",
   // USER
   USER_LIST: "/admin/user/search",
   USER_BY_ID: "/admin/user/single",
