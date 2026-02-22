@@ -11,6 +11,7 @@ export interface BookingStatusRow {
   bs_code: string | null;
 }
 
+
 export interface FilterData {
   page: number;
   limit: number;

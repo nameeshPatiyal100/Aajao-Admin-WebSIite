@@ -25,7 +25,7 @@ export const UserHeader = ({
   const dispatch = useAppDispatch();
   /* ================= STATE ================= */
   const [status, setStatus] = useState<StatusFilter>(null);
-  const [search, setSearch] = useState("");
+  const [search, _setSearch] = useState("");
   const isActive = status === 1;
   const isInactive = status === 0;
 

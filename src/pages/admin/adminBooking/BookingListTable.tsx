@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Visibility, Edit, Cancel, Delete } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 import { BookingRow } from "./types";
 
 interface BookingListTableProps {
@@ -25,20 +25,14 @@ interface BookingListTableProps {
 }
 
 const THEME_COLOR = "#881f9b";
-
-/** Payment chip color is derived from strict union */
 const paymentChipColor = (status: BookingRow["paymentStatus"]) =>
   status === "paid" ? "success" : "error";
 
 const BookingListTable: React.FC<BookingListTableProps> = ({
   rows,
-  onView,
-  onEdit,
-  onCancel,
-  onDelete,
+  onEdit
 }) => {
-
-  console.log(rows,"rows in table")
+  console.log(rows, "rows in table");
   return (
     <TableContainer
       component={Paper}
@@ -111,9 +105,7 @@ const BookingListTable: React.FC<BookingListTableProps> = ({
                 <TableCell>{row.checkIn}</TableCell>
                 <TableCell>{row.checkOut}</TableCell>
 
-                <TableCell sx={{ fontWeight: 600 }}>
-                  ₹{row.amount}
-                </TableCell>
+                <TableCell sx={{ fontWeight: 600 }}>₹{row.amount}</TableCell>
 
                 {/* BOOKING STATUS */}
                 <TableCell>
@@ -152,17 +144,6 @@ const BookingListTable: React.FC<BookingListTableProps> = ({
                         </IconButton>
                       </Tooltip>
                     )}
-
-                    {/* {onCancel && (
-                      <Tooltip title="Cancel">
-                        <IconButton
-                          color="error"
-                          onClick={() => onCancel(row)}
-                        >
-                          <Cancel fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    )} */}
                   </Box>
                 </TableCell>
               </TableRow>

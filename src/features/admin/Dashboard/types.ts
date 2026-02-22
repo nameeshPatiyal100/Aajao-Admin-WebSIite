@@ -13,6 +13,7 @@ export interface LatestBooking {
   book_id: string;
   book_total_amt: number;
   book_is_paid: 0 | 1;
+  book_status?: number;
   "bookingStatus.bs_title": string;
   "bookingStatus.bs_code": string;
 }

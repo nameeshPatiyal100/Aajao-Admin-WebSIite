@@ -18,24 +18,19 @@ import {
 import DashboardHeading from "./DashboardHeading";
 
 import type {
-  DashboardApiResponse,
   DashboardPayload,
   LatestUser,
   LatestBooking,
   LatestProperty,
 } from "../../../features/admin/Dashboard/types";
 
-/* ============================
-   DASHBOARD COMPONENT
-============================ */
 const Dashboard = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const {
     data: dashboardResponse,
-    loading,
-    error,
+    loading
   } = useAppSelector((state) => state.adminDashboardSlice);
 
   useEffect(() => {
@@ -259,7 +254,12 @@ const Dashboard = () => {
         onButtonClick={() => navigate("/admin/bookings")}
       />
       <Paper sx={sectionCard}>
-        <AdminBookingTable rows={latestBookings} />
+        <AdminBookingTable
+          rows={latestBookings.map((booking) => ({
+            ...booking,
+            book_status: booking.book_status ?? 0, // Default to 0 if undefined
+          }))}
+        />
       </Paper>
 
       <DashboardHeading

@@ -28,7 +28,7 @@ export const setupPropertySchema = Yup.object({
   hostId: Yup.number()
     .typeError("Host is required") // catches NaN
     .required("Host is required")
-    .nullable(true), // allows null for unselected state
+    .nullable(), // allows null for unselected state
 
   description: Yup.string().required("Description is required"),
 

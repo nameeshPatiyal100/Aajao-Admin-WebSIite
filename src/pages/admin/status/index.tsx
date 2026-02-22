@@ -2,23 +2,17 @@ import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { ThemeColors } from "../../../theme/themeColor";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-
 import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
 import Listing from "./Listing";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
-
 import { fetchBookingStatusListingForAdminPage } from "../../../features/admin/BookingStatus/bookingStatusListingForAdminPage.slice";
 import { updateBookingStatusAdminPage } from "../../../features/admin/BookingStatus/bookingStatusUpdateSlice";
-
-// import { FilterData } from "./types";
 
 export default function StatusPage() {
   const dispatch = useAppDispatch();
 
   const {
     loading: updateLoading,
-    success,
-    error,
   } = useAppSelector((state) => state.updateBookingStatusAdminPage);
 
   const {

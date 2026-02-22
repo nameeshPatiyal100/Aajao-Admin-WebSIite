@@ -3,7 +3,7 @@ export { default as UserManagementPage } from "./admin/userPage/UserManagementPa
 export { default as HostManagementPage } from "./admin/host-management/HostManagementPage";
 export { default as AdminLogin } from "./admin/adminLogin/AdminLogin";
 export { default as Dashboard } from "./admin/admindashboard/Dashboard";
-export { default as Transactions } from "./admin/transactions/Transactions";
+// export { default as Transactions } from "./admin/transactions/Transactions";
 export { default as AdminBookings } from "./admin/adminBooking/AdminBooking";
 // export { default as AdminProperties } from "./admin/adminProperty/AdminProperties";
 // export { default as AdminCategory } from "./admin/adminProperty/AdminCategory";

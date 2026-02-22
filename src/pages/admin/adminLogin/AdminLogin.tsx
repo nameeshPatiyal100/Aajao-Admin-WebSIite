@@ -9,7 +9,6 @@ import {
   IconButton,
   Alert,
 } from "@mui/material";
-import { Toaster } from "react-hot-toast";
 import login_illustration from "../../../assets/admin/login_illustration.png";
 import * as Yup from "yup";
 import { Lock, Eye, EyeOff, Mail } from "lucide-react";

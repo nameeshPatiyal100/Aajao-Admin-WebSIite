@@ -11,12 +11,12 @@ type ApiFile = {
   url: string;
 };
 
-interface PreviewItem {
-  id: string;
-  src: string;
-  file?: File;
-  afile_id?: number;
-}
+  // interface PreviewItem {
+  //   id: string;
+  //   src: string;
+  //   file?: File;
+  //   afile_id?: number;
+  // }
 
 export interface FilterData {
   page: number;
@@ -25,13 +25,13 @@ export interface FilterData {
   status: string;
   [key: string]: any;
 }
-type CoverImage =
-  | File
-  | {
-      afile_id: number;
-      url: string;
-    }
-  | null;
+// type CoverImage =
+//   | File
+//   | {
+//       afile_id: number;
+//       url: string;
+//     }
+//   | null;
 
 type ImageValue =
   | File

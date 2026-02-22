@@ -1,4 +1,4 @@
-import { useFormik } from "formik";
+import { useFormik, FormikErrors } from "formik";
 import {
   Box,
   Paper,
@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { PurpleThemeColor } from "../../../theme/themeColor";
 import { Pagination } from "../../../components";
-import type { ListingProps } from "./types";
+import type { ListingProps, BookingStatusRow } from "./types";
 import { bookingStatusRowSchema } from "../../../validations/admin-validations";
 
 const purpleTextFieldSx = {
@@ -149,7 +149,12 @@ export default function Listing({
                               }
                             });
 
-                            const errorsArray = [...(formik.errors.rows || [])];
+                            const errorsArray: FormikErrors<BookingStatusRow>[] =
+                              Array.isArray(formik.errors.rows)
+                                ? formik.errors.rows.map((error) =>
+                                    typeof error === "object" ? error : {}
+                                  )
+                                : [];
                             errorsArray[index] = rowErrors;
 
                             formik.setErrors({

@@ -10,12 +10,10 @@ import { AdminLayout } from "./components";
 import AdminProtectedRoute from "./components/authGaurd";
 import { SidebarProvider } from "./context/AdminContext";
 import AdminBooking from "./pages/admin/adminBooking/AdminBooking";
-import { Toaster } from "react-hot-toast";
 import {
   AdminLogin,
   Dashboard,
   StatusPage,
-  Transactions,
   UserManagementPage,
   AboutUs,
   ContactUs,
@@ -116,7 +114,7 @@ function App() {
           >
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="users" element={<UserManagementPage />} />
-            <Route path="transactions" element={<Transactions />} />
+            {/* <Route path="transactions" element={<Transactions />} /> */}
             <Route path="host" element={<HostManagementPage />} />
             <Route path="properties" element={<Properties />} />
             <Route

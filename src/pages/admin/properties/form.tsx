@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchTagsDropdown } from "../../../features/admin/propertyTag/tagsDropdown.slice";
 import { fetchAmenetiesDropdown } from "../../../features/admin/propertyAmenity/amenitiesDropdown.slice";
@@ -9,7 +9,6 @@ import { deletePropertyImage } from "../../../features/admin/properties/deletePr
 import { addOrUpdateProperty } from "../../../features/admin/properties/propertyAddUpdate.slice";
 import HostAssignField from "./HostAssignField";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
-
 import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
 import {
   showLoader,
@@ -89,57 +88,7 @@ export default function PropertiesForm() {
     if (id) {
       dispatch(fetchPropertyById(Number(id)));
     }
-  }, [id, dispatch]);
-
-  const handleDeleteDocument = async (file: ImageValue) => {
-    const current = formik.values.documents;
-
-    if (!Array.isArray(current)) return;
-    if (file instanceof File) {
-      const updated = current.filter((item) => item !== file);
-
-      formik.setFieldValue("documents", updated);
-
-      dispatch(
-        setMessage({
-          message: "Document removed",
-          severity: "success",
-        })
-      );
-      return;
-    }
-    try {
-      dispatch(showLoader());
-
-      const res: any = await dispatch(
-        deletePropertyImage({
-          afile_id: file.afile_id,
-          property_id: Number(formik.values.id),
-        })
-      );
-
-      if (res.meta.requestStatus === "fulfilled") {
-        const updated = current.filter(
-          (item) => !(item instanceof File) && item.afile_id !== file.afile_id
-        );
-
-        formik.setFieldValue("documents", updated);
-
-        dispatch(
-          setMessage({
-            message: "Document deleted successfully",
-            severity: "success",
-          })
-        );
-      } else {
-        throw new Error("Delete failed");
-      }
-    } catch {
-      dispatch(setError("Failed to delete document"));
-    } finally {
-      dispatch(hideLoader());
-    }
-  };
+  }, [id, dispatch]); 
   const handleDeleteFromField = async (field: ImageField, file: ImageValue) => {
     const current = formik.values[field];
     if (!Array.isArray(current)) return;
@@ -181,10 +130,6 @@ export default function PropertiesForm() {
       dispatch(hideLoader());
     }
   };
-
-  const onlyFiles = (arr?: (File | any)[]) =>
-    (arr || []).filter((item): item is File => item instanceof File);
-
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -229,7 +174,6 @@ export default function PropertiesForm() {
   };
 
   const handleSubmit = (values: FormValues) => {
-    console.log(values.hostId, "host id");
     const formData = new FormData();
     formData.append("propertyId", propertyId ? String(propertyId) : "");
     formData.append("propHostId", values.hostId!.toString());
@@ -238,7 +182,7 @@ export default function PropertiesForm() {
     formData.append("isActive", String(values.status));
     formData.append("isVerify", String(values.is_verified));
     formData.append("isLuxury", String(values.is_luxury));
-    /* ================= TEXT FIELDS ================= */
+
     formData.append("propertyName", values.name);
     formData.append("propDesc", values.description);
     formData.append("propAddress", values.address);
@@ -255,10 +199,6 @@ export default function PropertiesForm() {
     formData.append("monthlySecurity", String(values.monthly_security));
     formData.append("inTime", values.check_in_time);
     formData.append("outTime", values.check_out_time);
-
-    /* ✅ PROPERTY ID (OUTSIDE FORMIK) */
-
-    /* ================= ARRAYS ================= */
     values.categories.forEach((id) =>
       formData.append("categories[]", String(id))
     );
@@ -327,7 +267,6 @@ export default function PropertiesForm() {
       setHostNameDisplay(propertyData.hostName || "");
     }
   }, [propertyData]);
-  
 
   console.log("Formik errors:", formik?.errors);
   return (
@@ -1226,8 +1165,6 @@ export default function PropertiesForm() {
                   ))}
                 </Box>
               </Box>
-
-              {/* Actions */}
               <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
                 <Button
                   type="submit"
@@ -1240,7 +1177,6 @@ export default function PropertiesForm() {
                       transform: "scale(1.05)",
                     },
                   }}
-                  // onClick={() => handleSubmit(formik.values)}
                 >
                   {propertyAddUpdateLoading ? "Saving..." : "Submit"}
                 </Button>
