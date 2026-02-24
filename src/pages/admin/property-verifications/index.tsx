@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { ConfirmDeleteModal } from "../../../components";
 import { ThemeColors } from "../../../theme/themeColor";
 
-import Listing from "../properties/Listing";
+import VerificationListing from "./VerificationListing";
 import SearchBar from "./SearchBar";
 import type { FilterData } from "../properties/types";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
@@ -16,7 +16,9 @@ export default function PropertiesVerifications() {
   const [page, setPage] = useState(1);
 
   const dispatch = useAppDispatch();
-  const { properties, loading, pagination } = useAppSelector((state) => state.properties);
+  const { properties, loading, pagination } = useAppSelector(
+    (state) => state.properties
+  );
   const totalRecords = pagination?.totalRecords;
 
   const rowsPerPage = 10;
@@ -26,6 +28,7 @@ export default function PropertiesVerifications() {
     limit: rowsPerPage,
     search: "",
     status: "",
+    forVerification: true,
   };
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
@@ -34,7 +37,7 @@ export default function PropertiesVerifications() {
 
   useEffect(() => {
     dispatch(fetchProperties(requestBody));
-  }, [dispatch]);
+  }, [dispatch,filterData]);
 
   const handlePaginate = (_event: unknown, value: number) => {
     const updatedFilterData: FilterData = {
@@ -50,7 +53,7 @@ export default function PropertiesVerifications() {
   const handleFilterUpdate = (
     name: keyof FilterData,
     value: string,
-    apply: boolean = false,
+    apply: boolean = false
   ) => {
     const updatedFilterData: FilterData = {
       ...filterData,
@@ -83,7 +86,7 @@ export default function PropertiesVerifications() {
 
     try {
       await dispatch(
-        changePropertyStatus({ propertyId: id, status: newStatus }),
+        changePropertyStatus({ propertyId: id, status: newStatus })
       ).unwrap();
 
       dispatch(fetchProperties(filterData));
@@ -127,7 +130,7 @@ export default function PropertiesVerifications() {
       />
 
       {/* Property Table */}
-      <Listing
+      <VerificationListing
         ThemeColors={ThemeColors}
         properties={properties}
         totalRecords={totalRecords}

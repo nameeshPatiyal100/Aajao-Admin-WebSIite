@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchTagsDropdown } from "../../../features/admin/propertyTag/tagsDropdown.slice";
@@ -47,6 +47,7 @@ type ImageValue = File | ApiFile;
 type ImageField = "images" | "documents";
 
 export default function PropertiesForm() {
+
   const coverInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const { loading: propertyAddUpdateLoading } = useAppSelector(
@@ -88,7 +89,7 @@ export default function PropertiesForm() {
     if (id) {
       dispatch(fetchPropertyById(Number(id)));
     }
-  }, [id, dispatch]); 
+  }, [id, dispatch]);
   const handleDeleteFromField = async (field: ImageField, file: ImageValue) => {
     const current = formik.values[field];
     if (!Array.isArray(current)) return;

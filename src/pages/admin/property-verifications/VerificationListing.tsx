@@ -11,16 +11,17 @@ import {
   Switch,
   Tooltip,
   IconButton,
+  Chip,
 } from "@mui/material";
 
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
 import { PurpleThemeColor } from "../../../theme/themeColor";
-import type { ListingProps, PropertyRecord } from "./types";
+import type { ListingProps, PropertyRecord } from "../properties/types";
 import { Link } from "react-router-dom";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
 
-export default function Listing({
+export default function VerificationListing({
   ThemeColors,
   properties,
   totalRecords,
@@ -37,6 +38,7 @@ export default function Listing({
     "HOST NAME",
     "CATEGORIES",
     "STATUS",
+    "VERIFICATION STATUS",
     "ACTIONS",
   ];
 
@@ -87,7 +89,9 @@ export default function Listing({
                 </TableCell>
               </TableRow>
             ) : (
-              properties && properties.length > 0 && properties.map((property: PropertyRecord, index: number) => (
+              properties &&
+              properties.length > 0 &&
+              properties.map((property: PropertyRecord, index: number) => (
                 <TableRow
                   key={property.property_id}
                   hover
@@ -113,7 +117,9 @@ export default function Listing({
                     <Switch
                       size="small"
                       checked={property.is_active === true}
-                      onChange={() => handleToggleActive(Number(property.property_id))}
+                      onChange={() =>
+                        handleToggleActive(Number(property.property_id))
+                      }
                       sx={{
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: PurpleThemeColor,
@@ -128,11 +134,35 @@ export default function Listing({
                   </TableCell>
 
                   <TableCell>
+                    {property.is_verify === "Rejected" ? (
+                      <Chip
+                        label="Rejected"
+                        size="small"
+                        sx={{
+                          backgroundColor: "#fee2e2", // light red
+                          color: "#b91c1c",
+                          fontWeight: 500,
+                        }}
+                      />
+                    ) : (
+                      <Chip
+                        label="Pending"
+                        size="small"
+                        sx={{
+                          backgroundColor: "#fef9c3", // light yellow
+                          color: "#a16207",
+                          fontWeight: 500,
+                        }}
+                      />
+                    )}
+                  </TableCell>
+
+                  <TableCell>
                     <Tooltip title="Edit Property">
                       <IconButton
                         component={Link}
                         to={`/admin/properties/form/${property.property_id}`}
-                        state={{ from: "/admin/properties" }}
+                        state={{ from: "/admin/property-verification" }}
                         size="small"
                         sx={{
                           color: ThemeColors.secondary,

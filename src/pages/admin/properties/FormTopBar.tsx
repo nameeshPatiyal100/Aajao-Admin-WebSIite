@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface FormTopBarProps {
   ThemeColors: {
@@ -7,6 +7,13 @@ interface FormTopBarProps {
   };
 }
 export default function FormTopBar({ ThemeColors }: FormTopBarProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from =
+    (location.state as { from?: string })?.from ||
+    "/admin/properties"; // fallback
+
   return (
     <Box display="flex" flexDirection="column" gap={3} mb={4}>
       <Box
@@ -26,10 +33,10 @@ export default function FormTopBar({ ThemeColors }: FormTopBarProps) {
         >
           Properties
         </Typography>
+
         <Button
           variant="contained"
-          component={Link}
-          to="/admin/properties"
+          onClick={() => navigate(from)}
           sx={{
             backgroundColor: ThemeColors.primary,
             borderRadius: 2,

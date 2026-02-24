@@ -26,6 +26,7 @@ export default function Properties() {
     limit: rowsPerPage,
     search: "",
     status: "",
+    forVerification: false,
   };
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);

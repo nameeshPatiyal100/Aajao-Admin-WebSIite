@@ -4,6 +4,7 @@ export interface PropertyRecord {
   ["HostDetails.user_fullName"]: string;
   host_name: string;
   is_active: boolean;
+  is_verify: string;
   categories: string[];
 }
 type ApiFile = {
@@ -11,18 +12,12 @@ type ApiFile = {
   url: string;
 };
 
-  // interface PreviewItem {
-  //   id: string;
-  //   src: string;
-  //   file?: File;
-  //   afile_id?: number;
-  // }
-
 export interface FilterData {
   page: number;
   limit: number;
   search: string;
   status: string;
+  forVerification: boolean;
   [key: string]: any;
 }
 // type CoverImage =
@@ -91,7 +86,7 @@ export const DEFAULT_FORM_VALUES: FormValues = {
   id: "",
   name: "",
   hostId: null, // ok
-  hostName :"",
+  hostName: "",
   description: "",
   address: "",
   city: "",
@@ -123,7 +118,6 @@ export const DEFAULT_FORM_VALUES: FormValues = {
   images: [],
   documents: [],
 };
-
 
 export interface ListingProps {
   ThemeColors: { text: { secondary: string }; secondary: string };
