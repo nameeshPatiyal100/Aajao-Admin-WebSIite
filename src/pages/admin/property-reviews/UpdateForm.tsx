@@ -43,123 +43,205 @@ export default function UpdateForm({
 
   return (
     <Modal open={formshow} onClose={handleFormClose}>
-      <Box sx={themeCss.modalFormContainer}>
-        <Box sx={themeCss.modalHeader}>
-          <Typography
-            variant="h6"
-            sx={{
-              color: "#fff",
-              fontWeight: 600,
-            }}
-          >
-            Property Review
-          </Typography>
+      <Box
+        sx={{
+          ...themeCss.modalFormContainer,
+          maxWidth: 700,
+          animation: "fadeIn 0.3s ease-in-out",
+        }}
+      >
+        {/* Header */}
+        <Box
+          sx={{
+            px: 3,
+            py: 2,
+            background: `linear-gradient(135deg, ${PurpleThemeColor}, #6f137f)`,
+            color: "#fff",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box>
+            <Typography fontSize={12} sx={{ opacity: 0.9 }}>
+              Booking ID
+            </Typography>
+            <Typography fontWeight={700}>#{formik.values.id}</Typography>
+          </Box>
 
           <IconButton onClick={handleFormClose} sx={{ color: "#fff" }}>
             <CloseIcon />
           </IconButton>
         </Box>
+
         <Box sx={{ p: 3 }}>
+          {/* <Box sx={themeCss.modalBody}> */}
           <form onSubmit={formik.handleSubmit}>
-            <Box display="flex" flexDirection="column" gap={2}>
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "text.secondary", fontWeight: 500 }}
+            <Box display="flex" flexDirection="column" gap={3}>
+              {/* ===== Review Section Component ===== */}
+              {[
+                { label: "Property Review" },
+                { label: "Host Review" },
+                { label: "Platform Review" },
+              ].map((section) => (
+                <Box
+                  key={section.label}
+                  sx={{
+                    p: 2.5,
+                    borderRadius: 2,
+                    backgroundColor: "#fafafa",
+                    border: "1px solid #e5e7eb",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      backgroundColor: "#f5f3ff",
+                      borderColor: "#c4b5fd",
+                    },
+                  }}
                 >
-                  Property
-                </Typography>
-                <Typography variant="body1">
-                  {formik.values.property}
-                </Typography>
-              </Box>
+                  <Typography fontWeight={600} mb={1} color={PurpleThemeColor}>
+                    {section.label}
+                  </Typography>
 
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "text.secondary", fontWeight: 500 }}
-                >
-                  User Name
-                </Typography>
-                <Typography variant="body1">
-                  {formik.values.user_name}
-                </Typography>
-              </Box>
+                  <Typography fontSize={14} fontWeight={500}>
+                    {formik.values.title}
+                  </Typography>
 
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "text.secondary", fontWeight: 500 }}
-                >
-                  Title
-                </Typography>
-                <Typography variant="body1">{formik.values.title}</Typography>
-              </Box>
+                  <Typography fontSize={13} color="text.secondary" mt={0.5}>
+                    {formik.values.description}
+                  </Typography>
 
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "text.secondary", fontWeight: 500 }}
-                >
-                  Description
+                  <Rating
+                    value={Number(formik.values.rating)}
+                    readOnly
+                    size="small"
+                    sx={{ mt: 1 }}
+                  />
+                </Box>
+              ))}
+
+              {/* ===== Host Review for User ===== */}
+              <Box
+                sx={{
+                  p: 3,
+                  borderRadius: 2,
+                  backgroundColor: "#fff7ed",
+                  border: "1px solid #fed7aa",
+                }}
+              >
+                <Typography fontWeight={700} mb={1} color="#9a3412">
+                  Host Review for User
                 </Typography>
-                <Typography variant="body1">
+
+                <Typography fontSize={13}>
+                  <b>User:</b> {formik.values.user_name}
+                </Typography>
+                <Typography fontSize={13}>
+                  <b>Host:</b> {formik.values.property}
+                </Typography>
+                <Typography fontSize={13} mb={1}>
+                  <b>Property:</b> {formik.values.property}
+                </Typography>
+
+                <Typography fontWeight={500} fontSize={14}>
+                  {formik.values.title}
+                </Typography>
+                <Typography fontSize={13} color="text.secondary">
                   {formik.values.description}
-                </Typography>
-              </Box>
-
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "text.secondary", fontWeight: 500, display: "block" }}
-                >
-                  Rating
                 </Typography>
 
                 <Rating
                   value={Number(formik.values.rating)}
                   readOnly
-                  size="large"
+                  size="small"
+                  sx={{ mt: 1 }}
                 />
               </Box>
 
+              {/* ===== Status Dropdown ===== */}
               <FormControl fullWidth>
                 <InputLabel
-                  id="status-label"
                   sx={{
-                    color:
-                      formik.touched.status && formik.errors.status
-                        ? "error.main"
-                        : undefined,
                     "&.Mui-focused": {
-                      color: PurpleThemeColor,
+                      color: "#881f9b",
                     },
-                    transition: "color 0.3s ease",
                   }}
                 >
                   Status
                 </InputLabel>
 
                 <Select
-                  labelId="status-label"
-                  id="status"
                   name="status"
                   value={formik.values.status}
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
                   input={<OutlinedInput label="Status" />}
                   sx={{
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: PurpleThemeColor,
+                    /* Default border */
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#881f9b",
                     },
-                    transition: "all 0.3s ease",
+
+                    /* Hover border */
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#881f9b",
+                    },
+
+                    /* Focused border */
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#881f9b",
+                    },
                   }}
-                  error={formik.touched.status && !!formik.errors.status}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        backgroundColor: "#faf5ff", // light purple menu
+                      },
+                    },
+                  }}
                 >
-                  <MenuItem value="">Select Status</MenuItem>
-                  <MenuItem value="0">Pending</MenuItem>
-                  <MenuItem value="1">Approved</MenuItem>
-                  <MenuItem value="2">Rejected</MenuItem>
+                  <MenuItem
+                    value="0"
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "#ede9fe",
+                      },
+                      "&.Mui-selected": {
+                        backgroundColor: "#ddd6fe",
+                        "&:hover": {
+                          backgroundColor: "#c4b5fd",
+                        },
+                      },
+                    }}
+                  >
+                    Pending
+                  </MenuItem>
+
+                  <MenuItem
+                    value="1"
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "#ede9fe",
+                      },
+                      "&.Mui-selected": {
+                        backgroundColor: "#ddd6fe",
+                      },
+                    }}
+                  >
+                    Approved
+                  </MenuItem>
+
+                  <MenuItem
+                    value="2"
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "#ede9fe",
+                      },
+                      "&.Mui-selected": {
+                        backgroundColor: "#ddd6fe",
+                      },
+                    }}
+                  >
+                    Rejected
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -170,27 +252,34 @@ export default function UpdateForm({
                 variant="outlined"
                 onClick={handleFormClose}
                 sx={{
-                  color: "#cf1f1f",
-                  borderColor: "#cf1f1f",
-                  transition: "all 0.3s ease",
+                  borderColor: "#dc2626",
+                  color: "#dc2626",
                   "&:hover": {
-                    backgroundColor: "#fcecec",
-                    borderColor: "#cf1f1f",
-                    transform: "scale(1.05)",
+                    backgroundColor: "#fee2e2",
                   },
                 }}
               >
                 Cancel
               </Button>
+
               <Button
                 type="submit"
                 variant="contained"
+                disabled={formik.values.status === "1"}
                 sx={{
                   bgcolor: PurpleThemeColor,
-                  transition: "all 0.3s ease",
+                  opacity: formik.values.status === "1" ? 0.6 : 1,
+                  cursor:
+                    formik.values.status === "1" ? "not-allowed" : "pointer",
                   "&:hover": {
-                    bgcolor: "#6f137f",
-                    transform: "scale(1.05)",
+                    bgcolor:
+                      formik.values.status === "1"
+                        ? PurpleThemeColor
+                        : "#6f137f",
+                    transform:
+                      formik.values.status === "1"
+                        ? "none"
+                        : "translateY(-1px)",
                   },
                 }}
               >

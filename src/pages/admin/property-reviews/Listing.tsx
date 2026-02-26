@@ -16,7 +16,7 @@ import {
 
 import { Edit as EditIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
-import type { ListingProps } from "./types";
+import type { ListingProps } from "./types";    
 
 const reviewStatusMap = {
   0: { label: "Pending", color: "#ed6c02", bg: "#fff3e0" },

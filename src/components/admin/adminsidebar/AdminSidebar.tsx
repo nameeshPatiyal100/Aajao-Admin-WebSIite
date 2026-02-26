@@ -25,6 +25,7 @@ import {
   Tag,
   ShieldCheck,
   Star,
+  ChartLine,
 } from "lucide-react";
 import { useEffect, useState, MouseEvent } from "react";
 
@@ -44,7 +45,11 @@ const NAV_ITEMS: NavItem[] = [
     icon: AlignVerticalJustifyCenter,
   },
   { text: "Bookings", path: "/admin/bookings", icon: BookOpen },
-  // { text: "Support", path: "/admin/support", icon: Octagon },
+  {
+    text: "Property Analytics",
+    path: "/admin/Property-Analytics",
+    icon: ChartLine ,
+  },
 ];
 
 const SUB_ITEMS: Record<string, NavItem[]> = {

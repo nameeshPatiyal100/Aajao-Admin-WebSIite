@@ -10,8 +10,6 @@ export { default as ConfirmDeleteModal } from "./admin/modals/userModals/Confirm
 export { default as EditStatusModal } from "./admin/modals/settingModal/EditStatusModal";
 //------------------CHARTS---------------->
 export { default as AdmindPieChart } from "./admin/charts/AdmindPieChart";
-// export { default as AdminBarChart } from "./admin/charts/AdminBarChart";
-// export { default as AdminLineChart } from "./admin/charts/AdminLineChart";
 export { default as AdminRadarChart } from "./admin/charts/AdminSparkLine";
 export { default as AdminGaugeChart } from "./admin/charts/AdminGaugeChart";
 //------------------Tables---------------->
@@ -55,7 +53,6 @@ export { default as HostDetailsModal } from "./frontend/modals/HostDetailsModal"
 
 //------admin----------------->
 export { default as AdminLayout}from "./admin/adminLayout/AdminLayout"
-// export { default as AdminLogin} from "../../pages/admin/adminLogin/AdminLogin"
 export { default as AdminNavbar} from "./admin/adminnavbar/AdminNavbar"
 export { default as AdminSidebar} from "./admin/adminsidebar/AdminSidebar"
 export { default as AdminBarChart} from "./admin/charts/AdminBarChart"

@@ -5,12 +5,6 @@ export { default as AdminLogin } from "./admin/adminLogin/AdminLogin";
 export { default as Dashboard } from "./admin/admindashboard/Dashboard";
 // export { default as Transactions } from "./admin/transactions/Transactions";
 export { default as AdminBookings } from "./admin/adminBooking/AdminBooking";
-// export { default as AdminProperties } from "./admin/adminProperty/AdminProperties";
-// export { default as AdminCategory } from "./admin/adminProperty/AdminCategory";
-// export { default as AdminPropertyTags } from "./admin/adminProperty/AdminPropertyTags";
-// export { default as AdminAmmenities } from "./admin/adminProperty/AdminAmmenities";
-// export { default as AdminPropertyVerification } from "./admin/adminProperty/AdminPropertyVerification";
-// export { default as StatusPage } from "./admin/statusPage/StatusPage";
 export { default as PropertyCategory } from "./admin/property-category/index";
 export { default as PropertyAmenity } from "./admin/property-amenity/index";
 export { default as PropertyTag } from "./admin/property-tags/index";
@@ -19,6 +13,7 @@ export { default as PropertiesForm } from "./admin/properties/form";
 export { default as PropertiesVerifications } from "./admin/property-verifications/index";
 export { default as StatusPage } from "./admin/status/index";
 export { default as PropertyReviews } from "./admin/property-reviews/index";
+export { default as PropertyAnalytics } from "./admin/property-analytics/index";
 
 //USER SECTION EXPORTS
 export { default as Home } from "./user/home"

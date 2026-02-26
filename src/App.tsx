@@ -39,6 +39,7 @@ import {
   PropertiesForm,
   PropertiesVerifications,
   PropertyReviews,
+  PropertyAnalytics,
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -127,9 +128,10 @@ function App() {
             <Route path="categories" element={<PropertyCategory />} />
             <Route path="amenities" element={<PropertyAmenity />} />
             <Route path="property-reviews" element={<PropertyReviews />} />
+            <Route path="Property-Analytics" element={<PropertyAnalytics />} />
             <Route path="bookings" element={<AdminBooking />} />
             <Route path="status" element={<StatusPage />} />
-            <Route path="settings" element={<h1>Settings</h1>} />
+            {/* <Route path="settings" element={<h1>Settings</h1>} /> */}
             <Route path="*" element={<Navigate to="/admin/dashboard" />} />
           </Route>
         </Route>
