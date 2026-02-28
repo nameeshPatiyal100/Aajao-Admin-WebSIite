@@ -139,8 +139,34 @@ export const bookingStatusRowSchema = Yup.object({
   bs_code: Yup.string().required("Color code is required"),
 });
 
-// export const bookingStatusSchema = Yup.object({
-//   rows: Yup.array()
-//     .of(bookingStatusRowSchema)
-//     .required(),
-// });
+// import * as yup from "yup";
+
+export const couponValidationSchema = Yup.object().shape({
+  coupon_title: Yup
+    .string()
+    .required("Coupon title is required")
+    .min(3, "Coupon title must be at least 3 characters")
+    .max(100, "Coupon title cannot exceed 100 characters"),
+
+  coupon_code: Yup
+    .string()
+    .required("Coupon code is required")
+    .min(3, "Coupon code must be at least 3 characters")
+    .max(20, "Coupon code cannot exceed 20 characters")
+    .matches(
+      /^[A-Z0-9]+$/,
+      "Coupon code must contain only uppercase letters and numbers"
+    ),
+
+  discount_percentage: Yup
+    .number()
+    .typeError("Discount percentage must be a number")
+    .required("Discount percentage is required")
+    .min(1, "Discount must be at least 1%")
+    .max(100, "Discount cannot exceed 100%"),
+
+  status: Yup
+    .number()
+    .required("Status is required")
+    .oneOf([0, 1], "Invalid status value"),
+});

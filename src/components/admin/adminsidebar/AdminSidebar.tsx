@@ -26,6 +26,7 @@ import {
   ShieldCheck,
   Star,
   ChartLine,
+  Percent,
 } from "lucide-react";
 import { useEffect, useState, MouseEvent } from "react";
 
@@ -48,7 +49,12 @@ const NAV_ITEMS: NavItem[] = [
   {
     text: "Property Analytics",
     path: "/admin/Property-Analytics",
-    icon: ChartLine ,
+    icon: ChartLine,
+  },
+  {
+    text: "Coupons",
+    path: "/admin/coupons",
+    icon: Percent,
   },
 ];
 

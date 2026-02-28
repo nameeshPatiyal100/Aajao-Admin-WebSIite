@@ -14,6 +14,7 @@ export { default as PropertiesVerifications } from "./admin/property-verificatio
 export { default as StatusPage } from "./admin/status/index";
 export { default as PropertyReviews } from "./admin/property-reviews/index";
 export { default as PropertyAnalytics } from "./admin/property-analytics/index";
+export { default as CouponManagement } from "./admin/coupons";
 
 //USER SECTION EXPORTS
 export { default as Home } from "./user/home"

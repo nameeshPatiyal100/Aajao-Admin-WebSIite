@@ -40,6 +40,7 @@ import {
   PropertiesVerifications,
   PropertyReviews,
   PropertyAnalytics,
+  CouponManagement
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -131,7 +132,7 @@ function App() {
             <Route path="Property-Analytics" element={<PropertyAnalytics />} />
             <Route path="bookings" element={<AdminBooking />} />
             <Route path="status" element={<StatusPage />} />
-            {/* <Route path="settings" element={<h1>Settings</h1>} /> */}
+            <Route path="coupons" element={<CouponManagement />} />
             <Route path="*" element={<Navigate to="/admin/dashboard" />} />
           </Route>
         </Route>
