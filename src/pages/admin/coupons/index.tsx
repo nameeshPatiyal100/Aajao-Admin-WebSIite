@@ -182,7 +182,7 @@ export default function CouponManagement() {
       sx={{
         backgroundColor: ThemeColors.background,
         minHeight: "100vh",
-        p: 3,
+        // p: 3,
       }}
     >
       <CouponSearchBar

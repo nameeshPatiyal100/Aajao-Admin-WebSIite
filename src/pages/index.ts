@@ -15,6 +15,8 @@ export { default as StatusPage } from "./admin/status/index";
 export { default as PropertyReviews } from "./admin/property-reviews/index";
 export { default as PropertyAnalytics } from "./admin/property-analytics/index";
 export { default as CouponManagement } from "./admin/coupons";
+export { default as CmsHomePagesIndex } from "./admin/cms-homePage/PagesIndex";
+export { default as HomePageSection } from "./admin/cms-sections/HomePageSection";
 
 //USER SECTION EXPORTS
 export { default as Home } from "./user/home"

@@ -40,7 +40,9 @@ import {
   PropertiesVerifications,
   PropertyReviews,
   PropertyAnalytics,
-  CouponManagement
+  CouponManagement,
+  CmsHomePagesIndex,
+  HomePageSection
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -133,6 +135,8 @@ function App() {
             <Route path="bookings" element={<AdminBooking />} />
             <Route path="status" element={<StatusPage />} />
             <Route path="coupons" element={<CouponManagement />} />
+            <Route path="cms-home" element={<CmsHomePagesIndex />} />
+            <Route path="cms-home/homepage/edit/form" element={<HomePageSection />} />
             <Route path="*" element={<Navigate to="/admin/dashboard" />} />
           </Route>
         </Route>

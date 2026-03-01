@@ -18,7 +18,6 @@ import {
   AlignVerticalJustifyCenter,
   BookOpen,
   Octagon,
-  TrafficCone,
   Activity,
   CircleDot,
   Bath,
@@ -54,6 +53,11 @@ const NAV_ITEMS: NavItem[] = [
   {
     text: "Coupons",
     path: "/admin/coupons",
+    icon: Percent,
+  },
+  {
+    text: "CMS",
+    path: "/admin/cms-home",
     icon: Percent,
   },
 ];
@@ -93,13 +97,18 @@ const SUB_ITEMS: Record<string, NavItem[]> = {
       icon: Activity,
     },
   ],
-  Configuration: [
-    {
-      text: "Status",
-      path: "/admin/status",
-      icon: TrafficCone,
-    },
-  ],
+  // CMS: [
+  //   {
+  //     text: "FAQ",
+  //     path: "/admin/status",
+  //     icon: TrafficCone,
+  //   },
+  //   {
+  //     text: "T&C",
+  //     path: "/admin/status",
+  //     icon: TrafficCone,
+  //   },
+  // ],
 };
 
 const AdminSidebar = () => {

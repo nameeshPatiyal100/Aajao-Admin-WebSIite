@@ -5,43 +5,59 @@ import {
   Stack,
   Typography,
   TextField,
+  MenuItem,
 } from "@mui/material";
 import { PurpleThemeColor } from "../../../theme/themeColor";
-import { PropertySearchBarProps } from "./types";
+import { PageSearchBarProps } from "./types";
 
-const PropertySearchBar: React.FC<PropertySearchBarProps> = ({
+const PageSearchBar: React.FC<PageSearchBarProps> = ({
   ThemeColors,
   filterData,
   handleFilterUpdate,
   handleFilter,
   handleClear,
+  handleAddNew,
 }) => {
   const [searchItem, setSearchItem] = useState(filterData.keyword || "");
+  const [status, setStatus] = useState(filterData.status || "");
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchItem(event.target.value);
     handleFilterUpdate("keyword", event.target.value, false);
   };
 
+  const handleStatusChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setStatus(event.target.value);
+    handleFilterUpdate("status", event.target.value, false);
+  };
+
   const handleCancel = () => {
     setSearchItem("");
+    setStatus("");
     handleClear();
   };
 
   return (
     <Box display="flex" flexDirection="column" gap={3} mb={4}>
-      {/* Page Title */}
-      <Typography
-        variant="h4"
-        sx={{
-          color: ThemeColors.primary,
-          fontWeight: 700,
-        }}
+      {/* ===== Page Title + Add Button ===== */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
       >
-        Property Analytics
-      </Typography>
+        <Typography
+          variant="h4"
+          sx={{
+            color: ThemeColors.primary,
+            fontWeight: 700,
+          }}
+        >
+          CMS Pages
+        </Typography>
+      </Box>
 
-      {/* Search Form */}
+      {/* ===== Search Form ===== */}
       <form
         onSubmit={(e: FormEvent<HTMLFormElement>) => {
           e.preventDefault();
@@ -51,13 +67,13 @@ const PropertySearchBar: React.FC<PropertySearchBarProps> = ({
         <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
           {/* Search Input */}
           <TextField
-            label="Search property or host..."
+            label="Search title or slug..."
             variant="outlined"
             size="small"
             value={searchItem}
             onChange={handleInputChange}
             sx={{
-              minWidth: 280,
+              minWidth: 260,
               "& .MuiOutlinedInput-root.Mui-focused fieldset": {
                 borderColor: PurpleThemeColor,
               },
@@ -66,7 +82,6 @@ const PropertySearchBar: React.FC<PropertySearchBarProps> = ({
               },
             }}
           />
-
           {/* Buttons */}
           <Stack direction="row" spacing={1}>
             <Button
@@ -97,4 +112,4 @@ const PropertySearchBar: React.FC<PropertySearchBarProps> = ({
   );
 };
 
-export default PropertySearchBar;
+export default PageSearchBar;
