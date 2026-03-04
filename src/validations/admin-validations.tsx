@@ -170,3 +170,61 @@ export const couponValidationSchema = Yup.object().shape({
     .required("Status is required")
     .oneOf([0, 1], "Invalid status value"),
 });
+
+
+export const homePageSchema = Yup.object().shape({
+  featureTitle: Yup
+    .string()
+    .required("Feature title is required")
+    .min(3, "Minimum 3 characters"),
+
+  featureDesc: Yup
+    .string()
+    .required("Feature description is required")
+    .min(10, "Minimum 10 characters"),
+
+  labelTitle: Yup
+    .string()
+    .required("Label title is required")
+    .min(3, "Minimum 3 characters"),
+
+  labelDesc: Yup
+    .string()
+    .required("Label description is required")
+    .min(10, "Minimum 10 characters"),
+
+  testimonialTitle: Yup
+    .string()
+    .required("Testimonial title is required")
+    .min(3, "Minimum 3 characters"),
+
+  testimonialDesc: Yup
+    .string()
+    .required("Testimonial description is required")
+    .min(10, "Minimum 10 characters"),
+});
+
+/* ================= Yup Validation ================= */
+
+export const faqPageSchema = Yup.object().shape({
+  headerTitle: Yup.string().required("Header title is required"),
+  headerDesc: Yup.string().required("Header description is required"),
+
+  contactTitle: Yup.string().required("Contact title is required"),
+  contactDesc: Yup.string().required("Contact description is required"),
+  contactBtnTitle: Yup.string().required("Contact button title is required"),
+  contactBtnUrl: Yup.string().required("Contact button URL is required"),
+
+  labelTitle: Yup.string().required("Label title is required"),
+  labelDesc: Yup.string().required("Label description is required"),
+  labelBtnTitle: Yup.string().required("Label button title is required"),
+  labelBtnUrl: Yup.string().required("Label button URL is required"),
+});
+/* ================= Yup Validation ================= */
+
+export const tcPageSchema = Yup.object().shape({
+  headerTitle: Yup.string().required("Header title is required"),
+  headerDesc: Yup.string().required("Header description is required"),
+  labelTitle: Yup.string().required("Label title is required"),
+  labelDesc: Yup.string().required("Label description is required"),
+});

@@ -42,7 +42,11 @@ import {
   PropertyAnalytics,
   CouponManagement,
   CmsHomePagesIndex,
-  HomePageSection
+  HomePageSection,
+  FaqPageSection,
+  TCPageSection,
+  FaqManagement,
+  BookingHeatmap
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -136,7 +140,26 @@ function App() {
             <Route path="status" element={<StatusPage />} />
             <Route path="coupons" element={<CouponManagement />} />
             <Route path="cms-home" element={<CmsHomePagesIndex />} />
-            <Route path="cms-home/homepage/edit/form" element={<HomePageSection />} />
+            <Route
+              path="cms-home/homepage/edit/form"
+              element={<HomePageSection />}
+            />
+            <Route
+              path="cms-home/FaqPageSection/edit/form"
+              element={<FaqPageSection />}
+            />
+            <Route
+              path="cms-home/TCPageSection/edit/form"
+              element={<TCPageSection />}
+            />
+            <Route
+              path="cms-home/FaqManagement/edit/listing"
+              element={<FaqManagement />}
+            />
+            <Route
+              path="booking-analytics/heatmap"
+              element={<BookingHeatmap />}
+            />
             <Route path="*" element={<Navigate to="/admin/dashboard" />} />
           </Route>
         </Route>

@@ -6,7 +6,7 @@ import {
   Button,
   Stack,
   MenuItem,
-  IconButton,
+  // IconButton,
   Chip,
   Autocomplete,
 } from "@mui/material";
@@ -14,6 +14,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import { ThemeColors } from "../../../theme/themeColor";
+import { homePageSchema } from "../../../validations/admin-validations";
+import * as yup from "yup";
 
 interface Property {
   id: number;
@@ -25,7 +27,6 @@ interface Testimonial {
   name: string;
 }
 
-/* Fake selectable data */
 const fakeProperties: Property[] = [
   { id: 1, name: "Villa Sunset" },
   { id: 2, name: "Ocean View Apartment" },
@@ -41,28 +42,91 @@ const fakeTestimonials: Testimonial[] = [
 export default function HomePageSection() {
   const navigate = useNavigate();
 
+  /* ================= STATE ================= */
+
   const [featureTitle, setFeatureTitle] = useState("");
   const [featureDesc, setFeatureDesc] = useState("");
   const [selectedProperties, setSelectedProperties] = useState<Property[]>([]);
 
   const [labelTitle, setLabelTitle] = useState("");
   const [labelDesc, setLabelDesc] = useState("");
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
   const [buttonTitle, setButtonTitle] = useState("");
   const [buttonUrl, setButtonUrl] = useState("");
   const [buttonTarget, setButtonTarget] = useState("_self");
 
   const [testimonialTitle, setTestimonialTitle] = useState("");
   const [testimonialDesc, setTestimonialDesc] = useState("");
-  const [selectedTestimonials, setSelectedTestimonials] = useState<Testimonial[]>([]);
+  const [selectedTestimonials, setSelectedTestimonials] = useState<
+    Testimonial[]
+  >([]);
 
-  /* Image Upload */
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  /* ================= IMAGE ================= */
+
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = URL.createObjectURL(e.target.files[0]);
-      setImage(file);
+      setImage(e.target.files[0]); // store actual file for formData
     }
   };
+
+  /* ================= SUBMIT ================= */
+
+  const handleSubmit = async () => {
+    try {
+      const validationData = {
+        featureTitle,
+        featureDesc,
+        labelTitle,
+        labelDesc,
+        testimonialTitle,
+        testimonialDesc,
+      };
+
+      await homePageSchema.validate(validationData, {
+        abortEarly: false,
+      });
+
+      setErrors({});
+
+      /* ✅ Create FormData */
+      const formData = new FormData();
+
+      formData.append("featureTitle", featureTitle);
+      formData.append("featureDesc", featureDesc);
+      formData.append("properties", JSON.stringify(selectedProperties));
+
+      formData.append("labelTitle", labelTitle);
+      formData.append("labelDesc", labelDesc);
+      if (image) formData.append("image", image);
+      formData.append("buttonTitle", buttonTitle);
+      formData.append("buttonUrl", buttonUrl);
+      formData.append("buttonTarget", buttonTarget);
+
+      formData.append("testimonialTitle", testimonialTitle);
+      formData.append("testimonialDesc", testimonialDesc);
+      formData.append("testimonials", JSON.stringify(selectedTestimonials));
+
+      /* 🔥 Log FormData Properly */
+      console.log("=== FORM DATA ===");
+      for (const pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+    } catch (err) {
+      if (err instanceof yup.ValidationError) {
+        const formattedErrors: Record<string, string> = {};
+        err.inner.forEach((error) => {
+          if (error.path) {
+            formattedErrors[error.path] = error.message;
+          }
+        });
+        setErrors(formattedErrors);
+      }
+    }
+  };
+
+  /* ================= STYLES ================= */
 
   const inputStyle = {
     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
@@ -73,50 +137,30 @@ export default function HomePageSection() {
     },
   };
 
-  const handleSubmit = () => {
-    const payload = {
-      featureSection: {
-        title: featureTitle,
-        description: featureDesc,
-        properties: selectedProperties,
-      },
-      labelSection: {
-        title: labelTitle,
-        description: labelDesc,
-        image,
-        buttonTitle,
-        buttonUrl,
-        buttonTarget,
-      },
-      testimonialSection: {
-        title: testimonialTitle,
-        description: testimonialDesc,
-        testimonials: selectedTestimonials,
-      },
-    };
-
-    console.log("Form Data:", payload);
-  };
-
   return (
     <Box p={0}>
+      {/* Back Button Right */}
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate(-1)}
+          sx={{ color: ThemeColors.primary }}
+        >
+          Back
+        </Button>
+      </Box>
 
-      {/* Back Button */}
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() => navigate(-1)}
+      <Typography
+        variant="h4"
+        fontWeight={700}
+        mb={4}
         sx={{ color: ThemeColors.primary }}
       >
-        Back
-      </Button>
-
-      {/* Form Title */}
-      <Typography variant="h4" fontWeight={700} mb={4}>
         Home Page CMS Form
       </Typography>
 
       {/* ================= Feature Section ================= */}
-      <Typography variant="h6" fontWeight={600} mb={2}>
+      <Typography variant="h6" mb={2} sx={{ color: ThemeColors.primary }}>
         Feature Section
       </Typography>
 
@@ -125,7 +169,8 @@ export default function HomePageSection() {
           label="Title"
           value={featureTitle}
           onChange={(e) => setFeatureTitle(e.target.value)}
-          fullWidth
+          error={!!errors.featureTitle}
+          helperText={errors.featureTitle}
           sx={inputStyle}
         />
 
@@ -135,7 +180,8 @@ export default function HomePageSection() {
           rows={3}
           value={featureDesc}
           onChange={(e) => setFeatureDesc(e.target.value)}
-          fullWidth
+          error={!!errors.featureDesc}
+          helperText={errors.featureDesc}
           sx={inputStyle}
         />
 
@@ -155,13 +201,13 @@ export default function HomePageSection() {
             ))
           }
           renderInput={(params) => (
-            <TextField {...params} label="Select Properties" sx={inputStyle} />
+            <TextField {...params} label="Select Properties" />
           )}
         />
       </Stack>
 
       {/* ================= Label Section ================= */}
-      <Typography variant="h6" fontWeight={600} mb={2}>
+      <Typography variant="h6" mb={2} sx={{ color: ThemeColors.primary }}>
         Label Section
       </Typography>
 
@@ -170,7 +216,8 @@ export default function HomePageSection() {
           label="Title"
           value={labelTitle}
           onChange={(e) => setLabelTitle(e.target.value)}
-          fullWidth
+          error={!!errors.labelTitle}
+          helperText={errors.labelTitle}
           sx={inputStyle}
         />
 
@@ -180,11 +227,11 @@ export default function HomePageSection() {
           rows={3}
           value={labelDesc}
           onChange={(e) => setLabelDesc(e.target.value)}
-          fullWidth
+          error={!!errors.labelDesc}
+          helperText={errors.labelDesc}
           sx={inputStyle}
         />
 
-        {/* Image Upload */}
         <Button
           variant="outlined"
           component="label"
@@ -194,32 +241,13 @@ export default function HomePageSection() {
           }}
         >
           Upload Image
-          <input hidden type="file" accept="image/*" onChange={handleImageUpload} />
+          <input hidden type="file" onChange={handleImageUpload} />
         </Button>
-
-        {image && (
-          <Box position="relative" width="200px">
-            <img src={image} alt="preview" width="100%" />
-            <IconButton
-              size="small"
-              onClick={() => setImage(null)}
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                backgroundColor: "#fff",
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </Box>
-        )}
 
         <TextField
           label="Button Title"
           value={buttonTitle}
           onChange={(e) => setButtonTitle(e.target.value)}
-          fullWidth
           sx={inputStyle}
         />
 
@@ -227,7 +255,6 @@ export default function HomePageSection() {
           label="Button URL"
           value={buttonUrl}
           onChange={(e) => setButtonUrl(e.target.value)}
-          fullWidth
           sx={inputStyle}
         />
 
@@ -236,7 +263,6 @@ export default function HomePageSection() {
           label="Button Opener"
           value={buttonTarget}
           onChange={(e) => setButtonTarget(e.target.value)}
-          fullWidth
           sx={inputStyle}
         >
           <MenuItem value="_self">Same Tab</MenuItem>
@@ -245,7 +271,7 @@ export default function HomePageSection() {
       </Stack>
 
       {/* ================= Testimonial Section ================= */}
-      <Typography variant="h6" fontWeight={600} mb={2}>
+      <Typography variant="h6" mb={2} sx={{ color: ThemeColors.primary }}>
         Testimonial Section
       </Typography>
 
@@ -254,7 +280,8 @@ export default function HomePageSection() {
           label="Title"
           value={testimonialTitle}
           onChange={(e) => setTestimonialTitle(e.target.value)}
-          fullWidth
+          error={!!errors.testimonialTitle}
+          helperText={errors.testimonialTitle}
           sx={inputStyle}
         />
 
@@ -264,7 +291,8 @@ export default function HomePageSection() {
           rows={3}
           value={testimonialDesc}
           onChange={(e) => setTestimonialDesc(e.target.value)}
-          fullWidth
+          error={!!errors.testimonialDesc}
+          helperText={errors.testimonialDesc}
           sx={inputStyle}
         />
 
@@ -284,12 +312,12 @@ export default function HomePageSection() {
             ))
           }
           renderInput={(params) => (
-            <TextField {...params} label="Select Testimonials" sx={inputStyle} />
+            <TextField {...params} label="Select Testimonials" />
           )}
+          sx={inputStyle}
         />
       </Stack>
 
-      {/* Submit */}
       <Button
         variant="contained"
         onClick={handleSubmit}

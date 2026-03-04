@@ -26,6 +26,8 @@ import {
   Star,
   ChartLine,
   Percent,
+  GalleryVertical,
+  ChartNoAxesColumn 
 } from "lucide-react";
 import { useEffect, useState, MouseEvent } from "react";
 
@@ -58,8 +60,14 @@ const NAV_ITEMS: NavItem[] = [
   {
     text: "CMS",
     path: "/admin/cms-home",
-    icon: Percent,
+    icon: GalleryVertical,
   },
+  {
+    text: "Booking Analytics",
+    path: "/admin/booking-analytics/heatmap",
+    icon: ChartNoAxesColumn ,
+  },
+  
 ];
 
 const SUB_ITEMS: Record<string, NavItem[]> = {

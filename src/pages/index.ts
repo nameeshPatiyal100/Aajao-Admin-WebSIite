@@ -17,6 +17,11 @@ export { default as PropertyAnalytics } from "./admin/property-analytics/index";
 export { default as CouponManagement } from "./admin/coupons";
 export { default as CmsHomePagesIndex } from "./admin/cms-homePage/PagesIndex";
 export { default as HomePageSection } from "./admin/cms-sections/HomePageSection";
+export { default as FaqPageSection } from "./admin/cms-sections/FaqPageSection";
+export { default as TCPageSection } from "./admin/cms-sections/TCPageSection";
+export { default as FaqManagement } from "./admin/cms-sections/Faq";
+export { default as BookingHeatmap } from "./admin/BookingAnalytics/BookingHeatmap";
+
 
 //USER SECTION EXPORTS
 export { default as Home } from "./user/home"
