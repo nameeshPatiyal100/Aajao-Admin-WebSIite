@@ -48,8 +48,7 @@ export default function PageEditModal({
       prev
         ? {
             ...prev,
-            [name]:
-              name === "status" ? Number(value) : value,
+            [name]: name === "status" ? Number(value) : value,
           }
         : prev
     );
@@ -62,16 +61,30 @@ export default function PageEditModal({
     }
   };
 
+  /* Purple focus style for all fields */
+  const inputFocusStyle = {
+    "& .MuiOutlinedInput-root": {
+      "&.Mui-focused fieldset": {
+        borderColor: ThemeColors.primary,
+      },
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: ThemeColors.primary,
+    },
+  };
+
   return (
     <Modal
       isOpen={open}
       onRequestClose={handleClose}
       style={{
         content: {
-          maxWidth: "500px",
+          maxWidth: "460px",
           margin: "auto",
           borderRadius: "12px",
-          padding: "24px",
+          padding: "20px",
+          height: "auto",
+          inset: "40px",
         },
         overlay: {
           backgroundColor: "rgba(0,0,0,0.5)",
@@ -79,7 +92,12 @@ export default function PageEditModal({
       }}
     >
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
         <Typography variant="h6" fontWeight={700}>
           Edit Page
         </Typography>
@@ -100,15 +118,17 @@ export default function PageEditModal({
             onChange={handleChange}
             fullWidth
             required
+            sx={inputFocusStyle}
           />
 
-          {/* Slug (Disabled) */}
+          {/* Slug */}
           <TextField
             label="Slug"
             name="slug"
             value={formData.slug}
             fullWidth
             disabled
+            sx={inputFocusStyle}
           />
 
           {/* Status */}
@@ -119,6 +139,7 @@ export default function PageEditModal({
             value={formData.status}
             onChange={handleChange}
             fullWidth
+            sx={inputFocusStyle}
           >
             <MenuItem value={0}>Draft</MenuItem>
             <MenuItem value={1}>Publish</MenuItem>
@@ -132,10 +153,16 @@ export default function PageEditModal({
             onChange={handleChange}
             fullWidth
             required
+            sx={inputFocusStyle}
           />
 
           {/* Buttons */}
-          <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
+          <Stack
+            direction="row"
+            spacing={2}
+            justifyContent="flex-end"
+            mt={2}
+          >
             <Button
               variant="outlined"
               onClick={handleClose}
