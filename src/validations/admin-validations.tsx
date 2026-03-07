@@ -132,7 +132,6 @@ export const statusSchema = Yup.object({
   rows: Yup.array().of(statusListingSchema),
 });
 
-
 export const bookingStatusRowSchema = Yup.object({
   bs_id: Yup.number().required("Status ID is required"),
   bs_title: Yup.string().required("Title is required"),
@@ -142,14 +141,12 @@ export const bookingStatusRowSchema = Yup.object({
 // import * as yup from "yup";
 
 export const couponValidationSchema = Yup.object().shape({
-  coupon_title: Yup
-    .string()
+  coupon_title: Yup.string()
     .required("Coupon title is required")
     .min(3, "Coupon title must be at least 3 characters")
     .max(100, "Coupon title cannot exceed 100 characters"),
 
-  coupon_code: Yup
-    .string()
+  coupon_code: Yup.string()
     .required("Coupon code is required")
     .min(3, "Coupon code must be at least 3 characters")
     .max(20, "Coupon code cannot exceed 20 characters")
@@ -158,48 +155,39 @@ export const couponValidationSchema = Yup.object().shape({
       "Coupon code must contain only uppercase letters and numbers"
     ),
 
-  discount_percentage: Yup
-    .number()
+  discount_percentage: Yup.number()
     .typeError("Discount percentage must be a number")
     .required("Discount percentage is required")
     .min(1, "Discount must be at least 1%")
     .max(100, "Discount cannot exceed 100%"),
 
-  status: Yup
-    .number()
+  status: Yup.number()
     .required("Status is required")
     .oneOf([0, 1], "Invalid status value"),
 });
 
-
 export const homePageSchema = Yup.object().shape({
-  featureTitle: Yup
-    .string()
+  featureTitle: Yup.string()
     .required("Feature title is required")
     .min(3, "Minimum 3 characters"),
 
-  featureDesc: Yup
-    .string()
+  featureDesc: Yup.string()
     .required("Feature description is required")
     .min(10, "Minimum 10 characters"),
 
-  labelTitle: Yup
-    .string()
+  labelTitle: Yup.string()
     .required("Label title is required")
     .min(3, "Minimum 3 characters"),
 
-  labelDesc: Yup
-    .string()
+  labelDesc: Yup.string()
     .required("Label description is required")
     .min(10, "Minimum 10 characters"),
 
-  testimonialTitle: Yup
-    .string()
+  testimonialTitle: Yup.string()
     .required("Testimonial title is required")
     .min(3, "Minimum 3 characters"),
 
-  testimonialDesc: Yup
-    .string()
+  testimonialDesc: Yup.string()
     .required("Testimonial description is required")
     .min(10, "Minimum 10 characters"),
 });
@@ -227,4 +215,32 @@ export const tcPageSchema = Yup.object().shape({
   headerDesc: Yup.string().required("Header description is required"),
   labelTitle: Yup.string().required("Label title is required"),
   labelDesc: Yup.string().required("Label description is required"),
+});
+
+export const faqValidationSchema = Yup.object({
+  title: Yup.string().required("Title is required").trim(),
+  description: Yup.string().required("Description is required").trim(),
+  status: Yup.number()
+    .oneOf([0, 1], "Invalid status")
+    .required("Status is required"),
+});
+
+
+// import * as yup from "yup";
+
+export const tcValidationSchema = Yup.object({
+  title: Yup
+    .string()
+    .required("Title is required")
+    .trim(),
+
+  description: Yup
+    .string()
+    .required("Description is required")
+    .trim(),
+
+  status: Yup
+    .number()
+    .oneOf([0, 1], "Invalid status")
+    .required("Status is required"),
 });

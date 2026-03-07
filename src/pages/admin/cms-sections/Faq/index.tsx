@@ -4,6 +4,7 @@ import { faker } from "@faker-js/faker";
 import { ThemeColors } from "../../../../theme/themeColor";
 
 import FaqSearchBar from "./FaqSearchBar";
+import FaqModal from "./FaqModal";
 import FaqListing, { FaqRecord } from "./FaqListingSection";
 
 /* ================= Types ================= */
@@ -16,14 +17,12 @@ interface FaqFilterData {
 
 /* ================= Fake Data ================= */
 
-let fakeFaqData: FaqRecord[] = Array.from({ length: 50 }).map(
-  (_, index) => ({
-    id: index + 1,
-    title: faker.lorem.sentence(),
-    status: faker.datatype.boolean() ? 1 : 0,
-    created_at: faker.date.past().toISOString(),
-  })
-);
+let fakeFaqData: FaqRecord[] = Array.from({ length: 50 }).map((_, index) => ({
+  id: index + 1,
+  title: faker.lorem.sentence(),
+  status: faker.datatype.boolean() ? 1 : 0,
+  created_at: faker.date.past().toISOString(),
+}));
 
 /* ================= Component ================= */
 
@@ -32,6 +31,8 @@ export default function FaqManagement() {
   const [totalRecords, setTotalRecords] = useState(fakeFaqData.length);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedFaq, setSelectedFaq] = useState<FaqRecord | null>(null);
 
   const rowsPerPage = 10;
 
@@ -41,8 +42,7 @@ export default function FaqManagement() {
     keyword: "",
   };
 
-  const [filterData, setFilterData] =
-    useState<FaqFilterData>(requestBody);
+  const [filterData, setFilterData] = useState<FaqFilterData>(requestBody);
 
   useEffect(() => {
     handleListing(requestBody);
@@ -109,9 +109,7 @@ export default function FaqManagement() {
   /* ================= Delete ================= */
 
   const handleDeleteConfirm = (faqId: number) => {
-    fakeFaqData = fakeFaqData.filter(
-      (faq) => faq.id !== faqId
-    );
+    fakeFaqData = fakeFaqData.filter((faq) => faq.id !== faqId);
 
     handleListing(filterData);
   };
@@ -119,8 +117,38 @@ export default function FaqManagement() {
   /* ================= Edit ================= */
 
   const handleEditClick = (id: number) => {
-    console.log("Edit FAQ ID:", id);
-    // Later you can open modal here
+    const faq = fakeFaqData.find((f) => f.id === id);
+
+    if (faq) {
+      setSelectedFaq(faq);
+      setOpenModal(true);
+    }
+  };
+
+  const handleSubmitFaq = (data: {
+    title: string;
+    description: string;
+    status: 0 | 1;
+  }) => {
+    if (selectedFaq) {
+      // UPDATE
+      fakeFaqData = fakeFaqData.map((faq) =>
+        faq.id === selectedFaq.id ? { ...faq, ...data } : faq
+      );
+    } else {
+      // ADD NEW
+      const newFaq: FaqRecord = {
+        id: fakeFaqData.length + 1,
+        title: data.title,
+        status: data.status,
+        created_at: new Date().toISOString(),
+      };
+
+      fakeFaqData.unshift(newFaq);
+    }
+
+    handleListing(filterData);
+    setOpenModal(false);
   };
 
   /* ================= UI ================= */
@@ -139,7 +167,8 @@ export default function FaqManagement() {
         handleFilter={handleFilter}
         handleClear={handleClear}
         onAddClick={() => {
-          console.log("Add FAQ Clicked");
+          setSelectedFaq(null);
+          setOpenModal(true);
         }}
       />
 
@@ -152,6 +181,20 @@ export default function FaqManagement() {
         handlePaginate={handlePaginate}
         handleEditClick={handleEditClick}
         handleDeleteConfirm={handleDeleteConfirm}
+      />
+      <FaqModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        onSubmit={handleSubmitFaq}
+        initialData={
+          selectedFaq
+            ? {
+                title: selectedFaq.title,
+                description: "",
+                status: selectedFaq.status,
+              }
+            : undefined
+        }
       />
     </Box>
   );

@@ -46,7 +46,8 @@ import {
   FaqPageSection,
   TCPageSection,
   FaqManagement,
-  BookingHeatmap
+  BookingHeatmap,
+  TCManagement
 } from "./pages";
 
 // NEED TO SET ORDER
@@ -155,6 +156,10 @@ function App() {
             <Route
               path="cms-home/FaqManagement/edit/listing"
               element={<FaqManagement />}
+            />
+            <Route
+              path="cms-home/TCManagement/edit/listing"
+              element={<TCManagement />}
             />
             <Route
               path="booking-analytics/heatmap"

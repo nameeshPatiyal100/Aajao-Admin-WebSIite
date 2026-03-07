@@ -28,15 +28,15 @@ import { PurpleThemeColor } from "../../../../theme/themeColor";
 
 /* ================= Types ================= */
 
-export interface FaqRecord {
+export interface TCRecord {
   id: number;
   title: string;
-  status: 0 | 1; // 0 = Draft, 1 = Published
+  status: 0 | 1;
   created_at: string;
 }
 
-interface FaqListingProps {
-  faqs: FaqRecord[];
+interface TCListingProps {
+  terms: TCRecord[];
   totalRecords: number;
   loading: boolean;
   page: number;
@@ -48,8 +48,8 @@ interface FaqListingProps {
 
 /* ================= Component ================= */
 
-export default function FaqListing({
-  faqs,
+export default function TCListing({
+  terms,
   totalRecords,
   loading,
   page,
@@ -57,7 +57,7 @@ export default function FaqListing({
   handlePaginate,
   handleEditClick,
   handleDeleteConfirm,
-}: FaqListingProps) {
+}: TCListingProps) {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
@@ -108,19 +108,21 @@ export default function FaqListing({
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={5} align="center">
-                    <TableLoader text="Fetching FAQs..." />
+                    <TableLoader text="Fetching Terms & Conditions..." />
                   </TableCell>
                 </TableRow>
-              ) : faqs?.length === 0 ? (
+              ) : terms?.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} align="center">
-                    <Typography variant="body2">No FAQs found.</Typography>
+                    <Typography variant="body2">
+                      No Terms & Conditions found.
+                    </Typography>
                   </TableCell>
                 </TableRow>
               ) : (
-                faqs.map((faq: FaqRecord, index: number) => (
+                terms.map((tc: TCRecord, index: number) => (
                   <TableRow
-                    key={faq.id}
+                    key={tc.id}
                     hover
                     sx={{
                       "&:hover": { backgroundColor: "#f5f3ff" },
@@ -130,30 +132,32 @@ export default function FaqListing({
                       {(page - 1) * rowsPerPage + index + 1}
                     </TableCell>
 
-                    <TableCell>{faq.title}</TableCell>
+                    <TableCell>{tc.title}</TableCell>
 
                     <TableCell>
                       <Chip
-                        label={faq.status === 1 ? "Published" : "Draft"}
+                        label={tc.status === 1 ? "Active" : "Inactive"}
                         size="small"
                         sx={{
                           backgroundColor:
-                            faq.status === 1 ? PurpleThemeColor : "#e0e0e0",
-                          color: faq.status === 1 ? "#fff" : "#555",
+                            tc.status === 1
+                              ? PurpleThemeColor
+                              : "#e0e0e0",
+                          color: tc.status === 1 ? "#fff" : "#555",
                           fontWeight: 500,
                         }}
                       />
                     </TableCell>
 
                     <TableCell>
-                      {new Date(faq.created_at).toLocaleDateString()}
+                      {new Date(tc.created_at).toLocaleDateString()}
                     </TableCell>
 
                     <TableCell>
-                      <Tooltip title="Edit FAQ">
+                      <Tooltip title="Edit Terms">
                         <IconButton
                           size="small"
-                          onClick={() => handleEditClick(faq.id)}
+                          onClick={() => handleEditClick(tc.id)}
                           sx={{
                             color: PurpleThemeColor,
                             mr: 1,
@@ -164,10 +168,10 @@ export default function FaqListing({
                         </IconButton>
                       </Tooltip>
 
-                      <Tooltip title="Delete FAQ">
+                      <Tooltip title="Delete Terms">
                         <IconButton
                           size="small"
-                          onClick={() => handleDeleteClick(faq.id)}
+                          onClick={() => handleDeleteClick(tc.id)}
                           sx={{
                             color: "error.main",
                             "&:hover": { transform: "scale(1.1)" },
@@ -184,7 +188,7 @@ export default function FaqListing({
           </Table>
         </TableContainer>
 
-        {faqs?.length > 0 && (
+        {terms?.length > 0 && (
           <Box display="flex" justifyContent="center" p={2}>
             <Pagination
               count={Math.ceil(totalRecords / rowsPerPage)}
@@ -196,11 +200,13 @@ export default function FaqListing({
       </Paper>
 
       {/* ================= Delete Dialog ================= */}
+
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Delete FAQ</DialogTitle>
+        <DialogTitle>Delete Terms & Conditions</DialogTitle>
+
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this FAQ?
+            Are you sure you want to delete this Terms & Conditions record?
           </DialogContentText>
         </DialogContent>
 
