@@ -50,7 +50,7 @@ export default function Listing({
                 "SR. NO.",
                 "PROPERTY",
                 "USER NAME",
-                "RATING",
+                "PROPERTY RATING",
                 "STATUS",
                 "ACTIONS",
               ].map((header) => (

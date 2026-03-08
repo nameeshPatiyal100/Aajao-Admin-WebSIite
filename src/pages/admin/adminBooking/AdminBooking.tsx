@@ -130,6 +130,7 @@ const AdminBooking = () => {
               setDetailOpen(true);
             }}
             onEdit={(row) => {
+              console.log("EDIT CLICKED", row);
               setSelectedBookingId(row.id);
               setIsEdit(true);
               setDetailOpen(true);

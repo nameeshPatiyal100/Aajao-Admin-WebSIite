@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
+import "./index.css"
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchBookingStatus } from "../../../features/admin/Bookings/bookingStatus.slice";
 import { fetchBookingList } from "../../../features/admin/Bookings/fetchBooking.slice";

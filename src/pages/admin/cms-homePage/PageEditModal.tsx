@@ -155,8 +155,6 @@ export default function PageEditModal({
             required
             sx={inputFocusStyle}
           />
-
-          {/* Buttons */}
           <Stack
             direction="row"
             spacing={2}
