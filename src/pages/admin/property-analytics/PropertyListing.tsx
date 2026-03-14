@@ -6,9 +6,9 @@ import {
   TableHead,
   TableRow,
   Paper,
-  // Pagination,
   Typography,
   IconButton,
+  Chip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import type { PropertyRecord } from "./types";
@@ -52,72 +52,29 @@ export default function PropertyListing({
               borderBottom: "2px solid #f1f1f1",
             }}
           >
-            <TableCell
-              sx={{
-                color: ThemeColors.primary,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              S.No
-            </TableCell>
-
-            <TableCell
-              sx={{
-                color: ThemeColors.primary,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Property Name
-            </TableCell>
-
-            <TableCell
-              sx={{
-                color: ThemeColors.primary,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Host Name
-            </TableCell>
-
-            <TableCell
-              sx={{
-                color: ThemeColors.primary,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Max Price
-            </TableCell>
-
-            <TableCell
-              sx={{
-                color: ThemeColors.primary,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Avg Price
-            </TableCell>
-
-            <TableCell
-              align="center"
-              sx={{
-                color: ThemeColors.primary,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              Action
-            </TableCell>
+            {[
+              "S.No",
+              "Property Name",
+              "Host Name",
+              "Max Price",
+              "Bookings",
+              "Status",
+              "Luxury",
+              "Action",
+            ].map((head) => (
+              <TableCell
+                key={head}
+                align={head === "Action" ? "center" : "left"}
+                sx={{
+                  color: ThemeColors.primary,
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: 0.5,
+                }}
+              >
+                {head}
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
 
@@ -125,8 +82,14 @@ export default function PropertyListing({
         <TableBody>
           {loading ? (
             <TableRow>
-              <TableCell colSpan={6}>
+              <TableCell colSpan={8}>
                 <Typography align="center">Loading...</Typography>
+              </TableCell>
+            </TableRow>
+          ) : propertyListing.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={8}>
+                <Typography align="center">No Properties Found</Typography>
               </TableCell>
             </TableRow>
           ) : (
@@ -136,7 +99,7 @@ export default function PropertyListing({
                 hover
                 sx={{
                   "&:hover": {
-                    backgroundColor: "#faf5ff", // very light purple hover
+                    backgroundColor: "#faf5ff",
                   },
                 }}
               >
@@ -146,10 +109,55 @@ export default function PropertyListing({
                 </TableCell>
 
                 <TableCell>{row.property_name}</TableCell>
-                <TableCell>{row.host_name}</TableCell>
-                <TableCell>₹{row.max_price}</TableCell>
-                <TableCell>₹{row.avg_bookings}</TableCell>
 
+                <TableCell>{row.host_name}</TableCell>
+
+                <TableCell sx={{ fontWeight: 600 }}>
+                  ₹{row.max_price}
+                </TableCell>
+
+                {/* Number of Bookings */}
+                <TableCell>
+                  <Chip
+                    label={row.avg_bookings ?? 0}
+                    size="small"
+                    sx={{
+                      fontWeight: 600,
+                      backgroundColor: "#ede7f6",
+                      color: "#5e35b1",
+                    }}
+                  />
+                </TableCell>
+
+                {/* Status */}
+                <TableCell>
+                  <Chip
+                    label={row.status === 1 ? "Active" : "Inactive"}
+                    size="small"
+                    sx={{
+                      fontWeight: 600,
+                      color: "#fff",
+                      backgroundColor:
+                        row.status === 1 ? "#2e7d32" : "#d32f2f",
+                    }}
+                  />
+                </TableCell>
+
+                {/* Luxury */}
+                <TableCell>
+                  <Chip
+                    label={row.is_luxury === 1 ? "Yes" : "No"}
+                    size="small"
+                    sx={{
+                      fontWeight: 600,
+                      color: "#fff",
+                      backgroundColor:
+                        row.is_luxury === 1 ? "#1976d2" : "#9e9e9e",
+                    }}
+                  />
+                </TableCell>
+
+                {/* Action */}
                 <TableCell align="center">
                   <IconButton
                     onClick={() => handleEdit(row)}
@@ -175,7 +183,6 @@ export default function PropertyListing({
           count={Math.ceil(totalRecords / rowsPerPage)}
           page={page}
           onChange={handlePaginate}
-          // color="primary"
         />
       </Box>
     </Paper>

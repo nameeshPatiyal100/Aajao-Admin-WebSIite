@@ -51,6 +51,8 @@ export interface PropertyListingItem {
   }
 
   export interface PropertyRecord {
+    is_luxury: number;
+    status: number;
     id: string;
     property_name: string;
     host_name: string;
