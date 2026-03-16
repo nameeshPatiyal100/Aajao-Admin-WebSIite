@@ -37,6 +37,9 @@ export const ADMINENDPOINTS = {
   PROPERTY_STATUS: "/admin/properties/update-status",
   PROPERTY_DELETE: "/admin/property/delete",
   DELETE_PROPERTY_IMAGE: "/admin/properties/delete/image",
+  REVIEW_LISTING: "/admin/propety/review/search",
+  REVIEW_DETAIL: "/admin/property/review/detail",
+  UPDATE_REVIEW: "/admin/propety/review/update",
 
   //BOOKINGS
   BOOKING_LIST: "/admin/booking/search",

@@ -1,3 +1,12 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+// import { AppDispatch } from "../../../store/store";
+
+import { fetchReviewListing } from "../../../features/admin/Review/reviewListingSlice.slice";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { updateReview } from "../../../features/admin/Review/updateReviewSlice";
+import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
+
 import {
   Modal,
   Box,
@@ -19,276 +28,320 @@ import type { FormValues, UpdateFormProps } from "./types";
 import { themeCss } from "../../../theme/themeCss";
 
 export default function UpdateForm({
-  formData,
+  reviewDetail,
+  loading,
   formshow,
   handleFormClose,
   handleUpdateReview,
 }: UpdateFormProps) {
-  const formik = useFormik<FormValues>({
-    initialValues: {
-      id: formData?.id ?? "",
-      property: formData?.property ?? "",
-      user_name: formData?.user_name ?? "",
-      title: formData?.title ?? "",
-      description: formData?.description ?? "",
-      rating: formData?.rating ?? "1",
-      status: formData?.status ?? "0",
-    },
-    validationSchema: reviewSchema,
-    onSubmit: (values) => {
-      handleUpdateReview(values);
-      handleFormClose();
-    },
+  const dispatch = useAppDispatch();
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error",
   });
 
+  const showSnackbar = (message: string, severity: "success" | "error") => {
+    setSnackbar({ open: true, message, severity });
+  };
+  const { propertyReview, hostReview, platformReview, hostReviewForUser } =
+    reviewDetail || {};
+    const { page, search, status, loading: listingLoading } =
+  useAppSelector((state) => state.reviewListingSliceReducer);
+
+  // const { loading: updateLoading } =
+  // useAppSelector((state) => state.updateReview);
+
+  const formik = useFormik<FormValues>({
+    enableReinitialize: true,
+    initialValues: {
+      id: propertyReview?.br_book_id ?? "",
+      property:
+        hostReviewForUser?.["reviewProp.property_name"] ?? "No Property",
+      user_name:
+        hostReviewForUser?.["reviewUsername.user_fullName"] ?? "No User",
+      title: "",
+      description: "",
+      rating: "1",
+      status: String(propertyReview?.br_isActive ?? "0"),
+    },
+    validationSchema: reviewSchema,
+
+    onSubmit: async (values) => {
+      try {
+        // 1️⃣ update review
+        const updateRes = await dispatch(
+          updateReview({
+            bookingId: values.id,
+            status: Number(values.status),
+          })
+        ).unwrap();
+    
+        // 2️⃣ refresh listing with current filters
+        await dispatch(
+          fetchReviewListing({
+            page,
+            search,
+            limit,
+            status,
+          })
+        ).unwrap();
+    
+        // 3️⃣ show success snackbar
+        showSnackbar(updateRes.message || "Review updated successfully", "success");
+    
+        // 4️⃣ close modal
+        setTimeout(() => {
+          handleFormClose();
+        }, 500);
+    
+      } catch (error: any) {
+        showSnackbar(error || "Failed to update review", "error");
+      }
+    }
+  });
+  const ReviewCard = ({
+    title,
+    reviewTitle,
+    description,
+    rating,
+  }: {
+    title: string;
+    reviewTitle?: string | null;
+    description?: string | null;
+    rating?: number | string;
+  }) => (
+    <Box
+      sx={{
+        p: 2.5,
+        borderRadius: 2,
+        border: "1px solid #e5e7eb",
+        background: "#fafafa",
+        "&:hover": { borderColor: "#c4b5fd", background: "#f5f3ff" },
+      }}
+    >
+      <Typography fontWeight={600} mb={1} color={PurpleThemeColor}>
+        {title}
+      </Typography>
+
+      {reviewTitle || description ? (
+        <>
+          <Typography fontSize={14} fontWeight={500}>
+            {reviewTitle ?? "No Title"}
+          </Typography>
+
+          <Typography fontSize={13} color="text.secondary">
+            {description ?? "No Description"}
+          </Typography>
+
+          <Rating
+            value={Number(rating || 0)}
+            readOnly
+            size="small"
+            sx={{ mt: 1 }}
+          />
+        </>
+      ) : (
+        <Typography fontSize={13} color="text.secondary">
+          No Review
+        </Typography>
+      )}
+    </Box>
+  );
+
+  /* ================= Review Config ================= */
+
+  const reviews = [
+    {
+      label: "Property Review",
+      title: propertyReview?.br_title,
+      desc: propertyReview?.br_desc,
+      rating: propertyReview?.br_rating,
+    },
+    {
+      label: "Host Review",
+      title: hostReview?.hr_title,
+      desc: hostReview?.hr_description,
+      rating: hostReview?.hr_rating,
+    },
+    {
+      label: "Platform Review",
+      title: platformReview?.pr_title,
+      desc: platformReview?.pr_description,
+      rating: platformReview?.pr_rating,
+    },
+  ];
+
   return (
-    <Modal open={formshow} onClose={handleFormClose}>
-      <Box
-        sx={{
-          ...themeCss.modalFormContainer,
-          maxWidth: 700,
-          animation: "fadeIn 0.3s ease-in-out",
-        }}
-      >
-        {/* Header */}
-        <Box
-          sx={{
-            px: 3,
-            py: 2,
-            background: `linear-gradient(135deg, ${PurpleThemeColor}, #6f137f)`,
-            color: "#fff",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Box>
-            <Typography fontSize={12} sx={{ opacity: 0.9 }}>
-              Booking ID
-            </Typography>
-            <Typography fontWeight={700}>#{formik.values.id}</Typography>
+    <>
+      <Modal open={formshow} onClose={handleFormClose}>
+        <Box sx={{ ...themeCss.modalFormContainer, maxWidth: 720 }}>
+          {/* HEADER */}
+          <Box
+            sx={{
+              px: 3,
+              py: 2,
+              background: `linear-gradient(135deg, ${PurpleThemeColor}, #6f137f)`,
+              color: "#fff",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box>
+              <Typography fontSize={12} sx={{ opacity: 0.9 }}>
+                Booking ID
+              </Typography>
+              <Typography fontWeight={700}>
+                #{propertyReview?.br_book_id ?? "N/A"}
+              </Typography>
+            </Box>
+
+            <IconButton onClick={handleFormClose} sx={{ color: "#fff" }}>
+              <CloseIcon />
+            </IconButton>
           </Box>
 
-          <IconButton onClick={handleFormClose} sx={{ color: "#fff" }}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
+          {/* BODY */}
+          <Box p={3}>
+            <form onSubmit={formik.handleSubmit}>
+              <Box display="flex" flexDirection="column" gap={3}>
+                {/* Review Cards */}
+                {reviews.map((r) => (
+                  <ReviewCard
+                    key={r.label}
+                    title={r.label}
+                    reviewTitle={r.title}
+                    description={r.desc}
+                    rating={r.rating}
+                  />
+                ))}
 
-        <Box sx={{ p: 3 }}>
-          {/* <Box sx={themeCss.modalBody}> */}
-          <form onSubmit={formik.handleSubmit}>
-            <Box display="flex" flexDirection="column" gap={3}>
-              {/* ===== Review Section Component ===== */}
-              {[
-                { label: "Property Review" },
-                { label: "Host Review" },
-                { label: "Platform Review" },
-              ].map((section) => (
+                {/* Host Review For User */}
                 <Box
-                  key={section.label}
                   sx={{
-                    p: 2.5,
+                    p: 3,
                     borderRadius: 2,
-                    backgroundColor: "#fafafa",
-                    border: "1px solid #e5e7eb",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      backgroundColor: "#f5f3ff",
-                      borderColor: "#c4b5fd",
-                    },
+                    border: "1px solid #fed7aa",
+                    background: "#fff7ed",
                   }}
                 >
-                  <Typography fontWeight={600} mb={1} color={PurpleThemeColor}>
-                    {section.label}
+                  <Typography fontWeight={700} mb={1} color="#9a3412">
+                    Host Review for User
                   </Typography>
 
-                  <Typography fontSize={14} fontWeight={500}>
-                    {formik.values.title}
-                  </Typography>
+                  {hostReviewForUser ? (
+                    <>
+                      <Typography fontSize={13}>
+                        <b>User:</b>{" "}
+                        {hostReviewForUser["reviewUsername.user_fullName"]}
+                      </Typography>
 
-                  <Typography fontSize={13} color="text.secondary" mt={0.5}>
-                    {formik.values.description}
-                  </Typography>
+                      <Typography fontSize={13}>
+                        <b>Host:</b>{" "}
+                        {hostReviewForUser["reviewHostName.user_fullName"]}
+                      </Typography>
 
-                  <Rating
-                    value={Number(formik.values.rating)}
-                    readOnly
-                    size="small"
-                    sx={{ mt: 1 }}
-                  />
+                      <Typography fontSize={13} mb={1}>
+                        <b>Property:</b>{" "}
+                        {hostReviewForUser["reviewProp.property_name"]}
+                      </Typography>
+
+                      <Typography fontWeight={500}>
+                        {hostReviewForUser.hru_title ?? "No Title"}
+                      </Typography>
+
+                      <Typography fontSize={13} color="text.secondary">
+                        {hostReviewForUser.hru_description ?? "No Description"}
+                      </Typography>
+
+                      <Rating
+                        value={Number(hostReviewForUser.hru_rating || 0)}
+                        readOnly
+                        size="small"
+                        sx={{ mt: 1 }}
+                      />
+                    </>
+                  ) : (
+                    <Typography fontSize={13}>No Review</Typography>
+                  )}
                 </Box>
-              ))}
 
-              {/* ===== Host Review for User ===== */}
-              <Box
-                sx={{
-                  p: 3,
-                  borderRadius: 2,
-                  backgroundColor: "#fff7ed",
-                  border: "1px solid #fed7aa",
-                }}
-              >
-                <Typography fontWeight={700} mb={1} color="#9a3412">
-                  Host Review for User
-                </Typography>
-
-                <Typography fontSize={13}>
-                  <b>User:</b> {formik.values.user_name}
-                </Typography>
-                <Typography fontSize={13}>
-                  <b>Host:</b> {formik.values.property}
-                </Typography>
-                <Typography fontSize={13} mb={1}>
-                  <b>Property:</b> {formik.values.property}
-                </Typography>
-
-                <Typography fontWeight={500} fontSize={14}>
-                  {formik.values.title}
-                </Typography>
-                <Typography fontSize={13} color="text.secondary">
-                  {formik.values.description}
-                </Typography>
-
-                <Rating
-                  value={Number(formik.values.rating)}
-                  readOnly
-                  size="small"
-                  sx={{ mt: 1 }}
-                />
+                {/* STATUS DROPDOWN */}
+                <FormControl fullWidth>
+                  <InputLabel
+                    sx={{
+                      "&.Mui-focused": { color: PurpleThemeColor },
+                    }}
+                  >
+                    Status
+                  </InputLabel>
+                  <Select
+                    name="status"
+                    value={formik.values.status}
+                    onChange={formik.handleChange}
+                    disabled={formik.values.status === "1"}
+                    input={<OutlinedInput label="Status" />}
+                    sx={{
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#d1d5db",
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: PurpleThemeColor,
+                      },
+                      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: PurpleThemeColor,
+                      },
+                    }}
+                  >
+                    <MenuItem value="0">Pending</MenuItem>
+                    <MenuItem value="1">Approved</MenuItem>
+                    <MenuItem value="2">Rejected</MenuItem>
+                  </Select>
+                </FormControl>
               </Box>
 
-              {/* ===== Status Dropdown ===== */}
-              <FormControl fullWidth>
-                <InputLabel
+              {/* ACTION BUTTONS */}
+              <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+                <Button
+                  variant="outlined"
+                  onClick={handleFormClose}
                   sx={{
-                    "&.Mui-focused": {
-                      color: "#881f9b",
-                    },
+                    borderColor: "#dc2626",
+                    color: "#dc2626",
                   }}
                 >
-                  Status
-                </InputLabel>
+                  Cancel
+                </Button>
 
-                <Select
-                  name="status"
-                  value={formik.values.status}
-                  onChange={formik.handleChange}
-                  input={<OutlinedInput label="Status" />}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={formik.values.status === "1"}
                   sx={{
-                    /* Default border */
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#881f9b",
-                    },
-
-                    /* Hover border */
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#881f9b",
-                    },
-
-                    /* Focused border */
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#881f9b",
-                    },
-                  }}
-                  MenuProps={{
-                    PaperProps: {
-                      sx: {
-                        backgroundColor: "#faf5ff", // light purple menu
-                      },
-                    },
+                    bgcolor: PurpleThemeColor,
+                    "&:hover": { bgcolor: "#6f137f" },
                   }}
                 >
-                  <MenuItem
-                    value="0"
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "#ede9fe",
-                      },
-                      "&.Mui-selected": {
-                        backgroundColor: "#ddd6fe",
-                        "&:hover": {
-                          backgroundColor: "#c4b5fd",
-                        },
-                      },
-                    }}
-                  >
-                    Pending
-                  </MenuItem>
-
-                  <MenuItem
-                    value="1"
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "#ede9fe",
-                      },
-                      "&.Mui-selected": {
-                        backgroundColor: "#ddd6fe",
-                      },
-                    }}
-                  >
-                    Approved
-                  </MenuItem>
-
-                  <MenuItem
-                    value="2"
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "#ede9fe",
-                      },
-                      "&.Mui-selected": {
-                        backgroundColor: "#ddd6fe",
-                      },
-                    }}
-                  >
-                    Rejected
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-
-            {/* Actions */}
-            <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
-              <Button
-                variant="outlined"
-                onClick={handleFormClose}
-                sx={{
-                  borderColor: "#dc2626",
-                  color: "#dc2626",
-                  "&:hover": {
-                    backgroundColor: "#fee2e2",
-                  },
-                }}
-              >
-                Cancel
-              </Button>
-
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={formik.values.status === "1"}
-                sx={{
-                  bgcolor: PurpleThemeColor,
-                  opacity: formik.values.status === "1" ? 0.6 : 1,
-                  cursor:
-                    formik.values.status === "1" ? "not-allowed" : "pointer",
-                  "&:hover": {
-                    bgcolor:
-                      formik.values.status === "1"
-                        ? PurpleThemeColor
-                        : "#6f137f",
-                    transform:
-                      formik.values.status === "1"
-                        ? "none"
-                        : "translateY(-1px)",
-                  },
-                }}
-              >
-                Submit
-              </Button>
-            </Box>
-          </form>
+                  Submit
+                </Button>
+              </Box>
+            </form>
+          </Box>
         </Box>
-      </Box>
-    </Modal>
+      </Modal>
+      <CustomSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() =>
+          setSnackbar((prev) => ({
+            ...prev,
+            open: false,
+          }))
+        }
+      />
+    </>
   );
 }

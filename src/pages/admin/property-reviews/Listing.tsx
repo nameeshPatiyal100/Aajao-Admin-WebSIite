@@ -10,19 +10,24 @@ import {
   Typography,
   Tooltip,
   IconButton,
-  CircularProgress,
   Rating,
 } from "@mui/material";
 
 import { Edit as EditIcon } from "@mui/icons-material";
 import { Pagination } from "../../../components";
-import type { ListingProps } from "./types";    
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
-const reviewStatusMap = {
-  0: { label: "Pending", color: "#ed6c02", bg: "#fff3e0" },
-  1: { label: "Approved", color: "#2e7d32", bg: "#e8f5e9" },
-  2: { label: "Rejected", color: "#d32f2f", bg: "#fdecea" },
+import type { ListingProps } from "./types";
+
+const reviewStatusMap: Record<
+  "0" | "1" | "2",
+  { label: string; color: string; bg: string }
+> = {
+  "0": { label: "Pending", color: "#ed6c02", bg: "#fff3e0" },
+  "1": { label: "Approved", color: "#2e7d32", bg: "#e8f5e9" },
+  "2": { label: "Rejected", color: "#d32f2f", bg: "#fdecea" },
 };
+
 export default function Listing({
   ThemeColors,
   reviewsListing,
@@ -71,92 +76,104 @@ export default function Listing({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={4} align="center">
-                  <CircularProgress size={28} />
+                <TableCell colSpan={6} align="center">
+                  <TableLoader text="Fetching reviews..." />
                 </TableCell>
               </TableRow>
-            ) : reviewsListing.length === 0 ? (
+            ) : !reviewsListing || reviewsListing.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} align="center">
+                <TableCell colSpan={6} align="center">
                   <Typography
                     variant="body2"
                     sx={{ color: ThemeColors.text.secondary }}
                   >
-                    No records found.
+                    No reviews found.
                   </Typography>
                 </TableCell>
               </TableRow>
             ) : (
-              reviewsListing.map((review, index) => (
-                <TableRow
-                  key={review.id}
-                  hover
-                  sx={{
-                    transition: "all 0.3s ease",
-                    "&:hover": { backgroundColor: "#f5f3ff" },
-                    fontSize: "0.8rem",
-                  }}
-                >
-                  <TableCell>{(page - 1) * rowsPerPage + index + 1}</TableCell>
+              reviewsListing.map((review, index) => {
+                const status = review.status as "0" | "1" | "2";
+                console.log(review);
+                return (
+                  <TableRow
+                    key={review.id}
+                    hover
+                    sx={{
+                      transition: "all 0.3s ease",
+                      "&:hover": { backgroundColor: "#f5f3ff" },
+                      fontSize: "0.8rem",
+                    }}
+                  >
+                    {/* SR NO */}
+                    <TableCell>
+                      {(page - 1) * rowsPerPage + index + 1}
+                    </TableCell>
 
-                  <TableCell sx={{ fontSize: "0.85rem" }}>
-                    {review.property}
-                  </TableCell>
+                    {/* PROPERTY */}
+                    <TableCell sx={{ fontSize: "0.85rem" }}>
+                      {review.property}
+                    </TableCell>
 
-                  <TableCell sx={{ fontSize: "0.85rem" }}>
-                    {review.user_name}
-                  </TableCell>
+                    {/* USER NAME */}
+                    <TableCell sx={{ fontSize: "0.85rem" }}>
+                      {review.user_name}
+                    </TableCell>
 
-                  <TableCell sx={{ fontSize: "0.85rem" }}>
-                    <Rating
-                      value={Number(review.rating)}
-                      readOnly
-                      size="small"
-                    />
-                  </TableCell>
-
-                  <TableCell sx={{ fontSize: "0.85rem" }}>
-                    <Box
-                      sx={{
-                        display: "inline-block",
-                        px: 1.2,
-                        py: 0.4,
-                        borderRadius: "12px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                        color: reviewStatusMap[review.status]?.color,
-                        backgroundColor: reviewStatusMap[review.status]?.bg,
-                      }}
-                    >
-                      {reviewStatusMap[review.status]?.label}
-                    </Box>
-                  </TableCell>
-
-                  <TableCell>
-                    <Tooltip title="Edit Review">
-                      <IconButton
+                    {/* RATING */}
+                    <TableCell sx={{ fontSize: "0.85rem" }}>
+                      <Rating
+                        value={Number(review.rating)}
+                        readOnly
                         size="small"
+                      />
+                    </TableCell>
+
+                    {/* STATUS */}
+                    <TableCell sx={{ fontSize: "0.85rem" }}>
+                      <Box
                         sx={{
-                          color: ThemeColors.secondary,
-                          mr: 1,
-                          transition: "all 0.3s ease",
-                          "&:hover": { transform: "scale(1.1)" },
+                          display: "inline-block",
+                          px: 1.2,
+                          py: 0.4,
+                          borderRadius: "12px",
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          color: reviewStatusMap[status]?.color,
+                          backgroundColor: reviewStatusMap[status]?.bg,
                         }}
-                        onClick={() => handleFormShow(review.id)}
                       >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))
+                        {reviewStatusMap[status]?.label}
+                      </Box>
+                    </TableCell>
+
+                    {/* ACTION */}
+                    <TableCell>
+                      <Tooltip title="Edit Review">
+                        <IconButton
+                          size="small"
+                          sx={{
+                            color: ThemeColors.secondary,
+                            mr: 1,
+                            transition: "all 0.3s ease",
+                            "&:hover": { transform: "scale(1.1)" },
+                          }}
+                          onClick={() => handleFormShow(review.id)}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>
       </TableContainer>
 
       {/* Pagination */}
-      {reviewsListing.length > 0 && (
+      {reviewsListing && reviewsListing.length > 0 && (
         <Box display="flex" justifyContent="center" alignItems="center" p={2}>
           <Pagination
             count={Math.ceil(totalRecords / rowsPerPage)}

@@ -334,7 +334,6 @@ const AdminLogin = () => {
         severity={snackbarSeverity}
         onClose={() => dispatch(closeSnackbar())}
       />
-      ;
     </Box>
   );
 };

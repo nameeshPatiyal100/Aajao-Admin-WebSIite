@@ -41,6 +41,8 @@ import deletePropertyImageReducer from "../features/admin/properties/deletePrope
 import bookingStatusListingForAdminPageReducer from "../features/admin/BookingStatus/bookingStatusListingForAdminPage.slice";
 import updateBookingStatusAdminPageReducer from "../features/admin/BookingStatus/bookingStatusUpdateSlice";
 import adminDashboardSliceReducer from "../features/admin/Dashboard/dashboard.slice";
+import reviewListingSliceReducer from "../features/admin/Review/reviewListingSlice.slice";
+import reviewDetailSliceReducer from "../features/admin/Review/reviewDetailSlice.slice";
 
 export const store = configureStore({
   reducer: {
@@ -87,6 +89,8 @@ export const store = configureStore({
     bookingStatusListingForAdminPage: bookingStatusListingForAdminPageReducer,
     updateBookingStatusAdminPage: updateBookingStatusAdminPageReducer,
     adminDashboardSlice: adminDashboardSliceReducer,
+    reviewListingSliceReducer: reviewListingSliceReducer,
+    reviewDetailSlice: reviewDetailSliceReducer,
   },
 });
 
