@@ -45,13 +45,21 @@ export default function UpdateForm({
   const showSnackbar = (message: string, severity: "success" | "error") => {
     setSnackbar({ open: true, message, severity });
   };
+  console.log("Review Detail in Form:", reviewDetail); // ✅ Debug log
   const { propertyReview, hostReview, platformReview, hostReviewForUser } =
     reviewDetail || {};
-    const { page, search, status, loading: listingLoading } =
-  useAppSelector((state) => state.reviewListingSliceReducer);
+  const {
+    page,
+    search,
+    status,
+    loading: listingLoading,
+  } = useAppSelector((state) => state.reviewListingSlice);
 
   // const { loading: updateLoading } =
   // useAppSelector((state) => state.updateReview);
+
+  const limit = 10;
+  // const limit = 10; // ✅ FIX: define limit (or use your state value)
 
   const formik = useFormik<FormValues>({
     enableReinitialize: true,
@@ -64,42 +72,45 @@ export default function UpdateForm({
       title: "",
       description: "",
       rating: "1",
-      status: String(propertyReview?.br_isActive ?? "0"),
+
+      // ✅ FIXED HERE
+      status: String(propertyReview?.br_isActive ?? "0") as "0" | "1" | "2",
     },
     validationSchema: reviewSchema,
 
     onSubmit: async (values) => {
       try {
-        // 1️⃣ update review
         const updateRes = await dispatch(
           updateReview({
             bookingId: values.id,
             status: Number(values.status),
           })
-        ).unwrap();
-    
-        // 2️⃣ refresh listing with current filters
-        await dispatch(
+        )
+          .unwrap()
+          .then((res) => {
+            console.log(res, "resresresresresres");
+            showSnackbar(
+              res?.message || "Review updated successfully",
+              "success"
+            );
+          })
+          .then(() => {
+            setTimeout(() => {
+              handleFormClose();
+            }, 500);
+          });
+        dispatch(
           fetchReviewListing({
             page,
             search,
             limit,
             status,
           })
-        ).unwrap();
-    
-        // 3️⃣ show success snackbar
-        showSnackbar(updateRes.message || "Review updated successfully", "success");
-    
-        // 4️⃣ close modal
-        setTimeout(() => {
-          handleFormClose();
-        }, 500);
-    
+        );
       } catch (error: any) {
-        showSnackbar(error || "Failed to update review", "error");
+        showSnackbar(error?.message || "Failed to update review", "error");
       }
-    }
+    },
   });
   const ReviewCard = ({
     title,
@@ -281,7 +292,7 @@ export default function UpdateForm({
                     name="status"
                     value={formik.values.status}
                     onChange={formik.handleChange}
-                    disabled={formik.values.status === "1"}
+                    // disabled={formik.values.status === "1"}
                     input={<OutlinedInput label="Status" />}
                     sx={{
                       "& .MuiOutlinedInput-notchedOutline": {
@@ -318,7 +329,7 @@ export default function UpdateForm({
                 <Button
                   type="submit"
                   variant="contained"
-                  disabled={formik.values.status === "1"}
+                  // disabled={formik.values.status === "1"}
                   sx={{
                     bgcolor: PurpleThemeColor,
                     "&:hover": { bgcolor: "#6f137f" },

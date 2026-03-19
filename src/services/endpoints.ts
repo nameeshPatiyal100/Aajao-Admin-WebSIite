@@ -50,5 +50,13 @@ export const ADMINENDPOINTS = {
   //STATUS LISTING
   BOOKING_STATUS_LIST_FOR_ADMIN:"/admin/booking/status/listing/admin-page",
   UPDATE_BOOKING_STATUS_FROM_STATUS_LISTING_FOR_ADMIN_PAGE:"/admin/booking/status/update",
+  
+  //COUPONS
+  COUPON_LISTING:"/admin/coupon/search",
+  COUPON_DETAIL:"/admin/coupon/detail",
+  COUPON_UPSERT:"/admin/coupon/add",
+  DELETE_COUPON:"/admin/coupon/delete",
+  UPDATE_COUPON_STATUS:"/admin/coupon/status/update",
+  
 
 };

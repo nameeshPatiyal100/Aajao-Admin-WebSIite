@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { ThemeColors } from "../../../theme/themeColor";
 
 import type { CouponRecord, CouponFormData } from "./types";
@@ -9,6 +8,16 @@ import CouponListing from "./Listing";
 import DeleteConfirmDialog from "./DeleteConfirmDialog";
 import CouponFormModal from "./CouponFormModal";
 import DeleteSnackbar from "../../../components/admin/snackbar/DeleteSnackbar";
+import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
+
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { fetchCouponListing } from "../../../features/admin/Coupons/couponListing";
+import { fetchCouponDetail } from "../../../features/admin/Coupons/couponDetailed.slice";
+import { saveCoupon } from "../../../features/admin/Coupons/couponUpsert.slice";
+import { deleteCoupon } from "../../../features/admin/Coupons/deleteCoupon.slice";
+import { updateCouponStatus } from "../../../features/admin/Coupons/updateStatus.slice";
+
+/* ================= TYPES ================= */
 
 interface CouponFilterData {
   page: number;
@@ -16,26 +25,35 @@ interface CouponFilterData {
   keyword: string;
 }
 
-let fakeData: CouponRecord[] = Array.from({ length: 50 }).map((_, index) => ({
-  coupon_id: index + 1,
-  coupon_title: faker.commerce.productName(),
-  coupon_code: faker.string.alphanumeric(8).toUpperCase(),
-  discount_percentage: faker.number.int({ min: 5, max: 50 }),
-  is_active: faker.datatype.boolean(),
-}));
+/* ================= COMPONENT ================= */
 
 export default function CouponManagement() {
-  const [couponListing, setCouponListing] = useState<CouponRecord[]>([]);
-  const [totalRecords, setTotalRecords] = useState(fakeData.length);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  /* ================= REDUX STATE ================= */
+  const { coupon: couponDetail, loading: detailLoading } = useAppSelector(
+    (state) => state.couponDetailed
+  );
+  const { loading: saveLoading } = useAppSelector(
+    (state) => state.couponUpsert
+  );
+  const { coupons, totalRecords, loading } = useAppSelector(
+    (state) => state.couponListing
+  );
+
+  /* ================= LOCAL STATE ================= */
+
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedCouponId, setSelectedCouponId] = useState<number | null>(null);
+
   const [formOpen, setFormOpen] = useState(false);
   const [formMode, setFormMode] = useState<"add" | "edit">("add");
   const [editId, setEditId] = useState<number | null>(null);
-
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "warning" | "info"
+  >("success");
 
   const rowsPerPage = 10;
 
@@ -47,46 +65,36 @@ export default function CouponManagement() {
 
   const [filterData, setFilterData] = useState<CouponFilterData>(requestBody);
 
-  useEffect(() => {
-    handleListing(requestBody);
-  }, []);
+  /* ================= API CALL ================= */
 
   const handleListing = (filter: CouponFilterData) => {
-    setLoading(true);
-
-    let records = [...fakeData];
-
-    // 🔎 Search filter
-    if (filter.keyword) {
-      const keyword = filter.keyword.toLowerCase();
-      records = records.filter(
-        (item) =>
-          item.coupon_title.toLowerCase().includes(keyword) ||
-          item.coupon_code.toLowerCase().includes(keyword)
-      );
-    }
-
-    setTotalRecords(records.length);
-
-    const start = (filter.page - 1) * filter.limit;
-    const end = start + filter.limit;
-
-    setCouponListing(records.slice(start, end));
-    setLoading(false);
+    dispatch(
+      fetchCouponListing({
+        page: filter.page,
+        limit: filter.limit,
+        search: filter.keyword,
+        status: "",
+      })
+    );
   };
+
+  /* ================= INITIAL LOAD ================= */
+
+  useEffect(() => {
+    handleListing(filterData);
+  }, []);
+
+  /* ================= PAGINATION ================= */
 
   const handlePaginate = (_: unknown, value: number) => {
     const updatedFilter = { ...filterData, page: value };
-    setPage(value);
     setFilterData(updatedFilter);
     handleListing(updatedFilter);
   };
 
-  const handleFilterUpdate = (
-    key: string,
-    value: string,
-    _isImmediate?: boolean
-  ) => {
+  /* ================= FILTER ================= */
+
+  const handleFilterUpdate = (key: string, value: string) => {
     setFilterData((prev) => ({
       ...prev,
       [key]: value,
@@ -95,94 +103,141 @@ export default function CouponManagement() {
 
   const handleFilter = () => {
     const updatedFilter = { ...filterData, page: 1 };
-    setPage(1);
+    setFilterData(updatedFilter);
     handleListing(updatedFilter);
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
-    setPage(1);
     handleListing(requestBody);
   };
 
-  const handleToggleActive = (couponId: number) => {
-    fakeData = fakeData.map((coupon) =>
-      coupon.coupon_id === couponId
-        ? { ...coupon, is_active: !coupon.is_active }
-        : coupon
-    );
-
-    handleListing(filterData);
-  };
+  /* ================= DELETE ================= */
 
   const handleDeleteClick = (couponId: number) => {
     setSelectedCouponId(couponId);
     setDeleteOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    if (selectedCouponId !== null) {
-      fakeData = fakeData.filter(
-        (coupon) => coupon.coupon_id !== selectedCouponId
-      );
-
-      setDeleteOpen(false);
-      setSelectedCouponId(null);
+  const handleConfirmDelete = async () => {
+    try {
+      await dispatch(deleteCoupon(selectedCouponId!)).unwrap();
+  
+      setSnackbarMessage("Coupon deleted successfully");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+  
       handleListing(filterData);
-
-      // Show snackbar
+    } catch (err: any) {
+      setSnackbarMessage(err);
+      setSnackbarSeverity("error");
       setSnackbarOpen(true);
     }
+  
+    setDeleteOpen(false);
   };
+
   const handleCloseDelete = () => {
     setDeleteOpen(false);
     setSelectedCouponId(null);
   };
 
+  /* ================= EDIT ================= */
+
   const handleEditClick = (id: number) => {
     setFormMode("edit");
     setEditId(id);
     setFormOpen(true);
+    dispatch(fetchCouponDetail(id));
   };
+
+  /* ================= ADD / EDIT SUBMIT ================= */
+
+  // const handleFormSubmit = (data: CouponFormData) => {
+  //   dispatch(
+  //     saveCoupon({
+  //       formData: data,
+  //       cpn_id: formMode === "edit" ? editId : null, // 🔥 KEY LOGIC
+  //     })
+  //   ).then(() => {
+  //     handleListing(filterData);
+  //     setFormOpen(false);
+  //   });
+  // };
+  const handleFormSubmit = async (data: CouponFormData) => {
+    try {
+      await dispatch(
+        saveCoupon({
+          formData: data,
+          cpn_id: formMode === "edit" ? editId : null,
+        })
+      ).unwrap();
+
+      // ✅ SUCCESS
+      setSnackbarMessage(
+        formMode === "edit"
+          ? "Coupon updated successfully"
+          : "Coupon created successfully"
+      );
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+
+      handleListing(filterData);
+      setFormOpen(false);
+    } catch (error: any) {
+      // ❌ ERROR
+      setSnackbarMessage(error || "Something went wrong");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+  const handleToggleActive = async (
+    id: number,
+    newStatus: boolean
+  ) => {
+    try {
+      await dispatch(
+        updateCouponStatus({
+          cpn_id: id,
+          cpn_status: newStatus ? 1 : 0,
+        })
+      ).unwrap();
+  
+      setSnackbarMessage("Status updated successfully");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+  
+      handleListing(filterData);
+    } catch (err: any) {
+      setSnackbarMessage(err);
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    }
+  };
+
+  /* ================= SNACKBAR ================= */
+
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
 
-  const handleFormSubmit = (data: CouponFormData) => {
-    if (formMode === "add") {
-      fakeData.unshift({
-        coupon_id: Date.now(),
-        coupon_title: data.coupon_title,
-        coupon_code: data.coupon_code,
-        discount_percentage: Number(data.discount_percentage) || 0,
-        is_active: data.status === 1,
-      });
-    }
+  /* ================= DATA MAPPING ================= */
 
-    if (formMode === "edit" && editId !== null) {
-      fakeData = fakeData.map((coupon) =>
-        coupon.coupon_id === editId
-          ? {
-              ...coupon,
-              coupon_title: data.coupon_title,
-              coupon_code: data.coupon_code,
-              discount_percentage: Number(data.discount_percentage) || 0,
-              is_active: data.status === 1,
-            }
-          : coupon
-      );
-    }
+  const mappedCoupons: CouponRecord[] = coupons.map((item) => ({
+    coupon_id: Number(item.id),
+    coupon_title: item.title,
+    coupon_code: item.code,
+    discount_percentage: item.discount,
+    is_active: item.status === "1",
+  }));
 
-    handleListing(filterData);
-    setFormOpen(false);
-  };
+  /* ================= RENDER ================= */
 
   return (
     <Box
       sx={{
         backgroundColor: ThemeColors.background,
         minHeight: "100vh",
-        // p: 3,
       }}
     >
       <CouponSearchBar
@@ -200,16 +255,18 @@ export default function CouponManagement() {
 
       <CouponListing
         ThemeColors={ThemeColors}
-        coupons={couponListing}
+        coupons={mappedCoupons}
         totalRecords={totalRecords}
         loading={loading}
-        page={page}
+        page={filterData.page}
         rowsPerPage={rowsPerPage}
         handlePaginate={handlePaginate}
+        // handleToggleActive={() => {}} 
         handleToggleActive={handleToggleActive}
         handleDeleteClick={handleDeleteClick}
         handleEditClick={handleEditClick}
       />
+
       <DeleteConfirmDialog
         open={deleteOpen}
         onClose={handleCloseDelete}
@@ -226,26 +283,17 @@ export default function CouponManagement() {
       <CouponFormModal
         open={formOpen}
         mode={formMode}
-        initialData={
-          formMode === "edit" && editId !== null
-            ? {
-                coupon_title:
-                  fakeData.find((c) => c.coupon_id === editId)?.coupon_title ||
-                  "",
-                coupon_code:
-                  fakeData.find((c) => c.coupon_id === editId)?.coupon_code ||
-                  "",
-                discount_percentage:
-                  fakeData.find((c) => c.coupon_id === editId)
-                    ?.discount_percentage || 0,
-                status: fakeData.find((c) => c.coupon_id === editId)?.is_active
-                  ? 1
-                  : 0,
-              }
-            : null
-        }
+        initialData={formMode === "edit" ? couponDetail : null}
+        loading={detailLoading || saveLoading}
         onClose={() => setFormOpen(false)}
         onSubmit={handleFormSubmit}
+      />
+
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={() => setSnackbarOpen(false)}
       />
     </Box>
   );

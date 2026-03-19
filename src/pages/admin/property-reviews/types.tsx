@@ -62,7 +62,7 @@ export interface FormValues {
   user_name: string;
   title: string;
   rating: "1" | "2" | "3" | "4" | "5";
-  status: "0" | "1";
+  status: "0" | "1" | "2";
 }
 
 

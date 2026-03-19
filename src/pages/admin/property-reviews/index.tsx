@@ -9,6 +9,7 @@ import UpdateForm from "./UpdateForm";
 
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { fetchReviewListing } from "../../../features/admin/Review/reviewListingSlice.slice";
+// import { fetchReviewDetail } from "../../../features/admin/Review/reviewDetailSlice.slice";
 import { fetchReviewDetail } from "../../../features/admin/Review/reviewDetailSlice.slice";
 
 export default function PropertyReviews() {
@@ -16,7 +17,7 @@ export default function PropertyReviews() {
 
   // Listing State
   const { reviews, loading, totalRecords } = useAppSelector(
-    (state) => state.reviewListingSliceReducer
+    (state) => state.reviewListingSlice
   );
 
   // Review Detail State

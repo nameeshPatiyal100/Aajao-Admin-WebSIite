@@ -43,6 +43,11 @@ import updateBookingStatusAdminPageReducer from "../features/admin/BookingStatus
 import adminDashboardSliceReducer from "../features/admin/Dashboard/dashboard.slice";
 import reviewListingSliceReducer from "../features/admin/Review/reviewListingSlice.slice";
 import reviewDetailSliceReducer from "../features/admin/Review/reviewDetailSlice.slice";
+import couponListingReducer from "../features/admin/Coupons/couponListing";
+import couponDetailedReducer from "../features/admin/Coupons/couponDetailed.slice";
+import couponUpsertReducer from "../features/admin/Coupons/couponUpsert.slice";
+import deleteCouponReducer from "../features/admin/Coupons/deleteCoupon.slice";
+import updateStatusReducer from "../features/admin/Coupons/updateStatus.slice";
 
 export const store = configureStore({
   reducer: {
@@ -89,8 +94,13 @@ export const store = configureStore({
     bookingStatusListingForAdminPage: bookingStatusListingForAdminPageReducer,
     updateBookingStatusAdminPage: updateBookingStatusAdminPageReducer,
     adminDashboardSlice: adminDashboardSliceReducer,
-    reviewListingSliceReducer: reviewListingSliceReducer,
+    reviewListingSlice: reviewListingSliceReducer,
     reviewDetailSlice: reviewDetailSliceReducer,
+    couponListing: couponListingReducer,
+    couponDetailed: couponDetailedReducer,
+    couponUpsert: couponUpsertReducer,
+    deleteCoupon: deleteCouponReducer,
+    updateStatus: updateStatusReducer,
   },
 });
 
