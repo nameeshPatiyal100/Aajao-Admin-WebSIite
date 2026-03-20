@@ -15,9 +15,6 @@ import {
   Rating,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import PendingIcon from "@mui/icons-material/AccessTime";
 import { keyframes } from "@mui/system";
 import CountUp from "react-countup";
 
@@ -30,23 +27,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface Booking {
-  id: string;
-  user_name: string;
-  booking_price: number;
-  rating: number;
-  status: "confirmed" | "cancelled" | "pending";
-}
-
-interface PropertyRecord {
-  property_name: string;
-  max_price: number;
-}
-
 interface Props {
   open: boolean;
   handleClose: () => void;
-  selectedProperty: PropertyRecord | null;
+  selectedProperty: any;
+  analyticsData: any;
+  loading: boolean;
 }
 
 const fadeInUp = keyframes`
@@ -75,77 +61,42 @@ const pulseGlow = keyframes`
 export default function PropertyAnalyticsModal({
   open,
   handleClose,
-  selectedProperty,
+  analyticsData,
 }: Props) {
-  const bookings: Booking[] = [
-    {
-      id: "BK101",
-      user_name: "Rahul Sharma",
-      booking_price: 4500,
-      rating: 4,
-      status: "confirmed",
-    },
-    {
-      id: "BK102",
-      user_name: "Priya Singh",
-      booking_price: 5200,
-      rating: 5,
-      status: "pending",
-    },
-    {
-      id: "BK103",
-      user_name: "Amit Verma",
-      booking_price: 3900,
-      rating: 3,
-      status: "cancelled",
-    },
-  ];
+  const propertyDetail = analyticsData?.propertyDetail;
 
-  const revenueData = [
-    { month: "Jan", revenue: 12000 },
-    { month: "Feb", revenue: 18000 },
-    { month: "Mar", revenue: 15000 },
-    { month: "Apr", revenue: 22000 },
-  ];
+  /* ================= BOOKINGS ================= */
+  const bookings =
+    analyticsData?.bookings?.map((b: any) => ({
+      id: b.book_id,
+      user_name: b["userDetails.user_fullName"],
+      booking_price: b.book_total_amt,
+      rating: b["bookingReview.br_rating"],
+      statusTitle: b["bookingStatus.bs_title"],
+      statusColor: b["bookingStatus.bs_code"],
+    })) || [];
 
-  const totalRevenue = bookings.reduce(
-    (sum, b) => sum + b.booking_price,
-    0
-  );
+  /* ================= GRAPH ================= */
+  let revenueData =
+    analyticsData?.revenueGraph?.chartData?.map((item: any) => ({
+      month: item.month,
+      revenue: item.revenue,
+    })) || [];
 
-  const avgPrice = totalRevenue / bookings.length;
+  // ✅ Ensure line always visible (duplicate point if only one)
+  if (revenueData.length === 1) {
+    revenueData = [
+      ...revenueData,
+      { ...revenueData[0], month: revenueData[0].month + " " },
+    ];
+  }
 
-  const getStatusChip = (status: string) => {
-    switch (status) {
-      case "confirmed":
-        return (
-          <Chip
-            icon={<CheckCircleIcon />}
-            label="Confirmed"
-            color="success"
-            size="small"
-          />
-        );
-      case "cancelled":
-        return (
-          <Chip
-            icon={<CancelIcon />}
-            label="Cancelled"
-            color="error"
-            size="small"
-          />
-        );
-      default:
-        return (
-          <Chip
-            icon={<PendingIcon />}
-            label="Pending"
-            color="warning"
-            size="small"
-          />
-        );
-    }
-  };
+  /* ================= KPIs ================= */
+  const totalRevenue = analyticsData?.analytics?.totalRevenue || 0;
+  const avgPrice = analyticsData?.analytics?.avgBookingPrice || 0;
+  const totalBookings = analyticsData?.totalRecords || 0;
+
+  const categories = analyticsData?.categoryTitles || [];
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -179,12 +130,12 @@ export default function PropertyAnalyticsModal({
         >
           <Box>
             <Typography variant="h5" fontWeight={700}>
-              {selectedProperty?.property_name}
+              {propertyDetail?.property_name || "-"}
             </Typography>
 
-            {/* Purple Tags */}
+            {/* ✅ Categories from API */}
             <Box mt={1} display="flex" gap={1} flexWrap="wrap">
-              {["Luxury", "Beach View", "Villa"].map((tag) => (
+              {categories.map((tag: string) => (
                 <Chip
                   key={tag}
                   label={tag}
@@ -199,16 +150,16 @@ export default function PropertyAnalyticsModal({
             </Box>
           </Box>
 
+          {/* ✅ Max price from API */}
           <Typography variant="h6" fontWeight={600}>
-            Max Price: ₹{selectedProperty?.max_price}
+            Max Price: ₹{propertyDetail?.property_price || 0}
           </Typography>
         </Box>
 
         <Divider sx={{ my: 3 }} />
 
-        {/* ===== Animated KPI Cards ===== */}
+        {/* ===== KPI Cards ===== */}
         <Stack direction="row" spacing={3} flexWrap="wrap" useFlexGap mb={4}>
-          {/* Total Bookings */}
           <Box
             sx={{
               flex: "1 1 250px",
@@ -221,17 +172,15 @@ export default function PropertyAnalyticsModal({
             <Typography variant="subtitle2" color="text.secondary">
               Total Bookings
             </Typography>
-
             <Typography
               variant="h4"
               fontWeight={700}
               sx={{ color: "#881f9b", mt: 1 }}
             >
-              <CountUp end={bookings.length} duration={1.5} />
+              <CountUp end={totalBookings} duration={1.5} />
             </Typography>
           </Box>
 
-          {/* Revenue Card with Pulse */}
           <Box
             sx={{
               flex: "1 1 250px",
@@ -244,22 +193,16 @@ export default function PropertyAnalyticsModal({
             <Typography variant="subtitle2" color="text.secondary">
               Total Revenue
             </Typography>
-
             <Typography
               variant="h4"
               fontWeight={700}
               sx={{ color: "#881f9b", mt: 1 }}
             >
               ₹
-              <CountUp
-                end={totalRevenue}
-                duration={2}
-                separator=","
-              />
+              <CountUp end={totalRevenue} duration={2} separator="," />
             </Typography>
           </Box>
 
-          {/* Avg Booking Price */}
           <Box
             sx={{
               flex: "1 1 250px",
@@ -272,19 +215,13 @@ export default function PropertyAnalyticsModal({
             <Typography variant="subtitle2" color="text.secondary">
               Avg Booking Price
             </Typography>
-
             <Typography
               variant="h4"
               fontWeight={700}
               sx={{ color: "#881f9b", mt: 1 }}
             >
               ₹
-              <CountUp
-                end={avgPrice}
-                duration={2}
-                separator=","
-                decimals={0}
-              />
+              <CountUp end={avgPrice} duration={2} separator="," />
             </Typography>
           </Box>
         </Stack>
@@ -305,20 +242,34 @@ export default function PropertyAnalyticsModal({
             </TableRow>
           </TableHead>
           <TableBody>
-            {bookings.map((booking) => (
+            {bookings.map((booking: any) => (
               <TableRow key={booking.id} hover>
                 <TableCell>{booking.id}</TableCell>
                 <TableCell>{booking.user_name}</TableCell>
                 <TableCell>₹{booking.booking_price}</TableCell>
+
+                {/* ✅ Rating or No Review */}
                 <TableCell>
-                  <Rating
-                    value={booking.rating}
-                    readOnly
-                    size="small"
-                  />
+                  {booking.rating ? (
+                    <Rating value={booking.rating} readOnly size="small" />
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      No Review
+                    </Typography>
+                  )}
                 </TableCell>
+
+                {/* ✅ Status from API */}
                 <TableCell>
-                  {getStatusChip(booking.status)}
+                  <Chip
+                    label={booking.statusTitle}
+                    size="small"
+                    sx={{
+                      backgroundColor: booking.statusColor,
+                      color: "#fff",
+                      fontWeight: 500,
+                    }}
+                  />
                 </TableCell>
               </TableRow>
             ))}
@@ -327,7 +278,7 @@ export default function PropertyAnalyticsModal({
 
         <Divider sx={{ my: 4 }} />
 
-        {/* ===== Mini Revenue Chart ===== */}
+        {/* ===== Revenue Chart ===== */}
         <Typography variant="h6" mb={2}>
           Revenue Trend
         </Typography>
@@ -342,6 +293,7 @@ export default function PropertyAnalyticsModal({
               dataKey="revenue"
               stroke="#881f9b"
               strokeWidth={3}
+              dot={{ r: 4 }}
             />
           </LineChart>
         </ResponsiveContainer>

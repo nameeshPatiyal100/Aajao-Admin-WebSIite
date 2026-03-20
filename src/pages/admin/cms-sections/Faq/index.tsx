@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { ThemeColors } from "../../../../theme/themeColor";
 
 import FaqSearchBar from "./FaqSearchBar";
 import FaqModal from "./FaqModal";
 import FaqListing, { FaqRecord } from "./FaqListingSection";
+import { TableLoader } from "../../../../components/admin/common/TableLoader";
+import CustomSnackbar from "../../../../components/admin/snackbar/CustomSnackbar";
+
+// ✅ RTK
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import { fetchFaqListing } from "../../../../features/admin/FAQManagement/faqListing.slice";
+import { fetchFaqDetail } from "../../../../features/admin/FAQManagement/faqDetail.slice";
+
+import {
+  deleteFaq,
+  resetDeleteFaqState,
+} from "../../../../features/admin/FAQManagement/faqDelete.slice";
 
 /* ================= Types ================= */
 
@@ -15,22 +26,33 @@ interface FaqFilterData {
   keyword: string;
 }
 
-/* ================= Fake Data ================= */
-
-let fakeFaqData: FaqRecord[] = Array.from({ length: 50 }).map((_, index) => ({
-  id: index + 1,
-  title: faker.lorem.sentence(),
-  status: faker.datatype.boolean() ? 1 : 0,
-  created_at: faker.date.past().toISOString(),
-}));
-
 /* ================= Component ================= */
 
 export default function FaqManagement() {
+  const dispatch = useAppDispatch();
+
+  // ✅ Redux state
+  const { data, loading } = useAppSelector((state) => state.faqListing);
+  const {
+    loading: deleteLoading,
+    success: deleteSuccess,
+    error: deleteError,
+  } = useAppSelector((state) => state.faqDelete);
+
+  const { data: faqDetailData, loading: detailLoading } = useAppSelector(
+    (state) => state.faqDetail
+  );
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error",
+  });
+
   const [faqListing, setFaqListing] = useState<FaqRecord[]>([]);
-  const [totalRecords, setTotalRecords] = useState(fakeFaqData.length);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+
   const [openModal, setOpenModal] = useState(false);
   const [selectedFaq, setSelectedFaq] = useState<FaqRecord | null>(null);
 
@@ -44,33 +66,65 @@ export default function FaqManagement() {
 
   const [filterData, setFilterData] = useState<FaqFilterData>(requestBody);
 
-  useEffect(() => {
-    handleListing(requestBody);
-  }, []);
-
-  /* ================= Listing Logic ================= */
+  /* ================= API CALL ================= */
 
   const handleListing = (filter: FaqFilterData) => {
-    setLoading(true);
+    dispatch(
+      fetchFaqListing({
+        page: filter.page,
+        limit: filter.limit,
+        search: filter.keyword,
+      })
+    );
+  };
 
-    let records = [...fakeFaqData];
+  useEffect(() => {
+    handleListing(filterData);
+  }, []);
 
-    // 🔎 Search Filter
-    if (filter.keyword) {
-      const keyword = filter.keyword.toLowerCase();
-      records = records.filter((item) =>
-        item.title.toLowerCase().includes(keyword)
-      );
+  const handleDeleteConfirm = (faq_Id: number) => {
+    dispatch(deleteFaq({ faq_Id }));
+  };
+
+  /* ================= MAP API → UI ================= */
+
+  useEffect(() => {
+    if (data) {
+      const mappedFaqs: FaqRecord[] =
+        data.sections?.map((faq) => ({
+          id: faq.faq_id,
+          title: faq.faq_question,
+          status: faq.faq_is_active === 1 ? 1 : 0, // ✅ FIX HERE
+          created_at: faq.faq_created_at,
+        })) || [];
+
+      setFaqListing(mappedFaqs);
+      setTotalRecords(data.totalRecords);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      setSnackbar({
+        open: true,
+        message: "FAQ deleted successfully",
+        severity: "success",
+      });
+
+      handleListing(filterData);
+      dispatch(resetDeleteFaqState());
     }
 
-    setTotalRecords(records.length);
+    if (deleteError) {
+      setSnackbar({
+        open: true,
+        message: deleteError,
+        severity: "error",
+      });
 
-    const start = (filter.page - 1) * filter.limit;
-    const end = start + filter.limit;
-
-    setFaqListing(records.slice(start, end));
-    setLoading(false);
-  };
+      dispatch(resetDeleteFaqState());
+    }
+  }, [deleteSuccess, deleteError, dispatch]);
 
   /* ================= Pagination ================= */
 
@@ -97,6 +151,7 @@ export default function FaqManagement() {
   const handleFilter = () => {
     const updatedFilter = { ...filterData, page: 1 };
     setPage(1);
+    setFilterData(updatedFilter);
     handleListing(updatedFilter);
   };
 
@@ -106,49 +161,11 @@ export default function FaqManagement() {
     handleListing(requestBody);
   };
 
-  /* ================= Delete ================= */
-
-  const handleDeleteConfirm = (faqId: number) => {
-    fakeFaqData = fakeFaqData.filter((faq) => faq.id !== faqId);
-
-    handleListing(filterData);
-  };
-
   /* ================= Edit ================= */
 
   const handleEditClick = (id: number) => {
-    const faq = fakeFaqData.find((f) => f.id === id);
-
-    if (faq) {
-      setSelectedFaq(faq);
-      setOpenModal(true);
-    }
-  };
-
-  const handleSubmitFaq = (data: {
-    title: string;
-    description: string;
-    status: 0 | 1;
-  }) => {
-    if (selectedFaq) {
-      // UPDATE
-      fakeFaqData = fakeFaqData.map((faq) =>
-        faq.id === selectedFaq.id ? { ...faq, ...data } : faq
-      );
-    } else {
-      // ADD NEW
-      const newFaq: FaqRecord = {
-        id: fakeFaqData.length + 1,
-        title: data.title,
-        status: data.status,
-        created_at: new Date().toISOString(),
-      };
-
-      fakeFaqData.unshift(newFaq);
-    }
-
-    handleListing(filterData);
-    setOpenModal(false);
+    setOpenModal(true);
+    dispatch(fetchFaqDetail({ faqId: id }));
   };
 
   /* ================= UI ================= */
@@ -172,29 +189,43 @@ export default function FaqManagement() {
         }}
       />
 
-      <FaqListing
-        faqs={faqListing}
-        totalRecords={totalRecords}
-        loading={loading}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        handlePaginate={handlePaginate}
-        handleEditClick={handleEditClick}
-        handleDeleteConfirm={handleDeleteConfirm}
-      />
+      {/* ✅ Loader Integration */}
+      {loading ? (
+        <TableLoader />
+      ) : (
+        <FaqListing
+          faqs={faqListing}
+          totalRecords={totalRecords}
+          loading={loading}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          handlePaginate={handlePaginate}
+          handleEditClick={handleEditClick}
+          handleDeleteConfirm={handleDeleteConfirm}
+        />
+      )}
+
       <FaqModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onSubmit={handleSubmitFaq}
+        onSubmit={() => {}}
         initialData={
-          selectedFaq
+          faqDetailData
             ? {
-                title: selectedFaq.title,
-                description: "",
-                status: selectedFaq.status,
+                title: faqDetailData.faq_question,
+                description: faqDetailData.faq_answer,
+                status: faqDetailData.faq_is_active === 1 ? 1 : 0,
+                display_order: faqDetailData.faq_display_order,
               }
             : undefined
         }
+        loading={detailLoading} // ✅ NEW
+      />
+      <CustomSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
       />
     </Box>
   );

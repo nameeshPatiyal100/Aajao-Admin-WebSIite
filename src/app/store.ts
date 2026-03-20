@@ -48,6 +48,11 @@ import couponDetailedReducer from "../features/admin/Coupons/couponDetailed.slic
 import couponUpsertReducer from "../features/admin/Coupons/couponUpsert.slice";
 import deleteCouponReducer from "../features/admin/Coupons/deleteCoupon.slice";
 import updateStatusReducer from "../features/admin/Coupons/updateStatus.slice";
+import propertyAnalyticsReducer from "../features/admin/propertyAnalytics/propertyAnalytics.slice";
+import propertyAnalyticsDetailReducer from "../features/admin/propertyAnalytics/propertyAnalyticsDetail.slice";
+import faqListingReducer from "../features/admin/FAQManagement/faqListing.slice";
+import faqDeleteReducer from "../features/admin/FAQManagement/faqDelete.slice";
+import faqDetailReducer from "../features/admin/FAQManagement/faqDetail.slice";
 
 export const store = configureStore({
   reducer: {
@@ -101,6 +106,11 @@ export const store = configureStore({
     couponUpsert: couponUpsertReducer,
     deleteCoupon: deleteCouponReducer,
     updateStatus: updateStatusReducer,
+    propertyAnalytics: propertyAnalyticsReducer,
+    propertyAnalyticsDetail: propertyAnalyticsDetailReducer,
+    faqListing: faqListingReducer,
+    faqDelete: faqDeleteReducer,
+    faqDetail: faqDetailReducer,
   },
 });
 

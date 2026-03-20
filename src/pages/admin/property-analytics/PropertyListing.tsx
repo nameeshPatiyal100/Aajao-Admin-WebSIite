@@ -13,6 +13,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import type { PropertyRecord } from "./types";
 import { Pagination } from "../../../components";
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 interface Props {
   ThemeColors: any;
@@ -83,13 +84,15 @@ export default function PropertyListing({
           {loading ? (
             <TableRow>
               <TableCell colSpan={8}>
-                <Typography align="center">Loading...</Typography>
+                <TableLoader text="Loading properties..." />
               </TableCell>
             </TableRow>
           ) : propertyListing.length === 0 ? (
             <TableRow>
               <TableCell colSpan={8}>
-                <Typography align="center">No Properties Found</Typography>
+                <Typography align="center">
+                  No Properties Found
+                </Typography>
               </TableCell>
             </TableRow>
           ) : (
@@ -108,15 +111,18 @@ export default function PropertyListing({
                   {(page - 1) * rowsPerPage + index + 1}
                 </TableCell>
 
+                {/* Property Name */}
                 <TableCell>{row.property_name}</TableCell>
 
+                {/* Host Name */}
                 <TableCell>{row.host_name}</TableCell>
 
+                {/* Price */}
                 <TableCell sx={{ fontWeight: 600 }}>
                   ₹{row.max_price}
                 </TableCell>
 
-                {/* Number of Bookings */}
+                {/* Bookings */}
                 <TableCell>
                   <Chip
                     label={row.avg_bookings ?? 0}
@@ -129,30 +135,32 @@ export default function PropertyListing({
                   />
                 </TableCell>
 
-                {/* Status */}
+                {/* ✅ STATUS (FIXED) */}
                 <TableCell>
                   <Chip
-                    label={row.status === 1 ? "Active" : "Inactive"}
+                    label={row.is_active ? "Active" : "Inactive"}
                     size="small"
                     sx={{
                       fontWeight: 600,
                       color: "#fff",
-                      backgroundColor:
-                        row.status === 1 ? "#2e7d32" : "#d32f2f",
+                      backgroundColor: row.is_active
+                        ? "#2e7d32"
+                        : "#d32f2f",
                     }}
                   />
                 </TableCell>
 
-                {/* Luxury */}
+                {/* ✅ LUXURY (FIXED) */}
                 <TableCell>
                   <Chip
-                    label={row.is_luxury === 1 ? "Yes" : "No"}
+                    label={row.is_luxury ? "Luxury" : "Standard"}
                     size="small"
                     sx={{
                       fontWeight: 600,
                       color: "#fff",
-                      backgroundColor:
-                        row.is_luxury === 1 ? "#1976d2" : "#9e9e9e",
+                      backgroundColor: row.is_luxury
+                        ? "#1976d2"
+                        : "#9e9e9e",
                     }}
                   />
                 </TableCell>

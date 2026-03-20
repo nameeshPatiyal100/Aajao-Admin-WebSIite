@@ -2,6 +2,12 @@ export const ADMINENDPOINTS = {
   // ADMIN
   ADMIN_LOGIN: "/admin/login",
   GET_ADMIN_DASHBOARD_DATA: "/admin/dashboard",
+
+  // Admin FAQ
+  FAQ_LISTING: "/admin/faq/listing",
+  DELETE_FAQ: "/admin/faq/delete",
+  FAQ_DETAIL: "/admin/faq/detail",
+
   // USER
   USER_LIST: "/admin/user/search",
   USER_BY_ID: "/admin/user/single",
@@ -11,7 +17,7 @@ export const ADMINENDPOINTS = {
   HOST_LIST: "/admin/host/search",
   HOST_STATUS_UPDATE: "/admin/user/update/status",
   HOST_SEARCH_ASSIGN_PROPERTY: "/admin/host/search/assign-property",
-  
+
   // PROPERTY-CATEGORY
   PROPERTY_CATEGORIES: "admin/categories",
   PROPERTY_CATEGORY_BY_ID: "admin/category",
@@ -40,23 +46,24 @@ export const ADMINENDPOINTS = {
   REVIEW_LISTING: "/admin/propety/review/search",
   REVIEW_DETAIL: "/admin/property/review/detail",
   UPDATE_REVIEW: "/admin/propety/review/update",
+  PROPERTY_ANALYTICS_SEARCH: "/admin/properties/analytic/search",
+  PROPERTY_ANALYTICS_DETAIL: "/admin/property/analytic/detail",
 
   //BOOKINGS
   BOOKING_LIST: "/admin/booking/search",
   BOOKING_DETAIL: "/admin/booking/detail",
-  BOOKING_STATUS_LIST:"/admin/booking/status/list",
-  UPDATE_BOOKING_STATUS:"/admin/booking/update",
-  
-  //STATUS LISTING
-  BOOKING_STATUS_LIST_FOR_ADMIN:"/admin/booking/status/listing/admin-page",
-  UPDATE_BOOKING_STATUS_FROM_STATUS_LISTING_FOR_ADMIN_PAGE:"/admin/booking/status/update",
-  
-  //COUPONS
-  COUPON_LISTING:"/admin/coupon/search",
-  COUPON_DETAIL:"/admin/coupon/detail",
-  COUPON_UPSERT:"/admin/coupon/add",
-  DELETE_COUPON:"/admin/coupon/delete",
-  UPDATE_COUPON_STATUS:"/admin/coupon/status/update",
-  
+  BOOKING_STATUS_LIST: "/admin/booking/status/list",
+  UPDATE_BOOKING_STATUS: "/admin/booking/update",
 
+  //STATUS LISTING
+  BOOKING_STATUS_LIST_FOR_ADMIN: "/admin/booking/status/listing/admin-page",
+  UPDATE_BOOKING_STATUS_FROM_STATUS_LISTING_FOR_ADMIN_PAGE:
+    "/admin/booking/status/update",
+
+  //COUPONS
+  COUPON_LISTING: "/admin/coupon/search",
+  COUPON_DETAIL: "/admin/coupon/detail",
+  COUPON_UPSERT: "/admin/coupon/add",
+  DELETE_COUPON: "/admin/coupon/delete",
+  UPDATE_COUPON_STATUS: "/admin/coupon/status/update",
 };

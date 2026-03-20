@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import { ThemeColors } from "../../../theme/themeColor";
 
 import type { PropertyRecord, PropertyFilterData } from "./types";
@@ -8,33 +7,29 @@ import PropertySearchBar from "./PropertySearchBar";
 import PropertyListing from "./PropertyListing";
 import PropertyEditModal from "./PropertyEditModal";
 
-let fakeData: PropertyRecord[] = Array.from({ length: 50 }).map(() => ({
-  id: faker.string.uuid(),
-  property_name: faker.company.name(),
-  host_name: faker.person.fullName(),
-  max_price: faker.number.int({ min: 2000, max: 20000 }),
-  avg_bookings: faker.number.int({ min: 1, max: 100 }),
-}));
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { fetchPropertyAnalytics } from "../../../features/admin/propertyAnalytics/propertyAnalytics.slice";
+import { fetchPropertyAnalyticsDetail } from "../../../features/admin/propertyAnalytics/propertyAnalyticsDetail.slice";
 
 export default function PropertyAnalytics() {
-  const [propertyListing, setPropertyListing] = useState<PropertyRecord[]>([]);
-  const [totalRecords, setTotalRecords] = useState(fakeData.length);
+  const dispatch = useAppDispatch();
+
+  /* ================= REDUX STATE ================= */
+  const { data, loading: detailLoading } = useAppSelector(
+    (state) => state.propertyAnalyticsDetail
+  );
+
+  const { properties, loading } = useAppSelector(
+    (state) => state.propertyAnalytics
+  );
+
+  /* ================= LOCAL STATE ================= */
+
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] =
     useState<PropertyRecord | null>(null);
-
-  const handleEdit = (row: PropertyRecord) => {
-    setSelectedProperty(row);
-    setModalOpen(true);
-  };
-
-  const handleClose = () => {
-    setModalOpen(false);
-    setSelectedProperty(null);
-  };
 
   const rowsPerPage = 10;
 
@@ -46,39 +41,49 @@ export default function PropertyAnalytics() {
 
   const [filterData, setFilterData] = useState<PropertyFilterData>(requestBody);
 
+  /* ================= FETCH API ================= */
+
   useEffect(() => {
-    handleListing(requestBody);
+    dispatch(fetchPropertyAnalytics());
   }, []);
 
-  const handleListing = (filter: PropertyFilterData) => {
-    setLoading(true);
+  /* ================= MAP API → UI ================= */
 
-    let records = [...fakeData];
+  const mappedProperties: PropertyRecord[] = properties.map((item) => ({
+    id: item.id,
+    property_name: item.name,
+    host_name: item.hostName,
+    max_price: item.price,
+    avg_bookings: item.totalBookings,
+    is_luxury: item.isLuxury,
+    is_active: item.isActive,
+  }));
 
-    if (filter.keyword) {
-      const keyword = filter.keyword.toLowerCase();
-      records = records.filter(
-        (item) =>
-          item.property_name.toLowerCase().includes(keyword) ||
-          item.host_name.toLowerCase().includes(keyword)
-      );
-    }
+  /* ================= FILTER ================= */
 
-    setTotalRecords(records.length);
+  const filteredData = mappedProperties.filter((item) => {
+    if (!filterData.keyword) return true;
 
-    const start = (filter.page - 1) * filter.limit;
-    const end = start + filter.limit;
+    const keyword = filterData.keyword.toLowerCase();
 
-    setPropertyListing(records.slice(start, end));
-    setLoading(false);
-  };
+    return (
+      item.property_name.toLowerCase().includes(keyword) ||
+      item.host_name.toLowerCase().includes(keyword)
+    );
+  });
+
+  const totalRecords = filteredData.length;
+
+  /* ================= PAGINATION ================= */
+
+  const start = (page - 1) * rowsPerPage;
+  const paginatedData = filteredData.slice(start, start + rowsPerPage);
 
   const handlePaginate = (_: unknown, value: number) => {
-    const updatedFilter = { ...filterData, page: value };
     setPage(value);
-    setFilterData(updatedFilter);
-    handleListing(updatedFilter);
   };
+
+  /* ================= FILTER HANDLERS ================= */
 
   const handleFilterUpdate = (
     name: keyof PropertyFilterData,
@@ -88,16 +93,30 @@ export default function PropertyAnalytics() {
   };
 
   const handleFilter = () => {
-    const updatedFilter = { ...filterData, page: 1 };
     setPage(1);
-    handleListing(updatedFilter);
   };
 
   const handleClear = () => {
     setFilterData(requestBody);
     setPage(1);
-    handleListing(requestBody);
   };
+
+  /* ================= EDIT ================= */
+
+  const handleEdit = (row: PropertyRecord) => {
+    setSelectedProperty(row);
+    setModalOpen(true);
+
+    // 🔥 CALL API HERE
+    dispatch(fetchPropertyAnalyticsDetail({ propertyId: Number(row.id) }));
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+    setSelectedProperty(null);
+  };
+
+  /* ================= RENDER ================= */
 
   return (
     <Box
@@ -116,7 +135,7 @@ export default function PropertyAnalytics() {
 
       <PropertyListing
         ThemeColors={ThemeColors}
-        propertyListing={propertyListing}
+        propertyListing={paginatedData}
         totalRecords={totalRecords}
         loading={loading}
         page={page}
@@ -129,6 +148,8 @@ export default function PropertyAnalytics() {
         open={modalOpen}
         handleClose={handleClose}
         selectedProperty={selectedProperty}
+        analyticsData={data}
+        loading={detailLoading}
       />
     </Box>
   );

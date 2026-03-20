@@ -5,6 +5,16 @@ export interface PropertyListingItem {
     max_price: number;
     avg_bookings: number;
   }
+  export interface PropertyAnalytics {
+    id: number;
+    name: string;
+    price: number;
+    isActive: boolean;
+    isVerified: boolean;
+    isLuxury: boolean; // ✅ NEW (converted to boolean)
+    totalBookings: number;
+    hostName: string;
+  }
   
   export interface PropertyListingProps {
     ThemeColors: {
@@ -51,13 +61,13 @@ export interface PropertyListingItem {
   }
 
   export interface PropertyRecord {
-    is_luxury: number;
-    status: number;
-    id: string;
+    is_active: any;
+    id: number;
     property_name: string;
     host_name: string;
     max_price: number;
     avg_bookings: number;
+    is_luxury: number; 
   }
   
   export interface PropertyFilterData {

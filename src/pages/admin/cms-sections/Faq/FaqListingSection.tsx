@@ -138,7 +138,7 @@ export default function FaqListing({
                         size="small"
                         sx={{
                           backgroundColor:
-                            faq.status === 1 ? PurpleThemeColor : "#e0e0e0",
+                            faq.status === 1 ? "#1bb315" : "#e81c1c",
                           color: faq.status === 1 ? "#fff" : "#555",
                           fontWeight: 500,
                         }}
