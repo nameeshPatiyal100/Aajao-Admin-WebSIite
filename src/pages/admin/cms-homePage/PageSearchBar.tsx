@@ -5,7 +5,6 @@ import {
   Stack,
   Typography,
   TextField,
-  MenuItem,
 } from "@mui/material";
 import { PurpleThemeColor } from "../../../theme/themeColor";
 import { PageSearchBarProps } from "./types";
@@ -15,25 +14,19 @@ const PageSearchBar: React.FC<PageSearchBarProps> = ({
   filterData,
   handleFilterUpdate,
   handleFilter,
-  handleClear,
-  handleAddNew,
+  handleClear
 }) => {
   const [searchItem, setSearchItem] = useState(filterData.keyword || "");
-  const [status, setStatus] = useState(filterData.status || "");
+  // const [_status, setStatus] = useState(filterData.status || "");
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchItem(event.target.value);
     handleFilterUpdate("keyword", event.target.value, false);
   };
 
-  const handleStatusChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setStatus(event.target.value);
-    handleFilterUpdate("status", event.target.value, false);
-  };
-
   const handleCancel = () => {
     setSearchItem("");
-    setStatus("");
+    // setStatus("");
     handleClear();
   };
 

@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-// import { AppDispatch } from "../../../store/store";
-
 import { fetchReviewListing } from "../../../features/admin/Review/reviewListingSlice.slice";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { updateReview } from "../../../features/admin/Review/updateReviewSlice";
@@ -29,10 +26,10 @@ import { themeCss } from "../../../theme/themeCss";
 
 export default function UpdateForm({
   reviewDetail,
-  loading,
+  // loading,
   formshow,
   handleFormClose,
-  handleUpdateReview,
+  // handleUpdateReview,
 }: UpdateFormProps) {
   const dispatch = useAppDispatch();
 
@@ -48,12 +45,9 @@ export default function UpdateForm({
   console.log("Review Detail in Form:", reviewDetail); // ✅ Debug log
   const { propertyReview, hostReview, platformReview, hostReviewForUser } =
     reviewDetail || {};
-  const {
-    page,
-    search,
-    status,
-    loading: listingLoading,
-  } = useAppSelector((state) => state.reviewListingSlice);
+  const { page, search, status } = useAppSelector(
+    (state) => state.reviewListingSlice
+  );
 
   // const { loading: updateLoading } =
   // useAppSelector((state) => state.updateReview);
@@ -80,7 +74,7 @@ export default function UpdateForm({
 
     onSubmit: async (values) => {
       try {
-        const updateRes = await dispatch(
+        await dispatch(
           updateReview({
             bookingId: values.id,
             status: Number(values.status),

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { ThemeColors } from "../../../theme/themeColor";
 
-import type { ReviewRecord, FilterData } from "./types";
+import type { FilterData } from "./types";
 import SearchBar from "./SearchBar";
 import Listing from "./Listing";
 import UpdateForm from "./UpdateForm";
@@ -27,7 +27,7 @@ export default function PropertyReviews() {
 
   const [page, setPage] = useState(1);
   const [formshow, setFormShow] = useState(false);
-  const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
+  const [_selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
 
   const rowsPerPage = 10;
 

@@ -75,7 +75,7 @@ const saveTermSlice = createSlice({
 
       .addCase(
         saveTerm.fulfilled,
-        (state, action: PayloadAction<SaveTermResponse>) => {
+        (state, _action: PayloadAction<SaveTermResponse>) => {
           state.loading = false;
           state.success = true;
         }

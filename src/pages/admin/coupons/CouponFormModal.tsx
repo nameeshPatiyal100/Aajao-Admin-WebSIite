@@ -11,8 +11,6 @@ import {
   Stack,
   Fade,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
 import { PurpleThemeColor } from "../../../theme/themeColor";
 import type { CouponFormModalProps } from "./types";
 import { couponValidationSchema } from "../../../validations/admin-validations";

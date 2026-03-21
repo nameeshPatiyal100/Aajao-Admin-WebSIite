@@ -70,7 +70,7 @@ const deleteTermSlice = createSlice({
 
       .addCase(
         deleteTerm.fulfilled,
-        (state, action: PayloadAction<DeleteTermResponse>) => {
+        (state, _action: PayloadAction<DeleteTermResponse>) => {
           state.loading = false;
           state.success = true;
         }

@@ -31,7 +31,7 @@ export default function CouponListing({
   handleDeleteClick,
   handleEditClick,
 }: CouponListingProps) {
-  const [localCoupons, setLocalCoupons] = useState(coupons);
+  const [_localCoupons, setLocalCoupons] = useState(coupons);
 
   const headers = [
     "SR. NO.",

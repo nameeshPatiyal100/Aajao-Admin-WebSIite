@@ -118,7 +118,7 @@ export default function PagesIndex() {
   };
   const handleEnter = (row: PageRecord) => {
     const path = `/admin/${row.url}`;
-    navigate(path); // ✅ FIXED
+    navigate(path);
   };
   const handleAddNew = () => {
     navigate("/cms/pages/create");

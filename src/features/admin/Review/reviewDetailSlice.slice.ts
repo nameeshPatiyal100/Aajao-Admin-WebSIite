@@ -10,6 +10,7 @@ export interface PropertyReview {
   br_rating: string;
   br_title: string | null;
   br_desc: string | null;
+  br_isActive: number; //
 }
 
 export interface HostReview {

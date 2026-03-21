@@ -50,7 +50,6 @@ export default function FaqManagement() {
     success,
     error,
     message,
-    loading: faqUpsertLoading,
   } = useAppSelector((state) => state.faqUpsert);
 
   /* ================= LOCAL STATE ================= */

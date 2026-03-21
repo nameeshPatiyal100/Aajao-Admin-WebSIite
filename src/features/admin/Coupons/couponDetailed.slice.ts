@@ -58,20 +58,20 @@ const initialState: CouponDetailState = {
 
 /* ================= MAPPER ================= */
 
-const mapApiToCouponDetail = (data: CouponDetailApi): CouponDetail => ({
-  id: String(data.cpn_id),
-  title: data.cpn_title,
-  code: data.cpn_code,
-  discountType: data.cpn_dsctn_type,
-  discountPercentage: data.cpn_dsctn_percnt,
-  discountAmount: data.cpn_dsctn_amt,
-  minAmount: data.cpn_min_amt,
-  maxAmount: data.cpn_max_amt,
-  validFrom: data.cpn_valid_from,
-  validTo: data.cpn_valid_to,
-  usageLimit: data.cpn_usage_limit,
-  status: String(data.cpn_status) as "0" | "1",
-});
+// const mapApiToCouponDetail = (data: CouponDetailApi): CouponDetail => ({
+//   id: String(data.cpn_id),
+//   title: data.cpn_title,
+//   code: data.cpn_code,
+//   discountType: data.cpn_dsctn_type,
+//   discountPercentage: data.cpn_dsctn_percnt,
+//   discountAmount: data.cpn_dsctn_amt,
+//   minAmount: data.cpn_min_amt,
+//   maxAmount: data.cpn_max_amt,
+//   validFrom: data.cpn_valid_from,
+//   validTo: data.cpn_valid_to,
+//   usageLimit: data.cpn_usage_limit,
+//   status: String(data.cpn_status) as "0" | "1",
+// });
 
 /* ================= THUNK ================= */
 

@@ -52,7 +52,11 @@ interface ReviewState {
   loading: boolean;
   error: string | null;
   totalRecords: number;
+
   page: number;
+  search: string;
+  status: string;
+  rating: string;
 }
 
 const initialState: ReviewState = {
@@ -60,7 +64,11 @@ const initialState: ReviewState = {
   loading: false,
   error: null,
   totalRecords: 0,
+
   page: 1,
+  search: "",
+  status: "",
+  rating: "",
 };
 
 /* ================= THUNK ================= */
@@ -134,11 +142,22 @@ const reviewListingSlice = createSlice({
         state.error = null;
       })
 
+      // .addCase(fetchReviewListing.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.reviews = action.payload.reviews;
+      //   state.totalRecords = action.payload.totalRecords;
+      //   state.page = action.payload.page;
+      // })
       .addCase(fetchReviewListing.fulfilled, (state, action) => {
         state.loading = false;
         state.reviews = action.payload.reviews;
         state.totalRecords = action.payload.totalRecords;
         state.page = action.payload.page;
+
+        // ✅ store filters
+        state.search = action.meta.arg.search;
+        state.status = action.meta.arg.status;
+        state.rating = action.meta.arg.rating || "";
       })
 
       .addCase(fetchReviewListing.rejected, (state, action) => {

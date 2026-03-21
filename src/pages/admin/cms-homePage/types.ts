@@ -1,4 +1,5 @@
 export interface PageRecord {
+    url: unknown;
     id: number;
     title: string;
     slug: string;
@@ -26,11 +27,11 @@ export interface PageRecord {
     handleAddNew: () => void;
   }
 
-  export interface PageRecord {
+  export interface CmsPageRecord {
     id: number;
     title: string;
     slug: string;
-    status: 0 | 1; // 0 = Draft, 1 = Publish
+    status: 0 | 1;
     url: string;
     created_at: string;
   }
