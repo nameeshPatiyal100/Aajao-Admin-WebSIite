@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { faker } from "@faker-js/faker";
 
 import TCHeader from "./TCHeader";
 import TCListing, { TCRecord } from "./TCListing";
@@ -8,114 +7,233 @@ import TCModal from "./TCModal";
 
 import { ThemeColors } from "../../../../theme/themeColor";
 
-/* ================= Fake Data ================= */
+import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
+import { fetchTerms } from "../../../../features/admin/TermsConditions/tcCms.slice";
 
-let fakeData: TCRecord[] = Array.from({ length: 30 }).map(
-  (_, index) => ({
-    id: index + 1,
-    title: faker.lorem.sentence(),
-    status: faker.datatype.boolean() ? 1 : 0,
-    created_at: faker.date.past().toISOString(),
-  })
-);
+import {
+  fetchTermDetail,
+  clearTermDetail,
+} from "../../../../features/admin/TermsConditions/detailTerm.slice";
 
-/* ================= Component ================= */
+import {
+  saveTerm,
+  clearSaveTermState,
+} from "../../../../features/admin/TermsConditions/addUpdateTerm.slice";
+
+import {
+  deleteTerm,
+  clearDeleteTermState,
+} from "../../../../features/admin/TermsConditions/deleteTerm.slice";
+
+import { TableLoader } from "../../../../components/admin/common/TableLoader";
+import CustomSnackbar from "../../../../components/admin/snackbar/CustomSnackbar";
 
 export default function TCManagement() {
-  const [records, setRecords] = useState<TCRecord[]>(fakeData);
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedTC, setSelectedTC] = useState<TCRecord | null>(null);
+  const dispatch = useAppDispatch();
 
+  const { data, loading } = useAppSelector((state) => state.tcCms);
+
+  const { data: detailData, loading: detailLoading } = useAppSelector(
+    (state) => state.detailTerm
+  );
+
+  const {
+    loading: saveLoading,
+    success: saveSuccess,
+    error: saveError,
+  } = useAppSelector((state) => state.addUpdateTerm);
+
+  const { success: deleteSuccess, error: deleteError } = useAppSelector(
+    (state) => state.deleteTerm
+  );
+
+  /* ================= LOCAL ================= */
+
+  const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  /* Snackbar */
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error",
+  });
+
   const rowsPerPage = 10;
 
-  /* ================= Pagination ================= */
+  /* ================= FETCH ================= */
+
+  useEffect(() => {
+    dispatch(fetchTerms({ page, limit: rowsPerPage, search }));
+  }, [dispatch, page, search]);
+
+  /* ================= MAP ================= */
+
+  const records: TCRecord[] =
+    data?.terms?.map((item) => ({
+      id: item.tc_id,
+      title: item.tc_title,
+      status: item.tc_isActive === 1 ? 1 : 0,
+      created_at: item.tc_created_at,
+    })) || [];
+
+  /* ================= HANDLERS ================= */
 
   const handlePaginate = (_: unknown, value: number) => {
     setPage(value);
   };
 
-  /* ================= Delete ================= */
-
   const handleDeleteConfirm = (id: number) => {
-    const updated = records.filter((item) => item.id !== id);
-    setRecords(updated);
+    dispatch(deleteTerm({ tc_id: id }));
   };
-
-  /* ================= Edit ================= */
 
   const handleEditClick = (id: number) => {
-    const record = records.find((r) => r.id === id);
-    if (record) {
-      setSelectedTC(record);
-      setOpenModal(true);
-    }
+    dispatch(fetchTermDetail({ tc_id: id }));
+    setOpenModal(true);
   };
 
-  /* ================= Submit ================= */
-
-  const handleSubmit = (data: {
+  const handleSubmit = (formData: {
     title: string;
     description: string;
     status: 0 | 1;
   }) => {
-    if (selectedTC) {
-      const updated = records.map((item) =>
-        item.id === selectedTC.id ? { ...item, ...data } : item
-      );
-      setRecords(updated);
-    } else {
-      const newRecord: TCRecord = {
-        id: records.length + 1,
-        title: data.title,
-        status: data.status,
-        created_at: new Date().toISOString(),
-      };
+    dispatch(
+      saveTerm({
+        tc_id: detailData?.tc_id,
+        tc_title: formData.title,
+        tc_description: formData.description,
+        tc_type: 1,
+        tc_isActive: formData.status,
+      })
+    );
+  };
 
-      setRecords([newRecord, ...records]);
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    dispatch(clearTermDetail());
+  };
+
+  const closeSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  /* ================= SAVE SUCCESS ================= */
+
+  useEffect(() => {
+    if (saveSuccess) {
+      setSnackbar({
+        open: true,
+        message: "Saved successfully",
+        severity: "success",
+      });
+
+      setOpenModal(false);
+
+      dispatch(clearSaveTermState());
+      dispatch(clearTermDetail());
+
+      dispatch(fetchTerms({ page, limit: rowsPerPage, search }));
     }
 
-    setOpenModal(false);
-  };
+    if (saveError) {
+      setSnackbar({
+        open: true,
+        message: saveError,
+        severity: "error",
+      });
+
+      dispatch(clearSaveTermState());
+    }
+  }, [saveSuccess, saveError]);
+
+  /* ================= DELETE SUCCESS ================= */
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      setSnackbar({
+        open: true,
+        message: "Deleted successfully",
+        severity: "success",
+      });
+
+      dispatch(clearDeleteTermState());
+      dispatch(fetchTerms({ page, limit: rowsPerPage, search }));
+    }
+
+    if (deleteError) {
+      setSnackbar({
+        open: true,
+        message: deleteError,
+        severity: "error",
+      });
+
+      dispatch(clearDeleteTermState());
+    }
+  }, [deleteSuccess, deleteError]);
+
+  /* ================= UI ================= */
 
   return (
     <Box sx={{ backgroundColor: ThemeColors.background, minHeight: "100vh" }}>
       <TCHeader
         ThemeColors={ThemeColors}
-        filterData={{}}
-        handleFilterUpdate={() => {}}
-        handleFilter={() => {}}
-        handleClear={() => {}}
+        filterData={{ keyword: search }}
+        handleFilterUpdate={(key, value) => {
+          if (key === "keyword") setSearch(value);
+        }}
+        handleFilter={() => setPage(1)}
+        handleClear={() => {
+          setSearch("");
+          setPage(1);
+        }}
         onAddClick={() => {
-          setSelectedTC(null);
+          dispatch(clearTermDetail());
           setOpenModal(true);
         }}
       />
 
-      <TCListing
-        terms={records}
-        totalRecords={records.length}
-        loading={false}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        handlePaginate={handlePaginate}
-        handleEditClick={handleEditClick}
-        handleDeleteConfirm={handleDeleteConfirm}
-      />
+      {loading ? (
+        <TableLoader text="Loading Terms & Conditions..." />
+      ) : records.length === 0 ? (
+        <Box textAlign="center" py={4}>
+          No Terms & Conditions found
+        </Box>
+      ) : (
+        <TCListing
+          terms={records}
+          totalRecords={data?.totalRecords || 0}
+          loading={loading}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          handlePaginate={handlePaginate}
+          handleEditClick={handleEditClick}
+          handleDeleteConfirm={handleDeleteConfirm}
+        />
+      )}
 
       <TCModal
         open={openModal}
-        onClose={() => setOpenModal(false)}
+        onClose={handleCloseModal}
         onSubmit={handleSubmit}
+        loading={detailLoading || saveLoading}
         initialData={
-          selectedTC
+          detailData
             ? {
-                title: selectedTC.title,
-                description: "",
-                status: selectedTC.status,
+                title: detailData.tc_title,
+                description: detailData.tc_description,
+                status: detailData.tc_isActive === 1 ? 1 : 0,
               }
             : undefined
         }
+      />
+
+      {/* ================= SNACKBAR ================= */}
+      <CustomSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={closeSnackbar}
       />
     </Box>
   );

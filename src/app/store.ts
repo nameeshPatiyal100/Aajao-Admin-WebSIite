@@ -53,6 +53,12 @@ import propertyAnalyticsDetailReducer from "../features/admin/propertyAnalytics/
 import faqListingReducer from "../features/admin/FAQManagement/faqListing.slice";
 import faqDeleteReducer from "../features/admin/FAQManagement/faqDelete.slice";
 import faqDetailReducer from "../features/admin/FAQManagement/faqDetail.slice";
+import faqUpsertReducer from "../features/admin/FAQManagement/faqUpsert.slice";
+import tcCmsReducer from "../features/admin/TermsConditions/tcCms.slice";
+import detailTermReducer from "../features/admin/TermsConditions/detailTerm.slice";
+import addUpdateTermReducer from "../features/admin/TermsConditions/addUpdateTerm.slice";
+import deleteTermReducer from "../features/admin/TermsConditions/deleteTerm.slice";
+import cmsSectionReducer from "../features/admin/CMS/cmsSection.slice";
 
 export const store = configureStore({
   reducer: {
@@ -111,6 +117,12 @@ export const store = configureStore({
     faqListing: faqListingReducer,
     faqDelete: faqDeleteReducer,
     faqDetail: faqDetailReducer,
+    faqUpsert: faqUpsertReducer,
+    tcCms: tcCmsReducer,
+    detailTerm: detailTermReducer,
+    addUpdateTerm: addUpdateTermReducer,
+    deleteTerm: deleteTermReducer,
+    cmsSection: cmsSectionReducer,
   },
 });
 

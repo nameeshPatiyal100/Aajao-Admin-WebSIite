@@ -14,19 +14,30 @@ import { tcValidationSchema } from "../../../../validations/admin-validations";
 
 /* ================= Types ================= */
 
-interface TCModalProps {
+// interface TCModalProps {
+//   open: boolean;
+//   onClose: () => void;
+//   onSubmit: (data: {
+//     title: string;
+//     description: string;
+//     status: 0 | 1;
+//   }) => void;
+//   initialData?: {
+//     title: string;
+//     description: string;
+//     status: 0 | 1;
+//   };
+// }
+interface TCModalProps   {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: {
-    title: string;
-    description: string;
-    status: 0 | 1;
-  }) => void;
+  onSubmit: (data: any) => void;
   initialData?: {
     title: string;
     description: string;
     status: 0 | 1;
   };
+  loading?: boolean; // ✅ add this
 }
 
 /* ================= Component ================= */

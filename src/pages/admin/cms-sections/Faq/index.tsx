@@ -12,6 +12,10 @@ import CustomSnackbar from "../../../../components/admin/snackbar/CustomSnackbar
 import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
 import { fetchFaqListing } from "../../../../features/admin/FAQManagement/faqListing.slice";
 import { fetchFaqDetail } from "../../../../features/admin/FAQManagement/faqDetail.slice";
+import {
+  upsertFaq,
+  resetFaqUpsertState, // ✅ FIX ADDED
+} from "../../../../features/admin/FAQManagement/faqUpsert.slice";
 
 import {
   deleteFaq,
@@ -33,15 +37,23 @@ export default function FaqManagement() {
 
   // ✅ Redux state
   const { data, loading } = useAppSelector((state) => state.faqListing);
-  const {
-    loading: deleteLoading,
-    success: deleteSuccess,
-    error: deleteError,
-  } = useAppSelector((state) => state.faqDelete);
+
+  const { success: deleteSuccess, error: deleteError } = useAppSelector(
+    (state) => state.faqDelete
+  );
 
   const { data: faqDetailData, loading: detailLoading } = useAppSelector(
     (state) => state.faqDetail
   );
+
+  const {
+    success,
+    error,
+    message,
+    loading: faqUpsertLoading,
+  } = useAppSelector((state) => state.faqUpsert);
+
+  /* ================= LOCAL STATE ================= */
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -82,26 +94,37 @@ export default function FaqManagement() {
     handleListing(filterData);
   }, []);
 
+  /* ================= UPSERT SUCCESS / ERROR ================= */
+
+  useEffect(() => {
+    if (success) {
+      setSnackbar({
+        open: true,
+        message: message || "FAQ saved successfully",
+        severity: "success",
+      });
+
+      handleListing(filterData); // refresh list
+      dispatch(resetFaqUpsertState());
+      setOpenModal(false);
+    }
+
+    if (error) {
+      setSnackbar({
+        open: true,
+        message: error,
+        severity: "error",
+      });
+
+      dispatch(resetFaqUpsertState());
+    }
+  }, [success, error]);
+
+  /* ================= DELETE ================= */
+
   const handleDeleteConfirm = (faq_Id: number) => {
     dispatch(deleteFaq({ faq_Id }));
   };
-
-  /* ================= MAP API → UI ================= */
-
-  useEffect(() => {
-    if (data) {
-      const mappedFaqs: FaqRecord[] =
-        data.sections?.map((faq) => ({
-          id: faq.faq_id,
-          title: faq.faq_question,
-          status: faq.faq_is_active === 1 ? 1 : 0, // ✅ FIX HERE
-          created_at: faq.faq_created_at,
-        })) || [];
-
-      setFaqListing(mappedFaqs);
-      setTotalRecords(data.totalRecords);
-    }
-  }, [data]);
 
   useEffect(() => {
     if (deleteSuccess) {
@@ -126,6 +149,23 @@ export default function FaqManagement() {
     }
   }, [deleteSuccess, deleteError, dispatch]);
 
+  /* ================= MAP API → UI ================= */
+
+  useEffect(() => {
+    if (data) {
+      const mappedFaqs: FaqRecord[] =
+        data.sections?.map((faq) => ({
+          id: faq.faq_id,
+          title: faq.faq_question,
+          status: faq.faq_is_active === 1 ? 1 : 0,
+          created_at: faq.faq_created_at,
+        })) || [];
+
+      setFaqListing(mappedFaqs);
+      setTotalRecords(data.totalRecords);
+    }
+  }, [data]);
+
   /* ================= Pagination ================= */
 
   const handlePaginate = (_: unknown, value: number) => {
@@ -137,11 +177,7 @@ export default function FaqManagement() {
 
   /* ================= Filter ================= */
 
-  const handleFilterUpdate = (
-    key: string,
-    value: string,
-    _isImmediate?: boolean
-  ) => {
+  const handleFilterUpdate = (key: string, value: string) => {
     setFilterData((prev) => ({
       ...prev,
       [key]: value,
@@ -161,11 +197,35 @@ export default function FaqManagement() {
     handleListing(requestBody);
   };
 
-  /* ================= Edit ================= */
+  /* ================= EDIT ================= */
 
   const handleEditClick = (id: number) => {
+    const faq = faqListing.find((f) => f.id === id); // ✅ FIX
+    if (faq) {
+      setSelectedFaq(faq); // ✅ IMPORTANT
+    }
+
     setOpenModal(true);
     dispatch(fetchFaqDetail({ faqId: id }));
+  };
+
+  /* ================= SUBMIT ================= */
+
+  const handleSubmitFaq = (data: {
+    title: string;
+    description: string;
+    status: 0 | 1;
+    display_order: number;
+  }) => {
+    dispatch(
+      upsertFaq({
+        faq_id: selectedFaq?.id || null,
+        faq_question: data.title,
+        faq_answer: data.description,
+        faq_display_order: data.display_order,
+        faq_is_active: data.status,
+      })
+    );
   };
 
   /* ================= UI ================= */
@@ -189,7 +249,7 @@ export default function FaqManagement() {
         }}
       />
 
-      {/* ✅ Loader Integration */}
+      {/* ✅ Loader */}
       {loading ? (
         <TableLoader />
       ) : (
@@ -208,7 +268,7 @@ export default function FaqManagement() {
       <FaqModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onSubmit={() => {}}
+        onSubmit={handleSubmitFaq}
         initialData={
           faqDetailData
             ? {
@@ -219,8 +279,9 @@ export default function FaqManagement() {
               }
             : undefined
         }
-        loading={detailLoading} // ✅ NEW
+        loading={detailLoading}
       />
+
       <CustomSnackbar
         open={snackbar.open}
         message={snackbar.message}

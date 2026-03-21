@@ -140,10 +140,8 @@ export default function TCListing({
                         size="small"
                         sx={{
                           backgroundColor:
-                            tc.status === 1
-                              ? PurpleThemeColor
-                              : "#e0e0e0",
-                          color: tc.status === 1 ? "#fff" : "#555",
+                            tc.status === 1 ? "#dcfce7" : "#fee2e2",
+                          color: tc.status === 1 ? "#166534" : "#991b1b",
                           fontWeight: 500,
                         }}
                       />

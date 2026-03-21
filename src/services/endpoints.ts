@@ -1,13 +1,19 @@
 export const ADMINENDPOINTS = {
+  // Terms Conditions
+  TERMS_LISTING: "/admin/terms-condition/listing",
+  TERM_DETAIL: "/admin/terms-condition/detail",
+  TERM_SAVE: "/admin/terms-condition/add",
+  TERM_DELETE: "/admin/terms-condition/delete",
+  // CMS
+  CMS_SECTION_LISTING: "/admin/cms/section/search",
   // ADMIN
   ADMIN_LOGIN: "/admin/login",
   GET_ADMIN_DASHBOARD_DATA: "/admin/dashboard",
-
   // Admin FAQ
   FAQ_LISTING: "/admin/faq/listing",
   DELETE_FAQ: "/admin/faq/delete",
+  FAQ_ADD_UPDATE: "/admin/faq/add",
   FAQ_DETAIL: "/admin/faq/detail",
-
   // USER
   USER_LIST: "/admin/user/search",
   USER_BY_ID: "/admin/user/single",
@@ -17,7 +23,6 @@ export const ADMINENDPOINTS = {
   HOST_LIST: "/admin/host/search",
   HOST_STATUS_UPDATE: "/admin/user/update/status",
   HOST_SEARCH_ASSIGN_PROPERTY: "/admin/host/search/assign-property",
-
   // PROPERTY-CATEGORY
   PROPERTY_CATEGORIES: "admin/categories",
   PROPERTY_CATEGORY_BY_ID: "admin/category",

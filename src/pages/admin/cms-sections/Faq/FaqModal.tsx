@@ -10,10 +10,12 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import {CircularProgress} from "@mui/material";
 
 import { PurpleThemeColor } from "../../../../theme/themeColor";
 import { faqValidationSchema } from "../../../../validations/admin-validations";
 import { TableLoader } from "../../../../components/admin/common/TableLoader";
+import { useAppSelector } from "../../../../app/hooks";
 
 /* ================= Types ================= */
 
@@ -56,6 +58,9 @@ export default function FaqModal({
     display_order: "", // ✅ new
   });
 
+  const { loading: faqUpsertLoading } = useAppSelector(
+    (state) => state.faqUpsert
+  );
   /* ================= Load Data ================= */
 
   useEffect(() => {
@@ -175,7 +180,6 @@ export default function FaqModal({
                 },
               }}
             />
-
             {/* Description */}
             <TextField
               label="Description"
@@ -197,7 +201,6 @@ export default function FaqModal({
                 },
               }}
             />
-
             {/* Status */}
             <TextField
               select
@@ -221,7 +224,6 @@ export default function FaqModal({
               <MenuItem value={1}>Active</MenuItem>
               <MenuItem value={0}>Inactive</MenuItem>
             </TextField>
-
             {/* Display Order */}
             <TextField
               label="Display Order"
@@ -242,12 +244,14 @@ export default function FaqModal({
                 },
               }}
             />
-
             {/* Buttons */}
+
             <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
+              {/* Cancel */}
               <Button
                 variant="outlined"
                 onClick={onClose}
+                disabled={faqUpsertLoading} // ✅ prevent close while saving
                 sx={{
                   borderColor: PurpleThemeColor,
                   color: PurpleThemeColor,
@@ -256,17 +260,24 @@ export default function FaqModal({
                 Cancel
               </Button>
 
+              {/* Submit */}
               <Button
                 variant="contained"
                 onClick={handleSubmit}
+                disabled={faqUpsertLoading} // ✅ disable while loading
                 sx={{
                   backgroundColor: PurpleThemeColor,
+                  minWidth: "120px", // ✅ prevents size jump
                   "&:hover": {
                     backgroundColor: PurpleThemeColor,
                   },
                 }}
               >
-                Submit
+                {faqUpsertLoading ? (
+                  <CircularProgress size={22} sx={{ color: "#fff" }} />
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </Box>
           </Box>
