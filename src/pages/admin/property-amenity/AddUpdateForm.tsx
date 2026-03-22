@@ -20,7 +20,7 @@ import { themeCss } from "../../../theme/themeCss";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import React, { useEffect, useMemo } from "react";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
-import { CustomSnackbar } from "../../../components";
+
 import { getPropertyAmenityById } from "../../../features/admin/propertyAmenity/propertyAmenityDetails.slice";
 import { addOrUpdatePropertyAmenity } from "../../../features/admin/propertyAmenity/propertyAmenityAddUpdate.slice";
 import { fetchPropertyAmenities } from "../../../features/admin/propertyAmenity/propertyAmenity.thunk";
@@ -30,60 +30,77 @@ export default function AddUpdateForm({
   formshow,
   handleFormClose,
   filterData,
+  showSnackbar, 
 }: AddUpdateFormProps) {
   const dispatch = useAppDispatch();
+
+  const [submitLoading, setSubmitLoading] = React.useState(false);
+
   const initialValues = {
     amn_title: "",
     amn_isActive: "",
   };
-  const { data, loading } = useAppSelector((state) => state.propertyAmenityDetails);
+
+  const { data, loading } = useAppSelector(
+    (state) => state.propertyAmenityDetails
+  );
+
   const mapApiToFormValues = (data: any) => ({
     amn_title: data?.amn_title ?? "",
     amn_isActive: data?.amn_isActive ?? "",
   });
+
   useEffect(() => {
     if (amenetiesId && formshow) {
       dispatch(getPropertyAmenityById(Number(amenetiesId)));
     }
   }, [amenetiesId, formshow, dispatch]);
+
   const formInitialValues = useMemo(() => {
     if (amenetiesId === null) return initialValues;
     return data ? mapApiToFormValues(data) : initialValues;
   }, [amenetiesId, data]);
 
-  const [snackbar, setSnackbar] = React.useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error";
-  }>({ open: false, message: "", severity: "success" });
-
-  const handleSubmit = (values: any) => {
+  const handleSubmit = async (values: any) => {
     if (amenetiesId) {
       values.amenetiesId = amenetiesId;
     }
-    dispatch(addOrUpdatePropertyAmenity(values))
-      .unwrap()
-      .then(() => {
-        setSnackbar({
-          open: true,
-          message: "Amenity updated successfully!",
-          severity: "success",
-        });
-        handleFormClose();
-        dispatch(fetchPropertyAmenities(filterData));
-      })
-      .catch((err: any) => {
-        setSnackbar({
-          open: true,
-          message: err?.message || "Failed to update amenity",
-          severity: "error",
-        });
-      });
+
+    try {
+      setSubmitLoading(true);
+
+      const res = await dispatch(
+        addOrUpdatePropertyAmenity(values)
+      ).unwrap();
+
+      // ✅ CLOSE MODAL FIRST
+      handleFormClose();
+
+      // ✅ REFRESH TABLE
+      dispatch(fetchPropertyAmenities(filterData));
+
+      // ✅ SHOW SNACKBAR FROM PARENT
+      showSnackbar(
+        res?.message ||
+          `Amenity ${
+            amenetiesId ? "updated" : "added"
+          } successfully!`,
+        "success"
+      );
+    } catch (err: any) {
+      showSnackbar(
+        err?.message || "Failed to save amenity",
+        "error"
+      );
+    } finally {
+      setSubmitLoading(false);
+    }
   };
 
   return (
     <Modal open={formshow} onClose={handleFormClose}>
       <Box sx={themeCss.modalFormContainer}>
+        {/* HEADER */}
         <Box sx={themeCss.modalHeader}>
           <Typography
             variant="h6"
@@ -99,7 +116,10 @@ export default function AddUpdateForm({
             <CloseIcon />
           </IconButton>
         </Box>
-        <Box sx={{ p: 3 }}>
+
+        {/* BODY */}
+        <Box sx={{ p: 3, position: "relative" }}>
+          {/* ✅ DETAILS LOADER */}
           {loading && (
             <Box
               sx={{
@@ -112,9 +132,27 @@ export default function AddUpdateForm({
                 zIndex: 10,
               }}
             >
-              <TableLoader />
+              <TableLoader text="Loading..." />
             </Box>
           )}
+
+          {/* ✅ SUBMIT LOADER */}
+          {submitLoading && (
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(255,255,255,0.7)",
+                zIndex: 20,
+              }}
+            >
+              <TableLoader text="Saving..." />
+            </Box>
+          )}
+
           <Formik
             initialValues={formInitialValues}
             validationSchema={setupAmenitySchema}
@@ -124,7 +162,7 @@ export default function AddUpdateForm({
             {({ values, errors, touched, handleChange, handleBlur }) => (
               <Form>
                 <Box display="flex" flexDirection="column" gap={3}>
-                  {/* Name Field */}
+                  {/* NAME */}
                   <FormControl fullWidth>
                     <InputLabel
                       htmlFor="amn_title"
@@ -136,7 +174,6 @@ export default function AddUpdateForm({
                         "&.Mui-focused": {
                           color: PurpleThemeColor,
                         },
-                        transition: "color 0.3s ease",
                       }}
                     >
                       Name
@@ -154,7 +191,6 @@ export default function AddUpdateForm({
                         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                           borderColor: PurpleThemeColor,
                         },
-                        transition: "all 0.3s ease",
                       }}
                     />
 
@@ -165,23 +201,9 @@ export default function AddUpdateForm({
                     )}
                   </FormControl>
 
-                  {/* Status Field */}
+                  {/* STATUS */}
                   <FormControl fullWidth>
-                    <InputLabel
-                      id="status-label"
-                      sx={{
-                        color:
-                          touched.amn_isActive && errors.amn_isActive
-                            ? "error.main"
-                            : undefined,
-                        "&.Mui-focused": {
-                          color: PurpleThemeColor,
-                        },
-                        transition: "color 0.3s ease",
-                      }}
-                    >
-                      Status
-                    </InputLabel>
+                    <InputLabel id="status-label">Status</InputLabel>
 
                     <Select
                       labelId="status-label"
@@ -191,12 +213,6 @@ export default function AddUpdateForm({
                       onChange={handleChange}
                       onBlur={handleBlur}
                       input={<OutlinedInput label="Status" />}
-                      sx={{
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: PurpleThemeColor,
-                        },
-                        transition: "all 0.3s ease",
-                      }}
                       error={touched.amn_isActive && !!errors.amn_isActive}
                     >
                       <MenuItem value="">Select Status</MenuItem>
@@ -206,7 +222,7 @@ export default function AddUpdateForm({
                   </FormControl>
                 </Box>
 
-                {/* Actions */}
+                {/* ACTIONS */}
                 <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
                   <Button
                     variant="outlined"
@@ -214,41 +230,33 @@ export default function AddUpdateForm({
                     sx={{
                       color: "#cf1f1f",
                       borderColor: "#cf1f1f",
-                      transition: "all 0.3s ease",
                       "&:hover": {
                         backgroundColor: "#fcecec",
                         borderColor: "#cf1f1f",
-                        transform: "scale(1.05)",
                       },
                     }}
                   >
                     Cancel
                   </Button>
+
                   <Button
                     type="submit"
                     variant="contained"
+                    disabled={submitLoading}
                     sx={{
                       bgcolor: PurpleThemeColor,
-                      transition: "all 0.3s ease",
                       "&:hover": {
                         bgcolor: "#6f137f",
-                        transform: "scale(1.05)",
                       },
                     }}
                   >
-                    Submit
+                    {submitLoading ? "Saving..." : "Submit"}
                   </Button>
                 </Box>
               </Form>
             )}
           </Formik>
         </Box>
-        <CustomSnackbar
-          open={snackbar.open}
-          message={snackbar.message}
-          severity={snackbar.severity}
-          onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
-        />
       </Box>
     </Modal>
   );

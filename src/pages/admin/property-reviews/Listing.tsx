@@ -11,6 +11,7 @@ import {
   Tooltip,
   IconButton,
   Rating,
+  Switch,
 } from "@mui/material";
 
 import { Edit as EditIcon } from "@mui/icons-material";
@@ -37,6 +38,7 @@ export default function Listing({
   handlePaginate,
   page,
   rowsPerPage,
+  handleToggleStatus, 
 }: ListingProps) {
   return (
     <Paper
@@ -57,6 +59,7 @@ export default function Listing({
                 "USER NAME",
                 "PROPERTY RATING",
                 "STATUS",
+                "TOGGLE",
                 "ACTIONS",
               ].map((header) => (
                 <TableCell
@@ -76,13 +79,13 @@ export default function Listing({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} align="center">
+                <TableCell colSpan={7} align="center">
                   <TableLoader text="Fetching reviews..." />
                 </TableCell>
               </TableRow>
             ) : !reviewsListing || reviewsListing.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} align="center">
+                <TableCell colSpan={7} align="center">
                   <Typography
                     variant="body2"
                     sx={{ color: ThemeColors.text.secondary }}
@@ -92,9 +95,9 @@ export default function Listing({
                 </TableCell>
               </TableRow>
             ) : (
-              reviewsListing.map((review, index) => {
+              reviewsListing.map((review: any, index: number) => {
                 const status = review.status as "0" | "1" | "2";
-                console.log(review);
+
                 return (
                   <TableRow
                     key={review.id}
@@ -102,7 +105,6 @@ export default function Listing({
                     sx={{
                       transition: "all 0.3s ease",
                       "&:hover": { backgroundColor: "#f5f3ff" },
-                      fontSize: "0.8rem",
                     }}
                   >
                     {/* SR NO */}
@@ -111,17 +113,13 @@ export default function Listing({
                     </TableCell>
 
                     {/* PROPERTY */}
-                    <TableCell sx={{ fontSize: "0.85rem" }}>
-                      {review.property}
-                    </TableCell>
+                    <TableCell>{review.property}</TableCell>
 
-                    {/* USER NAME */}
-                    <TableCell sx={{ fontSize: "0.85rem" }}>
-                      {review.user_name}
-                    </TableCell>
+                    {/* USER */}
+                    <TableCell>{review.user_name}</TableCell>
 
                     {/* RATING */}
-                    <TableCell sx={{ fontSize: "0.85rem" }}>
+                    <TableCell>
                       <Rating
                         value={Number(review.rating)}
                         readOnly
@@ -129,8 +127,8 @@ export default function Listing({
                       />
                     </TableCell>
 
-                    {/* STATUS */}
-                    <TableCell sx={{ fontSize: "0.85rem" }}>
+                    {/* STATUS BADGE */}
+                    <TableCell>
                       <Box
                         sx={{
                           display: "inline-block",
@@ -141,10 +139,40 @@ export default function Listing({
                           fontWeight: 600,
                           color: reviewStatusMap[status]?.color,
                           backgroundColor: reviewStatusMap[status]?.bg,
+                          transition: "all 0.3s ease",
                         }}
                       >
                         {reviewStatusMap[status]?.label}
                       </Box>
+                    </TableCell>
+
+                    {/* 🔥 TOGGLE SWITCH */}
+                    <TableCell>
+                      <Switch
+                        size="small"
+                        checked={status === "1"} // Approved = ON
+                        onChange={() =>
+                          handleToggleStatus(Number(review.id))
+                        }
+                        sx={{
+                          "& .MuiSwitch-switchBase": {
+                            transitionDuration: "300ms",
+                          },
+                          "& .MuiSwitch-switchBase.Mui-checked": {
+                            color: "#7b1fa2",
+                          },
+                          "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                            {
+                              backgroundColor: "#7b1fa2",
+                            },
+                          "& .MuiSwitch-thumb": {
+                            transition: "all 0.3s ease",
+                          },
+                          "& .MuiSwitch-track": {
+                            transition: "all 0.3s ease",
+                          },
+                        }}
+                      />
                     </TableCell>
 
                     {/* ACTION */}
@@ -154,7 +182,6 @@ export default function Listing({
                           size="small"
                           sx={{
                             color: ThemeColors.secondary,
-                            mr: 1,
                             transition: "all 0.3s ease",
                             "&:hover": { transform: "scale(1.1)" },
                           }}

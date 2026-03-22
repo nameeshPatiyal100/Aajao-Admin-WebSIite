@@ -73,7 +73,7 @@ export interface ListingProps {
     id: string;
     property: string;
     user_name: string;
-    status: "0" | "1";
+    status: "0" | "1" | "2"; // ✅ FIXED (was missing "2")
     rating: "1" | "2" | "3" | "4" | "5";
   }[];
 
@@ -82,6 +82,9 @@ export interface ListingProps {
 
   handleFormShow: (id: string) => void;
   handlePaginate: (event: React.ChangeEvent<unknown>, page: number) => void;
+
+  // ✅ ADD THIS LINE 👇
+  handleToggleStatus: (id: number) => void;
 
   page: number;
   rowsPerPage: number;

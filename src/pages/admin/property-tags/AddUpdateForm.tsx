@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from "react";
 import {
   Modal,
   Box,
@@ -13,85 +14,77 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Form, Formik } from "formik";
-import { PurpleThemeColor } from "../../../theme/themeColor";
 import { setupTagSchema } from "../../../validations/admin-validations";
 import type { AddUpdateFormProps } from "./types";
 import { themeCss } from "../../../theme/themeCss";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import React, { useEffect, useMemo } from "react";
 import { getPropertyTagById } from "../../../features/admin/propertyTag/propertyTagDetails.slice";
 import { addOrUpdatePropertyTag } from "../../../features/admin/propertyTag/propertyTagAddUpdate.slice";
 import { fetchPropertyTags } from "../../../features/admin/propertyTag/propertyTag.thunk";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
-import { CustomSnackbar } from "../../../components";
+
+interface Props extends AddUpdateFormProps {
+  onSuccess: (message: string) => void;
+}
 
 export default function AddUpdateForm({
   tagId,
   formshow,
   handleFormClose,
   filterData,
-}: AddUpdateFormProps) {
+  onSuccess, // ✅ NEW
+}: Props) {
   const dispatch = useAppDispatch();
+
   const initialValues = {
     tag_name: "",
     tag_isActive: "",
   };
-  const { data, loading } = useAppSelector((state) => state.propertyTagDetails);
+
+  const { data } = useAppSelector((state) => state.propertyTagDetails);
+
+  // ✅ IMPORTANT: use add/update loading
+  const { loading } = useAppSelector((state) => state.propertyTagAddUpdate);
+
   const mapApiToFormValues = (data: any) => ({
     tag_name: data?.tag_name ?? "",
     tag_isActive: data?.tag_isActive ?? "",
   });
+
   useEffect(() => {
     if (tagId && formshow) {
       dispatch(getPropertyTagById(Number(tagId)));
     }
   }, [tagId, formshow, dispatch]);
+
   const formInitialValues = useMemo(() => {
     if (tagId === null) return initialValues;
     return data ? mapApiToFormValues(data) : initialValues;
   }, [tagId, data]);
 
-  const [snackbar, setSnackbar] = React.useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error";
-  }>({ open: false, message: "", severity: "success" });
-
   const handleSubmit = (values: any) => {
-    if (tagId) {
-      values.tagId = tagId;
-    }
+    if (tagId) values.tagId = tagId;
+
     dispatch(addOrUpdatePropertyTag(values))
       .unwrap()
-      .then(() => {
-        setSnackbar({
-          open: true,
-          message: "Tag updated successfully!",
-          severity: "success",
-        });
-        handleFormClose();
+      .then((res) => {
+        // ✅ SEND MESSAGE TO PARENT
+        onSuccess(res?.message || "Saved successfully");
+
+        handleFormClose(); // close modal
         dispatch(fetchPropertyTags(filterData));
       })
       .catch((err: any) => {
-        setSnackbar({
-          open: true,
-          message: err?.message || "Failed to update tag",
-          severity: "error",
-        });
+        onSuccess(err?.message || "Failed to save"); // still show
       });
   };
 
   return (
     <Modal open={formshow} onClose={handleFormClose}>
       <Box sx={themeCss.modalFormContainer}>
+        {/* HEADER */}
         <Box sx={themeCss.modalHeader}>
-          <Typography
-            variant="h6"
-            sx={{
-              color: "#fff",
-              fontWeight: 600,
-            }}
-          >
+          <Typography variant="h6" sx={{ color: "#fff", fontWeight: 600 }}>
             {tagId ? "Update Tag" : "Add Tag"}
           </Typography>
 
@@ -99,7 +92,10 @@ export default function AddUpdateForm({
             <CloseIcon />
           </IconButton>
         </Box>
-        <Box sx={{ p: 3 }}>
+
+        {/* BODY */}
+        <Box sx={{ p: 3, position: "relative" }}>
+          {/* ✅ LOADER FOR ADD/UPDATE */}
           {loading && (
             <Box
               sx={{
@@ -112,9 +108,10 @@ export default function AddUpdateForm({
                 zIndex: 10,
               }}
             >
-              <TableLoader />
+              <TableLoader text="Saving..." />
             </Box>
           )}
+
           <Formik
             initialValues={formInitialValues}
             validationSchema={setupTagSchema}
@@ -124,40 +121,16 @@ export default function AddUpdateForm({
             {({ values, errors, touched, handleChange, handleBlur }) => (
               <Form>
                 <Box display="flex" flexDirection="column" gap={3}>
-                  {/* Name Field */}
+                  {/* Name */}
                   <FormControl fullWidth>
-                    <InputLabel
-                      htmlFor="tag_name"
-                      sx={{
-                        color:
-                          touched.tag_name && errors.tag_name
-                            ? "error.main"
-                            : undefined,
-                        "&.Mui-focused": {
-                          color: PurpleThemeColor,
-                        },
-                        transition: "color 0.3s ease",
-                      }}
-                    >
-                      Name
-                    </InputLabel>
-
+                    <InputLabel>Name</InputLabel>
                     <OutlinedInput
-                      id="tag_name"
                       name="tag_name"
-                      label="Name"
                       value={values.tag_name}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       error={touched.tag_name && !!errors.tag_name}
-                      sx={{
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: PurpleThemeColor,
-                        },
-                        transition: "all 0.3s ease",
-                      }}
                     />
-
                     {touched.tag_name && errors.tag_name && (
                       <FormHelperText error>
                         {errors.tag_name as string}
@@ -165,38 +138,15 @@ export default function AddUpdateForm({
                     )}
                   </FormControl>
 
-                  {/* Status Field */}
+                  {/* Status */}
                   <FormControl fullWidth>
-                    <InputLabel
-                      id="status-label"
-                      sx={{
-                        color:
-                          touched.tag_isActive && errors.tag_isActive
-                            ? "error.main"
-                            : undefined,
-                        "&.Mui-focused": {
-                          color: PurpleThemeColor,
-                        },
-                        transition: "color 0.3s ease",
-                      }}
-                    >
-                      Status
-                    </InputLabel>
-
+                    <InputLabel>Status</InputLabel>
                     <Select
-                      labelId="status-label"
-                      id="tag_isActive"
                       name="tag_isActive"
                       value={values.tag_isActive}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       input={<OutlinedInput label="Status" />}
-                      sx={{
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: PurpleThemeColor,
-                        },
-                        transition: "all 0.3s ease",
-                      }}
                       error={touched.tag_isActive && !!errors.tag_isActive}
                     >
                       <MenuItem value="">Select Status</MenuItem>
@@ -206,19 +156,21 @@ export default function AddUpdateForm({
                   </FormControl>
                 </Box>
 
-                {/* Actions */}
+                {/* ACTIONS */}
                 <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+                  {/* Cancel Button */}
                   <Button
                     variant="outlined"
                     onClick={handleFormClose}
                     sx={{
-                      color: "#cf1f1f",
-                      borderColor: "#cf1f1f",
-                      transition: "all 0.3s ease",
+                      color: "#d32f2f",
+                      borderColor: "#d32f2f",
+                      fontWeight: 600,
+                      textTransform: "none",
                       "&:hover": {
-                        backgroundColor: "#fcecec",
-                        borderColor: "#cf1f1f",
-                        transform: "scale(1.05)",
+                        backgroundColor: "#fdecea",
+                        borderColor: "#b71c1c",
+                        color: "#b71c1c",
                       },
                     }}
                   >
@@ -228,11 +180,11 @@ export default function AddUpdateForm({
                     type="submit"
                     variant="contained"
                     sx={{
-                      bgcolor: PurpleThemeColor,
-                      transition: "all 0.3s ease",
+                      bgcolor: "#7C3AED",
+                      fontWeight: 600,
+                      textTransform: "none",
                       "&:hover": {
-                        bgcolor: "#6f137f",
-                        transform: "scale(1.05)",
+                        bgcolor: "#6D28D9",
                       },
                     }}
                   >
@@ -243,12 +195,6 @@ export default function AddUpdateForm({
             )}
           </Formik>
         </Box>
-        <CustomSnackbar
-          open={snackbar.open}
-          message={snackbar.message}
-          severity={snackbar.severity}
-          onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
-        />
       </Box>
     </Modal>
   );

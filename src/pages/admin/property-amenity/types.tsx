@@ -19,11 +19,16 @@ export interface FormValues {
 }
 
 export interface AddUpdateFormProps {
-  amenetiesId?: string | null;
+  amenetiesId: string | null;
   formshow: boolean;
-  // handleFormShow: (id?: string) => void;
-  filterData: any;
   handleFormClose: () => void;
+  filterData: FilterData;
+
+  // ✅ ADD THIS
+  showSnackbar: (
+    message: string,
+    severity: "success" | "error" | "warning" | "info"
+  ) => void;
 }
 
 export interface ListingProps {

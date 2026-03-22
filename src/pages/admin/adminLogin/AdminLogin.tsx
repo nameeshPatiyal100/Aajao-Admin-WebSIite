@@ -9,6 +9,7 @@ import {
   IconButton,
   Alert,
 } from "@mui/material";
+import { Toaster } from "react-hot-toast";
 import login_illustration from "../../../assets/admin/login_illustration.png";
 import * as Yup from "yup";
 import { Lock, Eye, EyeOff, Mail } from "lucide-react";
@@ -291,7 +292,7 @@ const AdminLogin = () => {
                   textAlign: "left",
 
                   "&:hover": {
-                    textDecoration: "underline", // optional, remove if not needed
+                    textDecoration: "underline",
                   },
                 }}
                 onClick={() =>
@@ -327,7 +328,7 @@ const AdminLogin = () => {
           </Box>
         </MotionBox>
       </Box>
-      {/* <Toaster /> */}
+      <Toaster />
       <CustomSnackbar
         open={snackbarOpen}
         message={snackbarMessage}

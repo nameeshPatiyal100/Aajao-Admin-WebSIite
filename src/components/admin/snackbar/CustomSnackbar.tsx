@@ -21,6 +21,7 @@ const CustomSnackbar: React.FC<CustomSnackbarProps> = ({
       autoHideDuration={4000}
       onClose={onClose}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      sx={{ zIndex: 9999 }}
     >
       <Alert
         onClose={onClose}

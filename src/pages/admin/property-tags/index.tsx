@@ -8,20 +8,25 @@ import SearchBar from "./SearchBar";
 import AddUpdateForm from "./AddUpdateForm";
 import type { FilterData } from "./types";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+
 import { fetchPropertyTags } from "../../../features/admin/propertyTag/propertyTag.thunk";
 import { changePropertyTagStatus } from "../../../features/admin/propertyTag/propertyTagStatus.slice";
 import { deletePropertyTag } from "../../../features/admin/propertyTag/propertyTagDelete.slice";
 
+// ✅ SNACKBAR
+import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
+
 export default function PropertyTag() {
-  // State Management
   const [page, setPage] = useState(1);
   const [formshow, setFormShow] = useState(false);
   const [tagId, setTagId] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
-  const { tags, loading, pagination } = useAppSelector((state) => state.propertyTag);
-  const totalRecords = pagination?.totalRecords;
+  const { tags, loading, pagination } = useAppSelector(
+    (state) => state.propertyTag
+  );
 
+  const totalRecords = pagination?.totalRecords;
   const rowsPerPage = 10;
 
   const requestBody: FilterData = {
@@ -39,6 +44,29 @@ export default function PropertyTag() {
   const [deleteTagId, setDeleteTagId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  // ✅ LOCAL SNACKBAR STATE
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "warning" | "info"
+  >("info");
+
+  const [localTags, setLocalTags] = useState(tags);
+
+  useEffect(() => {
+    setLocalTags(tags);
+  }, [tags]);
+
+  const showSnackbar = (
+    message: string,
+    severity: "success" | "error" | "warning" | "info"
+  ) => {
+    console.log("SNACKBAR TRIGGERED:", message);
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
   const handlePaginate = (_event: unknown, value: number) => {
     const updatedFilterData: FilterData = {
       ...filterData,
@@ -53,13 +81,15 @@ export default function PropertyTag() {
   const handleFilterUpdate = (
     name: keyof FilterData,
     value: string,
-    apply: boolean = false,
+    apply: boolean = false
   ) => {
     const updatedFilterData: FilterData = {
       ...filterData,
       [name]: value,
     };
+
     setFilterData(updatedFilterData);
+
     if (apply) {
       dispatch(fetchPropertyTags(updatedFilterData));
     }
@@ -78,21 +108,36 @@ export default function PropertyTag() {
   };
 
   const handleToggleActive = async (id: number) => {
-    const tag = tags.find((t) => t.tag_id === id);
+    const tag = localTags.find((t) => t.tag_id === id);
     if (!tag) return;
 
-    const newStatus: "1" | "0" = String(tag.tag_isActive) === "1" ? "0" : "1";
-    console.log(tag);
-    console.log(newStatus);
+    const newStatus = Number(tag.tag_isActive) === 1 ? 0 : 1;
+
+    // ✅ INSTANT UI UPDATE (smooth switch)
+    setLocalTags((prev) =>
+      prev.map((t) =>
+        t.tag_id === id ? { ...t, tag_isActive: String(newStatus) } : t
+      )
+    );
 
     try {
-      await dispatch(
-        changePropertyTagStatus({ tagId: id, tag_isActive: newStatus }),
+      const res = await dispatch(
+        changePropertyTagStatus({
+          tagId: id,
+          tag_isActive: newStatus === 1 ? "1" : "0",
+        })
       ).unwrap();
 
-      dispatch(fetchPropertyTags(filterData));
-    } catch (err) {
-      console.error(err);
+      showSnackbar(res?.message || "Status updated", "success");
+    } catch (err: any) {
+      // ❌ revert if API fails
+      setLocalTags((prev) =>
+        prev.map((t) =>
+          t.tag_id === id ? { ...t, tag_isActive: tag.tag_isActive } : t
+        )
+      );
+
+      showSnackbar(err?.message || "Failed to update", "error");
     }
   };
 
@@ -102,9 +147,7 @@ export default function PropertyTag() {
   };
 
   const handleFormShow = (id?: string) => {
-    if (id) {
-      setTagId(id);
-    }
+    if (id) setTagId(id);
     setFormShow(true);
   };
 
@@ -113,16 +156,26 @@ export default function PropertyTag() {
     setIsDeleteModalOpen(true);
   };
 
+  // ✅ DELETE TAG
   const handleDeleteTag = async () => {
     if (!deleteTagId) return;
+
     try {
-      await dispatch(deletePropertyTag({ tagId: deleteTagId })).unwrap();
+      const res = await dispatch(
+        deletePropertyTag({ tagId: deleteTagId })
+      ).unwrap();
+
+      showSnackbar(res?.message || "Tag deleted successfully", "success");
+
       dispatch(fetchPropertyTags(filterData));
       setIsDeleteModalOpen(false);
       setDeleteTagId(null);
-    } catch (err) {
-      console.error("Failed to delete tag:", err);
+    } catch (err: any) {
+      showSnackbar(err?.message || "Failed to delete tag", "error");
     }
+  };
+  const handleFormSuccess = (message: string) => {
+    showSnackbar(message, "success");
   };
 
   return (
@@ -133,7 +186,7 @@ export default function PropertyTag() {
         fontFamily: "Inter, sans-serif",
       }}
     >
-      {/* Header Section */}
+      {/* Header */}
       <SearchBar
         ThemeColors={ThemeColors}
         filterData={filterData}
@@ -143,10 +196,11 @@ export default function PropertyTag() {
         handleFormShow={handleFormShow}
       />
 
-      {/* Tag Table */}
+      {/* Listing */}
       <Listing
         ThemeColors={ThemeColors}
-        tags={tags}
+        // tags={tags}
+        tags={localTags}
         totalRecords={totalRecords}
         loading={loading}
         page={page}
@@ -154,11 +208,10 @@ export default function PropertyTag() {
         handlePaginate={handlePaginate}
         rowsPerPage={rowsPerPage}
         handleToggleActive={handleToggleActive}
-        // setPage={setPage}
         handleDeleteClick={handleDeleteClick}
       />
 
-      {/* Modals */}
+      {/* Delete Modal */}
       <ConfirmDeleteModal
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
@@ -167,14 +220,24 @@ export default function PropertyTag() {
         description="Are you sure you want to permanently remove this Tag?"
       />
 
+      {/* Form */}
       {formshow && (
         <AddUpdateForm
           tagId={tagId}
           formshow={formshow}
           handleFormClose={handleFormClose}
           filterData={filterData}
+          onSuccess={handleFormSuccess} // ✅ IMPORTANT
         />
       )}
+
+      {/* ✅ SNACKBAR */}
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={() => setSnackbarOpen(false)}
+      />
     </Box>
   );
 }

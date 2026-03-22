@@ -11,17 +11,19 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { changePropertyAmenityStatus } from "../../../features/admin/propertyAmenity/propertyAmenityStatus.slice";
 import { deletePropertyAmenity } from "../../../features/admin/propertyAmenity/propertyAmenityDelete.slice";
 import { fetchPropertyAmenities } from "../../../features/admin/propertyAmenity/propertyAmenity.thunk";
+import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
 
 export default function PropertyAmenity() {
-  // State Management
   const [page, setPage] = useState(1);
   const [formshow, setFormShow] = useState(false);
   const [amenetiesId, setAmenetiesId] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
-  const { amenities, loading, pagination } = useAppSelector((state) => state.propertyAmenity);
-  const totalRecords = pagination?.totalRecords;
+  const { amenities, loading, pagination } = useAppSelector(
+    (state) => state.propertyAmenity
+  );
 
+  const totalRecords = pagination?.totalRecords;
   const rowsPerPage = 10;
 
   const requestBody: FilterData = {
@@ -36,8 +38,32 @@ export default function PropertyAmenity() {
   }, [dispatch]);
 
   const [filterData, setFilterData] = useState<FilterData>(requestBody);
+
+  // ✅ LOCAL STATE FOR SMOOTH TOGGLE
+  const [localAmenities, setLocalAmenities] = useState(amenities);
+
+  useEffect(() => {
+    setLocalAmenities(amenities);
+  }, [amenities]);
+
   const [deleteAmenityId, setDeleteAmenityId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  // ✅ SNACKBAR STATE
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "warning" | "info"
+  >("info");
+
+  const showSnackbar = (
+    message: string,
+    severity: "success" | "error" | "warning" | "info"
+  ) => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
 
   const handlePaginate = (_event: unknown, value: number) => {
     const updatedFilterData: FilterData = {
@@ -53,13 +79,15 @@ export default function PropertyAmenity() {
   const handleFilterUpdate = (
     name: keyof FilterData,
     value: string,
-    apply: boolean = false,
+    apply: boolean = false
   ) => {
     const updatedFilterData: FilterData = {
       ...filterData,
       [name]: value,
     };
+
     setFilterData(updatedFilterData);
+
     if (apply) {
       dispatch(fetchPropertyAmenities(updatedFilterData));
     }
@@ -77,20 +105,38 @@ export default function PropertyAmenity() {
     dispatch(fetchPropertyAmenities(requestBody));
   };
 
+  // 🔥 SMOOTH TOGGLE + SNACKBAR
   const handleToggleActive = async (id: number) => {
-    const amenity = amenities.find((amn) => amn.amn_id === id);
+    const amenity = localAmenities.find((amn) => amn.amn_id === id);
     if (!amenity) return;
-
-    const newStatus: "1" | "0" = String(amenity.amn_isActive) === "1" ? "0" : "1";
+    const newStatus: "0" | "1" = amenity.amn_isActive === "1" ? "0" : "1";
+    setLocalAmenities((prev) =>
+      prev.map((a) => (a.amn_id === id ? { ...a, amn_isActive: newStatus } : a))
+    );
 
     try {
-      await dispatch(
-        changePropertyAmenityStatus({ amenetiesId: id, amn_isActive: newStatus }),
+      const res = await dispatch(
+        changePropertyAmenityStatus({
+          amenetiesId: id,
+          amn_isActive: newStatus, // ✅ NO String()
+        })
       ).unwrap();
 
-      dispatch(fetchPropertyAmenities(filterData));
-    } catch (err) {
-      console.error(err);
+      showSnackbar(
+        res?.message ||
+          `Amenity ${
+            newStatus === "1" ? "activated" : "deactivated"
+          } successfully`,
+        "success"
+      );
+    } catch (err: any) {
+      setLocalAmenities((prev) =>
+        prev.map((a) =>
+          a.amn_id === id ? { ...a, amn_isActive: amenity.amn_isActive } : a
+        )
+      );
+
+      showSnackbar(err?.message || "Failed to update status", "error");
     }
   };
 
@@ -100,9 +146,7 @@ export default function PropertyAmenity() {
   };
 
   const handleFormShow = (id?: string) => {
-    if (id) {
-      setAmenetiesId(id);
-    }
+    if (id) setAmenetiesId(id);
     setFormShow(true);
   };
 
@@ -113,13 +157,19 @@ export default function PropertyAmenity() {
 
   const handleDeleteAmenity = async () => {
     if (!deleteAmenityId) return;
+
     try {
-      await dispatch(deletePropertyAmenity({ amenetiesId: deleteAmenityId })).unwrap();
+      const res = await dispatch(
+        deletePropertyAmenity({ amenetiesId: deleteAmenityId })
+      ).unwrap();
+
+      showSnackbar(res?.message || "Amenity deleted successfully", "success");
+
       dispatch(fetchPropertyAmenities(filterData));
       setIsDeleteModalOpen(false);
       setDeleteAmenityId(null);
-    } catch (err) {
-      console.error("Failed to delete Amenity:", err);
+    } catch (err: any) {
+      showSnackbar(err?.message || "Failed to delete amenity", "error");
     }
   };
 
@@ -131,7 +181,6 @@ export default function PropertyAmenity() {
         fontFamily: "Inter, sans-serif",
       }}
     >
-      {/* Header Section */}
       <SearchBar
         ThemeColors={ThemeColors}
         filterData={filterData}
@@ -141,10 +190,9 @@ export default function PropertyAmenity() {
         handleFormShow={handleFormShow}
       />
 
-      {/* Amenity Table */}
       <Listing
         ThemeColors={ThemeColors}
-        amenities={amenities}
+        amenities={localAmenities}
         totalRecords={totalRecords}
         loading={loading}
         page={page}
@@ -152,11 +200,9 @@ export default function PropertyAmenity() {
         handlePaginate={handlePaginate}
         rowsPerPage={rowsPerPage}
         handleToggleActive={handleToggleActive}
-        // setPage={setPage}
         handleDeleteClick={handleDeleteClick}
       />
 
-      {/* Modals */}
       <ConfirmDeleteModal
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
@@ -171,8 +217,17 @@ export default function PropertyAmenity() {
           formshow={formshow}
           handleFormClose={handleFormClose}
           filterData={filterData}
+          showSnackbar={showSnackbar}
         />
       )}
+
+      {/* ✅ SNACKBAR */}
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        onClose={() => setSnackbarOpen(false)}
+      />
     </Box>
   );
 }

@@ -100,6 +100,9 @@ export default function Listing({
                       checked={tag.tag_isActive === 1}
                       onChange={() => handleToggleActive(Number(tag.tag_id))}
                       sx={{
+                        "& .MuiSwitch-switchBase": {
+                          transition: "transform 0.3s ease",
+                        },
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: PurpleThemeColor,
                         },
@@ -107,7 +110,9 @@ export default function Listing({
                           {
                             backgroundColor: PurpleThemeColor,
                           },
-                        transition: "all 0.3s ease",
+                        "& .MuiSwitch-track": {
+                          transition: "background-color 0.3s ease",
+                        },
                       }}
                     />
                   </TableCell>
