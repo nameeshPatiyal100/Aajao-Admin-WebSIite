@@ -59,6 +59,8 @@ import detailTermReducer from "../features/admin/TermsConditions/detailTerm.slic
 import addUpdateTermReducer from "../features/admin/TermsConditions/addUpdateTerm.slice";
 import deleteTermReducer from "../features/admin/TermsConditions/deleteTerm.slice";
 import cmsSectionReducer from "../features/admin/CMS/cmsSection.slice";
+import propDDhomepageCmsReducer from "../features/admin/CMS/propDDhomepageCms.slice";
+import bookingAnalyticsReducer from "../features/admin/bookingAnalytics/bookingAnalytics.slice";
 
 export const store = configureStore({
   reducer: {
@@ -122,7 +124,9 @@ export const store = configureStore({
     detailTerm: detailTermReducer,
     addUpdateTerm: addUpdateTermReducer,
     deleteTerm: deleteTermReducer,
+    bookingAnalytics: bookingAnalyticsReducer,
     cmsSection: cmsSectionReducer,
+    propDDhomepageCms: propDDhomepageCmsReducer,
   },
 });
 

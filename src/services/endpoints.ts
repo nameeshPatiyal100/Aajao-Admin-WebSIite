@@ -6,9 +6,12 @@ export const ADMINENDPOINTS = {
   TERM_DELETE: "/admin/terms-condition/delete",
   // CMS
   CMS_SECTION_LISTING: "/admin/cms/section/search",
+  PROPERTIES_DROP_DOWN: "/admin/cms/homepage/property/dropdown",
+  TESTIMONIALS_DROP_DOWN: "/admin/cms/homepage/testimonial/dropdown",
   // ADMIN
   ADMIN_LOGIN: "/admin/login",
   GET_ADMIN_DASHBOARD_DATA: "/admin/dashboard",
+  BOOKING_HeatMap_ANALYTICS: "/admin/analytics/graph",
   // Admin FAQ
   FAQ_LISTING: "/admin/faq/listing",
   DELETE_FAQ: "/admin/faq/delete",

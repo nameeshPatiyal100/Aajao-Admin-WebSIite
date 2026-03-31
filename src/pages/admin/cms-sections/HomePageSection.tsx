@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -6,7 +6,6 @@ import {
   Button,
   Stack,
   MenuItem,
-  // IconButton,
   Chip,
   Autocomplete,
 } from "@mui/material";
@@ -16,6 +15,13 @@ import { useNavigate } from "react-router-dom";
 import { ThemeColors } from "../../../theme/themeColor";
 import { homePageSchema } from "../../../validations/admin-validations";
 import * as yup from "yup";
+
+/* ✅ RTK */
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import {
+  fetchProperties,
+  fetchTestimonials,
+} from "../../../features/admin/CMS/propDDhomepageCms.slice";
 
 interface Property {
   id: number;
@@ -27,27 +33,28 @@ interface Testimonial {
   name: string;
 }
 
-const fakeProperties: Property[] = [
-  { id: 1, name: "Villa Sunset" },
-  { id: 2, name: "Ocean View Apartment" },
-  { id: 3, name: "City Center Flat" },
-];
-
-const fakeTestimonials: Testimonial[] = [
-  { id: 1, name: "John Review" },
-  { id: 2, name: "Emily Review" },
-  { id: 3, name: "David Review" },
-];
-
 export default function HomePageSection() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  /* ================= RTK STATE ================= */
+
+  const {
+    properties,
+    testimonials,
+    propertyLoading,
+    testimonialLoading,
+  } = useAppSelector((state) => state.propDDhomepageCms);
+
+  const [propertyInput, setPropertyInput] = useState("");
+  const [testimonialInput, setTestimonialInput] = useState("");
 
   /* ================= STATE ================= */
 
   const [featureTitle, setFeatureTitle] = useState("");
   const [featureDesc, setFeatureDesc] = useState("");
   const [selectedProperties, setSelectedProperties] = useState<Property[]>([]);
-
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [labelTitle, setLabelTitle] = useState("");
   const [labelDesc, setLabelDesc] = useState("");
   const [image, setImage] = useState<File | null>(null);
@@ -63,12 +70,35 @@ export default function HomePageSection() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  /* ================= API CALLS ================= */
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      dispatch(fetchProperties(propertyInput));
+    }, 500);
+    return () => clearTimeout(delay);
+  }, [propertyInput]);
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      dispatch(fetchTestimonials(testimonialInput));
+    }, 500);
+    return () => clearTimeout(delay);
+  }, [testimonialInput]);
+
   /* ================= IMAGE ================= */
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]); // store actual file for formData
+      const file = e.target.files[0];
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file));
     }
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);
+    setImagePreview(null);
   };
 
   /* ================= SUBMIT ================= */
@@ -90,7 +120,6 @@ export default function HomePageSection() {
 
       setErrors({});
 
-      /* ✅ Create FormData */
       const formData = new FormData();
 
       formData.append("featureTitle", featureTitle);
@@ -106,9 +135,11 @@ export default function HomePageSection() {
 
       formData.append("testimonialTitle", testimonialTitle);
       formData.append("testimonialDesc", testimonialDesc);
-      formData.append("testimonials", JSON.stringify(selectedTestimonials));
+      formData.append(
+        "testimonials",
+        JSON.stringify(selectedTestimonials)
+      );
 
-      /* 🔥 Log FormData Properly */
       console.log("=== FORM DATA ===");
       for (const pair of formData.entries()) {
         console.log(pair[0], pair[1]);
@@ -139,7 +170,15 @@ export default function HomePageSection() {
 
   return (
     <Box p={0}>
-      {/* Back Button Right */}
+      {/* Spinner animation */}
+      <style>
+        {`@keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }`}
+      </style>
+
+      {/* Back Button */}
       <Box display="flex" justifyContent="flex-end" mb={2}>
         <Button
           startIcon={<ArrowBackIcon />}
@@ -185,23 +224,59 @@ export default function HomePageSection() {
           sx={inputStyle}
         />
 
+        {/* ✅ PROPERTY DROPDOWN */}
         <Autocomplete
           multiple
-          options={fakeProperties}
+          options={properties}
           getOptionLabel={(option) => option.name}
           value={selectedProperties}
+          loading={propertyLoading}
+          isOptionEqualToValue={(o, v) => o.id === v.id}
           onChange={(_, value) => setSelectedProperties(value)}
+          onInputChange={(_, value) => setPropertyInput(value)}
+          ListboxProps={{
+            style: { maxHeight: 200, overflow: "auto" },
+          }}
           renderTags={(value, getTagProps) =>
             value.map((option, index) => (
               <Chip
                 {...getTagProps({ index })}
                 label={option.name}
                 deleteIcon={<CloseIcon />}
+                sx={{
+                  backgroundColor: ThemeColors.primary,
+                  color: "#fff",
+                }}
               />
             ))
           }
           renderInput={(params) => (
-            <TextField {...params} label="Select Properties" />
+            <TextField
+              {...params}
+              label="Select Properties"
+              sx={inputStyle}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {propertyLoading && (
+                      <Box
+                        sx={{
+                          width: 20,
+                          height: 20,
+                          border: `2px solid ${ThemeColors.primary}`,
+                          borderTop: "2px solid transparent",
+                          borderRadius: "50%",
+                          animation: "spin 1s linear infinite",
+                          mr: 1,
+                        }}
+                      />
+                    )}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
           )}
         />
       </Stack>
@@ -238,11 +313,30 @@ export default function HomePageSection() {
           sx={{
             borderColor: ThemeColors.primary,
             color: ThemeColors.primary,
+            width: "fit-content",
           }}
         >
           Upload Image
           <input hidden type="file" onChange={handleImageUpload} />
         </Button>
+
+        {imagePreview && (
+          <Box position="relative" width={200} height={150} mt={2}>
+            <img
+              src={imagePreview}
+              alt="preview"
+              style={{ width: "100%", height: "100%" }}
+            />
+            <Box
+              position="absolute"
+              top={5}
+              right={5}
+              onClick={handleRemoveImage}
+            >
+              <CloseIcon />
+            </Box>
+          </Box>
+        )}
 
         <TextField
           label="Button Title"
@@ -270,62 +364,42 @@ export default function HomePageSection() {
         </TextField>
       </Stack>
 
-      {/* ================= Testimonial Section ================= */}
-      <Typography variant="h6" mb={2} sx={{ color: ThemeColors.primary }}>
-        Testimonial Section
-      </Typography>
-
-      <Stack spacing={2} mb={4}>
-        <TextField
-          label="Title"
-          value={testimonialTitle}
-          onChange={(e) => setTestimonialTitle(e.target.value)}
-          error={!!errors.testimonialTitle}
-          helperText={errors.testimonialTitle}
-          sx={inputStyle}
-        />
-
-        <TextField
-          label="Description"
-          multiline
-          rows={3}
-          value={testimonialDesc}
-          onChange={(e) => setTestimonialDesc(e.target.value)}
-          error={!!errors.testimonialDesc}
-          helperText={errors.testimonialDesc}
-          sx={inputStyle}
-        />
-
-        <Autocomplete
-          multiple
-          options={fakeTestimonials}
-          getOptionLabel={(option) => option.name}
-          value={selectedTestimonials}
-          onChange={(_, value) => setSelectedTestimonials(value)}
-          renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
-              <Chip
-                {...getTagProps({ index })}
-                label={option.name}
-                deleteIcon={<CloseIcon />}
-              />
-            ))
-          }
-          renderInput={(params) => (
-            <TextField {...params} label="Select Testimonials" />
-          )}
-          sx={inputStyle}
-        />
-      </Stack>
-
-      <Button
-        variant="contained"
-        onClick={handleSubmit}
-        sx={{
-          backgroundColor: ThemeColors.primary,
-          px: 4,
+      {/* ================= TESTIMONIAL ================= */}
+      <Autocomplete
+        multiple
+        options={testimonials}
+        getOptionLabel={(option) => option.name}
+        value={selectedTestimonials}
+        loading={testimonialLoading}
+        isOptionEqualToValue={(o, v) => o.id === v.id}
+        onChange={(_, value) => setSelectedTestimonials(value)}
+        onInputChange={(_, value) => setTestimonialInput(value)}
+        ListboxProps={{
+          style: { maxHeight: 200, overflow: "auto" },
         }}
-      >
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => (
+            <Chip
+              {...getTagProps({ index })}
+              label={option.name}
+              deleteIcon={<CloseIcon />}
+              sx={{
+                backgroundColor: ThemeColors.primary,
+                color: "#fff",
+              }}
+            />
+          ))
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Select Testimonials"
+            sx={inputStyle}
+          />
+        )}
+      />
+
+      <Button variant="contained" onClick={handleSubmit}>
         Submit
       </Button>
     </Box>
