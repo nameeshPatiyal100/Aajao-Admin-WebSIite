@@ -8,6 +8,9 @@ export const ADMINENDPOINTS = {
   CMS_SECTION_LISTING: "/admin/cms/section/search",
   PROPERTIES_DROP_DOWN: "/admin/cms/homepage/property/dropdown",
   TESTIMONIALS_DROP_DOWN: "/admin/cms/homepage/testimonial/dropdown",
+  CMS_HOMEPAGE: "/admin/cms/homepage/get",
+  CMS_HOMEPAGE_UPDATE: "/admin/cms/homepage/update",
+  CMS_HOMEPAGE_DELETE_IMAGE: "/admin/cms/homepage/delete/image",
   // ADMIN
   ADMIN_LOGIN: "/admin/login",
   GET_ADMIN_DASHBOARD_DATA: "/admin/dashboard",

@@ -61,6 +61,9 @@ import deleteTermReducer from "../features/admin/TermsConditions/deleteTerm.slic
 import cmsSectionReducer from "../features/admin/CMS/cmsSection.slice";
 import propDDhomepageCmsReducer from "../features/admin/CMS/propDDhomepageCms.slice";
 import bookingAnalyticsReducer from "../features/admin/bookingAnalytics/bookingAnalytics.slice";
+import cmsPageHomepageReducer from "../features/admin/CMS/cmsPageHomepage.slice";
+import cmsHomepageUpdateReducer from "../features/admin/CMS/cmsHomepageUpdate.slice";
+import cmsHomepageDeleteImageReducer from "../features/admin/CMS/cmsHomepageDeleteImage.slice";
 
 export const store = configureStore({
   reducer: {
@@ -126,7 +129,10 @@ export const store = configureStore({
     deleteTerm: deleteTermReducer,
     bookingAnalytics: bookingAnalyticsReducer,
     cmsSection: cmsSectionReducer,
+    cmsPageHomepage: cmsPageHomepageReducer,
     propDDhomepageCms: propDDhomepageCmsReducer,
+    cmsHomepageUpdate: cmsHomepageUpdateReducer,
+    cmsHomepageDeleteImage: cmsHomepageDeleteImageReducer,
   },
 });
 

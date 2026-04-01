@@ -15,13 +15,16 @@ import { useNavigate } from "react-router-dom";
 import { ThemeColors } from "../../../theme/themeColor";
 import { homePageSchema } from "../../../validations/admin-validations";
 import * as yup from "yup";
-
-/* ✅ RTK */
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   fetchProperties,
   fetchTestimonials,
 } from "../../../features/admin/CMS/propDDhomepageCms.slice";
+import { fetchCmsHomePage } from "../../../features/admin/CMS/cmsPageHomepage.slice";
+import { updateCmsHomePage } from "../../../features/admin/CMS/cmsHomepageUpdate.slice";
+import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
+import { deleteCmsHomepageImage } from "../../../features/admin/CMS/cmsHomepageDeleteImage.slice";
+import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 interface Property {
   id: number;
@@ -39,15 +42,34 @@ export default function HomePageSection() {
 
   /* ================= RTK STATE ================= */
 
-  const {
-    properties,
-    testimonials,
-    propertyLoading,
-    testimonialLoading,
-  } = useAppSelector((state) => state.propDDhomepageCms);
+  const { properties, testimonials, propertyLoading, testimonialLoading } =
+    useAppSelector((state) => state.propDDhomepageCms);
+
+  const { data: cmsData, loading: cmsLoading } = useAppSelector(
+    (state) => state.cmsPageHomepage
+  );
 
   const [propertyInput, setPropertyInput] = useState("");
   const [testimonialInput, setTestimonialInput] = useState("");
+
+  const {
+    loading: updateLoading,
+    success,
+    error,
+    message,
+  } = useAppSelector((state) => state.cmsHomepageUpdate);
+  const {
+    loading: deleteLoading,
+    success: deleteSuccess,
+    error: deleteError,
+    message: deleteMessage,
+  } = useAppSelector((state) => state.cmsHomepageDeleteImage);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMsg, setSnackbarMsg] = useState("");
+  const [snackbarType, setSnackbarType] = useState<"success" | "error">(
+    "success"
+  );
 
   /* ================= STATE ================= */
 
@@ -61,7 +83,7 @@ export default function HomePageSection() {
   const [buttonTitle, setButtonTitle] = useState("");
   const [buttonUrl, setButtonUrl] = useState("");
   const [buttonTarget, setButtonTarget] = useState("_self");
-
+  const [isLocalImage, setIsLocalImage] = useState(false);
   const [testimonialTitle, setTestimonialTitle] = useState("");
   const [testimonialDesc, setTestimonialDesc] = useState("");
   const [selectedTestimonials, setSelectedTestimonials] = useState<
@@ -71,6 +93,38 @@ export default function HomePageSection() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   /* ================= API CALLS ================= */
+
+  useEffect(() => {
+    dispatch(fetchCmsHomePage(10));
+  }, []);
+
+  useEffect(() => {
+    if (cmsData) {
+      setFeatureTitle(cmsData.featureTitle);
+      setFeatureDesc(cmsData.featureDesc);
+      setSelectedProperties(
+        cmsData.selectedProperties
+          .filter((item: any) => item.name !== null)
+          .map((item: any) => ({ id: item.id, name: item.name as string }))
+      );
+
+      setLabelTitle(cmsData.labelTitle);
+      setLabelDesc(cmsData.labelDesc);
+      setImagePreview(cmsData.image);
+
+      setButtonTitle(cmsData.buttonTitle);
+      setButtonUrl(cmsData.buttonUrl);
+      setButtonTarget(cmsData.buttonTarget);
+
+      setTestimonialTitle(cmsData.testimonialTitle);
+      setTestimonialDesc(cmsData.testimonialDesc);
+      setSelectedTestimonials(
+        cmsData.selectedTestimonials
+          .filter((item: any) => item.name !== null)
+          .map((item: any) => ({ id: item.id, name: item.name as string }))
+      );
+    }
+  }, [cmsData]);
 
   useEffect(() => {
     const delay = setTimeout(() => {
@@ -91,14 +145,40 @@ export default function HomePageSection() {
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+  
       setImage(file);
-      setImagePreview(URL.createObjectURL(file));
+      // setImagePreview(URL.createObjectURL(file));
+      setImagePreview(cmsData?.image || URL.createObjectURL(file)); // ✅ show existing image if new one not selected
+  
+      // setIsLocalImage(true); // ✅ mark as local
+      setIsLocalImage(false); // ✅ mark as local
     }
   };
 
-  const handleRemoveImage = () => {
-    setImage(null);
-    setImagePreview(null);
+  const handleRemoveImage = async () => {
+    try {
+      // ✅ CASE 1: LOCAL IMAGE → NO API
+      if (isLocalImage) {
+        setImage(null);
+        setImagePreview(null);
+        setIsLocalImage(false);
+        return;
+      }
+  
+      // ✅ CASE 2: DB IMAGE → CALL API
+      await dispatch(
+        deleteCmsHomepageImage({
+          cp_page_id: 10,
+          cp_section_id: 2,
+        })
+      ).unwrap();
+  
+      setImage(null);
+      setImagePreview(null);
+  
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   /* ================= SUBMIT ================= */
@@ -122,29 +202,33 @@ export default function HomePageSection() {
 
       const formData = new FormData();
 
+      formData.append("cp_page_id", "10");
       formData.append("featureTitle", featureTitle);
       formData.append("featureDesc", featureDesc);
-      formData.append("properties", JSON.stringify(selectedProperties));
+
+      // ✅ PROPERTY IDS ARRAY
+      const propertyIds = selectedProperties.map((item) => item.id);
+      formData.append("properties", JSON.stringify(propertyIds));
 
       formData.append("labelTitle", labelTitle);
       formData.append("labelDesc", labelDesc);
       if (image) formData.append("image", image);
+
       formData.append("buttonTitle", buttonTitle);
       formData.append("buttonUrl", buttonUrl);
       formData.append("buttonTarget", buttonTarget);
 
       formData.append("testimonialTitle", testimonialTitle);
       formData.append("testimonialDesc", testimonialDesc);
-      formData.append(
-        "testimonials",
-        JSON.stringify(selectedTestimonials)
-      );
 
-      console.log("=== FORM DATA ===");
-      for (const pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-      }
-    } catch (err) {
+      // ✅ TESTIMONIAL IDS ARRAY
+      const testimonialIds = selectedTestimonials.map((item) => item.id);
+      formData.append("testimonials", JSON.stringify(testimonialIds));
+
+      /* 🔥 DISPATCH UPDATE API */
+      await dispatch(updateCmsHomePage(formData)).unwrap();
+    } catch (err: any) {
+      /* ✅ VALIDATION ERROR */
       if (err instanceof yup.ValidationError) {
         const formattedErrors: Record<string, string> = {};
         err.inner.forEach((error) => {
@@ -153,10 +237,45 @@ export default function HomePageSection() {
           }
         });
         setErrors(formattedErrors);
+      } else {
+        /* ✅ API ERROR handled by slice (snackbar already) */
+        console.error(err);
       }
     }
   };
 
+  useEffect(() => {
+    if (success) {
+      setSnackbarMsg(message || "Updated Successfully");
+      setSnackbarType("success");
+      setSnackbarOpen(true);
+
+      // 🔥 REFETCH UPDATED DATA
+      dispatch(fetchCmsHomePage(10));
+    }
+
+    if (error) {
+      setSnackbarMsg(error);
+      setSnackbarType("error");
+      setSnackbarOpen(true);
+    }
+  }, [success, error]);
+  useEffect(() => {
+    if (deleteSuccess) {
+      setSnackbarMsg(deleteMessage || "Image deleted successfully");
+      setSnackbarType("success");
+      setSnackbarOpen(true);
+  
+      // 🔥 REFRESH DATA
+      dispatch(fetchCmsHomePage(10));
+    }
+  
+    if (deleteError) {
+      setSnackbarMsg(deleteError);
+      setSnackbarType("error");
+      setSnackbarOpen(true);
+    }
+  }, [deleteSuccess, deleteError]);
   /* ================= STYLES ================= */
 
   const inputStyle = {
@@ -168,72 +287,162 @@ export default function HomePageSection() {
     },
   };
 
+  /* ================= LOADER ================= */
+
+  if (cmsLoading || updateLoading || deleteLoading) {
+    return <TableLoader />;
+  }
   return (
-    <Box p={0}>
-      {/* Spinner animation */}
-      <style>
-        {`@keyframes spin {
+    <>
+      <Box p={0}>
+        <style>
+          {`@keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }`}
-      </style>
+        </style>
 
-      {/* Back Button */}
-      <Box display="flex" justifyContent="flex-end" mb={2}>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
+        <Box display="flex" justifyContent="flex-end" mb={2}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)}
+            sx={{ color: ThemeColors.primary }}
+          >
+            Back
+          </Button>
+        </Box>
+
+        <Typography
+          variant="h4"
+          fontWeight={700}
+          mb={4}
           sx={{ color: ThemeColors.primary }}
         >
-          Back
-        </Button>
-      </Box>
+          Home Page CMS Form
+        </Typography>
 
-      <Typography
-        variant="h4"
-        fontWeight={700}
-        mb={4}
-        sx={{ color: ThemeColors.primary }}
-      >
-        Home Page CMS Form
-      </Typography>
+        <Typography variant="h6" mb={2} sx={{ color: ThemeColors.primary }}>
+          Feature Section
+        </Typography>
 
-      {/* ================= Feature Section ================= */}
-      <Typography variant="h6" mb={2} sx={{ color: ThemeColors.primary }}>
-        Feature Section
-      </Typography>
+        <Stack spacing={2} mb={4}>
+          <TextField
+            label="Title"
+            value={featureTitle}
+            onChange={(e) => setFeatureTitle(e.target.value)}
+            error={!!errors.featureTitle}
+            helperText={errors.featureTitle}
+            sx={inputStyle}
+          />
 
-      <Stack spacing={2} mb={4}>
-        <TextField
-          label="Title"
-          value={featureTitle}
-          onChange={(e) => setFeatureTitle(e.target.value)}
-          error={!!errors.featureTitle}
-          helperText={errors.featureTitle}
-          sx={inputStyle}
-        />
+          <TextField
+            label="Description"
+            multiline
+            rows={3}
+            value={featureDesc}
+            onChange={(e) => setFeatureDesc(e.target.value)}
+            error={!!errors.featureDesc}
+            helperText={errors.featureDesc}
+            sx={inputStyle}
+          />
 
-        <TextField
-          label="Description"
-          multiline
-          rows={3}
-          value={featureDesc}
-          onChange={(e) => setFeatureDesc(e.target.value)}
-          error={!!errors.featureDesc}
-          helperText={errors.featureDesc}
-          sx={inputStyle}
-        />
+          <Autocomplete
+            multiple
+            options={properties}
+            getOptionLabel={(option) => option.name}
+            value={selectedProperties}
+            loading={propertyLoading}
+            isOptionEqualToValue={(o, v) => o.id === v.id}
+            onChange={(_, value) => setSelectedProperties(value)}
+            onInputChange={(_, value) => setPropertyInput(value)}
+            ListboxProps={{
+              style: { maxHeight: 200, overflow: "auto" },
+            }}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip
+                  {...getTagProps({ index })}
+                  label={option.name}
+                  deleteIcon={<CloseIcon />}
+                  sx={{
+                    backgroundColor: ThemeColors.primary,
+                    color: "#fff",
+                  }}
+                />
+              ))
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select Properties"
+                sx={inputStyle}
+              />
+            )}
+          />
+        </Stack>
 
-        {/* ✅ PROPERTY DROPDOWN */}
+        <Stack spacing={2} mb={4}>
+          <TextField
+            label="Title"
+            value={labelTitle}
+            onChange={(e) => setLabelTitle(e.target.value)}
+            error={!!errors.labelTitle}
+            helperText={errors.labelTitle}
+            sx={inputStyle}
+          />
+
+          <TextField
+            label="Description"
+            multiline
+            rows={3}
+            value={labelDesc}
+            onChange={(e) => setLabelDesc(e.target.value)}
+            error={!!errors.labelDesc}
+            helperText={errors.labelDesc}
+            sx={inputStyle}
+          />
+
+          <Button
+            variant="outlined"
+            component="label"
+            sx={{
+              borderColor: ThemeColors.primary,
+              color: ThemeColors.primary,
+              width: "fit-content",
+            }}
+          >
+            Upload Image
+            <input hidden type="file" onChange={handleImageUpload} />
+          </Button>
+
+          {imagePreview && (
+            <Box position="relative" width={200} height={150} mt={2}>
+              <img
+                src={imagePreview}
+                alt="preview"
+                style={{ width: "100%", height: "100%" }}
+              />
+              <Box
+                position="absolute"
+                top={5}
+                right={5}
+                onClick={handleRemoveImage}
+              >
+                <CloseIcon />
+              </Box>
+            </Box>
+          )}
+        </Stack>
+
         <Autocomplete
           multiple
-          options={properties}
+          options={testimonials}
           getOptionLabel={(option) => option.name}
-          value={selectedProperties}
-          loading={propertyLoading}
+          value={selectedTestimonials}
+          loading={testimonialLoading}
           isOptionEqualToValue={(o, v) => o.id === v.id}
-          onChange={(_, value) => setSelectedProperties(value)}
-          onInputChange={(_, value) => setPropertyInput(value)}
+          onChange={(_, value) => setSelectedTestimonials(value)}
+          onInputChange={(_, value) => setTestimonialInput(value)}
           ListboxProps={{
             style: { maxHeight: 200, overflow: "auto" },
           }}
@@ -253,155 +462,32 @@ export default function HomePageSection() {
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Select Properties"
+              label="Select Testimonials"
               sx={inputStyle}
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: (
-                  <>
-                    {propertyLoading && (
-                      <Box
-                        sx={{
-                          width: 20,
-                          height: 20,
-                          border: `2px solid ${ThemeColors.primary}`,
-                          borderTop: "2px solid transparent",
-                          borderRadius: "50%",
-                          animation: "spin 1s linear infinite",
-                          mr: 1,
-                        }}
-                      />
-                    )}
-                    {params.InputProps.endAdornment}
-                  </>
-                ),
-              }}
             />
           )}
         />
-      </Stack>
 
-      {/* ================= Label Section ================= */}
-      <Typography variant="h6" mb={2} sx={{ color: ThemeColors.primary }}>
-        Label Section
-      </Typography>
-
-      <Stack spacing={2} mb={4}>
-        <TextField
-          label="Title"
-          value={labelTitle}
-          onChange={(e) => setLabelTitle(e.target.value)}
-          error={!!errors.labelTitle}
-          helperText={errors.labelTitle}
-          sx={inputStyle}
-        />
-
-        <TextField
-          label="Description"
-          multiline
-          rows={3}
-          value={labelDesc}
-          onChange={(e) => setLabelDesc(e.target.value)}
-          error={!!errors.labelDesc}
-          helperText={errors.labelDesc}
-          sx={inputStyle}
-        />
-
+        {/* ✅ ONLY CHANGE */}
         <Button
-          variant="outlined"
-          component="label"
+          variant="contained"
+          onClick={handleSubmit}
           sx={{
-            borderColor: ThemeColors.primary,
-            color: ThemeColors.primary,
-            width: "fit-content",
+            mt: 4,
+            backgroundColor: ThemeColors.primary,
+            "&:hover": { backgroundColor: ThemeColors.primary },
           }}
         >
-          Upload Image
-          <input hidden type="file" onChange={handleImageUpload} />
+          Submit
         </Button>
+      </Box>
 
-        {imagePreview && (
-          <Box position="relative" width={200} height={150} mt={2}>
-            <img
-              src={imagePreview}
-              alt="preview"
-              style={{ width: "100%", height: "100%" }}
-            />
-            <Box
-              position="absolute"
-              top={5}
-              right={5}
-              onClick={handleRemoveImage}
-            >
-              <CloseIcon />
-            </Box>
-          </Box>
-        )}
-
-        <TextField
-          label="Button Title"
-          value={buttonTitle}
-          onChange={(e) => setButtonTitle(e.target.value)}
-          sx={inputStyle}
-        />
-
-        <TextField
-          label="Button URL"
-          value={buttonUrl}
-          onChange={(e) => setButtonUrl(e.target.value)}
-          sx={inputStyle}
-        />
-
-        <TextField
-          select
-          label="Button Opener"
-          value={buttonTarget}
-          onChange={(e) => setButtonTarget(e.target.value)}
-          sx={inputStyle}
-        >
-          <MenuItem value="_self">Same Tab</MenuItem>
-          <MenuItem value="_blank">New Tab</MenuItem>
-        </TextField>
-      </Stack>
-
-      {/* ================= TESTIMONIAL ================= */}
-      <Autocomplete
-        multiple
-        options={testimonials}
-        getOptionLabel={(option) => option.name}
-        value={selectedTestimonials}
-        loading={testimonialLoading}
-        isOptionEqualToValue={(o, v) => o.id === v.id}
-        onChange={(_, value) => setSelectedTestimonials(value)}
-        onInputChange={(_, value) => setTestimonialInput(value)}
-        ListboxProps={{
-          style: { maxHeight: 200, overflow: "auto" },
-        }}
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => (
-            <Chip
-              {...getTagProps({ index })}
-              label={option.name}
-              deleteIcon={<CloseIcon />}
-              sx={{
-                backgroundColor: ThemeColors.primary,
-                color: "#fff",
-              }}
-            />
-          ))
-        }
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Select Testimonials"
-            sx={inputStyle}
-          />
-        )}
+      <CustomSnackbar
+        open={snackbarOpen}
+        message={snackbarMsg}
+        severity={snackbarType}
+        onClose={() => setSnackbarOpen(false)}
       />
-
-      <Button variant="contained" onClick={handleSubmit}>
-        Submit
-      </Button>
-    </Box>
+    </>
   );
 }
