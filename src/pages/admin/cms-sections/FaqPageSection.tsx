@@ -17,19 +17,13 @@ import * as yup from "yup";
 
 export default function FaqPageSection() {
   const navigate = useNavigate();
-
-  /* Header */
   const [headerTitle, setHeaderTitle] = useState("");
   const [headerDesc, setHeaderDesc] = useState("");
-
-  /* Contact */
   const [contactTitle, setContactTitle] = useState("");
   const [contactDesc, setContactDesc] = useState("");
   const [contactBtnTitle, setContactBtnTitle] = useState("");
   const [contactBtnUrl, setContactBtnUrl] = useState("");
   const [contactTarget, setContactTarget] = useState("_self");
-
-  /* Label */
   const [labelTitle, setLabelTitle] = useState("");
   const [labelDesc, setLabelDesc] = useState("");
   const [labelBtnTitle, setLabelBtnTitle] = useState("");
@@ -37,10 +31,8 @@ export default function FaqPageSection() {
   const [labelTarget, setLabelTarget] = useState("_self");
   const [labelImage, setLabelImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  /* Purple active style */
   const inputStyle = {
     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
       borderColor: "#7B1FA2",
@@ -50,7 +42,6 @@ export default function FaqPageSection() {
     },
   };
 
-  /* Image Upload */
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setLabelImage(e.target.files[0]);
@@ -58,7 +49,6 @@ export default function FaqPageSection() {
     }
   };
 
-  /* Submit */
   const handleSubmit = async () => {
     try {
       const formValues = {
@@ -73,12 +63,9 @@ export default function FaqPageSection() {
         labelBtnTitle,
         labelBtnUrl,
       };
-
       await faqPageSchema.validate(formValues, { abortEarly: false });
       setErrors({});
-
       const formData = new FormData();
-
       formData.append("headerTitle", headerTitle);
       formData.append("headerDesc", headerDesc);
 
@@ -97,10 +84,7 @@ export default function FaqPageSection() {
       if (labelImage) {
         formData.append("labelImage", labelImage);
       }
-
-      console.log("===== FormData Output =====");
       for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
       }
     } catch (err) {
       if (err instanceof yup.ValidationError) {

@@ -5,7 +5,6 @@ import {
   TextField,
   Button,
   Stack,
-  MenuItem,
   Chip,
   Autocomplete,
 } from "@mui/material";
@@ -29,22 +28,18 @@ import { TableLoader } from "../../../components/admin/common/TableLoader";
 interface Property {
   id: number;
   name: string;
-}
+};
 
 interface Testimonial {
   id: number;
   name: string;
-}
+};
 
 export default function HomePageSection() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  /* ================= RTK STATE ================= */
-
   const { properties, testimonials, propertyLoading, testimonialLoading } =
     useAppSelector((state) => state.propDDhomepageCms);
-
   const { data: cmsData, loading: cmsLoading } = useAppSelector(
     (state) => state.cmsPageHomepage
   );
@@ -71,8 +66,6 @@ export default function HomePageSection() {
     "success"
   );
 
-  /* ================= STATE ================= */
-
   const [featureTitle, setFeatureTitle] = useState("");
   const [featureDesc, setFeatureDesc] = useState("");
   const [selectedProperties, setSelectedProperties] = useState<Property[]>([]);
@@ -89,11 +82,7 @@ export default function HomePageSection() {
   const [selectedTestimonials, setSelectedTestimonials] = useState<
     Testimonial[]
   >([]);
-
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  /* ================= API CALLS ================= */
-
   useEffect(() => {
     dispatch(fetchCmsHomePage(10));
   }, []);
@@ -139,33 +128,24 @@ export default function HomePageSection() {
     }, 500);
     return () => clearTimeout(delay);
   }, [testimonialInput]);
-
-  /* ================= IMAGE ================= */
-
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
   
       setImage(file);
-      // setImagePreview(URL.createObjectURL(file));
-      setImagePreview(cmsData?.image || URL.createObjectURL(file)); // ✅ show existing image if new one not selected
-  
-      // setIsLocalImage(true); // ✅ mark as local
-      setIsLocalImage(false); // ✅ mark as local
+      setImagePreview(cmsData?.image || URL.createObjectURL(file));
+      setIsLocalImage(false); 
     }
   };
 
   const handleRemoveImage = async () => {
     try {
-      // ✅ CASE 1: LOCAL IMAGE → NO API
       if (isLocalImage) {
         setImage(null);
         setImagePreview(null);
         setIsLocalImage(false);
         return;
       }
-  
-      // ✅ CASE 2: DB IMAGE → CALL API
       await dispatch(
         deleteCmsHomepageImage({
           cp_page_id: 10,
@@ -180,9 +160,6 @@ export default function HomePageSection() {
       console.error(err);
     }
   };
-
-  /* ================= SUBMIT ================= */
-
   const handleSubmit = async () => {
     try {
       const validationData = {
@@ -205,8 +182,6 @@ export default function HomePageSection() {
       formData.append("cp_page_id", "10");
       formData.append("featureTitle", featureTitle);
       formData.append("featureDesc", featureDesc);
-
-      // ✅ PROPERTY IDS ARRAY
       const propertyIds = selectedProperties.map((item) => item.id);
       formData.append("properties", JSON.stringify(propertyIds));
 
@@ -220,15 +195,10 @@ export default function HomePageSection() {
 
       formData.append("testimonialTitle", testimonialTitle);
       formData.append("testimonialDesc", testimonialDesc);
-
-      // ✅ TESTIMONIAL IDS ARRAY
       const testimonialIds = selectedTestimonials.map((item) => item.id);
       formData.append("testimonials", JSON.stringify(testimonialIds));
-
-      /* 🔥 DISPATCH UPDATE API */
       await dispatch(updateCmsHomePage(formData)).unwrap();
     } catch (err: any) {
-      /* ✅ VALIDATION ERROR */
       if (err instanceof yup.ValidationError) {
         const formattedErrors: Record<string, string> = {};
         err.inner.forEach((error) => {
@@ -238,7 +208,6 @@ export default function HomePageSection() {
         });
         setErrors(formattedErrors);
       } else {
-        /* ✅ API ERROR handled by slice (snackbar already) */
         console.error(err);
       }
     }
@@ -249,8 +218,6 @@ export default function HomePageSection() {
       setSnackbarMsg(message || "Updated Successfully");
       setSnackbarType("success");
       setSnackbarOpen(true);
-
-      // 🔥 REFETCH UPDATED DATA
       dispatch(fetchCmsHomePage(10));
     }
 
@@ -265,8 +232,7 @@ export default function HomePageSection() {
       setSnackbarMsg(deleteMessage || "Image deleted successfully");
       setSnackbarType("success");
       setSnackbarOpen(true);
-  
-      // 🔥 REFRESH DATA
+
       dispatch(fetchCmsHomePage(10));
     }
   
@@ -276,7 +242,6 @@ export default function HomePageSection() {
       setSnackbarOpen(true);
     }
   }, [deleteSuccess, deleteError]);
-  /* ================= STYLES ================= */
 
   const inputStyle = {
     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
@@ -286,8 +251,6 @@ export default function HomePageSection() {
       color: ThemeColors.primary,
     },
   };
-
-  /* ================= LOADER ================= */
 
   if (cmsLoading || updateLoading || deleteLoading) {
     return <TableLoader />;

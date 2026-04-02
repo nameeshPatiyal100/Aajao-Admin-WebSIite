@@ -18,8 +18,6 @@ export default function TCPageSection() {
 
   const [headerTitle, setHeaderTitle] = useState("");
   const [headerDesc, setHeaderDesc] = useState("");
-
-  /* Label Section */
   const [labelTitle, setLabelTitle] = useState("");
   const [labelDesc, setLabelDesc] = useState("");
   const [labelImage, setLabelImage] = useState<File | null>(null);
