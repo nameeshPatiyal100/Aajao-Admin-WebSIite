@@ -11,6 +11,8 @@ export const ADMINENDPOINTS = {
   CMS_HOMEPAGE: "/admin/cms/homepage/get",
   CMS_HOMEPAGE_UPDATE: "/admin/cms/homepage/update",
   CMS_HOMEPAGE_DELETE_IMAGE: "/admin/cms/homepage/delete/image",
+  CMS_TC_GET: "/admin/cms/TCPage/get",
+  CMS_TC_UPDATE: "/admin/cms/TCPage/update",
   // ADMIN
   ADMIN_LOGIN: "/admin/login",
   GET_ADMIN_DASHBOARD_DATA: "/admin/dashboard",

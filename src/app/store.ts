@@ -64,6 +64,8 @@ import bookingAnalyticsReducer from "../features/admin/bookingAnalytics/bookingA
 import cmsPageHomepageReducer from "../features/admin/CMS/cmsPageHomepage.slice";
 import cmsHomepageUpdateReducer from "../features/admin/CMS/cmsHomepageUpdate.slice";
 import cmsHomepageDeleteImageReducer from "../features/admin/CMS/cmsHomepageDeleteImage.slice";
+import cmsTCPageUpdateReducer from "../features/admin/CMS/cmsTCPageUpdate.slice";
+import cmsFAQPageUpdateReducer from "../features/admin/CMS/cmsFAQPageUpdate.slice";
 
 export const store = configureStore({
   reducer: {
@@ -133,6 +135,8 @@ export const store = configureStore({
     propDDhomepageCms: propDDhomepageCmsReducer,
     cmsHomepageUpdate: cmsHomepageUpdateReducer,
     cmsHomepageDeleteImage: cmsHomepageDeleteImageReducer,
+    cmsTCPageUpdate: cmsTCPageUpdateReducer,
+    cmsFAQPageUpdate: cmsFAQPageUpdateReducer,
   },
 });
 

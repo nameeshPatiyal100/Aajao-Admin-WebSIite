@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -15,8 +15,32 @@ import { useNavigate } from "react-router-dom";
 import { ThemeColors } from "../../../theme/themeColor";
 import * as yup from "yup";
 
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import {
+  updateCmsFAQPage,
+  getCmsFAQPage,
+  resetCmsFAQState,
+} from "../../../features/admin/CMS/cmsFAQPageUpdate.slice";
+
+import {
+  deleteCmsHomepageImage,
+  resetDeleteImage,
+} from "../../../features/admin/CMS/cmsHomepageDeleteImage.slice";
+
+import { TableLoader } from "../../../components/admin/common/TableLoader";
+import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
+
 export default function FaqPageSection() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const { data, loading, fetchLoading, success, error, message } =
+    useAppSelector((state) => state.cmsFAQPageUpdate);
+
+  const deleteState = useAppSelector(
+    (state) => state.cmsHomepageDeleteImage
+  );
+
   const [headerTitle, setHeaderTitle] = useState("");
   const [headerDesc, setHeaderDesc] = useState("");
   const [contactTitle, setContactTitle] = useState("");
@@ -29,9 +53,17 @@ export default function FaqPageSection() {
   const [labelBtnTitle, setLabelBtnTitle] = useState("");
   const [labelBtnUrl, setLabelBtnUrl] = useState("");
   const [labelTarget, setLabelTarget] = useState("_self");
+
   const [labelImage, setLabelImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as any,
+  });
 
   const inputStyle = {
     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
@@ -42,6 +74,79 @@ export default function FaqPageSection() {
     },
   };
 
+  /* ================= GET ================= */
+  useEffect(() => {
+    dispatch(getCmsFAQPage(11));
+  }, [dispatch]);
+
+  /* ================= SET DATA ================= */
+  useEffect(() => {
+    if (data) {
+      setHeaderTitle(data.headerTitle || "");
+      setHeaderDesc(data.headerDesc || "");
+
+      setContactTitle(data.contactTitle || "");
+      setContactDesc(data.contactDesc || "");
+      setContactBtnTitle(data.contactBtnTitle || "");
+      setContactBtnUrl(data.contactBtnUrl || "");
+      setContactTarget(data.contactTarget || "_self");
+
+      setLabelTitle(data.labelTitle || "");
+      setLabelDesc(data.labelDesc || "");
+      setLabelBtnTitle(data.labelBtnTitle || "");
+      setLabelBtnUrl(data.labelBtnUrl || "");
+      setLabelTarget(data.labelTarget || "_self");
+
+      setPreview(data.labelImage || null);
+      setLabelImage(null);
+    }
+  }, [data]);
+
+  /* ================= UPDATE RESPONSE ================= */
+  useEffect(() => {
+    if (success) {
+      setSnackbar({
+        open: true,
+        message: message || "Updated successfully",
+        severity: "success",
+      });
+      dispatch(getCmsFAQPage(11));
+      dispatch(resetCmsFAQState());
+    }
+
+    if (error) {
+      setSnackbar({
+        open: true,
+        message: error,
+        severity: "error",
+      });
+      dispatch(resetCmsFAQState());
+    }
+  }, [success, error]);
+
+  /* ================= DELETE RESPONSE ================= */
+  useEffect(() => {
+    if (deleteState.success) {
+      setSnackbar({
+        open: true,
+        message: deleteState.message || "Image deleted",
+        severity: "success",
+      });
+      dispatch(getCmsFAQPage(11));
+      dispatch(resetDeleteImage());
+    }
+
+    if (deleteState.error) {
+      setSnackbar({
+        open: true,
+        message: deleteState.error,
+        severity: "error",
+      });
+      dispatch(resetDeleteImage());
+    }
+  }, [deleteState.success, deleteState.error]);
+
+  /* ================= IMAGE UPLOAD ================= */
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setLabelImage(e.target.files[0]);
@@ -49,6 +154,30 @@ export default function FaqPageSection() {
     }
   };
 
+  /* ================= DELETE IMAGE ================= */
+  const handleDeleteImage = () => {
+    if (labelImage) {
+      // Local image remove
+      setLabelImage(null);
+      setPreview(null);
+      setSnackbar({
+        open: true,
+        message: "Image removed",
+        severity: "success",
+      });
+    } else if (preview) {
+      // Backend image delete
+      dispatch(
+        deleteCmsHomepageImage({
+          cp_page_id: 11,
+          cp_section_id: 6,
+        })
+      );
+      setPreview(null);
+    }
+  };
+
+  /* ================= SUBMIT ================= */
   const handleSubmit = async () => {
     try {
       const formValues = {
@@ -63,9 +192,14 @@ export default function FaqPageSection() {
         labelBtnTitle,
         labelBtnUrl,
       };
+
       await faqPageSchema.validate(formValues, { abortEarly: false });
       setErrors({});
+
       const formData = new FormData();
+
+      formData.append("cp_page_id", "11");
+
       formData.append("headerTitle", headerTitle);
       formData.append("headerDesc", headerDesc);
 
@@ -82,10 +216,10 @@ export default function FaqPageSection() {
       formData.append("labelTarget", labelTarget);
 
       if (labelImage) {
-        formData.append("labelImage", labelImage);
+        formData.append("adminFaqPageimage", labelImage);
       }
-      for (let pair of formData.entries()) {
-      }
+
+      dispatch(updateCmsFAQPage(formData));
     } catch (err) {
       if (err instanceof yup.ValidationError) {
         const formattedErrors: Record<string, string> = {};
@@ -99,8 +233,17 @@ export default function FaqPageSection() {
     }
   };
 
+  /* ================= LOADER ================= */
+  if (fetchLoading) {
+    return <TableLoader text="Loading FAQ CMS..." />;
+  }
+
   return (
     <Box>
+      {(loading || deleteState.loading) && (
+        <TableLoader text="Processing..." />
+      )}
+
       {/* Header */}
       <Box display="flex" justifyContent="space-between" mb={4}>
         <Typography
@@ -164,56 +307,11 @@ export default function FaqPageSection() {
       </Typography>
 
       <Stack spacing={2} mb={4}>
-        <TextField
-          label="Title"
-          value={contactTitle}
-          onChange={(e) => setContactTitle(e.target.value)}
-          error={!!errors.contactTitle}
-          helperText={errors.contactTitle}
-          fullWidth
-          sx={inputStyle}
-        />
-
-        <TextField
-          label="Description"
-          multiline
-          rows={3}
-          value={contactDesc}
-          onChange={(e) => setContactDesc(e.target.value)}
-          error={!!errors.contactDesc}
-          helperText={errors.contactDesc}
-          fullWidth
-          sx={inputStyle}
-        />
-
-        <TextField
-          label="Button Title"
-          value={contactBtnTitle}
-          onChange={(e) => setContactBtnTitle(e.target.value)}
-          error={!!errors.contactBtnTitle}
-          helperText={errors.contactBtnTitle}
-          fullWidth
-          sx={inputStyle}
-        />
-
-        <TextField
-          label="Button URL"
-          value={contactBtnUrl}
-          onChange={(e) => setContactBtnUrl(e.target.value)}
-          error={!!errors.contactBtnUrl}
-          helperText={errors.contactBtnUrl}
-          fullWidth
-          sx={inputStyle}
-        />
-
-        <TextField
-          select
-          label="Open In"
-          value={contactTarget}
-          onChange={(e) => setContactTarget(e.target.value)}
-          fullWidth
-          sx={inputStyle}
-        >
+        <TextField label="Title" value={contactTitle} onChange={(e) => setContactTitle(e.target.value)} fullWidth sx={inputStyle}/>
+        <TextField label="Description" multiline rows={3} value={contactDesc} onChange={(e) => setContactDesc(e.target.value)} fullWidth sx={inputStyle}/>
+        <TextField label="Button Title" value={contactBtnTitle} onChange={(e) => setContactBtnTitle(e.target.value)} fullWidth sx={inputStyle}/>
+        <TextField label="Button URL" value={contactBtnUrl} onChange={(e) => setContactBtnUrl(e.target.value)} fullWidth sx={inputStyle}/>
+        <TextField select label="Open In" value={contactTarget} onChange={(e) => setContactTarget(e.target.value)} fullWidth sx={inputStyle}>
           <MenuItem value="_self">Same Window</MenuItem>
           <MenuItem value="_blank">New Window</MenuItem>
         </TextField>
@@ -230,73 +328,22 @@ export default function FaqPageSection() {
       </Typography>
 
       <Stack spacing={2} mb={4}>
-        <TextField
-          label="Title"
-          value={labelTitle}
-          onChange={(e) => setLabelTitle(e.target.value)}
-          error={!!errors.labelTitle}
-          helperText={errors.labelTitle}
-          fullWidth
-          sx={inputStyle}
-        />
-
-        <TextField
-          label="Description"
-          multiline
-          rows={3}
-          value={labelDesc}
-          onChange={(e) => setLabelDesc(e.target.value)}
-          error={!!errors.labelDesc}
-          helperText={errors.labelDesc}
-          fullWidth
-          sx={inputStyle}
-        />
-
-        <TextField
-          label="Button Title"
-          value={labelBtnTitle}
-          onChange={(e) => setLabelBtnTitle(e.target.value)}
-          error={!!errors.labelBtnTitle}
-          helperText={errors.labelBtnTitle}
-          fullWidth
-          sx={inputStyle}
-        />
-
-        <TextField
-          label="Button URL"
-          value={labelBtnUrl}
-          onChange={(e) => setLabelBtnUrl(e.target.value)}
-          error={!!errors.labelBtnUrl}
-          helperText={errors.labelBtnUrl}
-          fullWidth
-          sx={inputStyle}
-        />
-
-        <TextField
-          select
-          label="Open In"
-          value={labelTarget}
-          onChange={(e) => setLabelTarget(e.target.value)}
-          fullWidth
-          sx={inputStyle}
-        >
+        <TextField label="Title" value={labelTitle} onChange={(e) => setLabelTitle(e.target.value)} fullWidth sx={inputStyle}/>
+        <TextField label="Description" multiline rows={3} value={labelDesc} onChange={(e) => setLabelDesc(e.target.value)} fullWidth sx={inputStyle}/>
+        <TextField label="Button Title" value={labelBtnTitle} onChange={(e) => setLabelBtnTitle(e.target.value)} fullWidth sx={inputStyle}/>
+        <TextField label="Button URL" value={labelBtnUrl} onChange={(e) => setLabelBtnUrl(e.target.value)} fullWidth sx={inputStyle}/>
+        <TextField select label="Open In" value={labelTarget} onChange={(e) => setLabelTarget(e.target.value)} fullWidth sx={inputStyle}>
           <MenuItem value="_self">Same Window</MenuItem>
           <MenuItem value="_blank">New Window</MenuItem>
         </TextField>
 
-        {/* Image Upload */}
         <Button
           variant="outlined"
           component="label"
           sx={{ borderColor: "#7B1FA2", color: "#7B1FA2" }}
         >
           Upload Image
-          <input
-            hidden
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-          />
+          <input hidden type="file" accept="image/*" onChange={handleImageUpload} />
         </Button>
 
         {preview && (
@@ -304,10 +351,7 @@ export default function FaqPageSection() {
             <img src={preview} alt="preview" width="100%" />
             <IconButton
               size="small"
-              onClick={() => {
-                setLabelImage(null);
-                setPreview(null);
-              }}
+              onClick={handleDeleteImage}
               sx={{
                 position: "absolute",
                 top: 0,
@@ -321,17 +365,20 @@ export default function FaqPageSection() {
         )}
       </Stack>
 
-      {/* Submit */}
       <Button
         variant="contained"
         onClick={handleSubmit}
-        sx={{
-          backgroundColor: "#7B1FA2",
-          px: 4,
-        }}
+        sx={{ backgroundColor: "#7B1FA2", px: 4 }}
       >
         Submit
       </Button>
+
+      <CustomSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      />
     </Box>
   );
 }
