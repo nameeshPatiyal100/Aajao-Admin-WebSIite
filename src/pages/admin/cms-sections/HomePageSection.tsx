@@ -23,17 +23,18 @@ import { fetchCmsHomePage } from "../../../features/admin/CMS/cmsPageHomepage.sl
 import { updateCmsHomePage } from "../../../features/admin/CMS/cmsHomepageUpdate.slice";
 import CustomSnackbar from "../../../components/admin/snackbar/CustomSnackbar";
 import { deleteCmsHomepageImage } from "../../../features/admin/CMS/cmsHomepageDeleteImage.slice";
+import { resetDeleteImage } from "../../../features/admin/CMS/cmsHomepageDeleteImage.slice";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
 
 interface Property {
   id: number;
   name: string;
-};
+}
 
 interface Testimonial {
   id: number;
   name: string;
-};
+}
 
 export default function HomePageSection() {
   const navigate = useNavigate();
@@ -131,31 +132,34 @@ export default function HomePageSection() {
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-  
+
       setImage(file);
-      setImagePreview(cmsData?.image || URL.createObjectURL(file));
-      setIsLocalImage(false); 
+      setImagePreview(URL.createObjectURL(file)); // ✅ always local preview
+      setIsLocalImage(true); // ✅ mark as local
     }
   };
 
   const handleRemoveImage = async () => {
     try {
-      if (isLocalImage) {
+      if (image) {
+        // ✅ LOCAL IMAGE DELETE (same as FAQ page)
         setImage(null);
         setImagePreview(null);
         setIsLocalImage(false);
         return;
       }
-      await dispatch(
-        deleteCmsHomepageImage({
-          cp_page_id: 10,
-          cp_section_id: 2,
-        })
-      ).unwrap();
-  
-      setImage(null);
-      setImagePreview(null);
-  
+
+      if (imagePreview) {
+        // ✅ BACKEND IMAGE DELETE
+        await dispatch(
+          deleteCmsHomepageImage({
+            cp_page_id: 10,
+            cp_section_id: 2,
+          })
+        ).unwrap();
+
+        setImagePreview(null);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -198,6 +202,9 @@ export default function HomePageSection() {
       const testimonialIds = selectedTestimonials.map((item) => item.id);
       formData.append("testimonials", JSON.stringify(testimonialIds));
       await dispatch(updateCmsHomePage(formData)).unwrap();
+      setSnackbarMsg(message || "Updated Successfully");
+      setSnackbarType("success");
+      setSnackbarOpen(true);
     } catch (err: any) {
       if (err instanceof yup.ValidationError) {
         const formattedErrors: Record<string, string> = {};
@@ -215,9 +222,9 @@ export default function HomePageSection() {
 
   useEffect(() => {
     if (success) {
-      setSnackbarMsg(message || "Updated Successfully");
-      setSnackbarType("success");
-      setSnackbarOpen(true);
+      // setSnackbarMsg(message || "Updated Successfully");
+      // setSnackbarType("success");
+      // setSnackbarOpen(true);
       dispatch(fetchCmsHomePage(10));
     }
 
@@ -227,6 +234,23 @@ export default function HomePageSection() {
       setSnackbarOpen(true);
     }
   }, [success, error]);
+
+  // useEffect(() => {
+  //   if (deleteSuccess) {
+  //     setSnackbarMsg(deleteMessage || "Image deleted successfully");
+  //     setSnackbarType("success");
+  //     setSnackbarOpen(true);
+
+  //     dispatch(fetchCmsHomePage(10));
+  //   }
+
+  //   if (deleteError) {
+  //     setSnackbarMsg(deleteError);
+  //     setSnackbarType("error");
+  //     setSnackbarOpen(true);
+  //   }
+  // }, [deleteSuccess, deleteError]);
+
   useEffect(() => {
     if (deleteSuccess) {
       setSnackbarMsg(deleteMessage || "Image deleted successfully");
@@ -234,15 +258,17 @@ export default function HomePageSection() {
       setSnackbarOpen(true);
 
       dispatch(fetchCmsHomePage(10));
+      dispatch(resetDeleteImage()); // ✅ RESET
     }
-  
+
     if (deleteError) {
       setSnackbarMsg(deleteError);
       setSnackbarType("error");
       setSnackbarOpen(true);
+
+      dispatch(resetDeleteImage()); // ✅ RESET
     }
   }, [deleteSuccess, deleteError]);
-
   const inputStyle = {
     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
       borderColor: ThemeColors.primary,

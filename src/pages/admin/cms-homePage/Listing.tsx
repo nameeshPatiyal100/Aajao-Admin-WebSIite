@@ -114,7 +114,7 @@ import {
   
                   {/* Action */}
                   <TableCell align="center">
-                    <IconButton
+                    {/* <IconButton
                       onClick={() => handleEdit(row)}
                       sx={{
                         color: ThemeColors.primary,
@@ -122,7 +122,7 @@ import {
                       }}
                     >
                       <EditIcon />
-                    </IconButton>
+                    </IconButton> */}
   
                     <IconButton
                       onClick={() => handleEnter(row)}

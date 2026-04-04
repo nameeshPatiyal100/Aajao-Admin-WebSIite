@@ -37,9 +37,7 @@ export default function FaqPageSection() {
   const { data, loading, fetchLoading, success, error, message } =
     useAppSelector((state) => state.cmsFAQPageUpdate);
 
-  const deleteState = useAppSelector(
-    (state) => state.cmsHomepageDeleteImage
-  );
+  const deleteState = useAppSelector((state) => state.cmsHomepageDeleteImage);
 
   const [headerTitle, setHeaderTitle] = useState("");
   const [headerDesc, setHeaderDesc] = useState("");
@@ -239,9 +237,25 @@ export default function FaqPageSection() {
   }
 
   return (
-    <Box>
+    <Box position="relative">
       {(loading || deleteState.loading) && (
-        <TableLoader text="Processing..." />
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          width="100%"
+          height="100%"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          sx={{
+            backdropFilter: "blur(4px)",
+            backgroundColor: "rgba(255,255,255,0.5)",
+            zIndex: 10,
+          }}
+        >
+          <TableLoader text="Processing..." />
+        </Box>
       )}
 
       {/* Header */}
@@ -307,11 +321,44 @@ export default function FaqPageSection() {
       </Typography>
 
       <Stack spacing={2} mb={4}>
-        <TextField label="Title" value={contactTitle} onChange={(e) => setContactTitle(e.target.value)} fullWidth sx={inputStyle}/>
-        <TextField label="Description" multiline rows={3} value={contactDesc} onChange={(e) => setContactDesc(e.target.value)} fullWidth sx={inputStyle}/>
-        <TextField label="Button Title" value={contactBtnTitle} onChange={(e) => setContactBtnTitle(e.target.value)} fullWidth sx={inputStyle}/>
-        <TextField label="Button URL" value={contactBtnUrl} onChange={(e) => setContactBtnUrl(e.target.value)} fullWidth sx={inputStyle}/>
-        <TextField select label="Open In" value={contactTarget} onChange={(e) => setContactTarget(e.target.value)} fullWidth sx={inputStyle}>
+        <TextField
+          label="Title"
+          value={contactTitle}
+          onChange={(e) => setContactTitle(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        />
+        <TextField
+          label="Description"
+          multiline
+          rows={3}
+          value={contactDesc}
+          onChange={(e) => setContactDesc(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        />
+        <TextField
+          label="Button Title"
+          value={contactBtnTitle}
+          onChange={(e) => setContactBtnTitle(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        />
+        <TextField
+          label="Button URL"
+          value={contactBtnUrl}
+          onChange={(e) => setContactBtnUrl(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        />
+        <TextField
+          select
+          label="Open In"
+          value={contactTarget}
+          onChange={(e) => setContactTarget(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        >
           <MenuItem value="_self">Same Window</MenuItem>
           <MenuItem value="_blank">New Window</MenuItem>
         </TextField>
@@ -328,11 +375,44 @@ export default function FaqPageSection() {
       </Typography>
 
       <Stack spacing={2} mb={4}>
-        <TextField label="Title" value={labelTitle} onChange={(e) => setLabelTitle(e.target.value)} fullWidth sx={inputStyle}/>
-        <TextField label="Description" multiline rows={3} value={labelDesc} onChange={(e) => setLabelDesc(e.target.value)} fullWidth sx={inputStyle}/>
-        <TextField label="Button Title" value={labelBtnTitle} onChange={(e) => setLabelBtnTitle(e.target.value)} fullWidth sx={inputStyle}/>
-        <TextField label="Button URL" value={labelBtnUrl} onChange={(e) => setLabelBtnUrl(e.target.value)} fullWidth sx={inputStyle}/>
-        <TextField select label="Open In" value={labelTarget} onChange={(e) => setLabelTarget(e.target.value)} fullWidth sx={inputStyle}>
+        <TextField
+          label="Title"
+          value={labelTitle}
+          onChange={(e) => setLabelTitle(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        />
+        <TextField
+          label="Description"
+          multiline
+          rows={3}
+          value={labelDesc}
+          onChange={(e) => setLabelDesc(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        />
+        <TextField
+          label="Button Title"
+          value={labelBtnTitle}
+          onChange={(e) => setLabelBtnTitle(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        />
+        <TextField
+          label="Button URL"
+          value={labelBtnUrl}
+          onChange={(e) => setLabelBtnUrl(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        />
+        <TextField
+          select
+          label="Open In"
+          value={labelTarget}
+          onChange={(e) => setLabelTarget(e.target.value)}
+          fullWidth
+          sx={inputStyle}
+        >
           <MenuItem value="_self">Same Window</MenuItem>
           <MenuItem value="_blank">New Window</MenuItem>
         </TextField>
@@ -343,7 +423,12 @@ export default function FaqPageSection() {
           sx={{ borderColor: "#7B1FA2", color: "#7B1FA2" }}
         >
           Upload Image
-          <input hidden type="file" accept="image/*" onChange={handleImageUpload} />
+          <input
+            hidden
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
         </Button>
 
         {preview && (
