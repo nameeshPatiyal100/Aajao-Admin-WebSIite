@@ -97,7 +97,7 @@ export default function Listing({
                   <TableCell>
                     <Switch
                       size="small"
-                      checked={tag.tag_isActive === 1}
+                      checked={String(tag.tag_isActive) === "1"}
                       onChange={() => handleToggleActive(Number(tag.tag_id))}
                       sx={{
                         "& .MuiSwitch-switchBase": {

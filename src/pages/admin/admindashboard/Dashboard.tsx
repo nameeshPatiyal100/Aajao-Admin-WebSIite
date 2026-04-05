@@ -3,56 +3,36 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import { getAdminDashboardData } from "../../../features/admin/Dashboard/dashboard.slice";
 import { Box, Paper, Stack, Typography } from "@mui/material";
-
 import AdminUserTable from "../../../components/admin/adminTable/AdminUserTable";
 import AdminBookingTable from "../../../components/admin/adminTable/AdminBookingTable";
 import AdminPropertyTable from "../../../components/admin/adminTable/AdminPropertyTable";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
-
 import {
   AdmindPieChart,
   AdminBarChart,
   AdminLineChart,
 } from "../../../components";
-
 import DashboardHeading from "./DashboardHeading";
-
 import type {
   DashboardPayload,
   LatestUser,
   LatestBooking,
   LatestProperty,
 } from "../../../features/admin/Dashboard/types";
-
 const Dashboard = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const {
-    data: dashboardResponse,
-    loading
-  } = useAppSelector((state) => state.adminDashboardSlice);
-
+  const { data: dashboardResponse, loading } = useAppSelector(
+    (state) => state.adminDashboardSlice
+  );
   useEffect(() => {
     dispatch(getAdminDashboardData());
   }, [dispatch]);
-
-  /* ============================
-     SAFELY EXTRACT PAYLOAD
-  ============================ */
   const dashboardData: DashboardPayload | null =
     dashboardResponse?.data ?? null;
-
-  /* ============================
-     LOADING STATE
-  ============================ */
   if (loading) {
     return <TableLoader text="Loading dashboard data..." minHeight={400} />;
   }
-
-  /* ============================
-     STATS
-  ============================ */
   const stats = [
     {
       label: "Total Number of User",
@@ -71,10 +51,6 @@ const Dashboard = () => {
       value: dashboardData?.BookingCount ?? 0,
     },
   ];
-
-  /* ============================
-     CHART DATA
-  ============================ */
   const months = dashboardData?.getMonthlyBookingsData?.months ?? [];
   const successfulBookings =
     dashboardData?.getMonthlyBookingsData?.successful ?? [];
@@ -83,22 +59,20 @@ const Dashboard = () => {
 
   const dates = dashboardData?.getDailyUsersData?.dates ?? [];
   const users = dashboardData?.getDailyUsersData?.users ?? [];
-
-  /* ============================
-     TABLE DATA
-  ============================ */
   const latestUsers: LatestUser[] = dashboardData?.getLatestUser ?? [];
-  const latestBookings: LatestBooking[] =
-    dashboardData?.getLatestBooking ?? [];
+  const latestBookings: LatestBooking[] = dashboardData?.getLatestBooking ?? [];
   const latestProperties: LatestProperty[] =
     dashboardData?.getLatestProperties ?? [];
 
-  /* ============================
-     RENDER
-  ============================ */
+  const propStats = dashboardData?.getPropStatsData ?? {
+    active: 0,
+    inactive: 0,
+    verified: 0,
+    other: 0,
+  };
+
   return (
     <>
-      {/* ================= HERO ================= */}
       <Paper
         sx={{
           background:
@@ -144,8 +118,6 @@ const Dashboard = () => {
           ))}
         </Box>
       </Paper>
-
-      {/* ================= MOTIVATION ================= */}
       <Paper sx={sectionCard}>
         <Stack
           direction={{ xs: "column-reverse", md: "row" }}
@@ -153,15 +125,6 @@ const Dashboard = () => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Stack spacing={2}>
-            <Typography variant="h4" fontWeight={600} color="#881f9b">
-              “The only way to do great work is to love what you do”
-            </Typography>
-            <Typography fontStyle="italic" color="#7c3aed">
-              — Steve Jobs
-            </Typography>
-          </Stack>
-
           <Paper sx={{ p: 3, textAlign: "center" }}>
             <Typography variant="caption" fontWeight={600}>
               Pending Properties
@@ -172,8 +135,6 @@ const Dashboard = () => {
           </Paper>
         </Stack>
       </Paper>
-
-      {/* ================= CHARTS ================= */}
       <Paper sx={sectionCard}>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {months.length > 0 && (
@@ -184,7 +145,6 @@ const Dashboard = () => {
             />
           )}
         </Box>
-
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {dates.length > 0 && <AdminBarChart dates={dates} users={users} />}
         </Box>
@@ -215,30 +175,52 @@ const Dashboard = () => {
           />
         </Box>
 
-        <Box sx={{ flex: 1 }}>
+        {/* <Box sx={{ flex: 1 }}>
           <AdmindPieChart
-            title="Host Overview"
+            title="Properties Overview"
             data={[
               {
                 id: 0,
-                label: "Active Hosts",
+                label: "Active Properties",
                 value: dashboardData?.getHostStatsData?.active ?? 0,
               },
               {
                 id: 1,
-                label: "Inactive Hosts",
+                label: "Inactive Properties",
                 value: dashboardData?.getHostStatsData?.inactive ?? 0,
               },
               {
                 id: 2,
-                label: "Verified Hosts",
+                label: "Verified Properties",
                 value: dashboardData?.getHostStatsData?.verified ?? 0,
+              },
+            ]}
+          />
+        </Box> */}
+
+        <Box sx={{ flex: 1 }}>
+          <AdmindPieChart
+            title="Properties Overview"
+            data={[
+              {
+                id: 0,
+                label: "Active Properties",
+                value: propStats.active,
+              },
+              {
+                id: 1,
+                label: "Inactive Properties",
+                value: propStats.inactive,
+              },
+              {
+                id: 2,
+                label: "Verified Properties",
+                value: propStats.verified,
               },
             ]}
           />
         </Box>
       </Paper>
-
       <DashboardHeading
         heading="Latest Users"
         buttonText="View All"
@@ -247,7 +229,6 @@ const Dashboard = () => {
       <Paper sx={sectionCard}>
         <AdminUserTable rows={latestUsers} />
       </Paper>
-
       <DashboardHeading
         heading="Latest Bookings"
         buttonText="View All"
@@ -257,11 +238,10 @@ const Dashboard = () => {
         <AdminBookingTable
           rows={latestBookings.map((booking) => ({
             ...booking,
-            book_status: booking.book_status ?? 0, // Default to 0 if undefined
+            book_status: booking.book_status ?? 0,
           }))}
         />
       </Paper>
-
       <DashboardHeading
         heading="Latest Properties"
         buttonText="View All"
@@ -273,7 +253,6 @@ const Dashboard = () => {
     </>
   );
 };
-
 const sectionCard = {
   display: "flex",
   gap: 4,
@@ -284,5 +263,4 @@ const sectionCard = {
   boxShadow: "0 10px 40px rgba(0,0,0,0.08)",
   flexWrap: "wrap",
 };
-
 export default Dashboard;

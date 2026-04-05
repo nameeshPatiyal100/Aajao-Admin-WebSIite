@@ -102,6 +102,7 @@ export default function Listing({
                         size="small"
                         checked={cat.cat_isActive === "1"}
                         onChange={() => handleToggleActive(Number(cat.cat_id))}
+                        disabled={loading}
                         sx={{
                           "& .MuiSwitch-switchBase.Mui-checked": {
                             color: PurpleThemeColor,

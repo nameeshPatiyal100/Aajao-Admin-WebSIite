@@ -12,17 +12,15 @@ import { changePropertyStatus } from "../../../features/admin/properties/propert
 import { deleteProperty } from "../../../features/admin/properties/propertyDelete.slice";
 
 export default function PropertiesVerifications() {
-  // State Management
   const [page, setPage] = useState(1);
 
   const dispatch = useAppDispatch();
   const { properties, loading, pagination } = useAppSelector(
     (state) => state.properties
   );
+  const [localProperties, setLocalProperties] = useState(properties);
   const totalRecords = pagination?.totalRecords;
-
   const rowsPerPage = 10;
-
   const requestBody: FilterData = {
     page: page,
     limit: rowsPerPage,
@@ -37,7 +35,7 @@ export default function PropertiesVerifications() {
 
   useEffect(() => {
     dispatch(fetchProperties(requestBody));
-  }, [dispatch,filterData]);
+  }, [dispatch, filterData]);
 
   const handlePaginate = (_event: unknown, value: number) => {
     const updatedFilterData: FilterData = {
@@ -50,6 +48,15 @@ export default function PropertiesVerifications() {
     dispatch(fetchProperties(updatedFilterData));
   };
 
+  useEffect(() => {
+    if (!loading) {
+      const normalized = properties.map((p) => ({
+        ...p,
+        is_active: String(p.is_active),
+      }));
+      setLocalProperties(normalized);
+    }
+  }, [properties, loading]);
   const handleFilterUpdate = (
     name: keyof FilterData,
     value: string,

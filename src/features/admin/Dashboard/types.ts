@@ -26,8 +26,20 @@ export interface LatestProperty {
 }
 
 /* ============================
+   STATS TYPES
+============================ */
+
+export interface StatsData {
+  active: number;
+  inactive: number;
+  verified: number;
+  other: number;
+}
+
+/* ============================
    INNER DASHBOARD DATA
 ============================ */
+
 export interface DashboardPayload {
   userCount: number;
   hostCount: number;
@@ -50,24 +62,17 @@ export interface DashboardPayload {
     users: number[];
   };
 
-  getUserStatsData: {
-    active: number;
-    inactive: number;
-    verified: number;
-    other: number;
-  };
+  getUserStatsData: StatsData;
+  getHostStatsData: StatsData;
 
-  getHostStatsData: {
-    active: number;
-    inactive: number;
-    verified: number;
-    other: number;
-  };
+  // ✅ NEW (SAFE)
+  getPropStatsData: StatsData | null;
 }
 
 /* ============================
    FULL API RESPONSE
 ============================ */
+
 export interface DashboardApiResponse {
   success: boolean;
   message: string;
@@ -77,6 +82,7 @@ export interface DashboardApiResponse {
 /* ============================
    REDUX STATE
 ============================ */
+
 export interface DashboardState {
   loading: boolean;
   success: boolean;

@@ -42,14 +42,28 @@ const initialState: HostState = {
 
 export const fetchHosts = createAsyncThunk<
   HostListResponse,
-  { page: number; search?: string; status?: 1 | 0 | null }
+  { 
+    page: number; 
+    search?: string; 
+    user_isActive?: 1 | 0 | null;
+    user_isVerified?: 1 | 0 | null;
+  }
 >("hosts/fetchHosts", async (payload, { rejectWithValue }) => {
   try {
-    const res = await api.post(ADMINENDPOINTS.HOST_LIST, {
+    const body: any = {
       page: payload.page,
       search: payload.search ?? "",
-      status: payload.status,
-    });
+    };
+
+    if (payload.user_isActive !== null && payload.user_isActive !== undefined) {
+      body.status = payload.user_isActive;
+    }
+
+    if (payload.user_isVerified !== null && payload.user_isVerified !== undefined) {
+      body.user_isVerified = payload.user_isVerified;
+    }
+
+    const res = await api.post(ADMINENDPOINTS.HOST_LIST, body);
 
     return res.data;
   } catch (err: any) {

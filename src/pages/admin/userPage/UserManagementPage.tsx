@@ -79,16 +79,13 @@ export default function UserManagementPage() {
       isActive: user.isActive === 1,
       isVerified: user.isVerified === 1,
     });
-
     setIsDeleteModalOpen(true);
   };
-
   const handleConfirmDelete = async () => {
     if (selectedUser) {
       console.log(selectedUser.user_id, "delete user");
     }
     if (!selectedUser?.user_id) return;
-
     try {
       await dispatch(deleteUser(selectedUser.user_id)).unwrap();
       dispatch(
@@ -97,7 +94,6 @@ export default function UserManagementPage() {
           search: debouncedSearch,
         })
       );
-
       setIsDeleteModalOpen(false);
       setSelectedUser(null);
     } catch (err: any) {
@@ -108,7 +104,6 @@ export default function UserManagementPage() {
       });
     }
   };
-
   useEffect(() => {
     dispatch(
       fetchUsers({
@@ -119,7 +114,6 @@ export default function UserManagementPage() {
   }, [dispatch, page, debouncedSearch]);
   const tableUsers: UserTableRow[] = useMemo(() => {
     if (!Array.isArray(users)) return [];
-
     return users.map((u: ApiUser) => ({
       user_id: u.user_id,
       user_fullName: u.user_fullName,
@@ -129,7 +123,6 @@ export default function UserManagementPage() {
       isVerified: u.user_isVerified === 1 ? 1 : 0,
     }));
   }, [users]);
-
   return (
     <Box p={3} minHeight="100vh">
       <UserHeader
@@ -144,7 +137,6 @@ export default function UserManagementPage() {
           setIsAddModalOpen(true);
         }}
       />
-
       <UserTable
         users={tableUsers}
         page={page}

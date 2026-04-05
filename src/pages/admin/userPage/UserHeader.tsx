@@ -4,51 +4,43 @@ import { useAppDispatch } from "../../../app/hooks";
 import { fetchUsers } from "../../../features/admin/userManagement/user.slice";
 import { FilterList as FilterListIcon } from "@mui/icons-material";
 import { useDebounce } from "../../../hooks/useDebounce";
-
-const COLORS = {
-  primary: "#881f9b",
-};
-
+const COLORS = { primary: "#881f9b" };
 interface UserHeaderProps {
   searchTerm: string;
   onSearch: (value: string) => void;
   onAdd: () => void;
 }
-
 type StatusFilter = 1 | 0 | null;
-
 export const UserHeader = ({
   searchTerm,
   onSearch,
   onAdd,
 }: UserHeaderProps) => {
   const dispatch = useAppDispatch();
-  /* ================= STATE ================= */
   const [status, setStatus] = useState<StatusFilter>(null);
   const [search, _setSearch] = useState("");
   const isActive = status === 1;
   const isInactive = status === 0;
-
   const debouncedSearch = useDebounce(search, 500);
-  // const dispatch = useAppDispatch();
-
-  /* ================= API TRIGGER ================= */
-  const hitStatusApi = (overrideStatus?: StatusFilter) => {
-    console.log("Calling API with status:", status);
+  const hitStatusApi = (nextStatus: StatusFilter) => {
     dispatch(
       fetchUsers({
         page: 1,
         search: debouncedSearch,
-        status: overrideStatus ?? status,
+        status: nextStatus ?? undefined,
       })
-    ).unwrap();
+    );
   };
 
   useEffect(() => {
-    hitStatusApi();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
-
+    dispatch(
+      fetchUsers({
+        page: 1,
+        search: debouncedSearch,
+        status: status ?? undefined,
+      })
+    );
+  }, [debouncedSearch, status]);
   return (
     <Box
       display="flex"
@@ -61,9 +53,7 @@ export const UserHeader = ({
       <Typography variant="h4" sx={{ color: COLORS.primary, fontWeight: 700 }}>
         User Management
       </Typography>
-
       <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
-        {/* ================= SEARCH ================= */}
         <Box display="flex" gap={1} alignItems="center">
           <TextField
             label="Search name or E-mail"
@@ -84,14 +74,8 @@ export const UserHeader = ({
               },
             }}
           />
-          {/* <Button variant="contained" sx={{ background: COLORS.primary }}>
-            Search
-          </Button> */}
         </Box>
-
-        {/* ================= FILTER TOGGLES ================= */}
         <Stack direction="row" spacing={2}>
-          {/* ACTIVE */}
           <Button
             variant="outlined"
             startIcon={<FilterListIcon />}
@@ -111,10 +95,8 @@ export const UserHeader = ({
               },
             }}
           >
-            {isActive ? "Active (ON)" : "Active (OFF)"}
+            {isActive ? "Active" : "Active"}
           </Button>
-
-          {/* INACTIVE */}
           <Button
             variant="outlined"
             startIcon={<FilterListIcon />}
@@ -134,11 +116,9 @@ export const UserHeader = ({
               },
             }}
           >
-            {isInactive ? "Inactive (ON)" : "Inactive (OFF)"}
+            {isInactive ? "Inactive" : "Inactive"}
           </Button>
         </Stack>
-
-        {/* ================= ADD USER ================= */}
         <Button
           variant="contained"
           onClick={onAdd}

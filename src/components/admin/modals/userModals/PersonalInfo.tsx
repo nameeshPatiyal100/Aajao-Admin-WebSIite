@@ -37,9 +37,7 @@ const PersonalInfo = ({ disabled }: { disabled: boolean }) => {
         onChange={(e) => setFieldValue("email", e.target.value)}
         error={touched.email && !!errors.email}
         helperText={
-          touched.email && typeof errors.email === "string"
-            ? errors.email
-            : ""
+          touched.email && typeof errors.email === "string" ? errors.email : ""
         }
         disabled={disabled}
         sx={fieldStyle}
@@ -52,9 +50,7 @@ const PersonalInfo = ({ disabled }: { disabled: boolean }) => {
         onChange={(e) => setFieldValue("phone", e.target.value)}
         error={touched.phone && !!errors.phone}
         helperText={
-          touched.phone && typeof errors.phone === "string"
-            ? errors.phone
-            : ""
+          touched.phone && typeof errors.phone === "string" ? errors.phone : ""
         }
         disabled={disabled}
         sx={fieldStyle}
@@ -88,28 +84,61 @@ const PersonalInfo = ({ disabled }: { disabled: boolean }) => {
           ),
         }}
       />
-
-      {/* 📅 DATE PICKER */}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Date of Birth"
           value={values.dob ? dayjs(values.dob) : null}
-          onChange={(value) =>
-            setFieldValue(
-              "dob",
-              value ? value.format("YYYY-MM-DD") : ""
-            )
-          }
+          onChange={(value) => {
+            setFieldValue("dob", value ? value.format("YYYY-MM-DD") : "");
+          }}
+          disableFuture
           disabled={disabled}
           slotProps={{
             textField: {
               fullWidth: true,
               error: touched.dob && !!errors.dob,
               helperText:
-                touched.dob && typeof errors.dob === "string"
-                  ? errors.dob
-                  : "",
-              sx: fieldStyle,
+                touched.dob && typeof errors.dob === "string" ? errors.dob : "",
+                sx: {
+                  ...fieldStyle,
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#881f9b !important",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#881f9b !important",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#881f9b !important",
+                      borderWidth: "2px",
+                    },
+                    "&.Mui-disabled fieldset": {
+                      borderColor: "#881f9b !important",
+                      opacity: 0.6,
+                    },
+                    "&.Mui-error fieldset": {
+                      borderColor: "#881f9b !important", 
+                    },
+                  },
+                
+                  "& .MuiInputLabel-root": {
+                    color: "#881f9b",
+                  },
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "#881f9b",
+                  },
+                }
+            },
+            popper: {
+              sx: {
+                "& .MuiPaper-root": {
+                  borderRadius: 3,
+                  boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
+                },
+                "& .MuiPickersDay-root.Mui-selected": {
+                  backgroundColor: "#881f9b !important",
+                },
+              },
             },
           }}
         />
@@ -120,4 +149,3 @@ const PersonalInfo = ({ disabled }: { disabled: boolean }) => {
 
 // export default ;
 export default React.memo(PersonalInfo);
-

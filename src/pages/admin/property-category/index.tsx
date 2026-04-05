@@ -14,23 +14,20 @@ import { changePropertyCategoryStatus } from "../../../features/admin/propertyCa
 import { deletePropertyCategory } from "../../../features/admin/propertyCategory/propertyCategoryDelete.slice";
 
 export default function PropertyCategory() {
-  // State Management
-  // const [totalRecords, setTotalRecords] = useState(fakeData.length);
-  const [page, setPage] = useState(1);
-  const [formshow, setFormShow] = useState(false);
-  const [categoryId, setCategoryId] = useState<string | null>(null);
-  // const [loading, setLoading] = useState(true);
-
   const dispatch = useAppDispatch();
   const { categories, loading, pagination } = useAppSelector(
     (state) => state.propertyCategory,
   );
+
+  const [page, setPage] = useState(1);
+  const [formshow, setFormShow] = useState(false);
+  const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [localCategories, setLocalCategories] = useState(categories);
+
+
+  
   const totalRecords = pagination?.totalRecords;
-
-  // Fetch categories on mount
-
   const rowsPerPage = 10;
-
   const requestBody: FilterData = {
     page: page,
     limit: rowsPerPage,
@@ -84,21 +81,37 @@ export default function PropertyCategory() {
   };
 
   const handleToggleActive = async (id: number) => {
-    const cat = categories.find((c) => c.cat_id === id);
-    if (!cat) return;
-
-    const newStatus: "1" | "0" = cat.cat_isActive === "1" ? "0" : "1";
-
-    try {
-      await dispatch(
-        changePropertyCategoryStatus({ categoryId: id, status: newStatus }),
-      ).unwrap();
-
-      dispatch(fetchPropertyCategories(filterData));
-    } catch (err) {
-      console.error(err);
+  const updated = localCategories.map((cat) => {
+    if (cat.cat_id === id) {
+      return {
+        ...cat,
+        cat_isActive: cat.cat_isActive === "1" ? "0" : "1",
+      };
     }
-  };
+    return cat;
+  });
+
+  // ✅ INSTANT UI UPDATE
+  setLocalCategories(updated);
+
+  const cat = categories.find((c) => c.cat_id === id);
+  if (!cat) return;
+
+  const newStatus: "1" | "0" = cat.cat_isActive === "1" ? "0" : "1";
+
+  try {
+    await dispatch(
+      changePropertyCategoryStatus({ categoryId: id, status: newStatus })
+    ).unwrap();
+
+    dispatch(fetchPropertyCategories(filterData));
+  } catch (err) {
+    console.error(err);
+
+    // ❌ REVERT UI if API fails
+    setLocalCategories(categories);
+  }
+};
 
   const handleFormClose = () => {
     setFormShow(false);

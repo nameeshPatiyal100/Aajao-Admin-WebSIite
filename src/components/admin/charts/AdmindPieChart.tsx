@@ -42,20 +42,14 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
 }) => {
   const [hoveredSlice, _setHoveredSlice] = useState<number | null>(null);
   const [selectedSlice, setSelectedSlice] = useState<number | null>(null);
-
-  /* ✅ Use API data if provided, otherwise fallback
-     ✅ Remove negative / zero values (PieChart-safe) */
   const baseData = (data?.length ? data : FALLBACK_DATA).filter(
     (item) => item.value > 0
   );
-
   const total = baseData.reduce((sum, item) => sum + item.value, 0);
-
   const chartData: ChartData[] = baseData.map((item, index) => ({
     ...item,
     color: colors[index % colors.length],
   }));
-
   const handleSliceClick = (_: any, item: any) => {
     const clickedId = item.dataIndex;
     setSelectedSlice(selectedSlice === clickedId ? null : clickedId);
@@ -63,7 +57,6 @@ const AdmindPieChart: React.FC<CustomPieChartProps> = ({
 
   return (
     <Box sx={{ textAlign: "center", mt: "2rem" }}>
-      {/* ===== Title ===== */}
       <Typography
         variant="h6"
         sx={{

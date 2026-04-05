@@ -43,8 +43,14 @@ export default function PropertyAmenity() {
   const [localAmenities, setLocalAmenities] = useState(amenities);
 
   useEffect(() => {
-    setLocalAmenities(amenities);
-  }, [amenities]);
+    if (!loading) {
+      const normalized = amenities.map((a) => ({
+        ...a,
+        amn_isActive: String(a.amn_isActive),
+      }));
+      setLocalAmenities(normalized);
+    }
+  }, [amenities, loading]);
 
   const [deleteAmenityId, setDeleteAmenityId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);

@@ -54,7 +54,12 @@ export default function PropertyTag() {
   const [localTags, setLocalTags] = useState(tags);
 
   useEffect(() => {
-    setLocalTags(tags);
+    const normalized = tags.map((t) => ({
+      ...t,
+      tag_isActive: String(t.tag_isActive),
+    }));
+  
+    setLocalTags(normalized);
   }, [tags]);
 
   const showSnackbar = (

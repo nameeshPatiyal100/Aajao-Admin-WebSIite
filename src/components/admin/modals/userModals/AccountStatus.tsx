@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TextField, MenuItem } from "@mui/material";
 import { useFormikContext } from "formik";
 import { fieldStyle } from "./styles";
 
 const AccountStatus = ({ disabled }: { disabled: boolean }) => {
   const { values, errors, touched, setFieldValue } = useFormikContext<any>();
+
+  useEffect(() => {
+    setFieldValue("documentNumber", "");
+  }, [values.documentType]);
 
   return (
     <>
@@ -68,13 +72,35 @@ const AccountStatus = ({ disabled }: { disabled: boolean }) => {
         <MenuItem value={2}>Driving Licence</MenuItem>
         <MenuItem value={3}>Passport</MenuItem>
       </TextField>
-
-      {/* Document Number */}
-      <TextField
+      {/* <TextField
         fullWidth
         label="Document Number"
         value={values.documentNumber}
         onChange={(e) => setFieldValue("documentNumber", e.target.value)}
+        error={touched.documentNumber && !!errors.documentNumber}
+        helperText={
+          touched.documentNumber && typeof errors.documentNumber === "string"
+            ? errors.documentNumber
+            : ""
+        }
+        disabled={disabled}
+        sx={fieldStyle}
+      /> */}
+      <TextField
+        fullWidth
+        label="Document Number"
+        value={values.documentNumber}
+        onChange={(e) => {
+          let value = e.target.value;
+
+          // 🚀 Restrict input based on type
+          if (values.documentType === 1) {
+            // Aadhaar → only numbers
+            value = value.replace(/\D/g, "").slice(0, 12);
+          }
+
+          setFieldValue("documentNumber", value);
+        }}
         error={touched.documentNumber && !!errors.documentNumber}
         helperText={
           touched.documentNumber && typeof errors.documentNumber === "string"

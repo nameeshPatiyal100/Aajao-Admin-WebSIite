@@ -13,18 +13,6 @@ export interface User {
   status: "Active" | "Inactive";
   createdAt: string;
 }
-// interface FetchUsersPayload {
-//   page?: number;
-//   search?: string;
-//   status?: string | null;
-// }
-
-// interface Pagination {
-//   currentPage: number;
-//   totalPages: number;
-//   totalRecords: number;
-//   limit: number;
-// }
 
 interface UserState {
   users: ApiUser[];
@@ -46,8 +34,6 @@ const initialState: UserState = {
   loading: false,
   error: null,
 };
-
-/* ---------------- THUNK (INSIDE SAME FILE) ---------------- */
 
 export const fetchUsers = createAsyncThunk(
   "users/fetch",

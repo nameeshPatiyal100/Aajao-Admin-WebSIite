@@ -97,8 +97,9 @@ export default function Listing({
                   <TableCell>
                     <Switch
                       size="small"
-                      checked={amenity.amn_isActive === 1}
+                      checked={String(amenity.amn_isActive) === "1"}
                       onChange={() => handleToggleActive(Number(amenity.amn_id))}
+                      disabled={loading}
                       sx={{
                         "& .MuiSwitch-switchBase.Mui-checked": {
                           color: PurpleThemeColor,

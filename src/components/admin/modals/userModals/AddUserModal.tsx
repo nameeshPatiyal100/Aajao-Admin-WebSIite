@@ -44,16 +44,14 @@ export const initialValues = {
 interface AddUserModalProps {
   open: boolean;
   onClose: () => void;
-  // onAddUser: (data: any) => void;
   mode: "add" | "edit" | "view";
   userId?: number;
-  context: "user" | "host"; // ✅ NEW
+  context: "user" | "host"; 
 }
 
 const AddUserModal: React.FC<AddUserModalProps> = ({
   open,
   onClose,
-  // onAddUser,
   mode,
   context,
   userId,
@@ -71,9 +69,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     message: string;
     severity: "success" | "error";
   }>({ open: false, message: "", severity: "success" });
-
   const isViewMode = mode === "view";
-
   /* ---------------- API → Form mapping ---------------- */
   const mapApiToFormValues = (data: any) => ({
     fullName: data?.user_fullName ?? "",

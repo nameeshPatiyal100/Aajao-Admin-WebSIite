@@ -18,6 +18,8 @@ export default function HostManagementPage() {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState<number | null>(null);
+  // const [status, setStatus] = useState<1 | 0 | null>(null);
+  const [verified, setVerified] = useState<1 | 0 | null>(null);
 
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
@@ -34,18 +36,16 @@ export default function HostManagementPage() {
   });
 
   const rowsPerPage = 10;
-
-  /* ================= API ================= */
-
   const loadHosts = useCallback(() => {
     dispatch(
       fetchHosts({
         page: page + 1,
         search,
-        status,
+        user_isActive: status,
+        user_isVerified: verified,
       })
     );
-  }, [dispatch, page, search, status]);
+  }, [dispatch, page, search, status, verified]);
 
   /* ================= EFFECTS ================= */
 
@@ -61,7 +61,7 @@ export default function HostManagementPage() {
     dispatch(deleteUser(deleteUserId))
       .unwrap()
       .then(() => {
-        loadHosts();  
+        loadHosts();
       })
       .finally(() => {
         setOpenDeleteModal(false);
@@ -87,10 +87,20 @@ export default function HostManagementPage() {
     }
   };
 
-  const handleSearch = (searchValue: string, statusValue: 1 | 0 | null) => {
-    setPage(0); // reset pagination
+  // const handleSearch = (searchValue: string, statusValue: 1 | 0 | null) => {
+  //   setPage(0); // reset pagination
+  //   setSearch(searchValue);
+  //   setStatus(statusValue);
+  // };
+  const handleSearch = (
+    searchValue: string,
+    statusValue: 1 | 0 | null,
+    verifiedValue: 1 | 0 | null
+  ) => {
+    setPage(0);
     setSearch(searchValue);
     setStatus(statusValue);
+    setVerified(verifiedValue);
   };
   const handleDeleteHost = (host: HostTableRow) => {
     setDeleteUserId(host.id);
@@ -118,12 +128,13 @@ export default function HostManagementPage() {
   return (
     <>
       <Box p={3}>
-        <HostHeader
-          searchTerm={search}
-          status={status}
-          onSearch={handleSearch} 
-          onAdd={handleAddHost}
-        />
+      <HostHeader
+  searchTerm={search}
+  status={status}
+  verified={verified}
+  onSearch={handleSearch}
+  onAdd={handleAddHost}
+/>
 
         <HostTable
           hosts={tableHosts}
