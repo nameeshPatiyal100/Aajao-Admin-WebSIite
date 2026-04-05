@@ -14,7 +14,6 @@ import { fetchPropertyAnalyticsDetail } from "../../../features/admin/propertyAn
 export default function PropertyAnalytics() {
   const dispatch = useAppDispatch();
 
-  /* ================= REDUX STATE ================= */
   const { data, loading: detailLoading } = useAppSelector(
     (state) => state.propertyAnalyticsDetail
   );
@@ -23,32 +22,56 @@ export default function PropertyAnalytics() {
     (state) => state.propertyAnalytics
   );
 
-  /* ================= LOCAL STATE ================= */
-
-  const [page, setPage] = useState(1);
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedProperty, setSelectedProperty] =
-    useState<PropertyRecord | null>(null);
-
   const rowsPerPage = 10;
 
   const requestBody: PropertyFilterData = {
     page: 1,
     limit: rowsPerPage,
-    keyword: "",
   };
 
-  const [filterData, setFilterData] = useState<PropertyFilterData>(requestBody);
+  const [filterData, setFilterData] =
+    useState<PropertyFilterData>(requestBody);
 
-  /* ================= FETCH API ================= */
+  const [page, setPage] = useState(1);
 
+  /* ✅ API CALL */
   useEffect(() => {
-    dispatch(fetchPropertyAnalytics());
-  }, []);
+    dispatch(fetchPropertyAnalytics(filterData));
+  }, [dispatch, filterData]);
 
-  /* ================= MAP API → UI ================= */
+  /* ✅ FILTER UPDATE */
+  const handleFilterUpdate = (
+    name: keyof PropertyFilterData,
+    value: string | number | undefined
+  ) => {
+    setFilterData((prev) => {
+      const updated: any = { ...prev, page: 1 };
 
+      if (value === undefined || value === "") {
+        delete updated[name];
+      } else {
+        updated[name] = value;
+      }
+
+      return updated;
+    });
+  };
+
+  const handleFilter = () => {
+    setFilterData((prev) => ({ ...prev, page: 1 }));
+  };
+
+  const handleClear = () => {
+    setFilterData(requestBody);
+    setPage(1);
+  };
+
+  const handlePaginate = (_: unknown, value: number) => {
+    setPage(value);
+    setFilterData((prev) => ({ ...prev, page: value }));
+  };
+
+  /* ✅ DATA */
   const mappedProperties: PropertyRecord[] = properties.map((item) => ({
     id: item.id,
     property_name: item.name,
@@ -59,55 +82,14 @@ export default function PropertyAnalytics() {
     is_active: item.isActive,
   }));
 
-  /* ================= FILTER ================= */
-
-  const filteredData = mappedProperties.filter((item) => {
-    if (!filterData.keyword) return true;
-
-    const keyword = filterData.keyword.toLowerCase();
-
-    return (
-      item.property_name.toLowerCase().includes(keyword) ||
-      item.host_name.toLowerCase().includes(keyword)
-    );
-  });
-
-  const totalRecords = filteredData.length;
-
-  /* ================= PAGINATION ================= */
-
-  const start = (page - 1) * rowsPerPage;
-  const paginatedData = filteredData.slice(start, start + rowsPerPage);
-
-  const handlePaginate = (_: unknown, value: number) => {
-    setPage(value);
-  };
-
-  /* ================= FILTER HANDLERS ================= */
-
-  const handleFilterUpdate = (
-    name: keyof PropertyFilterData,
-    value: string
-  ) => {
-    setFilterData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFilter = () => {
-    setPage(1);
-  };
-
-  const handleClear = () => {
-    setFilterData(requestBody);
-    setPage(1);
-  };
-
-  /* ================= EDIT ================= */
+  /* ✅ MODAL */
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] =
+    useState<PropertyRecord | null>(null);
 
   const handleEdit = (row: PropertyRecord) => {
     setSelectedProperty(row);
     setModalOpen(true);
-
-    // 🔥 CALL API HERE
     dispatch(fetchPropertyAnalyticsDetail({ propertyId: Number(row.id) }));
   };
 
@@ -116,15 +98,8 @@ export default function PropertyAnalytics() {
     setSelectedProperty(null);
   };
 
-  /* ================= RENDER ================= */
-
   return (
-    <Box
-      sx={{
-        backgroundColor: ThemeColors.background,
-        minHeight: "100vh",
-      }}
-    >
+    <Box sx={{ backgroundColor: ThemeColors.background, minHeight: "100vh" }}>
       <PropertySearchBar
         ThemeColors={ThemeColors}
         filterData={filterData}
@@ -135,8 +110,8 @@ export default function PropertyAnalytics() {
 
       <PropertyListing
         ThemeColors={ThemeColors}
-        propertyListing={paginatedData}
-        totalRecords={totalRecords}
+        propertyListing={mappedProperties}
+        totalRecords={mappedProperties.length}
         loading={loading}
         page={page}
         rowsPerPage={rowsPerPage}

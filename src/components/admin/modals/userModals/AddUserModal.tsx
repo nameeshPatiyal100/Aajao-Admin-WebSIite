@@ -185,7 +185,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
             fetchHosts({
               page: 1,
               search: "",
-              status: null,
+              // status: null,
+              user_isActive: null,
             })
           );
         } else {

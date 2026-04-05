@@ -16,11 +16,10 @@ import type { CouponFormModalProps } from "./types";
 import { couponValidationSchema } from "../../../validations/admin-validations";
 import { TableLoader } from "../../../components/admin/common/TableLoader";
 
-/* ================= Default Form ================= */
-
 const defaultForm = {
   coupon_title: "",
   coupon_code: "",
+  cpn_type: "",
   discount_type: 1,
   discount_percentage: "",
   discount_amount: "",
@@ -42,38 +41,49 @@ const CouponFormModal: React.FC<CouponFormModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<any>(defaultForm);
   const [errors, setErrors] = useState<any>({});
-
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setFormData({
         coupon_title: initialData.cpn_title ?? "",
         coupon_code: initialData.cpn_code ?? "",
+        cpn_type: initialData.cpn_type ?? "",
+  
         discount_type: initialData.cpn_dsctn_type ?? 1,
-        discount_percentage: initialData.cpn_dsctn_percnt ?? "",
-        discount_amount: initialData.cpn_dsctn_amt ?? "",
+  
+        discount_percentage:
+          initialData.cpn_dsctn_type === 1
+            ? initialData.cpn_dsctn_percnt ?? ""
+            : "",
+  
+        discount_amount:
+          initialData.cpn_dsctn_type === 2
+            ? initialData.cpn_dsctn_amt ?? ""
+            : "",
+  
         min_amount: initialData.cpn_min_amt ?? "",
         max_amount: initialData.cpn_max_amt ?? "",
+  
         valid_from: initialData.cpn_valid_from ?? "",
         valid_to: initialData.cpn_valid_to ?? "",
+  
         usage_limit: initialData.cpn_usage_limit ?? "",
         status: initialData.cpn_status ?? 1,
       });
     }
-
+  
     if (mode === "add") {
       setFormData(defaultForm);
     }
-
+  
     setErrors({});
   }, [initialData, mode]);
-  /* ================= Handle Change ================= */
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     setFormData((prev: any) => ({
       ...prev,
       [name]: [
+        "cpn_type",
         "discount_type",
         "discount_percentage",
         "discount_amount",
@@ -89,16 +99,36 @@ const CouponFormModal: React.FC<CouponFormModalProps> = ({
     }));
   };
 
-  /* ================= Submit ================= */
 
   const handleSubmit = async () => {
     try {
       await couponValidationSchema.validate(formData, {
         abortEarly: false,
       });
-
+  
       setErrors({});
-      onSubmit(formData);
+  
+      // ✅ SEND FORM DATA (NOT API PAYLOAD)
+      const formPayload = {
+        coupon_title: formData.coupon_title,
+        coupon_code: formData.coupon_code,
+        cpn_type: Number(formData.cpn_type),
+  
+        discount_type: formData.discount_type,
+        discount_percentage: formData.discount_percentage,
+        discount_amount: formData.discount_amount,
+  
+        min_amount: formData.min_amount,
+        max_amount: formData.max_amount,
+  
+        valid_from: formData.valid_from,
+        valid_to: formData.valid_to,
+  
+        usage_limit: formData.usage_limit,
+        status: formData.status,
+      };
+  
+      onSubmit(formPayload); // ✅ THIS IS IMPORTANT
     } catch (err: any) {
       const validationErrors: any = {};
       err.inner.forEach((error: any) => {
@@ -107,8 +137,6 @@ const CouponFormModal: React.FC<CouponFormModalProps> = ({
       setErrors(validationErrors);
     }
   };
-
-  /* ================= Purple Style ================= */
 
   const purpleFieldStyle = {
     "& .MuiOutlinedInput-root.Mui-focused fieldset": {
@@ -132,13 +160,8 @@ const CouponFormModal: React.FC<CouponFormModalProps> = ({
         <Typography fontWeight={700}>
           {mode === "add" ? "Add Coupon" : "Edit Coupon"}
         </Typography>
-        {/* <IconButton onClick={onClose}>
-          <CloseIcon />
-        </IconButton> */}
       </DialogTitle>
 
-      {/* <DialogContent>
-        <Stack spacing={3} mt={1}> */}
       <DialogContent>
         {loading && mode === "edit" ? (
           <TableLoader minHeight={250} text="Loading coupon details..." />
@@ -152,31 +175,46 @@ const CouponFormModal: React.FC<CouponFormModalProps> = ({
               onChange={handleChange}
               fullWidth
               size="small"
-              InputLabelProps={{ shrink: true }} // ✅ FIX
               error={!!errors.coupon_title}
               helperText={errors.coupon_title}
               sx={purpleFieldStyle}
             />
 
+            {/* Code */}
             <TextField
               label="Coupon Code"
               name="coupon_code"
               value={formData.coupon_code}
-              onChange={(e) => {
-                const upperValue = e.target.value.toUpperCase();
-
+              onChange={(e) =>
                 setFormData((prev: any) => ({
                   ...prev,
-                  coupon_code: upperValue,
-                }));
-              }}
+                  coupon_code: e.target.value.toUpperCase(),
+                }))
+              }
               fullWidth
               size="small"
-              InputLabelProps={{ shrink: true }} // also fix overlap
               error={!!errors.coupon_code}
               helperText={errors.coupon_code}
               sx={purpleFieldStyle}
             />
+
+            {/* Coupon Type */}
+            <TextField
+              select
+              label="Coupon Type"
+              name="cpn_type"
+              value={formData.cpn_type}
+              onChange={handleChange}
+              fullWidth
+              size="small"
+              error={!!errors.cpn_type}
+              helperText={errors.cpn_type}
+              sx={purpleFieldStyle}
+            >
+              <MenuItem value={1}>Host to Host</MenuItem>
+              <MenuItem value={2}>Host to User</MenuItem>
+              <MenuItem value={3}>User to User</MenuItem>
+            </TextField>
 
             {/* Discount Type */}
             <TextField
@@ -193,7 +231,7 @@ const CouponFormModal: React.FC<CouponFormModalProps> = ({
               <MenuItem value={2}>Flat Amount</MenuItem>
             </TextField>
 
-            {/* Conditional Discount Field */}
+            {/* Conditional */}
             {formData.discount_type === 1 ? (
               <TextField
                 label="Discount %"
@@ -218,7 +256,7 @@ const CouponFormModal: React.FC<CouponFormModalProps> = ({
               />
             )}
 
-            {/* Min / Max */}
+            {/* Min/Max */}
             <Stack direction="row" spacing={2}>
               <TextField
                 label="Min Amount"
@@ -268,7 +306,7 @@ const CouponFormModal: React.FC<CouponFormModalProps> = ({
               />
             </Stack>
 
-            {/* Usage Limit */}
+            {/* Usage */}
             <TextField
               label="Usage Limit"
               name="usage_limit"
@@ -312,10 +350,7 @@ const CouponFormModal: React.FC<CouponFormModalProps> = ({
                 onClick={handleSubmit}
                 variant="contained"
                 disabled={loading}
-                sx={{
-                  backgroundColor: PurpleThemeColor,
-                  "&:hover": { backgroundColor: PurpleThemeColor },
-                }}
+                sx={{ backgroundColor: PurpleThemeColor }}
               >
                 {mode === "add" ? "Add Coupon" : "Update Coupon"}
               </Button>

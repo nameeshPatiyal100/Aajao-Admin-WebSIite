@@ -18,7 +18,7 @@ export default function PropertiesVerifications() {
   const { properties, loading, pagination } = useAppSelector(
     (state) => state.properties
   );
-  const [localProperties, setLocalProperties] = useState(properties);
+  const [_localProperties, setLocalProperties] = useState(properties);
   const totalRecords = pagination?.totalRecords;
   const rowsPerPage = 10;
   const requestBody: FilterData = {

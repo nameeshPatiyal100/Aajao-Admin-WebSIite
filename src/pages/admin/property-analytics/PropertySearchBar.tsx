@@ -1,11 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import {
-  Box,
-  Button,
-  Stack,
-  Typography,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Stack, Typography, TextField } from "@mui/material";
 import { PurpleThemeColor } from "../../../theme/themeColor";
 import { PropertySearchBarProps } from "./types";
 
@@ -19,8 +13,9 @@ const PropertySearchBar: React.FC<PropertySearchBarProps> = ({
   const [searchItem, setSearchItem] = useState(filterData.keyword || "");
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchItem(event.target.value);
-    handleFilterUpdate("keyword", event.target.value, false);
+    const value = event.target.value;
+    setSearchItem(value);
+    handleFilterUpdate("keyword", value);
   };
 
   const handleCancel = () => {
@@ -30,18 +25,13 @@ const PropertySearchBar: React.FC<PropertySearchBarProps> = ({
 
   return (
     <Box display="flex" flexDirection="column" gap={3} mb={4}>
-      {/* Page Title */}
       <Typography
         variant="h4"
-        sx={{
-          color: ThemeColors.primary,
-          fontWeight: 700,
-        }}
+        sx={{ color: ThemeColors.primary, fontWeight: 700 }}
       >
         Property Analytics
       </Typography>
 
-      {/* Search Form */}
       <form
         onSubmit={(e: FormEvent<HTMLFormElement>) => {
           e.preventDefault();
@@ -49,10 +39,8 @@ const PropertySearchBar: React.FC<PropertySearchBarProps> = ({
         }}
       >
         <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
-          {/* Search Input */}
           <TextField
             label="Search property or host..."
-            variant="outlined"
             size="small"
             value={searchItem}
             onChange={handleInputChange}
@@ -67,15 +55,11 @@ const PropertySearchBar: React.FC<PropertySearchBarProps> = ({
             }}
           />
 
-          {/* Buttons */}
           <Stack direction="row" spacing={1}>
             <Button
               type="submit"
               variant="contained"
-              sx={{
-                background: ThemeColors.primary,
-                px: 3,
-              }}
+              sx={{ background: ThemeColors.primary }}
             >
               Search
             </Button>
@@ -89,6 +73,74 @@ const PropertySearchBar: React.FC<PropertySearchBarProps> = ({
               }}
             >
               Clear
+            </Button>
+
+            {/* ACTIVE */}
+            <Button
+              variant={filterData.status === 1 ? "contained" : "outlined"}
+              onClick={() =>
+                handleFilterUpdate(
+                  "status",
+                  filterData.status === 1 ? undefined : 1,
+                  true
+                )
+              }
+              sx={{
+                ...(filterData.status === 1
+                  ? {
+                      backgroundColor: "green",
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "darkgreen",
+                      },
+                    }
+                  : {
+                      borderColor: "green",
+                      color: "green",
+                    }),
+              }}
+            >
+              Active
+            </Button>
+
+            {/* INACTIVE */}
+            <Button
+              variant={filterData.status === 0 ? "contained" : "outlined"}
+              onClick={() =>
+                handleFilterUpdate(
+                  "status",
+                  filterData.status === 0 ? undefined : 0,
+                  true
+                )
+              }
+              sx={{
+                ...(filterData.status === 0
+                  ? {
+                      backgroundColor: "red",
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "darkred",
+                      },
+                    }
+                  : {
+                      borderColor: "red",
+                      color: "red",
+                    }),
+              }}
+            >
+              Inactive
+            </Button> 
+            <Button
+              variant={filterData.isLuxury === 1 ? "contained" : "outlined"}
+              onClick={() =>
+                handleFilterUpdate(
+                  "isLuxury",
+                  filterData.isLuxury === 1 ? undefined : 1,
+                  true
+                )
+              }
+            >
+              Luxury
             </Button>
           </Stack>
         </Box>

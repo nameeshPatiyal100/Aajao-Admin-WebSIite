@@ -7,6 +7,7 @@ import { ADMINENDPOINTS } from "../../../services/endpoints";
 export interface CouponFormData {
   coupon_title: string;
   coupon_code: string;
+  cpn_type: number;
   discount_type: number;
   discount_percentage: number | "";
   discount_amount: number | "";
@@ -24,6 +25,7 @@ export interface CouponUpsertPayload {
   cpn_id: number | null;
   cpn_title: string;
   cpn_code: string;
+  cpn_type: number;
   cpn_dsctn_type: number;
   cpn_dsctn_percnt: number | null;
   cpn_dsctn_amt: number | null;
@@ -56,38 +58,43 @@ const initialState: CouponUpsertState = {
   error: null,
 };
 
-/* ================= MAPPER ================= */
-
 const mapFormToApi = (
   data: CouponFormData,
   cpn_id: number | null
 ): CouponUpsertPayload => ({
   cpn_id: cpn_id ?? null,
+
   cpn_title: data.coupon_title,
   cpn_code: data.coupon_code,
+  cpn_type: Number(data.cpn_type),
+
   cpn_dsctn_type: data.discount_type,
+
   cpn_dsctn_percnt:
     data.discount_type === 1
       ? data.discount_percentage === ""
         ? null
         : Number(data.discount_percentage)
       : null,
+
   cpn_dsctn_amt:
     data.discount_type === 2
       ? data.discount_amount === ""
         ? null
         : Number(data.discount_amount)
       : null,
+
   cpn_min_amt: data.min_amount === "" ? null : Number(data.min_amount),
   cpn_max_amt: data.max_amount === "" ? null : Number(data.max_amount),
+
   cpn_valid_from: data.valid_from || null,
   cpn_valid_to: data.valid_to || null,
+
   cpn_usage_limit:
     data.usage_limit === "" ? null : Number(data.usage_limit),
+
   cpn_status: data.status,
 });
-
-/* ================= THUNK ================= */
 
 export const saveCoupon = createAsyncThunk(
   "couponUpsert/save",

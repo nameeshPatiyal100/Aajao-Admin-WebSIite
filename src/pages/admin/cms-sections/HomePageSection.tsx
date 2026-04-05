@@ -77,7 +77,7 @@ export default function HomePageSection() {
   const [buttonTitle, setButtonTitle] = useState("");
   const [buttonUrl, setButtonUrl] = useState("");
   const [buttonTarget, setButtonTarget] = useState("_self");
-  const [isLocalImage, setIsLocalImage] = useState(false);
+  const [_isLocalImage, setIsLocalImage] = useState(false);
   const [testimonialTitle, setTestimonialTitle] = useState("");
   const [testimonialDesc, setTestimonialDesc] = useState("");
   const [selectedTestimonials, setSelectedTestimonials] = useState<

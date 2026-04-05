@@ -10,7 +10,6 @@ import {
     IconButton,
     Chip
   } from "@mui/material";
-  import EditIcon from "@mui/icons-material/Edit";
   import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
   import type { PageRecord } from "./types";
   import { Pagination } from "../../../components";
@@ -35,7 +34,6 @@ import {
     page,
     rowsPerPage,
     handlePaginate,
-    handleEdit,
     handleEnter,
   }: Props) {
     return (

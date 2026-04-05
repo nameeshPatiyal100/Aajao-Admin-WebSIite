@@ -38,7 +38,7 @@ const initialState: BookingAnalyticsState = {
 export const fetchBookingAnalytics = createAsyncThunk(
   "bookingAnalytics/list",
   async (
-    params: {
+    _params: {
       state?: string;
       city?: string;
       fromDate?: string;

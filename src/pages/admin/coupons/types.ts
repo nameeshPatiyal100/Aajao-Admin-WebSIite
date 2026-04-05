@@ -37,6 +37,7 @@ export interface CouponSearchBarProps {
 export interface CouponFormData {
   coupon_title: string;
   coupon_code: string;
+  cpn_type: number; // ✅ REQUIRED
   discount_type: number;
   discount_percentage: number | "";
   discount_amount: number | "";
@@ -73,11 +74,21 @@ export interface CouponFormModalProps {
   onSubmit: (data: CouponFormData) => void;
   loading?: boolean;
 }
-// export interface CouponFormModalProps {
-//   open: boolean;
-//   mode: "add" | "edit";
-//   initialData?: CouponApiResponse; // ✅ FIXED
-//   onClose: () => void;
-//   onSubmit: (data: CouponFormData) => void;
-//   loading?: boolean;
-// }
+export interface CouponPayload {
+  cpn_id?: number;
+  cpn_title: string;
+  cpn_code: string;
+  cpn_type: number;
+
+  cpn_dsctn_type: number;
+  cpn_dsctn_percnt: number | null;
+  cpn_dsctn_amt: number | null;
+
+  cpn_min_amt: number | null;
+  cpn_max_amt: number | null;
+  cpn_valid_from: string | null;
+  cpn_valid_to: string | null;
+
+  cpn_usage_limit: number | null;
+  cpn_status: number;
+}

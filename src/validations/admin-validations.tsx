@@ -101,9 +101,7 @@ export const setupPropertySchema = Yup.object({
 export const validationSchemaAddUserHostModal = Yup.object({
   fullName: Yup.string().required("Full Name is required"),
 
-  email: Yup.string()
-    .email("Invalid email")
-    .required("Email is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
 
   phone: Yup.string()
     .matches(/^[0-9]{10}$/, "Enter valid 10-digit number")
@@ -112,31 +110,31 @@ export const validationSchemaAddUserHostModal = Yup.object({
   documentType: Yup.number().required("Document type is required"),
 
   documentNumber: Yup.string()
-  .required("Document number is required")
-  .when("documentType", ([documentType], schema) => {
-    switch (Number(documentType)) {
-      case 1: // Aadhaar
-        return schema.matches(
-          /^[0-9]{12}$/,
-          "Aadhaar must be exactly 12 digits"
-        );
+    .required("Document number is required")
+    .when("documentType", ([documentType], schema) => {
+      switch (Number(documentType)) {
+        case 1: // Aadhaar
+          return schema.matches(
+            /^[0-9]{12}$/,
+            "Aadhaar must be exactly 12 digits"
+          );
 
-      case 2: // Driving License
-        return schema.matches(
-          /^[A-Za-z0-9]{10,16}$/,
-          "Driving License must be 10–16 alphanumeric characters"
-        );
+        case 2: // Driving License
+          return schema.matches(
+            /^[A-Za-z0-9]{10,16}$/,
+            "Driving License must be 10–16 alphanumeric characters"
+          );
 
-      case 3: // Passport
-        return schema.matches(
-          /^[A-Za-z0-9]{6,9}$/,
-          "Passport must be 6–9 alphanumeric characters"
-        );
+        case 3: // Passport
+          return schema.matches(
+            /^[A-Za-z0-9]{6,9}$/,
+            "Passport must be 6–9 alphanumeric characters"
+          );
 
-      default:
-        return schema;
-    }
-  }),
+        default:
+          return schema;
+      }
+    }),
 
   dob: Yup.date()
     .nullable()
@@ -175,6 +173,10 @@ export const bookingStatusRowSchema = Yup.object({
 // import * as yup from "yup";
 
 export const couponValidationSchema = Yup.object().shape({
+  cpn_type: Yup.number()
+    .required("Coupon type is required")
+    .oneOf([1, 2, 3], "Invalid coupon type"),
+    
   coupon_title: Yup.string()
     .required("Coupon title is required")
     .min(3, "Coupon title must be at least 3 characters")
@@ -259,22 +261,14 @@ export const faqValidationSchema = Yup.object({
     .required("Status is required"),
 });
 
-
 // import * as yup from "yup";
 
 export const tcValidationSchema = Yup.object({
-  title: Yup
-    .string()
-    .required("Title is required")
-    .trim(),
+  title: Yup.string().required("Title is required").trim(),
 
-  description: Yup
-    .string()
-    .required("Description is required")
-    .trim(),
+  description: Yup.string().required("Description is required").trim(),
 
-  status: Yup
-    .number()
+  status: Yup.number()
     .oneOf([0, 1], "Invalid status")
     .required("Status is required"),
 });
