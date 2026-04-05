@@ -1,19 +1,3 @@
-// 🔹 Fetch all individuals
-// export const fetchIndividualData = createAsyncThunk('individuals/fetch', async (_, { getState, dispatch, rejectWithValue }) => {
-//     try {
-//         dispatch(showLoading());
-//         const { search, filters, search_columns, sort, page, limit } = getState().individualSlice;
-//         const response = await HttpClient.get('individual-client', { search, filters, search_columns, sort, page, limit }, {}, { showToast: false });
-//         dispatch(hideLoading());
-//         return response;
-//     } catch (error) {
-//         dispatch(hideLoading());
-//         return rejectWithValue(error);
-//     } finally {
-//         dispatch(hideLoading()); // Ensure that loading state is hidden
-//     }
-// });
-
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { axios } from '../axios/axios';
 
